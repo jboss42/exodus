@@ -123,7 +123,7 @@ var
 begin
     Item := _Items.Item[0];
     _ActMap := GetActionController().buildActions(_Items);
-    _TypedActs := _ActMap.GetActionsFor('contact');
+    _TypedActs := _ActMap.GetActionsFor('');
     
     Act := _TypedActs.GetActionNamed('{000-exodus.googlecode.com}-000-start-chat');
     btnChat.Tag := Integer(Pointer(Act));

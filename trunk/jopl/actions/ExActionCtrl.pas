@@ -54,8 +54,8 @@ private
     _key, _val: Widestring;
 
 public
-    constructor CreateString(item: Widestring);
-    constructor CreatePair(key, val: Widestring);
+    constructor Create(item: Widestring); overload;
+    constructor Create(key, val: Widestring); overload;
     destructor Destroy; override;
 
     property Key: Widestring read _key;
@@ -69,8 +69,8 @@ private
     _enableSet, _disableSet: TWidestringList;
 
 public
-    constructor Create(enableHints, disableHints: TWidestringList);
-    constructor CreateFromList(filters: TWidestringList);
+    constructor Create(filters: TWidestringList = nil); overload;
+    constructor Create(enableHints, disableHints: TWidestringList); overload;
     destructor Destroy; override;
 
     procedure update(item: IExodusItem);
@@ -131,7 +131,7 @@ function GetActionController: IExodusActionController;
 
 implementation
 
-uses ComServ, SysUtils;
+uses ComServ, Session, SysUtils;
 
 var g_ActCtrl: IExodusActionController;
 
@@ -222,15 +222,15 @@ procedure TActionProxy.addToEnabling(filter: Widestring);
 var
     fitem :TFilteringItem;
 begin
-    fitem := TFilteringItem.CreateString(filter);
+    fitem := TFilteringItem.Create(filter);
 
     if _enabling.Sorted then
         _enabling.Sorted := false;
     _enabling.AddObject(fitem.Key, fitem);
     if fitem.Key = 'selection' then begin
-        fitem := TFilteringItem.CreatePair('global-selection', fitem.value);
+        fitem := TFilteringItem.Create('global-selection', fitem.value);
         _enabling.AddObject(fitem.Key, fitem);
-        fitem := TFilteringItem.CreatePair('type-selection', fitem.value);
+        fitem := TFilteringItem.Create('type-selection', fitem.value);
         _enabling.AddObject(fitem.Key, fitem);
     end;
 end;
@@ -238,16 +238,16 @@ procedure TActionProxy.addToDisabling(filter: Widestring);
 var
     fitem :TFilteringItem;
 begin
-    fitem := TFilteringItem.CreateString(filter);
+    fitem := TFilteringItem.Create(filter);
 
     if _disabling.Sorted then
         _disabling.Sorted := false;
 
     _disabling.AddObject(fitem.Key, fitem);
     if fitem.Key = 'selection' then begin
-        fitem := TFilteringItem.CreatePair('global-selection', fitem.value);
+        fitem := TFilteringItem.Create('global-selection', fitem.value);
         _disabling.AddObject(fitem.Key, fitem);
-        fitem := TFilteringItem.CreatePair('type-selection', fitem.value);
+        fitem := TFilteringItem.Create('type-selection', fitem.value);
         _disabling.AddObject(fitem.Key, fitem);
     end;
 end;
@@ -280,7 +280,7 @@ end;
 {
     TFilteringItem implementation
 }
-constructor TFilteringItem.CreateString(item: WideString);
+constructor TFilteringItem.Create(item: WideString);
 var
     place: Integer;
 
@@ -298,7 +298,7 @@ begin
 
     _key := StrLowerW(PWideChar(_key));
 end;
-constructor TFilteringItem.CreatePair(key: WideString; val: WideString);
+constructor TFilteringItem.Create(key: WideString; val: WideString);
 begin
     inherited Create;
 
@@ -329,7 +329,7 @@ begin
     if (disableHints <> nil) and (disableHints.Count > 0) then
         _disableHints.Assign(disableHints);
 end;
-constructor TFilteringSet.CreateFromList(filters: TWideStringList);
+constructor TFilteringSet.Create(filters: TWideStringList);
 var
     idx, jdx, loc: Integer;
     filter: TFilteringSet;
@@ -343,6 +343,8 @@ begin
 
     _disableHints := TWidestringList.Create;
     _disableSet := TWidestringList.Create;
+
+    if filters = nil then exit;
 
     //update hints
     for idx := 0 to filters.Count - 1 do begin
@@ -381,7 +383,7 @@ begin
             end;
 
             fitem := TFilteringItem(fromList.Objects[jdx]);
-            fitem := TFilteringItem.CreatePair(fitem.Key, fitem.Value);
+            fitem := TFilteringItem.Create(fitem.Key, fitem.Value);
 
             toList.AddObject(fromList[jdx], fitem);
         end;
@@ -404,7 +406,7 @@ begin
                 end;
             end else begin
                 fitem := TFilteringItem(fromList.Objects[jdx]);
-                fitem := TFilteringItem.CreatePair(fitem.Key, fitem.Value);
+                fitem := TFilteringItem.Create(fitem.Key, fitem.Value);
 
                 toList.AddObject(fromList[jdx], fitem);
             end;
@@ -474,7 +476,7 @@ begin
         if not lookupKeyValue then continue;
 
         //don't care if it's already present...
-        currItem := TFilteringItem.CreatePair(key, val);
+        currItem := TFilteringItem.Create(key, val);
         _disableSet.AddObject(key, currItem);
     end;
 
@@ -486,7 +488,7 @@ begin
         //now we care if it's already there...
         place := _enableSet.IndexOf(key);
         if place = -1 then //brand-new!
-            _enableSet.AddObject(key, TFilteringItem.CreatePair(key, val))
+            _enableSet.AddObject(key, TFilteringItem.Create(key, val))
         else begin
             foundItem := TFilteringItem(_enableSet.Objects[place]);
             if foundItem.Value <> val then begin
@@ -675,6 +677,278 @@ begin
     Result := typedActs as IExodusTypedActions;
 end;
 
+type TActionBuildModeType = (abmNone, abmSingleOther, abmSingleGroup, abmMulti);
+type TActionBuildInfo = class
+public
+    Enabling, Disabling: TWidestringList;
+    AllInterests: TWidestringList;
+    MainInterests: TFilteringSet;
+
+    constructor Create();
+    destructor Destroy(); override;
+end;
+constructor TActionBuildInfo.Create;
+begin
+    Enabling := TWidestringList.Create();
+    Disabling := TWidestringList.Create();
+
+    AllInterests := TWidestringList.Create();
+    AllInterests.Sorted := true;
+end;
+destructor TActionBuildInfo.Destroy;
+begin
+    FreeAndNil(Enabling);
+    FreeAndNil(Disabling);
+    FreeAndNil(AllInterests);
+    FreeAndNil(MainInterests);
+
+    inherited;
+end;
+
+
+function TExodusActionController.buildActions(
+    const items: IExodusItemList): IExodusActionMap;
+var
+    actmap: TExodusActionMap;
+    info: TActionBuildInfo;
+    mode: TActionBuildModeType;
+    applied: TObjectList;
+    idx, jdx: Integer;
+    typedActs, mainActs: TExodusTypedActions;
+
+    procedure _PopulateItemDescendants(
+            group: Widestring;
+            items: IExodusItemList);
+    var
+        subitems: IExodusItemList;
+        subitem: IExodusItem;
+        idx: Integer;
+    begin
+        subitems := MainSession.ItemController.GetGroupItems(group);
+        for idx := 0 to subitems.Count - 1 do begin
+            subitem := subitems.Item[idx];
+            if subitem.Type_ = 'group' then
+                _PopulateItemDescendants(subitem.UID, items)
+            else if subitem.IsVisible then
+                items.Add(subitem);
+        end;
+    end;
+    function _DetermineMode(items: IExodusItemList): TActionBuildModeType;
+    var
+        idx, size: Integer;
+    begin
+        case items.Count of
+            1: with items.Item[0] do begin
+                if (Type_ <> 'group') then
+                    Result := abmSingleOther
+                else begin
+                    Result := abmSingleGroup;
+
+                    _PopulateItemDescendants(UID, items);
+                end;
+            end;
+        else
+            Result := abmMulti;
+            size := items.Count;
+            for idx := size - 1 downto 0 do begin
+                with items.Item[idx] do begin
+                    if Type_ = 'group' then
+                        _PopulateItemDescendants(UID, items);
+                end;
+            end;
+        end;
+    end;
+    function _DetermineFilters(items: IExodusItemList): TActionBuildInfo;
+    var
+        idx, jdx: Integer;
+        item: IExodusItem;
+        potentials: TPotentialActions;
+        typedInterests: TFilteringSet;
+    begin
+        Result := TActionBuildInfo.Create();
+        with Result do for idx := 0 to items.Count - 1 do begin
+            item := items.Item[idx];
+
+            potentials := lookupActionsFor(item.Type_, false);
+            if (potentials <> nil) then begin
+                jdx := allInterests.IndexOf(potentials.ItemType);
+                if (jdx <> -1) then begin
+                    typedInterests := TFilteringSet(allInterests.Objects[jdx]);
+                end else begin
+                    for jdx := 0 to potentials.EnableHints.Count - 1 do
+                        enabling.Add(potentials.EnableHints[jdx]);
+                    for jdx := 0 to potentials.DisableHints.Count - 1 do
+                        disabling.Add(potentials.DisableHints[jdx]);
+                    typedInterests := TFilteringSet.Create(
+                            potentials.EnableHints,
+                            potentials.DisableHints);
+                    allInterests.AddObject(potentials.ItemType, typedInterests);
+                end;
+
+                typedInterests.update(item);
+            end;
+        end;
+        Result.mainInterests := TFilteringSet.Create(Result.enabling, Result.disabling);
+        for idx := 0 to items.Count - 1 do begin
+            Result.mainInterests.update(item);
+        end;
+        case items.Count of
+            1: begin
+                Result.mainInterests.Disabling.AddObject('global-selection',
+                        TFilteringItem.Create('global-selection','single'));
+                Result.mainInterests.Enabling.AddObject('global-selection',
+                        TFilteringItem.Create('global-selection','single'));
+            end;
+            else begin
+                Result.mainInterests.Disabling.AddObject('global-selection',
+                        TFilteringItem.Create('global-selection','multi'));
+                Result.mainInterests.Enabling.AddObject('global-selection',
+                        TFilteringItem.Create('global-selection','multi'));
+            end;
+        end;
+    end;
+    procedure _DetermineActionsForType(
+            itemtype: Widestring;
+            typedInterests: TFilteringSet;
+            applied: TObjectList);
+    var
+        idx, jdx: Integer;
+        potentials: TPotentialActions;
+        typedActs: TExodusTypedActions;
+        proxy: TActionProxy;
+    begin
+        potentials := lookupActionsFor(itemtype, false);
+
+        case typedInterests.ItemCount of
+            1: begin
+                typedInterests.Disabling.AddObject('type-selection',
+                        TFilteringItem.Create('type-selection','single'));
+                typedInterests.Enabling.AddObject('type-selection',
+                        TFilteringItem.Create('type-selection','single'));
+            end;
+            else begin
+                typedInterests.Disabling.AddObject('type-selection',
+                        TFilteringItem.Create('type-selection','multi'));
+                typedInterests.Enabling.AddObject('type-selection',
+                        TFilteringItem.Create('type-selection','multi'));
+            end;
+        end;
+
+        //make sure the list exists (so we don't accidentally get single-type main actions)
+        typedActs := actmap.LookupTypedActions(itemtype, true);
+
+        //add applicable typed actions to actionmap
+        for jdx := 0 to potentials.ProxyCount - 1 do begin
+            proxy := potentials.Proxy[jdx];
+
+            if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
+                if (applied.IndexOf(proxy) = -1) then
+                    applied.Add(proxy);
+                typedActs.AddAction(proxy.Action);
+            end;
+        end;
+
+        //add applicable "anytype" actions to actionmap
+        potentials := lookupActionsFor('', true);
+        for jdx := 0 to potentials.ProxyCount - 1 do begin
+            proxy := potentials.Proxy[jdx];
+
+            if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
+                if (applied.IndexOf(proxy) = -1) then
+                    applied.Add(proxy);
+                typedActs.AddAction(proxy.Action);
+            end;
+        end;
+
+        //Free up typed interests now
+        typedInterests.Free;
+    end;
+    procedure _BuildMainActions(info: TActionBuildInfo);
+    var
+        mainActs, typedActs: TExodusTypedActions;
+        itemtype: Widestring;
+        proxy: TActionProxy;
+        idx, jdx: Integer;
+    begin
+        mainActs := actMap.LookupTypedActions('', true);
+        with info do for idx := 0 to applied.Count - 1 do begin
+            proxy := TActionProxy(applied[idx]);
+            if not proxy.applies(mainInterests.Enabling, mainInterests.Disabling) then
+                continue;
+
+            for jdx := 0 to allInterests.Count - 1 do begin
+                itemtype := allInterests[jdx];
+                typedActs := actMap.LookupTypedActions(itemtype, false);
+                if (typedActs.GetActionNamed(proxy.Name) <> proxy.Action) then begin
+                    proxy := nil;
+                    break;
+                end;
+            end;
+
+            if (proxy <> nil) then
+                mainActs.AddAction(proxy.Action);
+        end;
+    end;
+    
+begin
+    actmap := TExodusActionMap.Create(items);
+    Result := actmap as IExodusActionMap;
+
+    mode := _DetermineMode(actmap.GetAllItems());
+    if (mode = abmNone) then exit;
+    
+    info := _DetermineFilters(actmap.GetAllItems());
+
+    //Find type-specific actions
+    applied := TObjectList.Create();
+    applied.OwnsObjects := false;
+    with info do for idx := 0 to AllInterests.Count - 1 do begin
+        _DetermineActionsForType(
+                AllInterests[idx],
+                TFilteringSet(AllInterests.Objects[idx]),
+                applied);
+    end;
+
+    //Assemble main actions
+    case mode of
+        abmSingleOther: begin
+            //(the only) type-specific actions are main actions
+            typedActs := actmap.LookupTypedActions(actmap.Get_Item(0).Type_, true);
+
+            //copy type-specific into main
+            mainActs := actmap.LookupTypedActions('', true);
+            mainActs.Clear();
+            for idx := 0 to typedActs.Get_ActionCount() - 1 do
+                mainActs.AddAction(typedActs.Get_Action(idx));
+            
+            //remove type-specific actions
+            actmap.DeleteTypedActions(typedActs);
+        end;
+        abmSingleGroup: begin
+            //group actions are main actions
+            typedActs := actmap.LookupTypedActions('group', true);
+            
+            //copy group actions into main
+            mainActs := actmap.LookupTypedActions('', true);
+            mainActs.Clear();
+            for idx := 0 to typedActs.Get_ActionCount() - 1 do
+                mainActs.AddAction(typedActs.Get_Action(idx));
+
+            //remove group actions
+            actmap.DeleteTypedActions(typedActs);
+        end;
+        abmMulti: begin
+            //main actions are an intersection of all type-specific actions
+            //  (but are further filtered by selection=multi)
+            _BuildMainActions(info);
+        end;
+    end;
+
+    FreeAndNil(info);
+    FreeAndNil(applied);
+end;
+
+{
 function TExodusActionController.buildActions(
         const items: IExodusItemList): IExodusActionMap;
 var
@@ -724,15 +998,15 @@ begin
     case items.Count of
         1: begin
             mainInterests.Disabling.AddObject('global-selection',
-                    TFilteringItem.CreatePair('global-selection','single'));
+                    TFilteringItem.Create('global-selection','single'));
             mainInterests.Enabling.AddObject('global-selection',
-                    TFilteringItem.CreatePair('global-selection','single'));
+                    TFilteringItem.Create('global-selection','single'));
         end;
         else begin
             mainInterests.Disabling.AddObject('global-selection',
-                    TFilteringItem.CreatePair('global-selection','multi'));
+                    TFilteringItem.Create('global-selection','multi'));
             mainInterests.Enabling.AddObject('global-selection',
-                    TFilteringItem.CreatePair('global-selection','multi'));
+                    TFilteringItem.Create('global-selection','multi'));
         end;
     end;
     for idx := 0 to items.Count - 1 do begin
@@ -750,15 +1024,15 @@ begin
         case typedInterests.ItemCount of
             1: begin
                 typedInterests.Disabling.AddObject('type-selection',
-                        TFilteringItem.CreatePair('type-selection','single'));
+                        TFilteringItem.Create('type-selection','single'));
                 typedInterests.Enabling.AddObject('type-selection',
-                        TFilteringItem.CreatePair('type-selection','single'));
+                        TFilteringItem.Create('type-selection','single'));
             end;
             else begin
                 typedInterests.Disabling.AddObject('type-selection',
-                        TFilteringItem.CreatePair('type-selection','multi'));
+                        TFilteringItem.Create('type-selection','multi'));
                 typedInterests.Enabling.AddObject('type-selection',
-                        TFilteringItem.CreatePair('type-selection','multi'));
+                        TFilteringItem.Create('type-selection','multi'));
             end;
         end;
 
@@ -812,15 +1086,12 @@ begin
             mainActs.AddAction(proxy.Action);
     end;
 
-
-    //Prep map
-    actmap.Collate;
-    
     //Cleanup
     FreeAndNil(allInterests);
     FreeAndNil(mainInterests);
     FreeAndNil(applied);
 end;
+}
 
 function GetActionController: IExodusActionController;
 begin

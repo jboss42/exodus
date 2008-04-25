@@ -20,7 +20,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 606
+  ExplicitHeight = 612
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
@@ -84,7 +84,7 @@ inherited frmExodus: TfrmExodus
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 393
+      ExplicitHeight = 0
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -94,7 +94,6 @@ inherited frmExodus: TfrmExodus
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitHeight = 356
       end
       object GridPanel1: TGridPanel
         Left = 0
