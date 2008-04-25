@@ -6,19 +6,24 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, XMLTag, ExAllTreeView, Exodus_TLB, LoginWindow, ComCtrls,
   TntComCtrls, ExContactsTreeView, ExRoomsTreeView, COMExodusTabController,
-  Unicode;
+  Unicode, AppEvnts, ExItemHoverForm;
 
 type
   TRosterForm = class(TExForm)
      _PageControl: TTntPageControl;
+    ApplicationEvents: TApplicationEvents;
       procedure TntFormClose(Sender: TObject; var Action: TCloseAction);
     procedure _PageControlGetImageIndex(Sender: TObject; TabIndex: Integer;
       var ImageIndex: Integer);
     procedure _PageControlDrawTab(Control: TCustomTabControl; TabIndex: Integer;
       const Rect: TRect; Active: Boolean);
+    procedure ApplicationEventsShowHint(var HintStr: string;
+      var CanShow: Boolean; var HintInfo: THintInfo);
+    //procedure TntFormCreate(Sender: TObject);
 
   private
       { Private declarations }
+
       _SessionCB: integer;            // session callback id
       _RosterCB: integer;            // roster callback id
       _TreeMain: TExAllTreeView;
@@ -27,11 +32,13 @@ type
       _TabController: IExodusTabController;
       _PageControlSaveWinProc: TWndMethod;
       _ActiveTabColor: TColor;
+      _HoverWindow: TExItemHoverForm;
       procedure _PageControlNewWndProc(var Msg: TMessage);
       procedure _ToggleGUI(state: TLoginGuiState);
       function _GetImages() : TImageList;
       procedure _SetImages(Value :TImageList);
       function _GetTreeByTabIndex(Index: Integer): TTntTreeView;
+
       //procedure _RemovePluginTabs();
   public
       { Public declarations }
@@ -47,6 +54,7 @@ type
       property  ImageList: TImageList read _GetImages  write _SetImages;
       property  TabController: IExodusTabController read _TabController;
       property  PageControl: TTntPageControl read _PageControl;
+      property  HoverWindow: TExItemHoverForm read _HoverWindow;
   end;
 
 
@@ -122,6 +130,7 @@ begin
    if (TabIndex < 0) then exit; 
    ImageIndex :=  TabController.Tab[TabIndex].ImageIndex;
 end;
+
 
 {---------------------------------------}
 procedure TRosterForm._SetImages(Value :TImageList);
@@ -199,7 +208,9 @@ begin
     _TreeRooms.Free();
     _TreeRooms := nil;
     _TabController := nil;
+    _HoverWindow.Free;
 end;
+
 
 {---------------------------------------}
 procedure TRosterForm.InitControlls();
@@ -215,6 +226,7 @@ begin
     _TreeMain.Align := alClient;
     _TreeMain.Canvas.Pen.Width := 1;
     _TreeMain.SetFontsAndColors();
+
     _Rostercb := MainSession.RegisterCallback(RosterCallback, '/item');
     _SessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
 
@@ -258,6 +270,9 @@ begin
     end;
 
     AssignUnicodeFont(Self, 9);
+    Application.HintPause := MainSession.prefs.getInt('roster_hint_delay');
+
+   _HoverWindow := TExItemHoverForm.Create(Self);    
 end;
 
 {---------------------------------------}
@@ -302,7 +317,19 @@ begin
     Result := ExUtils.GetParentForm(Self);
 end;
 
-{---------------------------------------}
+
+procedure TRosterForm.ApplicationEventsShowHint(var HintStr: string;
+  var CanShow: Boolean; var HintInfo: THintInfo);
+begin
+    if (HintInfo.HintControl is TExTreeView) then
+    begin
+       CanShow := false;
+       TExTreeView(HintInfo.HintControl).ActivateHover();
+       exit;
+    end;
+    inherited;
+end;
+
 procedure TRosterForm.DockWindow(docksite: TWinControl);
 begin
     if (docksite <> Self.Parent) then begin

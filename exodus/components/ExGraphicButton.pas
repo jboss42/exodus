@@ -89,6 +89,9 @@ type
     property Padding;
 
     property OnClick;
+    property OnMouseEnter;
+    property OnMouseLeave;
+
 end;
 
 procedure Register;

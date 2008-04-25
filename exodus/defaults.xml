@@ -19,7 +19,7 @@
     <restore_desktop value="0" control="chkRestoreDesktop" state="rw"/>
     <debug value="0" control="chkDebug" state="rw"/>
     <!-- Other System Preferences -->
-    <restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
+	<restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
     <start_docked value="1" state="rw"/>
 
     <recon_tries value="25" control="txtAttempts" state="rw">
@@ -53,7 +53,11 @@
     <displayname_profile_enabled value='1' control="chkUseProfileDN" state="rw"/>
     <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
     <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
-    <roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
+	<roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
+	<!-- timeout values are in milliseconds -->
+	<roster_hint_delay value="1500"/>
+	<roster_hint_hide_delay value="10000"/>
+	<roster_hint_reentry_delay value="500"/>
 
     <!-- advanced roster prefs -->
     <inline_color value="$808000" control="cboStatusColor" state="rw">

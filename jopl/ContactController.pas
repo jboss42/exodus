@@ -534,6 +534,11 @@ begin
     except
 
     end;
+    try
+        Item.Value['show'] := Show;
+    except
+        Item.AddProperty('show', Show);
+    end;
 
     //Figure out status text for the item
     //Need to have presence for extended text(status).
