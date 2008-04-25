@@ -1,9 +1,10 @@
 inherited ExItemHoverForm: TExItemHoverForm
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
+  BorderStyle = bsToolWindow
   Caption = 'Display Name'
-  ClientHeight = 227
+  ClientHeight = 237
   ClientWidth = 320
+  Visible = True
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy
   OnMouseEnter = TntFormMouseEnter
