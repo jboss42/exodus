@@ -66,6 +66,7 @@ type
     function ProcessPresenceMsg(const nick: widestring; const txt: Widestring; const timestamp: string): widestring;
     function ProcessComposing(const txt: Widestring): widestring; overload;
     function ProcessComposing(const txt: Widestring; var id:widestring): widestring; overload;
+    function ProcessRawText(const txt: Widestring): Widestring;
     procedure Reset();
 
     property lastLineClass: widestring read _lastLineClass write _lastLineClass;
@@ -187,6 +188,7 @@ type
     procedure DisplayComposing(msg: Widestring); override;
     procedure HideComposing(); override;
     function  isComposing(): boolean; override;
+    procedure DisplayRawText(txt: Widestring); override;
 
     procedure ChangeStylesheet( resname: WideString);
     procedure ResetStylesheet();
@@ -694,6 +696,12 @@ begin
                  '"><br /><span class="composing">' +
                  HTML_EscapeChars(txt, false, false) +
                  '</span><br /></div>';
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor.ProcessRawText(const txt: Widestring): Widestring;
+begin
+    Result := HTML_EscapeChars(txt, false, false);
 end;
 
 
@@ -1549,6 +1557,15 @@ begin
     end;
 
     _composing := -1;
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.DisplayRawText(txt: Widestring);
+var
+    processedTxt: Widestring;
+begin
+    processedTxt := _msgProcessor.ProcessRawText(txt);
+    writeHTML(processedTxt);
 end;
 
 {---------------------------------------}
