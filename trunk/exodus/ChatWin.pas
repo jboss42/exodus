@@ -1414,6 +1414,7 @@ var
     j: TJabberID;
     Item: IExodusItem;
     dt: TDateTime;
+    showtxt: Widestring;
 begin
     // Get the user
     user := tag.GetAttribute('from');
@@ -1437,14 +1438,6 @@ begin
     if ((_show <> show) or (_status <> status)) then begin
         ChangePresImage(Item, show, status);
 
-        if (status = '') then
-            txt := show
-        else
-            txt := status;
-
-        if (txt = '') then
-            txt := _(sAvailable);
-
         if (MainSession.Prefs.getBool('timestamp')) then begin
             dt := Now;
             ts := FormatDateTime(MainSession.Prefs.getString('timestamp_format'), dt);
@@ -1453,7 +1446,28 @@ begin
             ts := '';
         end;
 
-        MsgList.DisplayPresence(_displayName, _displayName + ' ' + _(sIsNow) + ' ' + txt + '.', ts, dt);
+        showtxt := show;
+        if (showtxt = '') then begin
+            showtxt := _(sAvailable);
+        end;
+
+        txt := _displayName +
+               ' ' +
+               _(sIsNow) +
+               ' ' +
+               showtxt;
+
+        if ((LowerCase(status) <> LowerCase(showtxt)) and
+            (status <> '')) then begin
+            txt := txt +
+                   ' (' +
+                   status +
+                   ')';
+        end;
+
+        txt := txt + '.';
+
+        MsgList.DisplayPresence(_displayName, txt, ts, dt);
     end;
 end;
 
