@@ -464,18 +464,18 @@ begin
 
     e := chkNotify.Checked[i] and not OneNI._IsReadOnly;
     pnlToast.Enabled := e and _CanEnableToast;
-    chkFlash.Enabled := e and _CanEnableFlash;
-    chkTrayNotify.Enabled := e and _CanEnableTray;
-    chkFront.Enabled := e and _CanEnableFront;
+    chkFlash.Enabled := e and _CanEnableFlash and (OneNI._Key <> 'notify_online') and (OneNI._Key <> 'notify_offline');
+    chkTrayNotify.Enabled := e and _CanEnableTray and (OneNI._Key <> 'notify_online') and (OneNI._Key <> 'notify_offline');
+    chkFront.Enabled := e and _CanEnableFront and (OneNI._Key <> 'notify_online') and (OneNI._Key <> 'notify_offline');
     chkPlaySound.Enabled := e and _CanEnableSound;
 
     if (not chkNotify.Checked[i]) then
         OneNI.IntValue := 0;
 
     chkToast.Checked := ((OneNI.IntValue and notify_toast) > 0);
-    chkFlash.Checked := ((OneNI.IntValue and notify_flash) > 0);
-    chkTrayNotify.Checked := ((OneNI.IntValue and notify_tray) > 0);
-    chkFront.Checked := ((OneNI.IntValue and notify_front) > 0);
+    chkFlash.Checked := (((OneNI.IntValue and notify_flash) > 0) and (OneNI._Key <> 'notify_online') and (OneNI._Key <> 'notify_offline'));
+    chkTrayNotify.Checked := (((OneNI.IntValue and notify_tray) > 0) and (OneNI._Key <> 'notify_online') and (OneNI._Key <> 'notify_offline'));
+    chkFront.Checked := (((OneNI.IntValue and notify_front) > 0) and (OneNI._Key <> 'notify_online') and (OneNI._Key <> 'notify_offline'));
     chkPlaySound.Checked := ((OneNI.IntValue and notify_sound) > 0);
 
     pnlSoundFile.enabled := chkPlaySound.Checked;
