@@ -44,7 +44,7 @@ uses ActionMenus, Graphics, ExActionCtrl, gnugettext, GrpManagement,
         COMExodusItemList, Session, TntComCtrls, Windows;
 
 const
-    sConfirmDeleteCaption: Widestring = 'Delete Items';
+    sConfirmDeleteCaption: Widestring = 'Delete Item(s)';
     sConfirmDeleteSingleTxt: Widestring = 'Are you sure you want to delete %s?';
     sConfirmDeleteMultiTxt: Widestring = 'Are you sure you want to delete these %d items?';
     sWarnSingleNotDeletedTxt: Widestring = 'The group %s is not empty and could not be deleted.' + #13#10 + 'Make sure all items in the group are removed, then try again.';
@@ -60,6 +60,7 @@ begin
 
     popup := TExActionPopupMenu.Create(Self);
     popup.ActionController := GetActionController();
+    popup.Excludes.Add('{000-exodus.googlecode.com}-190-delete');
 
     mi := TTntMenuItem.Create(popup.Items);
     mi.Caption := _('Move...');

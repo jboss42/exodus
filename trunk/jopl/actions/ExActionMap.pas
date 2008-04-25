@@ -46,13 +46,14 @@ type
         function Get_ItemType: Widestring; safecall;
         function Get_ItemCount: Integer; safecall;
         function Get_Item(idx: Integer): IExodusItem; safecall;
+        procedure Set_Item(idx: Integer; item: IExodusItem);
 
         function Get_ActionCount: Integer; safecall;
         function Get_Action(idx: Integer): IExodusAction; safecall;
         function IndexOfAction(act: IExodusAction): Integer;
         procedure AddAction(act: IExodusAction);
         procedure RemoveAction(act: IExodusAction);
-        procedure Clear;
+        procedure Clear(items: Boolean = true);
 
         function GetActionNamed(const name: Widestring): IExodusAction; safecall;
         procedure execute(const actname: Widestring); safecall;
@@ -164,6 +165,14 @@ begin
 
     Result := _items.Item[idx];
 end;
+procedure TExodusTypedActions.Set_Item(idx: Integer; item: IExodusItem);
+begin
+    if (idx < 0) or (idx > _items.Count) then exit
+    else if (idx = _items.Count) then
+        _items.Add(item)
+    else
+        _items.Item[idx] := item;
+end;
 
 function TExodusTypedActions.Get_ActionCount: Integer;
 begin
@@ -222,7 +231,7 @@ begin
         end;
     end;
 end;
-procedure TExodusTypedActions.Clear;
+procedure TExodusTypedActions.Clear(items: Boolean);
 var
     idx: Integer;
 begin
@@ -230,7 +239,7 @@ begin
         IExodusAction(Pointer(_actions.Objects[idx]))._Release;
         _actions.Delete(idx);
     end;
-    _items.Clear();
+    if (items) then _items.Clear();
 end;
 
 function TExodusTypedActions.GetActionNamed(const name: WideString): IExodusAction;
