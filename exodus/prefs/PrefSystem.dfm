@@ -104,7 +104,7 @@ inherited frmPrefSystem: TfrmPrefSystem
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
-        Caption = 'Start &minimized to the System Tray'
+        Caption = 'Start contact list &minimized to the System Tray'
         TabOrder = 1
       end
       object chkRestoreDesktop: TTntCheckBox
@@ -244,7 +244,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       ParentColor = True
       TabOrder = 4
       AutoHide = True
-      ExplicitTop = 341
       object chkToolbox: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -390,7 +389,7 @@ inherited frmPrefSystem: TfrmPrefSystem
         Left = 0
         Top = 21
         Width = 299
-        Height = 25
+        Height = 24
         Margins.Left = 0
         Align = alTop
         AutoSize = True
@@ -411,7 +410,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Left = 171
           Top = 0
           Width = 45
-          Height = 24
+          Height = 25
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
@@ -420,12 +419,12 @@ inherited frmPrefSystem: TfrmPrefSystem
           Max = 1000000
           DesignSize = (
             45
-            24)
+            25)
         end
       end
       object pnlTime: TExBrandPanel
         Left = 0
-        Top = 49
+        Top = 48
         Width = 302
         Height = 30
         Align = alTop
@@ -468,7 +467,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Left = 171
           Top = 0
           Width = 45
-          Height = 24
+          Height = 25
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
@@ -477,7 +476,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Max = 3600
           DesignSize = (
             45
-            24)
+            25)
         end
       end
     end

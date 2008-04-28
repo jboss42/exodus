@@ -551,8 +551,7 @@ begin
         // Make sure that if we are starting up and we are supposed to
         // start minimized to systray, then be sure to be minimized to systray
         if ((StateForm.restoringDesktopFlag) and
-            (ExStartup.minimized) and
-            (not frmExodus.Showing)) then begin                   
+            (not frmExodus.Showing)) then begin
             ShowWindow(Self.Handle, SW_HIDE);
         end;
         

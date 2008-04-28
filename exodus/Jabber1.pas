@@ -1057,11 +1057,11 @@ begin
             // restore our app
             doRestore();
             _hidden := false;
+
+            getDockManager().BringToFront(); // takes focus
+            Self.BringToFront(); // take back focus
+
             msg.Result := 0;
-        end
-        else begin
-            // minimize our app
-            doHide();
         end;
     end
     else if ((Msg.LParam = WM_LBUTTONDOWN) and (not Application.Active) and (not _hidden))then begin
@@ -1489,10 +1489,6 @@ begin
                 getDockManager().ShowDockManagerWindow(true, false);
             end;
             ShowDebugForm(false);
-            if ((ExStartup.minimized) and
-                (_dockwindow <> nil)) then begin
-                ShowWindow(_dockwindow.Handle, SW_HIDE);
-            end;
         end;
         if (ExStartup.auto_login) then begin
             // snag default profile, etc..
