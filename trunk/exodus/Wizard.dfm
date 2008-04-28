@@ -91,7 +91,9 @@ inherited frmWizard: TfrmWizard
       Width = 135
       Height = 13
       Align = alCustom
+      AutoSize = False
       Caption = 'Wizard Label goes here'
+      EllipsisPosition = epEndEllipsis
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -108,7 +110,9 @@ inherited frmWizard: TfrmWizard
       Align = alCustom
       AutoSize = False
       Caption = 'lblWizardDetails'
+      EllipsisPosition = epEndEllipsis
       Transparent = True
+      WordWrap = True
     end
     object Image1: TImage
       Left = 369

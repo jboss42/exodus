@@ -19,10 +19,6 @@ inherited frmRegister: TfrmRegister
   inherited Tabs: TPageControl
     ActivePage = TabSheet2
     inherited TabSheet1: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 27
-      ExplicitWidth = 486
-      ExplicitHeight = 293
       object Label1: TTntLabel
         Left = 0
         Top = 0
@@ -175,12 +171,7 @@ inherited frmRegister: TfrmRegister
         Anchors = [akLeft, akTop, akRight]
       end
       inherited lblWizardDetails: TTntLabel
-        Width = 75
-        Height = 13
         Anchors = [akLeft, akTop, akRight]
-        AutoSize = True
-        ExplicitWidth = 75
-        ExplicitHeight = 13
       end
       inherited Image1: TImage
         Picture.Data = {00}
