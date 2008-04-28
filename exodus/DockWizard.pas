@@ -41,6 +41,7 @@ type
     lblWizardTitle: TTntLabel;
     lblWizardDetails: TTntLabel;
     Image1: TImage;
+    pnlBevel: TTntPanel;
     procedure FormCreate(Sender: TObject);
     procedure Panel1Resize(Sender: TObject);
   private
