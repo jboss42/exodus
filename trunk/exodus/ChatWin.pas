@@ -1642,8 +1642,9 @@ end;
 procedure TfrmChat.freeChatObject();
 begin
     if (chat_object = nil) then exit;
+    // Setting window to nil will call dec the ref count,
+    // so don't call release.
     chat_object.window := nil;
-    chat_object.Release();
     chat_object := nil;
 end;
 
