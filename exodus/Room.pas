@@ -1884,6 +1884,7 @@ end;
 procedure TfrmRoom.SetJID(sjid: Widestring);
 var
     j: TJabberID;
+    Item: IExodusItem;
 begin
     // setup our callbacks
     if (_mcallback = -1) then begin
@@ -1900,6 +1901,12 @@ begin
     j := TJabberID.Create(sjid);
     setUID(j.getDisplayFull());
     MsgList.setTitle(j.removeJEP106(j.user));
+    Item := MainSession.ItemController.GetItem(jid);
+    if (Item <> nil) then
+    begin
+        Item.Active := true;
+        MainSession.FireEvent('/item/update', Item)
+    end;
     j.Free();
 end;
 
@@ -2056,9 +2063,17 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+    Item: IExodusItem;
 begin
     inherited;
     Action := caFree;
+    Item := MainSession.ItemController.GetItem(jid);
+    if (Item <> nil) then
+    begin
+        Item.Active := false;
+        MainSession.FireEvent('/item/update', Item)
+    end;
 end;
 
 {---------------------------------------}
