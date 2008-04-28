@@ -58,8 +58,6 @@ type
     TabSheet4: TTabSheet;
     Panel2: TPanel;
     Label3: TTntLabel;
-    cboGroup: TTntComboBox;
-    lblAddGrp: TTntLabel;
     lstContacts: TTntListView;
     PopupMenu1: TTntPopupMenu;
     btnContacts: TButton;
@@ -72,6 +70,7 @@ type
     xdataBox: TframeXData;
     btnChat: TButton;
     btnBroadcastMsg: TButton;
+    lblGroup: TTntLabel;
     procedure lstContactsMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure btnBroadcastMsgClick(Sender: TObject);
@@ -83,7 +82,6 @@ type
       var Handled: Boolean);
     procedure popAddClick(Sender: TObject);
     procedure Label1Click(Sender: TObject);
-    procedure lblAddGrpClick(Sender: TObject);
     procedure popProfileClick(Sender: TObject);
     procedure popChatClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -162,7 +160,7 @@ uses
     fGeneric, Session, JabberUtils,
     ExUtils,  XMLUtils, fTopLabel,
     TntClasses, DisplayName, Jabber1,
-    RosterImages;
+    RosterImages, Exodus_TLB;
 
 var
     cur_sort: integer;
@@ -268,22 +266,16 @@ begin
     cur_state := 'get_fields';
     cur_sort := -1;
     cur_dir := true;
-     { TODO : Roster refactor }
-    //MainSession.Roster.AssignGroups(cboGroup.Items);
+  
     dflt_grp := MainSession.Prefs.getString('roster_default');
     Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
 
-    if (dflt_grp <> '') then
-        cboGroup.ItemIndex := cboGroup.Items.IndexOf(dflt_grp);
-        
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
 
     AssignDefaultFont(Self.Font);
     AssignDefaultFont(Tabs.Font);
     AssignDefaultFont(TabFields.Font);
-    AssignUnicodeURL(lblAddGrp.Font, 8);
-
     TabSheet1.TabVisible := false;
     TabSheet2.TabVisible := false;
     TabFields.TabVisible := false;
@@ -294,7 +286,7 @@ begin
     btnChat.Enabled := false;
     btnBroadcastMsg.Enabled := false;
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
-
+    lblGroup.Caption := dflt_grp;
     _windowType := 'jud';
 end;
 
@@ -754,17 +746,18 @@ var
     procedure doAdd(item: TListItem);
     var
         nick: Widestring;
-//        ritem: TJabberRosterItem;
+        ExItem: IExodusItem;
         jid: TJabberID;
+        dflt_grp: WideString;
     begin
+        dflt_grp := MainSession.Prefs.getString('roster_default');
         // do the actual add stuff
         jid := TJabberID.Create(item.caption, false); // item may be escaped
-   { TODO : Roster refactor }
-//        ritem := MainSession.roster.Find(jid.jid);
-//        if (ritem <> nil) then begin
-//            if ((ritem.subscription = 'to') or (ritem.subscription = 'both')) then
-//                exit;
-//        end;
+        ExItem := MainSession.ItemController.GetItem(jid.jid);
+        if (ExItem <> nil) then begin
+            if ((ExItem.Value['Subscription'] = 'to') or (ExItem.Value['Subscription'] = 'both')) then
+                exit;
+        end;
 
         // add the item
         nick := '';
@@ -772,8 +765,7 @@ var
             nick := item.SubItems[nick_col];
 
         if (nick = '') then nick := DisplayName.getDisplayNameCache().getDisplayName(jid);
-        { TODO : Roster refactor }
-        //MainSession.roster.AddItem(jid.jid, nick, cboGroup.Text, true);
+        MainSession.Roster.AddItem(jid.jid, nick, dflt_grp, true);
         jid.Free();
         
     end;
@@ -806,18 +798,6 @@ begin
     self.reset();
 end;
 
-{---------------------------------------}
-procedure TfrmJUD.lblAddGrpClick(Sender: TObject);
-//var
-//    go: TJabberGroup;
-begin
-  inherited;
-    // Add a new group to the list...
-    //go := promptNewGroup();
-{ TODO : Roster refactor }    
-//    if (go <> nil) then
-//        MainSession.Roster.AssignGroups(cboGroup.Items);
-end;
 
 {---------------------------------------}
 function TfrmJUD.convertDisplayToJID(displayJID: widestring): widestring;

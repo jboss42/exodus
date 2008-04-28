@@ -2,71 +2,72 @@ inherited frmJud: TfrmJud
   BorderIcons = [biSystemMenu, biMaximize]
   BorderStyle = bsSizeable
   Caption = 'Jabber Search'
-  ClientHeight = 416
-  ClientWidth = 492
+  ClientHeight = 512
+  ClientWidth = 606
   OldCreateOrder = True
   OnResize = FormResize
-  ExplicitWidth = 320
-  ExplicitHeight = 444
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 614
+  ExplicitHeight = 552
+  PixelsPerInch = 120
+  TextHeight = 16
   inherited TntPanel1: TTntPanel
-    Top = 375
-    Width = 492
-    ExplicitTop = 375
-    ExplicitWidth = 492
+    Top = 462
+    Width = 606
+    ExplicitTop = 462
+    ExplicitWidth = 606
     inherited Bevel1: TBevel
-      Width = 492
-      ExplicitWidth = 409
+      Width = 606
+      ExplicitWidth = 606
     end
     inherited btnBack: TTntButton
-      Left = 250
+      Left = 308
       Anchors = [akTop, akRight]
       Cancel = True
       OnClick = btnBackClick
-      ExplicitLeft = 250
+      ExplicitLeft = 308
     end
     inherited btnNext: TTntButton
-      Left = 326
+      Left = 401
       Anchors = [akTop, akRight]
       Default = True
       OnClick = btnNextClick
-      ExplicitLeft = 326
+      ExplicitLeft = 401
     end
     inherited btnCancel: TTntButton
-      Left = 410
+      Left = 505
       Anchors = [akTop, akRight]
       OnClick = btnCancelClick
-      ExplicitLeft = 410
+      ExplicitLeft = 505
     end
   end
   inherited Tabs: TPageControl
-    Width = 492
-    Height = 322
-    ActivePage = TabXData
-    ExplicitWidth = 492
-    ExplicitHeight = 322
+    Width = 606
+    Height = 397
+    ActivePage = TabSheet4
+    ExplicitWidth = 606
+    ExplicitHeight = 397
     inherited TabSheet1: TTabSheet
       OnEnter = TabSheet1Enter
       ExplicitLeft = 4
-      ExplicitTop = 27
-      ExplicitWidth = 484
-      ExplicitHeight = 291
+      ExplicitTop = 30
+      ExplicitWidth = 598
+      ExplicitHeight = 363
       object lblSelect: TTntLabel
         Left = 0
         Top = 0
-        Width = 259
-        Height = 13
+        Width = 598
+        Height = 16
         Align = alTop
         Caption = 'Select the user database for the search agent to use:'
         WordWrap = True
+        ExplicitWidth = 306
       end
       object cboJID: TTntComboBox
-        Left = 16
-        Top = 33
-        Width = 233
-        Height = 21
-        ItemHeight = 0
+        Left = 20
+        Top = 41
+        Width = 286
+        Height = 24
+        ItemHeight = 16
         Sorted = True
         TabOrder = 0
       end
@@ -74,23 +75,20 @@ inherited frmJud: TfrmJud
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 183
-        Height = 13
+        Width = 598
+        Height = 16
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
         WordWrap = True
+        ExplicitWidth = 216
       end
       object aniWait: TAnimate
         Left = 0
-        Top = 13
-        Width = 484
+        Top = 16
+        Width = 598
         Height = 50
         Align = alTop
         CommonAVI = aviFindFolder
@@ -100,32 +98,25 @@ inherited frmJud: TfrmJud
     object TabFields: TTabSheet
       Caption = 'TabFields'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblInstructions: TTntLabel
         Left = 0
         Top = 0
-        Width = 210
-        Height = 13
+        Width = 598
+        Height = 16
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
         WordWrap = True
+        ExplicitWidth = 251
       end
     end
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel2: TPanel
         Left = 0
-        Top = 232
-        Width = 484
-        Height = 59
+        Top = 291
+        Width = 598
+        Height = 72
         Align = alBottom
         BevelOuter = bvNone
         BorderWidth = 2
@@ -134,77 +125,67 @@ inherited frmJud: TfrmJud
         object Label3: TTntLabel
           Left = 2
           Top = 2
-          Width = 133
-          Height = 13
+          Width = 156
+          Height = 16
           Caption = 'Add Contacts to this group:'
         end
-        object lblAddGrp: TTntLabel
-          Left = 2
-          Top = 43
-          Width = 83
-          Height = 13
-          Cursor = crHandPoint
-          Caption = 'Add a new Group'
-          OnClick = lblAddGrpClick
-        end
         object lblCount: TTntLabel
-          Left = 321
+          Left = 397
           Top = 2
-          Width = 66
-          Height = 13
+          Width = 79
+          Height = 16
           Alignment = taRightJustify
           Caption = 'N items found'
         end
-        object cboGroup: TTntComboBox
-          Left = 5
-          Top = 20
-          Width = 196
-          Height = 21
-          Style = csDropDownList
-          ItemHeight = 0
-          Sorted = True
-          TabOrder = 0
+        object lblGroup: TTntLabel
+          Left = 8
+          Top = 32
+          Width = 4
+          Height = 16
         end
         object btnContacts: TButton
-          Left = 207
-          Top = 21
-          Width = 109
-          Height = 25
+          Left = 255
+          Top = 26
+          Width = 134
+          Height = 31
           Caption = 'Add Contacts'
-          TabOrder = 1
+          TabOrder = 0
           OnClick = popAddClick
         end
         object btnChat: TButton
-          Left = 321
-          Top = 21
-          Width = 109
-          Height = 25
+          Left = 395
+          Top = 26
+          Width = 134
+          Height = 31
           Caption = 'Chat'
-          TabOrder = 2
+          TabOrder = 1
           OnClick = OnChatClick
         end
         object btnBroadcastMsg: TButton
-          Left = 435
-          Top = 21
-          Width = 109
-          Height = 25
+          Left = 535
+          Top = 26
+          Width = 135
+          Height = 31
           Caption = 'Message'
-          TabOrder = 3
+          TabOrder = 2
           OnClick = btnBroadcastMsgClick
         end
       end
       object lstContacts: TTntListView
         Left = 0
         Top = 0
-        Width = 484
-        Height = 232
+        Width = 598
+        Height = 291
         Align = alClient
         Columns = <
           item
+            Width = 62
           end
           item
+            Width = 62
           end
           item
+            Width = 62
           end>
         HideSelection = False
         MultiSelect = True
@@ -223,69 +204,67 @@ inherited frmJud: TfrmJud
     object TabXData: TTabSheet
       Caption = 'TabXData'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline xdataBox: TframeXData
         Left = 0
         Top = 0
-        Width = 484
-        Height = 291
+        Width = 598
+        Height = 363
         Align = alClient
         Color = 13681583
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -15
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentColor = False
         ParentFont = False
         TabOrder = 0
         TabStop = True
-        ExplicitWidth = 484
-        ExplicitHeight = 291
+        ExplicitWidth = 598
+        ExplicitHeight = 363
         inherited Panel1: TPanel
-          Width = 484
-          Height = 291
-          ExplicitWidth = 484
-          ExplicitHeight = 291
+          Width = 598
+          Height = 363
+          ExplicitWidth = 598
+          ExplicitHeight = 363
           inherited ScrollBox1: TScrollBox
-            Width = 474
-            Height = 281
-            ExplicitWidth = 474
-            ExplicitHeight = 281
+            Width = 588
+            Height = 353
+            ExplicitWidth = 588
+            ExplicitHeight = 353
           end
         end
       end
     end
   end
   inherited pnlDockTop: TPanel
-    Width = 492
-    ExplicitWidth = 492
+    Width = 606
+    ExplicitWidth = 606
     inherited tbDockBar: TToolBar
-      Left = 443
-      ExplicitLeft = 443
+      Left = 557
+      Height = 59
+      ExplicitLeft = 557
+      ExplicitHeight = 59
     end
     inherited Panel1: TPanel
-      Width = 440
-      ExplicitWidth = 440
+      Width = 554
+      ExplicitWidth = 554
       inherited Bevel2: TBevel
-        Width = 440
-        ExplicitWidth = 409
+        Width = 554
+        ExplicitWidth = 542
       end
       inherited lblWizardTitle: TTntLabel
-        Width = 126
+        Width = 155
         Caption = 'Jabber Search Wizard'
-        ExplicitWidth = 126
+        ExplicitWidth = 155
       end
       inherited lblWizardDetails: TTntLabel
         Caption = ''
       end
       inherited Image1: TImage
-        Left = 399
+        Left = 504
         Picture.Data = {00}
-        ExplicitLeft = 368
+        ExplicitLeft = 491
       end
     end
   end
