@@ -88,6 +88,7 @@ var
 begin
     Room := TJabberSession(_js).ItemController.AddItemByUid(JabberID, EI_TYPE_ROOM, _ItemsCB);
     Room.ImageIndex := RI_CONFERENCE_INDEX;
+    Room.Active := true;
     Room.Text := RoomName;    
     Room.AddProperty('name', RoomName);
     Room.AddProperty('nick', Nickname);
@@ -100,6 +101,12 @@ begin
         Room.AddProperty('reg_nick', 'true')
     else
         Room.AddProperty('reg_nick', 'false');
+
+    if (Groups = nil) then
+    begin
+       Groups := TWideStringList.Create();
+       Groups.Add(TJabberSession(_js).Prefs.getString('roster_default'));
+    end;
 
     for i := 0 to Groups.Count - 1 do
     begin
