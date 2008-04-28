@@ -101,6 +101,10 @@ inherited frmRegister: TfrmRegister
     object TabSheet3: TTabSheet
       Caption = 'TabSheet3'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label2: TTntLabel
         Left = 0
         Top = 0
@@ -122,6 +126,10 @@ inherited frmRegister: TfrmRegister
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblOK: TTntLabel
         Left = 0
         Top = 0

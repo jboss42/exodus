@@ -79,15 +79,15 @@ inherited frmDockWizard: TfrmDockWizard
     ExplicitHeight = 53
     inherited tbDockBar: TToolBar
       Left = 445
-      Height = 47
-      ExplicitLeft = 445
-      ExplicitHeight = 47
+      Height = 44
+      ExplicitLeft = 3
+      ExplicitHeight = 44
     end
     object Panel1: TPanel
       Left = 0
       Top = 0
       Width = 442
-      Height = 53
+      Height = 50
       Align = alClient
       BevelOuter = bvNone
       Ctl3D = False
@@ -96,16 +96,9 @@ inherited frmDockWizard: TfrmDockWizard
       ParentCtl3D = False
       TabOrder = 1
       OnResize = Panel1Resize
-      object Bevel2: TBevel
-        Left = 0
-        Top = 44
-        Width = 442
-        Height = 9
-        Align = alBottom
-        Shape = bsBottomLine
-        ExplicitTop = 51
-        ExplicitWidth = 416
-      end
+      ExplicitLeft = -3
+      ExplicitTop = -6
+      ExplicitHeight = 53
       object lblWizardTitle: TTntLabel
         Left = 16
         Top = 5
@@ -139,7 +132,7 @@ inherited frmDockWizard: TfrmDockWizard
         Left = 401
         Top = 0
         Width = 41
-        Height = 44
+        Height = 50
         Align = alRight
         Center = True
         Picture.Data = {
@@ -1082,6 +1075,25 @@ inherited frmDockWizard: TfrmDockWizard
         Transparent = True
         ExplicitLeft = 375
         ExplicitHeight = 51
+      end
+    end
+    object pnlBevel: TTntPanel
+      Left = 0
+      Top = 50
+      Width = 494
+      Height = 3
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 2
+      object Bevel2: TBevel
+        Left = 0
+        Top = -19
+        Width = 494
+        Height = 22
+        Align = alBottom
+        Shape = bsBottomLine
+        ExplicitTop = 0
+        ExplicitWidth = 442
       end
     end
   end
