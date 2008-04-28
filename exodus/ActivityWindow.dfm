@@ -193,7 +193,7 @@ object frmActivityWindow: TfrmActivityWindow
         Top = 5
         Width = 16
         Height = 20
-        Hint = 'Back to Roster'
+        Hint = 'Back to Contact List'
         Align = alLeft
         ParentShowHint = False
         ShowHint = True
