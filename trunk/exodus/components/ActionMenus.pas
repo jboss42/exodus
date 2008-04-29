@@ -173,12 +173,13 @@ function TExActionPopupMenu.createTypedMenu(
         parent: TMenuItem;
         offset: Integer): Integer;
 var
-    idx: Integer;
+    idx, amt: Integer;
     act: IExodusAction;
     mi: TExActionMenuItem;
 begin
-    if (offset < 0) or (offset > parent.Count) then
-        offset := parent.Count;
+    if (offset < 0) then offset := 0;
+    if (offset > parent.Count) then offset := parent.Count;
+    amt := 0;
 
     for idx := 0 to actList.ActionCount - 1 do begin
         act := actlist.Action[idx];
@@ -193,11 +194,11 @@ begin
         if createSubMenu(actList.ItemType, act, mi) = 0 then
             mi.OnClick := HandleClick;
 
-        parent.Insert(offset, mi);
-        Inc(offset);
+        parent.Insert(offset + amt, mi);
+        Inc(amt);
     end;
 
-    Result := actList.ActionCount;
+    Result := amt;
 end;
 function TExActionPopupMenu.createSubMenu(
         itemtype: Widestring;

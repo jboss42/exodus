@@ -290,6 +290,7 @@ var
     uid: Widestring;
     item: IExodusItem;
     Pres: TJabberPres;
+    visible: Boolean;
 begin
      if Event = '/session/authenticated'  then
      begin
@@ -314,37 +315,28 @@ begin
          end;
          _UpdateContacts();
      end
-     else if Event = '/session/block' then
+     else if (Event = '/session/block') or (Event = '/session/unblock') then
      begin
          uid := Tag.GetAttribute('jid');
          item := TJabberSession(_js).ItemController.GetItem(uid);
 
          if (item <> nil) then
          begin
-             item.value['blocked'] := 'true';
+             if (Event = '/session/block') then
+                item.value['blocked'] := 'true'
+             else
+                item.value['blocked'] := 'false';
+                
+             visible := item.IsVisible;
              pres := TJabberSession(_JS).ppdb.FindPres(Item.uid, '');
              //We need to obtain new image and see if blocked items are visible
              _UpdateContact(Item, pres);
-             if (Item.IsVisible) then
+             if not visible and Item.IsVisible then
                  TJabberSession(_JS).FireEvent('/item/add',  Item)
-             else
-                 TJabberSession(_JS).FireEvent('/item/remove', Item);
-         end;
-     end
-     else if Event = '/session/unblock' then
-     begin
-         uid := Tag.GetAttribute('jid');
-         item := TJabberSession(_js).ItemController.GetItem(uid);
-         if (item <> nil) then
-         begin
-             item.value['blocked'] := 'false';
-             pres := TJabberSession(_JS).ppdb.FindPres(Item.uid, '');
-              //We need to obtain new image and see if blocked items are visible
-             _UpdateContact(Item, pres);
-             if (Item.IsVisible) then
-                 TJabberSession(_JS).FireEvent('/item/add',  Item)
-             else
-                 TJabberSession(_JS).FireEvent('/item/remove', Item);
+             else if visible and not Item.IsVisible then
+                 TJabberSession(_JS).FireEvent('/item/remove', Item)
+             else if visible and Item.IsVisible then
+                  TJabberSession(_JS).FireEvent('/item/update', Item);
          end;
      end;
 end;
@@ -360,6 +352,7 @@ var
     item: IExodusItem;
     itemCtrl: IExodusItemController;
     session: TJabberSession;
+    visible: Boolean;
 begin
     if (Tag <> nil) then
         query := Tag.GetFirstTag('query')
@@ -393,12 +386,16 @@ begin
         end
         else if (item <> nil) then begin
             //some sort of update
+            visible := item.IsVisible;
+
             _ParseContact(item, riTag);
             _UpdateContact(item, MainSession.ppdb.FindPres(item.UID, ''));
-            if item.IsVisible then
+            if not visible and item.IsVisible then
                 session.FireEvent('/item/add', item)
-            else
-                session.FireEvent('/item/remove', item);
+            else if visible and not item.IsVisible then
+                session.FireEvent('/item/remove', item)
+            else if visible and item.IsVisible then
+                 session.FireEvent('/item/update', item);
         end;
     end;
 end;
