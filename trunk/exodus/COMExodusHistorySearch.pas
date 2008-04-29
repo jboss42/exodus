@@ -116,8 +116,6 @@ end;
 
 {---------------------------------------}
 destructor TExodusHistorySearch.Destroy();
-var
-    i: integer;
 begin
     _AllowedSearchType.Clear();
     _JIDList.Clear();
@@ -323,8 +321,6 @@ end;
 
 {---------------------------------------}
 procedure TExodusHistorySearch.SetJIDExclusiveHandlerID(JIDIndex, HandlerID: Integer);
-var
-    idx: integer;
 begin
     if (JIDindex < 0) or (JIDindex >= _ExclusiveJIDSearchList.Count) then exit;
 

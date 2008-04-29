@@ -114,8 +114,6 @@ end;
 
 {---------------------------------------}
 procedure TSQLSearchThread.Execute;
-var
-    i: integer;
 begin
     // NOTE: Object frees on terminate from this thread
     if (_DataStore = nil) then exit;
@@ -153,9 +151,6 @@ var
     tmp: widestring;
     parser: TXMLTagParser;
     keywordpos: integer;
-    keywordlen: integer;
-    exactkeywordstartvalid: boolean;
-    exactkeywordendvalid: boolean;
 begin
     if (_table = nil) then exit;
 

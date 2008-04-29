@@ -223,10 +223,6 @@ end;
 procedure TSQLLogger.DeleteLogEntries(jid: widestring; datestart, dateend: TDateTime);
 var
     sql: widestring;
-    dtStart: integer;
-    tiStart: double;
-    dtEnd: integer;
-    tiEnd: double;
     tag: TXMLTag;
 begin
     if (DataStore = nil) then exit;
