@@ -75,9 +75,6 @@ begin
 end;
 
 procedure TExItemHoverForm._InitControls(Item: IExodusItem);
-var
-  Pres: TJabberPres;
-  LeftTop: TPoint;
 begin
     Caption := Item.Text;
     if (_CurrentFrame <> nil) then
@@ -156,8 +153,6 @@ begin
 end;
 
 procedure TExItemHoverForm.TntFormMouseLeave(Sender: TObject);
-var
-   Point: TPoint;
 begin
     //OutputDebugString(PChar('Form MouseLeave'));
     CancelHover();
@@ -174,7 +169,6 @@ end;
 
 procedure TExItemHoverForm._CalcHoverPosition(Point: TPoint);
 var
-    Rect: TRect;
     CurMonitor: TMonitor;
 begin
     Point.X := Point.X - Width;
