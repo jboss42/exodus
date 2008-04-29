@@ -206,7 +206,6 @@ end;
 procedure TExodusHistorySearchManager.CancelAllSearches();
 var
     i: integer;
-    tracker: TSearchTracker;
 begin
     for i := _CurrentSearches.Count -1 downto 0 do begin
         CancelSearch(_CurrentSearches[i]);
