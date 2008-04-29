@@ -242,7 +242,6 @@ object frmActivityWindow: TfrmActivityWindow
     Height = 10
     Align = alTop
     BevelOuter = bvNone
-    Caption = 'pnlBorderTop'
     Color = 13681583
     TabOrder = 1
     GradientProperites.startColor = 13681583
@@ -256,7 +255,6 @@ object frmActivityWindow: TfrmActivityWindow
     Height = 10
     Align = alBottom
     BevelOuter = bvNone
-    Caption = 'ExGradientPanel1'
     Color = 13681583
     TabOrder = 2
     GradientProperites.startColor = 13681583
