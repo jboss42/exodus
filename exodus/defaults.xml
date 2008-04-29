@@ -54,6 +54,7 @@
     <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
     <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
 	<roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
+	<roster_tabs control="btnManageTabs" state="rw"/>
 	<!-- timeout values are in milliseconds -->
 	<roster_hint_delay value="1500"/>
 	<roster_hint_hide_delay value="10000"/>
