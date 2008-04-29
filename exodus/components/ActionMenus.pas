@@ -137,9 +137,13 @@ begin
         //TODO:  better item type captions!
         mi := TExActionMenuItem.Create(Items);
         mi.Caption := _(itemtype + 's');
-        Items.Insert(0, mi);
-        createTypedMenu(typedActs, mi, miCount);
-        Inc(miCount);
+        if (createTypedMenu(typedActs, mi, miCount) > 0) then begin
+            Items.Insert(0, mi);
+            Inc(miCount);
+        end
+        else begin
+            mi.Free();
+        end;
     end;
 
     //build main actions

@@ -31,7 +31,7 @@ private
     _enabling: TWidestringList; //List of name/value pairs
     _disabling: TWidestringList; //List of name/value pairs
 
-    function enabledContainsAny(actual: TWidestringList): Boolean;
+    function enabledContainsAll(actual: TWidestringList): Boolean;
     function disabledContainsAny(actual: TWidestringList): Boolean;
     procedure Set_Delegate(const act: IExodusAction);
 public
@@ -159,13 +159,13 @@ begin
     inherited;
 end;
 
-function TActionProxy.enabledContainsAny(actual: TWideStringList): Boolean;
+function TActionProxy.enabledContainsAll(actual: TWideStringList): Boolean;
 var
     idx, jdx: Integer;
     eval, aval: TFilteringItem;
 begin
     //Assume it does contain all
-    Result := false;
+    Result := true;
 
     //make sure we're sorted (lookups are faster)
     if not _enabling.Sorted then _enabling.Sorted := true;
@@ -180,7 +180,7 @@ begin
             Result := (eval.Value = aval.Value);
         end;
 
-        if (Result) then exit;
+        if not (Result) then exit;
     end;
 end;
 function TActionProxy.disabledContainsAny(actual: TWidestringList): Boolean;
@@ -267,7 +267,7 @@ begin
     end;
 
     //Check enabling (if any are present)
-    Result := (_enabling.Count = 0) or enabledContainsAny(enabling);
+    Result := (_enabling.Count = 0) or enabledContainsAll(enabling);
     if not Result then exit;
 
     //Check disabling
@@ -952,150 +952,6 @@ begin
     FreeAndNil(applied);
 end;
 
-{
-function TExodusActionController.buildActions(
-        const items: IExodusItemList): IExodusActionMap;
-var
-    actmap: TExodusActionMap;
-    mainActs, typedActs: TExodusTypedActions;
-    potentials: TPotentialActions;
-    proxy: TActionProxy;
-    applied: TObjectList;
-    allInterests: TWidestringList;
-    enabling, disabling: TWidestringList;
-    mainInterests, typedInterests: TFilteringSet;
-    idx, jdx: Integer;
-    item: IExodusItem;
-    itemtype: Widestring;
-begin
-    actmap := TExodusActionMap.Create(items);
-    Result := actmap as IExodusActionMap;
-
-    if (items = nil) or (items.Count = 0) then exit;
-
-    //walk items, building sets
-    allInterests := TWidestringList.Create;
-    enabling := TWidestringList.Create;
-    disabling := TWidestringList.Create;
-    for idx := 0 to items.Count - 1 do begin
-        item := items.Item[idx];
-
-        potentials := lookupActionsFor(item.Type_, false);
-        if (potentials <> nil) then begin
-            jdx := allInterests.IndexOf(potentials.ItemType);
-            if (jdx <> -1) then begin
-                typedInterests := TFilteringSet(allInterests.Objects[jdx]);
-            end else begin
-                for jdx := 0 to potentials.EnableHints.Count - 1 do
-                    enabling.Add(potentials.EnableHints[jdx]);
-                for jdx := 0 to potentials.DisableHints.Count - 1 do
-                    disabling.Add(potentials.DisableHints[jdx]);
-                typedInterests := TFilteringSet.Create(potentials.EnableHints, potentials.DisableHints);
-                allInterests.AddObject(potentials.ItemType, typedInterests);
-            end;
-
-            typedInterests.update(item);
-        end;
-    end;
-
-    mainInterests := TFilteringSet.Create(enabling, disabling);
-    case items.Count of
-        1: begin
-            mainInterests.Disabling.AddObject('global-selection',
-                    TFilteringItem.Create('global-selection','single'));
-            mainInterests.Enabling.AddObject('global-selection',
-                    TFilteringItem.Create('global-selection','single'));
-        end;
-        else begin
-            mainInterests.Disabling.AddObject('global-selection',
-                    TFilteringItem.Create('global-selection','multi'));
-            mainInterests.Enabling.AddObject('global-selection',
-                    TFilteringItem.Create('global-selection','multi'));
-        end;
-    end;
-    for idx := 0 to items.Count - 1 do begin
-        mainInterests.update(item);
-    end;
-
-    //walk types, building action map
-    applied := TObjectList.Create();
-    applied.OwnsObjects := false;
-    for idx := 0 to allInterests.Count - 1 do begin
-        itemtype := allInterests[idx];
-        potentials := lookupActionsFor(itemtype, false);
-        typedInterests := TFilteringSet(allInterests.Objects[idx]);
-
-        case typedInterests.ItemCount of
-            1: begin
-                typedInterests.Disabling.AddObject('type-selection',
-                        TFilteringItem.Create('type-selection','single'));
-                typedInterests.Enabling.AddObject('type-selection',
-                        TFilteringItem.Create('type-selection','single'));
-            end;
-            else begin
-                typedInterests.Disabling.AddObject('type-selection',
-                        TFilteringItem.Create('type-selection','multi'));
-                typedInterests.Enabling.AddObject('type-selection',
-                        TFilteringItem.Create('type-selection','multi'));
-            end;
-        end;
-
-        //make sure the list exists (so we don't accidentally get single-type main actions)
-        typedActs := actmap.LookupTypedActions(itemtype, true);
-
-        //add applicable typed actions to actionmap
-        for jdx := 0 to potentials.ProxyCount - 1 do begin
-            proxy := potentials.Proxy[jdx];
-
-            if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
-                if (applied.IndexOf(proxy) = -1) then
-                    applied.Add(proxy);
-                typedActs.AddAction(proxy.Action);
-            end;
-        end;
-
-        //add applicable "anytype" actions to actionmap
-        potentials := lookupActionsFor('', true);
-        for jdx := 0 to potentials.ProxyCount - 1 do begin
-            proxy := potentials.Proxy[jdx];
-
-            if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
-                if (applied.IndexOf(proxy) = -1) then
-                    applied.Add(proxy);
-                typedActs.AddAction(proxy.Action);
-            end;
-        end;
-
-        //Free up typed interests now
-        typedInterests.Free;
-    end;
-
-    //One more walk, to setup main actions (mostly for selection madness)
-    mainActs := actMap.LookupTypedActions('', true);
-    for idx := 0 to applied.Count - 1 do begin
-        proxy := TActionProxy(applied[idx]);
-        if not proxy.applies(mainInterests.Enabling, mainInterests.Disabling) then
-            continue;
-
-        for jdx := 0 to allInterests.Count - 1 do begin
-            itemtype := allInterests[jdx];
-            typedActs := actMap.LookupTypedActions(itemtype, false);
-            if (typedActs.GetActionNamed(proxy.Name) <> proxy.Action) then begin
-                proxy := nil;
-                break;
-            end;
-        end;
-
-        if (proxy <> nil) then
-            mainActs.AddAction(proxy.Action);
-    end;
-
-    //Cleanup
-    FreeAndNil(allInterests);
-    FreeAndNil(mainInterests);
-    FreeAndNil(applied);
-end;
-}
 
 function GetActionController: IExodusActionController;
 begin

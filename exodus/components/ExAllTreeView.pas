@@ -41,7 +41,7 @@ end;
 implementation
 
 uses ActionMenus, Graphics, ExActionCtrl, gnugettext, GrpManagement,
-        COMExodusItemList, Session, TntComCtrls, Windows, Jabber1;
+        COMExodusItemList, Session, TntComCtrls, Windows, Jabber1, RosterImages;
 
 const
     sConfirmDeleteCaption: Widestring = 'Delete Item(s)';
@@ -61,7 +61,6 @@ begin
     popup := TExActionPopupMenu.Create(Self);
     popup.ActionController := GetActionController();
     popup.Excludes.Add('{000-exodus.googlecode.com}-190-delete');
-    popup.Images := frmExodus.ImageList1;
 
     mi := TTntMenuItem.Create(popup.Items);
     mi.Caption := _('Move...');
@@ -89,6 +88,9 @@ var
     pt: TPoint;
 begin
     if Assigned(PopupMenu) and PopupMenu.InheritsFrom(TExActionPopupMenu) then begin
+        if (PopupMenu.Images = nil) then begin
+            PopupMenu.Images := frmExodus.ImageList1;
+        end;
         actPM := TExActionPopupMenu(PopupMenu);
         actPM.Targets := GetSelectedItems();
         _mnuCopy.Visible := (SelectionCount > 0);
