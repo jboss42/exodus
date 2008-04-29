@@ -125,19 +125,16 @@ end;
 {---------------------------------------}
 procedure TfrmGrpManagement.frameButtons1btnOKClick(Sender: TObject);
 var
-    parser: TGroupParser;
     new_grp: Widestring;
-    item: IExodusItem;
     itemCtrl: IExodusItemController;
     idx: Integer;
 begin
     Self.Close();
-    
+
     if ((_items = nil) or (_items.Count <= 0)) then begin
         exit;
     end;
 
-    parser := TGroupParser.Create(MainSession);
     itemCtrl := MainSession.ItemController;
     new_grp := lstGroups.Items[lstGroups.ItemIndex];
 
