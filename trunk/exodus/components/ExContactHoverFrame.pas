@@ -263,8 +263,6 @@ begin
 end;
 
 procedure TExContactHoverFrame.TntFrameMouseLeave(Sender: TObject);
-var
-    Point: TPoint;
 begin
    //OutputDebugString(PChar('Contact MouseLeave'));
    TExItemHoverForm(Parent).CancelHover();
