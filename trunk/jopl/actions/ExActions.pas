@@ -50,7 +50,7 @@ type TExBaseAction = class(TAutoIntfObject, IExodusAction)
         function Get_Name: Widestring; safecall;
         function Get_Caption: Widestring; safecall;
         function Get_ImageIndex: Integer; safecall;
-        function Get_Enabled: WordBool; safecall;
+        function Get_Enabled: WordBool; virtual; safecall;
         function Get_SubActionCount: Integer; safecall;
         function Get_SubAction(idx: Integer): IExodusAction; safecall;
 

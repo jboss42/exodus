@@ -33,6 +33,7 @@ type
   private
     constructor Create;
   public
+    function Get_Enabled: WordBool; override;
     procedure execute(const items: IExodusItemList); override;
   end;
   
@@ -83,7 +84,7 @@ implementation
 uses
     JabberUtils, ExUtils,  GnuGetText, Jabber1, PrefController,
     JabberConst, InputPassword, DisplayName,
-    Session, Room, RosterForm, ContactController, SelectItem;
+    Session, Room, RosterForm, ContactController, SelectItem, RosterImages;
 
 const
     sConfRoom = 'Conference Room:';
@@ -129,12 +130,8 @@ var
     idx: integer;
     entered: TTntListItems;
     entry: TListItem;
-//    itemCtrl: IExodusItemController;
     item: IExodusItem;
     cap: Widestring;
-//    cap: WideString;
-//    ritem: TJabberRosterItem;
-//    n: TListItem;
 begin
     item := MainSession.ItemController.GetItem(jid);
     
@@ -382,21 +379,28 @@ begin
     Caption := _('Invite to Conference...');
 end;
 
+function TInviteToRoomAction.Get_Enabled: WordBool;
+begin
+    Result := (Room.room_list.Count > 0);
+end;
 procedure TInviteToRoomAction.execute(const items: IExodusItemList);
 var
     idx: Integer;
     item: IExodusItem;
     jids: TWidestringList;
+    rjid: Widestring;
 begin
     jids := TWidestringList.Create;
+    rjid := '';
 
     for idx := 0 to items.Count - 1 do begin
         item := items.Item[idx];
+        if (item.Type_ = 'room') and (rjid = '') then rjid := item.UID;
         if (item.Type_ <> 'contact') then continue;
         
         jids.Add(item.UID);
     end;
-    ShowInvite('', jids);
+    ShowInvite(rjid, jids);
 
     jids.Free;
 end;
@@ -405,15 +409,16 @@ end;
 procedure RegisterActions();
 var
     actctrl: IExodusActionController;
-    act: TInviteToRoomAction;
+    act: IExodusAction;
 begin
-    act := TInviteToRoomAction.Create;
 
     actctrl := GetActionController();
-    actctrl.registerAction('contact', act as IExodusAction);
 
-    //TODO:  setup filters...
+    act := TInviteToRoomAction.Create;
+    actctrl.registerAction('contact', act);
 
+    actctrl.registerAction('room', act);
+    actctrl.addEnableFilter('room', act.Name, 'selection=single');
 end;
 
 initialization
