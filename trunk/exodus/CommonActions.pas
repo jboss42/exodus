@@ -130,7 +130,7 @@ end;
 
 procedure TDeleteItemAction.execute(const items: IExodusItemList);
 var
-    path, msg: Widestring;
+    msg: Widestring;
     idx, jdx, rst: Integer;
     itemCtrl: IExodusItemController;
     postitems, collateralitems: IExodusItemList;

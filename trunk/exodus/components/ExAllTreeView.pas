@@ -41,7 +41,7 @@ end;
 implementation
 
 uses ActionMenus, Graphics, ExActionCtrl, gnugettext, GrpManagement,
-        COMExodusItemList, Session, TntComCtrls, Windows;
+        COMExodusItemList, Session, TntComCtrls, Windows, Jabber1;
 
 const
     sConfirmDeleteCaption: Widestring = 'Delete Item(s)';
@@ -61,6 +61,7 @@ begin
     popup := TExActionPopupMenu.Create(Self);
     popup.ActionController := GetActionController();
     popup.Excludes.Add('{000-exodus.googlecode.com}-190-delete');
+    popup.Images := frmExodus.ImageList1;
 
     mi := TTntMenuItem.Create(popup.Items);
     mi.Caption := _('Move...');
@@ -131,7 +132,7 @@ end;
 procedure TExAllTreeView.mnuDeleteClick(Sender: TObject);
 var
     ops: TList;
-    path, msg, uid: Widestring;
+    path, msg: Widestring;
     idx, jdx, rst: Integer;
     itemCtrl: IExodusItemController;
     postitems, collateralitems: IExodusItemList;
