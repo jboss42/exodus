@@ -4137,7 +4137,8 @@ begin
         result := DT_OPEN;
         exit;
     end;
-    if name = 'Screen-saver' then begin
+    if ((name = 'Screen-saver') and
+        (MainSession.Prefs.getBool('away_screen_saver'))) then begin
         result := DT_SCREENSAVER;
         exit;
     end;

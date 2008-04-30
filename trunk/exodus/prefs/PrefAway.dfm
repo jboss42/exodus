@@ -27,7 +27,7 @@ inherited frmPrefAway: TfrmPrefAway
       Left = 0
       Top = 3
       Width = 362
-      Height = 113
+      Height = 138
       Margins.Left = 0
       Margins.Right = 0
       Margins.Bottom = 0
@@ -54,6 +54,7 @@ inherited frmPrefAway: TfrmPrefAway
         ParentColor = True
         TabOrder = 1
         AutoHide = True
+        ExplicitTop = 21
         object lblAwayTime: TTntLabel
           Left = 0
           Top = 3
@@ -93,21 +94,20 @@ inherited frmPrefAway: TfrmPrefAway
         Align = alTop
         Caption = 'Reduce &priority to 0 when Away'
         TabOrder = 3
-        ExplicitTop = 42
+        ExplicitTop = 69
       end
       object chkAwayAutoResponse: TTntCheckBox
         AlignWithMargins = True
         Left = 18
         Top = 90
         Width = 341
-        Height = 23
+        Height = 24
         Margins.Left = 18
         Margins.Top = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = '&Send auto response message when away'
         TabOrder = 4
-        ExplicitTop = 66
       end
       object ExBrandPanel2: TExBrandPanel
         AlignWithMargins = True
@@ -124,7 +124,7 @@ inherited frmPrefAway: TfrmPrefAway
         ParentColor = True
         TabOrder = 2
         AutoHide = True
-        ExplicitLeft = 17
+        ExplicitTop = 45
         object lblAwayStatus: TTntLabel
           Left = 0
           Top = 3
@@ -143,11 +143,24 @@ inherited frmPrefAway: TfrmPrefAway
           ExplicitHeight = 21
         end
       end
+      object chkAwayScreenSaver: TTntCheckBox
+        AlignWithMargins = True
+        Left = 18
+        Top = 114
+        Width = 341
+        Height = 24
+        Margins.Left = 18
+        Margins.Top = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Caption = 'Set status to Away with screen sa&ver activation'
+        TabOrder = 5
+      end
     end
     object chkAutoXA: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 122
+      Top = 147
       Width = 362
       Height = 69
       Margins.Left = 0
@@ -163,6 +176,7 @@ inherited frmPrefAway: TfrmPrefAway
       AutoHide = False
       Checked = False
       OnCheckChanged = chkAutoXACheckChanged
+      ExplicitTop = 122
       object ExBrandPanel3: TExBrandPanel
         AlignWithMargins = True
         Left = 18
@@ -239,9 +253,9 @@ inherited frmPrefAway: TfrmPrefAway
     object chkAutoDisconnect: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 197
+      Top = 222
       Width = 362
-      Height = 43
+      Height = 44
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -255,10 +269,11 @@ inherited frmPrefAway: TfrmPrefAway
       AutoHide = False
       Checked = False
       OnCheckChanged = chkAutoDisconnectCheckChanged
+      ExplicitTop = 197
       object lblDisconnectTime: TTntLabel
         AlignWithMargins = True
         Left = 18
-        Top = 26
+        Top = 28
         Width = 180
         Height = 13
         Margins.Left = 21
@@ -270,7 +285,7 @@ inherited frmPrefAway: TfrmPrefAway
         Left = 304
         Top = 19
         Width = 54
-        Height = 24
+        Height = 25
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
@@ -279,7 +294,7 @@ inherited frmPrefAway: TfrmPrefAway
         Max = 600
         DesignSize = (
           54
-          24)
+          25)
       end
     end
   end
