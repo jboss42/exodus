@@ -27,7 +27,7 @@ inherited frmPrefAway: TfrmPrefAway
       Left = 0
       Top = 3
       Width = 362
-      Height = 138
+      Height = 162
       Margins.Left = 0
       Margins.Right = 0
       Margins.Bottom = 0
@@ -108,6 +108,7 @@ inherited frmPrefAway: TfrmPrefAway
         Align = alTop
         Caption = '&Send auto response message when away'
         TabOrder = 4
+        ExplicitTop = 93
       end
       object ExBrandPanel2: TExBrandPanel
         AlignWithMargins = True
@@ -155,12 +156,28 @@ inherited frmPrefAway: TfrmPrefAway
         Align = alTop
         Caption = 'Set status to Away with screen sa&ver activation'
         TabOrder = 5
+        ExplicitTop = 117
+      end
+      object chkAwayFullScreen: TTntCheckBox
+        AlignWithMargins = True
+        Left = 18
+        Top = 138
+        Width = 341
+        Height = 24
+        Margins.Left = 18
+        Margins.Top = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Caption = 'Set status to Away with full sc&reen application'
+        TabOrder = 6
+        ExplicitLeft = 6
+        ExplicitTop = 146
       end
     end
     object chkAutoXA: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 147
+      Top = 171
       Width = 362
       Height = 69
       Margins.Left = 0
@@ -176,7 +193,7 @@ inherited frmPrefAway: TfrmPrefAway
       AutoHide = False
       Checked = False
       OnCheckChanged = chkAutoXACheckChanged
-      ExplicitTop = 122
+      ExplicitTop = 147
       object ExBrandPanel3: TExBrandPanel
         AlignWithMargins = True
         Left = 18
@@ -253,7 +270,7 @@ inherited frmPrefAway: TfrmPrefAway
     object chkAutoDisconnect: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 222
+      Top = 246
       Width = 362
       Height = 44
       Margins.Left = 0
@@ -269,7 +286,7 @@ inherited frmPrefAway: TfrmPrefAway
       AutoHide = False
       Checked = False
       OnCheckChanged = chkAutoDisconnectCheckChanged
-      ExplicitTop = 197
+      ExplicitTop = 222
       object lblDisconnectTime: TTntLabel
         AlignWithMargins = True
         Left = 18
