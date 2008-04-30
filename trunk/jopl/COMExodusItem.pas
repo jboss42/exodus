@@ -202,6 +202,8 @@ end;
 {---------------------------------------}
 procedure TExodusItem.AddGroup(const Group: WideString);
 begin
+    if _Groups.IndexOf(Group) <> -1 then exit;
+    
     _Ctrl.AddGroup(Group);
     _Groups.Add(Group);
     if (not IsUpdating) then _Callback.ItemGroupsChanged(Self);
