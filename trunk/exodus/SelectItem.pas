@@ -33,12 +33,15 @@ type
   TTypedTreeView = class(TExTreeView)
   private
     _online: Boolean;
+    _itemtype: Widestring;
 
     constructor Create(AOwner: TfrmSelectItem; Session: TObject);
 
     procedure SetShowOnline(flag: Boolean);
+    procedure SetItemType(itemtype: Widestring);
 
   protected
+    procedure SaveGroupsState(); override;
     function FilterItem(item: IExodusItem): Boolean; override;
 
   public
@@ -47,7 +50,7 @@ type
     procedure DblClick; override;
 
     property ShowOnline: Boolean read _online write SetShowOnline;
-
+    property ItemType: Widestring read _itemtype write SetItemType;
   end;
 
   TfrmSelectItem = class(TExForm)
@@ -132,26 +135,30 @@ begin
     if (flag <> _online) then begin
         _online := flag;
 
-        if not (csLoading in ComponentState) then
+        if not (csLoading in ComponentState) and (Parent <> nil) then
             Refresh();
     end;
+end;
+procedure TTypedTreeView.SetItemType(itemtype: WideString);
+begin
+    if (itemtype <> _itemtype) then begin
+        _itemtype := itemtype;
 
+        if not (csLoading in ComponentState) and (Parent <> nil) then
+            Refresh();
+    end;
 end;
 
-function TTypedTreeView.FilterItem(item: IExodusItem): Boolean;
-var
-    itemtype: Widestring;
+procedure TTypedTreeView.SaveGroupsState;
 begin
-    Result := false;
-
-    if ShowOnline and (not item.IsVisible) then
-        exit;
-
-    itemtype := TfrmSelectItem(Owner).ItemType;
-    if (ItemType <> '') and (ItemType <> item.Type_) then
-        exit;
-
-    Result := true;
+    //DO NOTHING!
+end;
+function TTypedTreeView.FilterItem(item: IExodusItem): Boolean;
+begin
+    Result := Item.IsVisible or (not ShowOnline);
+    if Result then begin
+        Result := (ItemType = '') or (item.Type_ = 'group') or (ItemType = item.Type_);
+    end;
 end;
 
 procedure TTypedTreeView.DblClick;
@@ -193,6 +200,7 @@ begin
     Self.Caption := _(Self.Caption + ' ' + _itemtype);
 
     _itemView := TTypedTreeView.Create(Self, MainSession);
+    _itemView.ItemType := _itemtype;
     _itemView.Parent := pnlSelect;
     _itemView.MultiSelect := false;
     _itemView.Align := alClient;
@@ -207,6 +215,7 @@ begin
         _itemView.Font.Charset := getInt('roster_font_charset');
         _itemView.ShowOnline := getBool('roster_only_online');
     end;
+    mnuShowOnline.Checked := _itemView.ShowOnline;
 
     _itemView.Refresh;
 end;

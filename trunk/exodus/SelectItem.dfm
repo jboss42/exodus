@@ -17,8 +17,6 @@ inherited frmSelectItem: TfrmSelectItem
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
-    ExplicitWidth = 281
-    ExplicitHeight = 288
     object pnlSelect: TPanel
       AlignWithMargins = True
       Left = 3
@@ -29,8 +27,6 @@ inherited frmSelectItem: TfrmSelectItem
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitWidth = 275
-      ExplicitHeight = 253
     end
     object pnlEntry: TPanel
       Left = 0
@@ -42,8 +38,6 @@ inherited frmSelectItem: TfrmSelectItem
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
-      ExplicitTop = 259
-      ExplicitWidth = 281
       object lblJID: TTntLabel
         AlignWithMargins = True
         Left = 3
@@ -65,7 +59,6 @@ inherited frmSelectItem: TfrmSelectItem
         Align = alClient
         TabOrder = 0
         OnChange = txtJIDChange
-        ExplicitWidth = 222
         ExplicitHeight = 21
       end
     end
@@ -80,8 +73,6 @@ inherited frmSelectItem: TfrmSelectItem
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
-    ExplicitTop = 288
-    ExplicitWidth = 281
     object ColorBevel1: TColorBevel
       Left = 0
       Top = 0
