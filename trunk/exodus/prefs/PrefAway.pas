@@ -50,6 +50,7 @@ type
     lblDisconnectTime: TTntLabel;
     txtDisconnectTime: TExNumericEdit;
     chkAwayScreenSaver: TTntCheckBox;
+    chkAwayFullScreen: TTntCheckBox;
     procedure chkAutoDisconnectCheckChanged(Sender: TObject);
     procedure chkAutoXACheckChanged(Sender: TObject);
     procedure chkAutoAwayCheckChanged(Sender: TObject);

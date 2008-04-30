@@ -4129,7 +4129,9 @@ begin
             if((mon.BoundsRect.Left = wSize.Left) and
                (mon.BoundsRect.Right = wSize.Right) and
                (mon.BoundsRect.Top = wSize.Top) and
-               (mon.BoundsRect.Bottom = wSize.Bottom)) then begin
+               (mon.BoundsRect.Bottom = wSize.Bottom) and
+               (MainSession.Prefs.getBool('auto_away')) and
+               (MainSession.Prefs.getBool('away_full_screen'))) then begin
                result := DT_FULLSCREEN;
                exit;
             end;
@@ -4138,6 +4140,7 @@ begin
         exit;
     end;
     if ((name = 'Screen-saver') and
+        (MainSession.Prefs.getBool('auto_away')) and
         (MainSession.Prefs.getBool('away_screen_saver'))) then begin
         result := DT_SCREENSAVER;
         exit;
