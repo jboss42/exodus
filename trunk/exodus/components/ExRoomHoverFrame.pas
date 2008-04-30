@@ -10,8 +10,7 @@ uses
 type
   TExRoomHoverFrame = class(TExFrame)
     imgRoom: TImage;
-    lblRoomDisplayName: TTntLabel;
-    lblRoomUID: TTntLabel;
+    RoomDisplayName: TTntLabel;
     lblSubject: TTntLabel;
     lblAffiliation: TTntLabel;
     lblParticipants: TTntLabel;
@@ -20,6 +19,10 @@ type
     btnRename: TExGraphicButton;
     btnJoinTC: TExGraphicButton;
     Separator1: TExGroupBox;
+    lblName: TTntLabel;
+    Subject: TTntLabel;
+    Affiliation: TTntLabel;
+    Participants: TTntLabel;
     procedure TntFrameMouseEnter(Sender: TObject);
     procedure TntFrameMouseLeave(Sender: TObject);
     procedure imgRoomMouseEnter(Sender: TObject);
@@ -37,8 +40,8 @@ type
       Y: Integer);
     procedure lblParticipantsMouseEnter(Sender: TObject);
     procedure lblParticipantsMouseLeave(Sender: TObject);
-    procedure lblRoomDisplayNameMouseEnter(Sender: TObject);
-    procedure lblRoomDisplayNameMouseLeave(Sender: TObject);
+    procedure RoomDisplayNameMouseEnter(Sender: TObject);
+    procedure RoomDisplayNameMouseLeave(Sender: TObject);
     procedure lblRoomUIDMouseLeave(Sender: TObject);
     procedure lblRoomUIDMouseEnter(Sender: TObject);
     procedure lblSubjectMouseEnter(Sender: TObject);
@@ -82,22 +85,21 @@ begin
     Room := FindRoom(Item.UID);
     if (Room <> nil) then
     begin
-        lblSubject.Caption := _('Subject: ') + Room.lblSubject.Caption;
-        lblParticipants.Caption := _('Participants: ') + IntToStr(Room.lstRoster.Items.Count);
-        lblAffiliation.Caption := _('Affiliation: ') + Room.MyAffiliation;
+        Subject.Caption := Room.lblSubject.Caption;
+        Participants.Caption := IntToStr(Room.lstRoster.Items.Count);
+        Affiliation.Caption := Room.MyAffiliation;
     end
     else
     begin
-        lblSubject.Caption := _('Subject: N/A');
-        lblParticipants.Caption := _('Participants: N/A');
-        lblAffiliation.Caption := _('Affiliation: N/A');
+        Subject.Caption := _('N/A');
+        Participants.Caption := _('N/A');
+        Affiliation.Caption := _('N/A');
     end;
 
     Act := IExodusAction(Pointer(chkAutoJoin.Tag));
     if (Act <> nil) then
         chkAutoJoin.Checked := (Act.Name = '{000-exodus.googlecode.com}-010-unjoin-on-startup');
-    lblRoomUID.Caption := Item.UID;
-    lblRoomDisplayName.Caption := Item.Text;
+    RoomDisplayName.Caption := Item.Text;
     Separator1.Caption := '';
 end;
 
@@ -114,15 +116,19 @@ begin
     btnJoinTC.Tag := Integer(Pointer(act));
     btnJoinTC.Enabled := act <> nil;
     if (act <> nil) then btnJoinTC.Caption := act.Caption;
-    
+    btnJoinTC.Caption := '   ' + btnJoinTC.Caption;
+
     act := _TypedActs.GetActionNamed('{000-exodus.googlecode.com}-150-rename');
     btnRename.Tag := Integer(Pointer(act));
     btnRename.Enabled := act <> nil;
     if (act <> nil) then btnRename.Caption := act.Caption;
+    btnRename.Caption := '   ' + btnRename.Caption;
+
     act := _TypedActs.GetActionNamed('{000-exodus.googlecode.com}-190-delete');
     btnDelete.Tag := Integer(Pointer(act));
     btnDelete.Enabled := act <> nil;
     if (act <> nil) then btnDelete.Caption := act.Caption;
+    btnDelete.Caption := '   ' + btnDelete.Caption;
     try
        AutoJoinValue := Item.value['autojoin'];
     except
@@ -254,13 +260,13 @@ begin
   TExItemHoverForm(Parent).CancelHover();
 end;
 
-procedure TExRoomHoverFrame.lblRoomDisplayNameMouseEnter(Sender: TObject);
+procedure TExRoomHoverFrame.RoomDisplayNameMouseEnter(Sender: TObject);
 begin
   inherited;
   TExItemHoverForm(Parent).SetHover();
 end;
 
-procedure TExRoomHoverFrame.lblRoomDisplayNameMouseLeave(Sender: TObject);
+procedure TExRoomHoverFrame.RoomDisplayNameMouseLeave(Sender: TObject);
 begin
   inherited;
   TExItemHoverForm(Parent).CancelHover();

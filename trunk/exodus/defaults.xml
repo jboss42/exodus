@@ -56,7 +56,7 @@
 	<roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
 	<roster_tabs control="btnManageTabs" state="rw"/>
 	<!-- timeout values are in milliseconds -->
-	<roster_hint_delay value="1500"/>
+	<roster_hint_delay value="750"/>
 	<roster_hint_hide_delay value="10000"/>
 	<roster_hint_reentry_delay value="500"/>
 
