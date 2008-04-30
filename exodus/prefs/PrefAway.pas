@@ -49,6 +49,7 @@ type
     chkAutoDisconnect: TExCheckGroupBox;
     lblDisconnectTime: TTntLabel;
     txtDisconnectTime: TExNumericEdit;
+    chkAwayScreenSaver: TTntCheckBox;
     procedure chkAutoDisconnectCheckChanged(Sender: TObject);
     procedure chkAutoXACheckChanged(Sender: TObject);
     procedure chkAutoAwayCheckChanged(Sender: TObject);
@@ -67,7 +68,8 @@ var
 implementation
 {$R *.dfm}
 uses
-    Session, PrefFile, PrefController;
+    Session, PrefFile, PrefController,
+    Unicode;
 
 procedure TfrmPrefAway.chkAutoDisconnectCheckChanged(Sender: TObject);
 begin
