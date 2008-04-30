@@ -129,14 +129,17 @@ begin
     btnChat.Tag := Integer(Pointer(Act));
     btnChat.Enabled := Act <> nil;
     if (Act <> nil) then btnChat.Caption := Act.Caption;
+    btnChat.Caption := '     ' + btnChat.Caption;
     Act := _TypedActs.GetActionNamed('{000-exodus.googlecode.com}-150-rename');
     btnRename.Tag := Integer(Pointer(Act));
     btnRename.Enabled := Act <> nil;
     if (Act <> nil) then btnRename.Caption := Act.Caption;
+    btnRename.Caption := '     ' + btnRename.Caption;
     Act := _TypedActs.GetActionNamed('{000-exodus.googlecode.com}-190-delete');
     btnDelete.Tag := Integer(Pointer(Act));
     btnDelete.Enabled := Act <> nil;
     if (Act <> nil) then btnDelete.Caption := Act.Caption;
+    btnDelete.Caption := '     ' + btnDelete.Caption;
 
 end;
 
@@ -153,8 +156,8 @@ begin
         if (Avatar.Height >= 0) then
         begin
             _Avatar := Avatar;
-            if (_Avatar.Height > 32) then
-                imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+            if (_Avatar.Height > 48) then
+                imgAvatar.Width := Trunc((48 / _avatar.Height) * (_avatar.Width))
             else
                 imgAvatar.Width := _avatar.Width;
         end;
@@ -237,8 +240,8 @@ begin
     else begin
         Rect.Top := 1;
         Rect.Left := 1;
-        Rect.Bottom := 28;
-        Rect.Right := 28;
+        Rect.Bottom := 49;
+        Rect.Right := 49;
         imgAvatar.Canvas.StretchDraw(Rect, _UnknownAvatar);
     end;
 end;

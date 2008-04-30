@@ -1,13 +1,13 @@
 inherited ExRoomHoverFrame: TExRoomHoverFrame
-  Width = 298
-  Height = 238
+  Width = 303
+  Height = 190
   OnMouseEnter = TntFrameMouseEnter
   OnMouseLeave = TntFrameMouseLeave
-  ExplicitWidth = 298
-  ExplicitHeight = 238
+  ExplicitWidth = 303
+  ExplicitHeight = 190
   object imgRoom: TImage
-    Left = 0
-    Top = 8
+    Left = 10
+    Top = 10
     Width = 32
     Height = 32
     Picture.Data = {
@@ -51,51 +51,83 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseEnter = imgRoomMouseEnter
     OnMouseLeave = imgRoomMouseLeave
   end
-  object lblRoomDisplayName: TTntLabel
-    Left = 42
-    Top = 8
-    Width = 4
+  object RoomDisplayName: TTntLabel
+    Left = 132
+    Top = 10
+    Width = 69
     Height = 16
-    OnMouseEnter = lblRoomDisplayNameMouseEnter
-    OnMouseLeave = lblRoomDisplayNameMouseLeave
-  end
-  object lblRoomUID: TTntLabel
-    Left = 42
-    Top = 30
-    Width = 4
-    Height = 16
-    OnMouseEnter = lblRoomUIDMouseEnter
-    OnMouseLeave = lblRoomUIDMouseLeave
+    Caption = 'Room name'
+    OnMouseEnter = RoomDisplayNameMouseEnter
+    OnMouseLeave = RoomDisplayNameMouseLeave
   end
   object lblSubject: TTntLabel
-    Left = 38
-    Top = 52
-    Width = 4
+    Left = 52
+    Top = 32
+    Width = 48
     Height = 16
+    Caption = 'Subject:'
     OnMouseEnter = lblSubjectMouseEnter
     OnMouseLeave = lblSubjectMouseLeave
   end
   object lblAffiliation: TTntLabel
-    Left = 38
-    Top = 74
-    Width = 4
+    Left = 52
+    Top = 54
+    Width = 58
     Height = 16
+    Caption = 'Affiliation:'
     OnMouseMove = lblAffiliationMouseMove
     OnMouseLeave = lblAffiliationMouseLeave
   end
   object lblParticipants: TTntLabel
-    Left = 38
-    Top = 96
-    Width = 4
+    Left = 52
+    Top = 76
+    Width = 71
     Height = 16
+    Caption = 'Participants:'
     OnMouseEnter = lblParticipantsMouseEnter
     OnMouseLeave = lblParticipantsMouseLeave
   end
+  object lblName: TTntLabel
+    Left = 52
+    Top = 10
+    Width = 38
+    Height = 16
+    Caption = 'Name:'
+    OnMouseEnter = lblSubjectMouseEnter
+    OnMouseLeave = lblSubjectMouseLeave
+  end
+  object Subject: TTntLabel
+    Left = 132
+    Top = 32
+    Width = 43
+    Height = 16
+    Caption = 'Subject'
+    OnMouseEnter = lblSubjectMouseEnter
+    OnMouseLeave = lblSubjectMouseLeave
+  end
+  object Affiliation: TTntLabel
+    Left = 132
+    Top = 54
+    Width = 53
+    Height = 16
+    Caption = 'Affiliation'
+    OnMouseEnter = lblSubjectMouseEnter
+    OnMouseLeave = lblSubjectMouseLeave
+  end
+  object Participants: TTntLabel
+    Left = 132
+    Top = 76
+    Width = 66
+    Height = 16
+    Caption = 'Participants'
+    OnMouseEnter = lblSubjectMouseEnter
+    OnMouseLeave = lblSubjectMouseLeave
+  end
   object Separator1: TExGroupBox
     Left = 0
-    Top = 112
-    Width = 298
-    Height = 126
+    Top = 88
+    Width = 303
+    Height = 102
     Align = alBottom
     BevelOuter = bvNone
     Caption = 'lblCaption'
@@ -103,21 +135,22 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     ParentColor = True
     TabOrder = 4
     AutoHide = False
+    ExplicitWidth = 341
   end
   object chkAutoJoin: TCheckBox
-    Left = 38
-    Top = 215
+    Left = 52
+    Top = 168
     Width = 235
     Height = 17
-    Caption = ' Auto Join'
+    Caption = '   Auto Join'
     TabOrder = 0
     OnClick = chkAutoJoinClick
     OnMouseEnter = chkAutoJoinMouseEnter
     OnMouseLeave = chkAutoJoinMouseLeave
   end
   object btnDelete: TExGraphicButton
-    Left = 30
-    Top = 157
+    Left = 44
+    Top = 120
     Width = 183
     Height = 26
     BorderWidth = 0
@@ -181,8 +214,8 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseLeave = btnDeleteMouseLeave
   end
   object btnRename: TExGraphicButton
-    Left = 30
-    Top = 130
+    Left = 44
+    Top = 98
     Width = 183
     Height = 26
     BorderWidth = 0
@@ -248,8 +281,8 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseLeave = btnRenameMouseLeave
   end
   object btnJoinTC: TExGraphicButton
-    Left = 30
-    Top = 183
+    Left = 44
+    Top = 142
     Width = 183
     Height = 26
     BorderWidth = 0
