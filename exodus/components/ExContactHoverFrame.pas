@@ -90,8 +90,11 @@ begin
     Separator1.Caption := '';
     Separator2.Caption := '';
     lblDisplayName.Caption := Item.Text;
+    lblDisplayName.Hint := Item.Text;
+    lblDisplayName.ShowHint := true;
     lblUID.Hint := Item.UID;
     lblUID.Caption := Item.UID;
+    lblUID.ShowHint := true;
 
     _GetAvatar();
     _GetPresence();
