@@ -112,7 +112,6 @@ type
     _flash_ticks: integer;
 
     _reply_id: string;
-    _check_event: boolean;
     _send_composing: boolean;
     _sent_composing: boolean;
     _warn_busyclose: boolean;
@@ -498,7 +497,6 @@ begin
     _windowType := 'chat';
     //make this window track new messages
 
-    _check_event := false;
     _reply_id := '';
     _msg_out := false;
     _jid := nil;
@@ -858,31 +856,17 @@ begin
         exit;
     end;
 
-    if (_check_event) then begin
-        // check for composing events
-        etag := tag.QueryXPTag(XP_MSGXEVENT);
-        if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
-            // we got a composing a message
-            if (etag.GetBasicText('id') = chat_object.LastMsgId) then begin
-                _flash_ticks := 0;
-
-                // Setup the cache'd old versions in ChangePresImage
-//                _cur_img := _pres_img;
-                MsgList.DisplayComposing('-- ' + DisplayName + _(' is replying --'));
-
-                {
-                should we really bail here??
-                Gabber sends type=chat for msg events so it'll get into the
-                next block of code anyways. If we don't bail,
-                then we'll have to check to see if we have a body in the
-                next block of code. ICK
-                }
-
-                exit;
-            end
-            else if (etag.GetFirstTag('id') <> nil) then //Got an empty id
-                MsgList.HideComposing();
-        end;
+    // check for composing events
+    etag := tag.QueryXPTag(XP_MSGXEVENT);
+    if ((tag.GetFirstTag('body') = nil) and (etag <> nil) and (etag.GetFirstTag('composing') <> nil))then
+    begin
+        // we got a composing a message
+        if (etag.GetBasicText('id') = chat_object.LastMsgId) then begin
+            _flash_ticks := 0;
+            MsgList.DisplayComposing('-- ' + DisplayName + _(' is replying --'));
+            exit; //done
+        end
+        else MsgList.HideComposing(); //Got an empty id
     end;
 
     // process the msg
@@ -1074,7 +1058,6 @@ begin
         exit;
     end;
 
-    _check_event := false;
     MsgList.HideComposing();
 
     // Check to see if we need to increment the
@@ -1150,7 +1133,6 @@ begin
     // XXX: PGM: is this your trim?  What should we do with messages that
     // start with $#D, etc.?
     chat_object.SendMsg(Trim(body),subject,xml,true, priority);
-    _check_event := true;
 end;
 
 {---------------------------------------}

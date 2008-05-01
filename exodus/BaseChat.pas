@@ -601,10 +601,17 @@ begin
     if ((pnlMsgList.Height + Splitter1.Height + pnlInput.Height + pnlDockTop.Height) > ClientHeight) then begin
         // All combined, everything is bigger then the room we have, so resize
         oldHeight := pnlMsgList.Height + pnlInput.Height;
-        real_a := pnlMsgList.Height;
-        real_b := pnlInput.Height;
-        msglistratio := real_a / oldHeight;
-        pnlinputratio := real_b / oldHeight;
+        if (oldHeight <> 0) then
+        begin
+            real_a := pnlMsgList.Height;
+            real_b := pnlInput.Height;
+            msglistratio := real_a / oldHeight;
+            pnlinputratio := real_b / oldHeight;
+        end else
+        begin
+            msglistratio := 0.7;
+            pnlinputratio := 0.3;
+        end;
 
         // Now that we have ratios, make sure that nothing would be too small;
         pnlMsgList.Height := Trunc(msglistratio * (ClientHeight - Splitter1.Height - pnlDockTop.Height));

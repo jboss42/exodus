@@ -39,6 +39,7 @@ type
         _jid: Widestring; //The jid of the other party involved in this chat
         _resource: Widestring; //The resource of the other party involved in this chat
         _msg_cb: integer;
+        _eventCB: integer; //event listener for this chat session
         _OnMessageEvent: TChatMessageEvent;
         _OnSendMessageEvent: TChatMessageEvent;
         _history: Widestring;
@@ -65,6 +66,7 @@ type
 
         procedure SetJID(sjid: Widestring);
         procedure MsgCallback(event: string; tag: TXMLTag);
+        procedure EventCallback(event: string; tag: TXMLTag);
         procedure SendMsg(tag: TXMLTag); overload;
         procedure SendMsg(body: Widestring; subject: Widestring; xml: Widestring; composing: boolean = false; priority: PriorityType = None); overload;
         procedure SendMsgCallback(event: string; tag: TXMLTag);
@@ -175,6 +177,7 @@ begin
     inherited Create();
 
     _msg_cb := -1;
+    _eventCB := -1;
     _send_msg_cb := -1;
     _SessionCB := -1;
     _jid := sjid;
@@ -289,27 +292,24 @@ procedure TChatController.MsgCallback(event: string; tag: TXMLTag);
 var
     mtype: Widestring;
     m, etag: TXMLTag;
-    is_composing: boolean;
+    isComposingEvent: boolean;
     auto_resp_body: WideString;
     auto_resp_msg: TJabberMessage;
 begin
     // do stuff
     // if we don't have a window, then ignore composing events
     etag := tag.QueryXPTag(XP_MSGXEVENT);
-    is_composing := ((etag <> nil) and
+    isComposingEvent := ((etag <> nil) and
         (etag.GetFirstTag('composing') <> nil) and
         (etag.GetFirstTag('id') <> nil));
 
     // if our event isn't hooked up, and this is a composing event,
     // just bail
-    if ((is_composing) and (not Assigned(_OnMessageEvent))) then exit;
-
-    // if we have no body, then bail
-    if ((not is_composing) and (tag.GetFirstTag('body') = nil)) then exit;
+    if (isComposingEvent and (not Assigned(_OnMessageEvent))) then exit;
 
     mtype := tag.GetAttribute('type');
-    //if not chat or event, bail
-    if ((mtype =  '') and not is_composing)  then exit;
+    // if not an event and we have no body or type, do not handle
+    if ((etag = nil) and ((tag.GetFirstTag('body') = nil) or (mtype =  '')))  then exit;
     
     // check for delivered requests
     if (mtype <> 'error') and (etag <> nil) then begin
@@ -346,7 +346,7 @@ begin
     //Send auto response message?
     if (MainSession.Prefs.getBool('away_auto_response')
       and not _sent_auto_response
-      and not is_composing
+      and not isComposingEvent
       and not ((MainSession.Show = '')
           or (MainSession.Show = 'chat'))) then begin
 
@@ -367,6 +367,14 @@ begin
 
       FreeAndNil(auto_resp_msg);
     end;
+end;
+
+procedure TChatController.EventCallback(event: string; tag: TXMLTag);
+begin
+    //ignore if this event has a body, part of a normal message that
+    //MsgCallback will handle.
+    if (tag.GetFirstTag('body') = nil) then
+        MsgCallback(event, tag);
 end;
 
 {---------------------------------------}
@@ -618,25 +626,32 @@ end;
 procedure TChatController.RegisterMsgCB();
 var
     event: widestring;
+    from: widestring;
 begin
     UnRegisterMsgCB();
     //event := '/packet/message[@type="chat"][@from="';
-    event := XPLiteEscape(Lowercase(Self.JID));
+    from := XPLiteEscape(Lowercase(Self.JID));
     if (_anonymous_chat) then
-        event := event + XPLiteEscape(Lowercase('/' + Self.Resource))
-    else event := event + '*';
-    
-    event := '/packet/message[@type="chat"][@from="' + event + '"]';
-    _msg_cb := MainSession.RegisterCallback(MsgCallback, event);
+        from := from + XPLiteEscape(Lowercase('/' + Self.Resource))
+    else from := from + '*';
+
+    _msg_cb := MainSession.RegisterCallback(MsgCallback,
+                                            '/packet/message[@type="chat"][@from="' + from + '"]');
+    _eventCB := MainSession.RegisterCallback(EventCallback,
+                                            '/packet/message[@from="' + from + '"]/x[@xmlns="' + XMLNS_XEVENT + '"]/id');
 end;
 
 {---------------------------------------}
 procedure TChatController.UnregisterMsgCB();
 begin
-  if (_msg_cb >= 0) then begin
-    MainSession.UnRegisterCallback(_msg_cb);
-    _msg_cb := -1;
-  end;
+    if (_msg_cb <> -1) then begin
+        MainSession.UnRegisterCallback(_msg_cb);
+        _msg_cb := -1;
+    end;
+    if (_eventCB <> -1) then begin
+        MainSession.UnRegisterCallback(_eventCB);
+        _eventCB := -1;
+    end;
 end;
 
 {---------------------------------------}
