@@ -306,7 +306,7 @@ begin
         if (tmps = '') then
             tmps := _('Exodus');
         chkAutoStart.Caption := _(sStartCheckCaption + tmps);
-        gbOnStart.Caption := _(sOnStartedAppCaption + tmps + ':');
+        gbOnStart.Caption := _(sOnStartedAppCaption + tmps);
 
         //window dock pref
         rbDocked.Checked := GetBool('start_docked');

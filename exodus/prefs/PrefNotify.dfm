@@ -201,7 +201,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'Take the following actions:'
+      Caption = 'Take the following actions'
       ParentColor = True
       TabOrder = 2
       AutoHide = True
