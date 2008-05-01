@@ -247,7 +247,6 @@ procedure InitPlugins();
 procedure UnloadPlugins();
 procedure ConfigurePlugin(com_name: string);
 function IsPluginConfigurable(com_name: string): boolean;
-procedure ReloadPlugins(sl: TWidestringlist);
 
 var
     plugs: TStringList;
@@ -661,13 +660,7 @@ begin
     //
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
-        LoadPlugin(com_name, errorStr);
-        idx := plugs.IndexOf(com_name);
-    end;
-
-    if (idx < 0) then begin
-        MessageDlgW(errorStr + #13#10#13#10 + _('Plug-in could not be initialized or configured.'),
-            mtError, [mbOK], 0);
+        // Plugin not found as enabled.
         exit;
     end;
 
@@ -690,13 +683,7 @@ begin
     Result := false;
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
-        LoadPlugin(com_name, errorStr);
-        idx := plugs.IndexOf(com_name);
-    end;
-
-    if (idx < 0) then begin
-        MessageDlgW(errorStr + #13#10#13#10 + _('Plug-in could not be initialized or configured.'),
-            mtError, [mbOK], 0);
+        Result := false;
         exit;
     end;
 
@@ -713,43 +700,6 @@ begin
       Result := com2.Configurable
     else
       Result := false;
-end;
-
-{---------------------------------------}
-procedure ReloadPlugins(sl: TWidestringlist);
-var
-    i, idx: integer;
-    loaded: TStringlist;
-    p: TPlugin;
-    errorStr: WideString;
-begin
-    // load all plugins listed, if they are not already loaded.
-    loaded := TStringlist.Create();
-    for i := 0 to sl.Count -1  do begin
-        idx := plugs.IndexOf(sl[i]);
-        if (idx < 0) then begin
-            if (not LoadPlugin(sl[i], errorStr)) then
-                MessageDlgW(errorStr, mtError, [mbOK], 0);
-        end;
-        loaded.Add(sl[i]);
-    end;
-
-    // unload any plugins not in the loaded list
-    for i := plugs.Count - 1 downto 0 do begin
-        try
-            idx := loaded.IndexOf(plugs[i]);
-            if (idx < 0) then begin
-                // unload the plugin
-                p := TPlugin(plugs.Objects[i]);
-                plugs.Delete(i);
-                p.com.Shutdown;
-                p.Free;
-            end;
-        except
-            DebugMessage('COM Exception in ReloadPlugins');
-        end;
-    end;
-    loaded.Free();
 end;
 
 {---------------------------------------}
