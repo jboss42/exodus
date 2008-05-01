@@ -33,12 +33,14 @@ type
       _PageControlSaveWinProc: TWndMethod;
       _ActiveTabColor: TColor;
       _HoverWindow: TExItemHoverForm;
+      _LastHoverTab: Integer;
       procedure _PageControlNewWndProc(var Msg: TMessage);
       procedure _ToggleGUI(state: TLoginGuiState);
       function _GetImages() : TImageList;
       procedure _SetImages(Value :TImageList);
       function _GetTreeByTabIndex(Index: Integer): TTntTreeView;
-
+      procedure TntPageControlMouseMove(Sender: TObject; Shift: TShiftState;
+                                        X, Y: Integer);
       //procedure _RemovePluginTabs();
   public
       { Public declarations }
@@ -272,7 +274,10 @@ begin
     AssignUnicodeFont(Self, 9);
     Application.HintPause := MainSession.prefs.getInt('roster_hint_delay');
 
-   _HoverWindow := TExItemHoverForm.Create(Self);    
+   _HoverWindow := TExItemHoverForm.Create(Self);
+   _LastHoverTab := -1;
+   _PageControl.OnMouseMove := TntPageControlMouseMove;
+   _PageControl.ShowHint := true;
 end;
 
 {---------------------------------------}
@@ -320,11 +325,25 @@ end;
 
 procedure TRosterForm.ApplicationEventsShowHint(var HintStr: string;
   var CanShow: Boolean; var HintInfo: THintInfo);
+var
+   HitTest: THitTests;
 begin
     if (HintInfo.HintControl is TExTreeView) then
     begin
        CanShow := false;
        TExTreeView(HintInfo.HintControl).ActivateHover();
+       exit;
+    end;
+    if (HintInfo.HintControl = _PageControl) then
+    begin
+        //We want to suppress hints for tabs when user hovers over tree area of the tab
+        HitTest := _PageControl.GetHitTestInfoAt(HintInfo.CursorPos.X, HintInfo.CursorPos.Y) ;
+        if (HitTest = [htNowhere])  then
+        begin
+           CanShow := false;
+           exit;
+        end;
+
        exit;
     end;
     inherited;
@@ -350,6 +369,29 @@ begin
         Result := TExTreeView(Tree).GetSelectedItems()
     else
         Result := TExodusItemList.Create() as IExodusItemList;
+end;
+
+{---------------------------------------}
+//This function performs custom code for tool tips on the tabs
+//We only want to show tool tips if the user hovers over different tab
+//We should suppress tooltips if the user hovers over tree control area of the tab
+procedure TRosterForm.TntPageControlMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+var
+   Idx: Integer;
+begin
+   Idx := _PageControl.IndexOfTabAt(X, Y);
+
+   if (Idx > -1) then
+   begin
+     if (_LastHoverTab <> Idx) then
+     begin
+         Application.CancelHint;
+         _PageControl.Hint := TabController.Tab[Idx].Name;
+         _LastHoverTab := Idx;
+     end;
+   end;
+
 end;
 
 end.
