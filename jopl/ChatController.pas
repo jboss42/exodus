@@ -38,6 +38,7 @@ type
     private
         _jid: Widestring; //The jid of the other party involved in this chat
         _resource: Widestring; //The resource of the other party involved in this chat
+        
         _msg_cb: integer;
         _eventCB: integer; //event listener for this chat session
         _OnMessageEvent: TChatMessageEvent;
@@ -100,7 +101,7 @@ type
         procedure UnregisterSendMsgCB();
 
         property JID: WideString read _jid;
-        property Resource: Widestring read _resource;
+        property Resource2: Widestring read _resource;
         property Window: TObject read _window write SetWindow;
         property OnMessage: TChatMessageEvent read _OnMessageEvent write _OnMessageEvent;
         property OnSendMessage: TChatMessageEvent read _OnSendMessageEvent write _OnSendMessageEvent;
@@ -222,7 +223,14 @@ end;
 
 {---------------------------------------}
 procedure TChatController.SetJID(sjid: Widestring);
+var
+    tjid: TJabberID;
 begin
+    tjid := TJabberID.create(sjid);
+    if (tjid.resource <> '') then
+        _resource := tjid.resource;
+    tjid.free();
+    
     RegisterSessionCB('/session/presence');
     RegisterMsgCB();
     RegisterSendMsgCB();
@@ -632,7 +640,7 @@ begin
     //event := '/packet/message[@type="chat"][@from="';
     from := XPLiteEscape(Lowercase(Self.JID));
     if (_anonymous_chat) then
-        from := from + XPLiteEscape(Lowercase('/' + Self.Resource))
+        from := from + XPLiteEscape(Lowercase('/' + Self.Resource2))
     else from := from + '*';
 
     _msg_cb := MainSession.RegisterCallback(MsgCallback,
@@ -664,7 +672,7 @@ begin
     event := '/packet/message[@type="chat"][@to="';
     event := event + XPLiteEscape(Lowercase(Self.JID));
     if (_anonymous_chat) then
-        event := event + XPLiteEscape(Lowercase('/' + Self.Resource));
+        event := event + XPLiteEscape(Lowercase('/' + Self.Resource2));
     event := event + '*"]';  
     _send_msg_cb := MainSession.RegisterCallback(SendMsgCallback, event);
 end;
