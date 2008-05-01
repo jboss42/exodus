@@ -88,6 +88,8 @@ begin
     if (Room <> nil) then
     begin
         Subject.Caption := Room.lblSubject.Caption;
+        Subject.Hint := Room.lblSubject.Caption;
+        Subject.ShowHint := true;
         Participants.Caption := IntToStr(Room.lstRoster.Items.Count);
         Affiliation.Caption := Room.MyAffiliation;
     end
