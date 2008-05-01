@@ -1125,6 +1125,8 @@ var
     ts: TTimeStamp;
 begin
     Result := '';
+    //hide "is replying", don't keep that html around
+    HideComposing();
     if (_content <> nil) then
         Result := _content.innerHTML + Result;
 
