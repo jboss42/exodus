@@ -52,7 +52,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseLeave = imgRoomMouseLeave
   end
   object RoomDisplayName: TTntLabel
-    Left = 132
+    Left = 96
     Top = 10
     Width = 69
     Height = 16
@@ -97,7 +97,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseLeave = lblSubjectMouseLeave
   end
   object Subject: TTntLabel
-    Left = 132
+    Left = 106
     Top = 32
     Width = 43
     Height = 16
@@ -106,7 +106,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseLeave = lblSubjectMouseLeave
   end
   object Affiliation: TTntLabel
-    Left = 132
+    Left = 116
     Top = 54
     Width = 53
     Height = 16
@@ -115,7 +115,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseLeave = lblSubjectMouseLeave
   end
   object Participants: TTntLabel
-    Left = 132
+    Left = 129
     Top = 76
     Width = 66
     Height = 16
@@ -135,7 +135,6 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     ParentColor = True
     TabOrder = 4
     AutoHide = False
-    ExplicitWidth = 341
   end
   object chkAutoJoin: TCheckBox
     Left = 52
@@ -210,6 +209,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
       098AA2528B8B0B859A04156E2A95752000D6972FB5904E93148ACEFFD6A054DE
       A6D5D543B472080AE3E3E3B51DDA9FE054F0EF05BF00DF149FE09C0FAB970000
       000049454E44AE426082}
+    OnClick = btnDeleteClick
     OnMouseEnter = btnDeleteMouseEnter
     OnMouseLeave = btnDeleteMouseLeave
   end
@@ -277,6 +277,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
       FBB182DF5BDEF53F03C8F43AED953A4D1DD96836E7D10EF28A2565235353D34C
       4F4F4FA698702900DCD83258BBF7F1641E1F9CC277C9AFD3AFBE07258F2D017F
       7AFCFB806FEC97DAE061B3B0100000000049454E44AE426082}
+    OnClick = btnRenameClick
     OnMouseEnter = btnRenameMouseEnter
     OnMouseLeave = btnRenameMouseLeave
   end

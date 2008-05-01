@@ -48,6 +48,8 @@ type
     procedure lblSubjectMouseLeave(Sender: TObject);
     procedure btnJoinTCClick(Sender: TObject);
     procedure chkAutoJoinClick(Sender: TObject);
+    procedure btnRenameClick(Sender: TObject);
+    procedure btnDeleteClick(Sender: TObject);
   private
     { Private declarations }
     _TypedActs: IExodusTypedActions;
@@ -100,6 +102,8 @@ begin
     if (Act <> nil) then
         chkAutoJoin.Checked := (Act.Name = '{000-exodus.googlecode.com}-010-unjoin-on-startup');
     RoomDisplayName.Caption := Item.Text;
+    RoomDisplayName.Hint := Item.Text;
+    RoomDisplayName.ShowHint := true;
     Separator1.Caption := '';
 end;
 
@@ -154,6 +158,14 @@ begin
     TExItemHoverForm(Parent).CancelHover();
 end;
 
+procedure TExRoomHoverFrame.btnDeleteClick(Sender: TObject);
+var
+    act: IExodusAction;
+begin
+    act := IExodusAction(Pointer(TExGraphicButton(Sender).Tag));
+    act.Execute(_Items);
+end;
+
 procedure TExRoomHoverFrame.btnDeleteMouseEnter(Sender: TObject);
 begin
   inherited;
@@ -170,7 +182,7 @@ procedure TExRoomHoverFrame.btnJoinTCClick(Sender: TObject);
 var
     act: IExodusAction;
 begin
-    act := IExodusAction(Pointer(btnJoinTC.Tag));
+    act := IExodusAction(Pointer(TExGraphicButton(Sender).Tag));
     act.Execute(_Items);
 end;
 
@@ -184,6 +196,14 @@ procedure TExRoomHoverFrame.btnJoinTCMouseLeave(Sender: TObject);
 begin
   inherited;
   TExItemHoverForm(Parent).CancelHover();
+end;
+
+procedure TExRoomHoverFrame.btnRenameClick(Sender: TObject);
+var
+    act: IExodusAction;
+begin
+    act := IExodusAction(Pointer(TExGraphicButton(Sender).Tag));
+    act.Execute(_Items);
 end;
 
 procedure TExRoomHoverFrame.btnRenameMouseEnter(Sender: TObject);

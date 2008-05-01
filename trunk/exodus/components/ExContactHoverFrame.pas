@@ -20,6 +20,7 @@ type
     Separator2: TExGroupBox;
     Separator1: TExGroupBox;
     imgAvatar: TPaintBox;
+    TntLabel1: TTntLabel;
     procedure TntFrameMouseLeave(Sender: TObject);
     procedure TntFrameMouseEnter(Sender: TObject);
     procedure InitControls(Item: IExodusItem);
@@ -45,6 +46,8 @@ type
     procedure btnDeleteMouseEnter(Sender: TObject);
     procedure btnDeleteMouseLeave(Sender: TObject);
     procedure imgAvatarPaint(Sender: TObject);
+    procedure btnRenameClick(Sender: TObject);
+    procedure btnDeleteClick(Sender: TObject);
   private
     { Private declarations }
     _Items: IExodusItemList;
@@ -87,6 +90,7 @@ begin
     Separator1.Caption := '';
     Separator2.Caption := '';
     lblDisplayName.Caption := Item.Text;
+    lblUID.Hint := Item.UID;
     lblUID.Caption := Item.UID;
 
     _GetAvatar();
@@ -156,8 +160,8 @@ begin
         if (Avatar.Height >= 0) then
         begin
             _Avatar := Avatar;
-            if (_Avatar.Height > 48) then
-                imgAvatar.Width := Trunc((48 / _avatar.Height) * (_avatar.Width))
+            if (_Avatar.Height > 32) then
+                imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
             else
                 imgAvatar.Width := _avatar.Width;
         end;
@@ -168,7 +172,7 @@ procedure TExContactHoverFrame.btnChatClick(Sender: TObject);
 var
     act: IExodusAction;
 begin
-  act := IExodusAction(Pointer(btnChat.Tag));
+  act := IExodusAction(Pointer(TExGraphicButton(Sender).Tag));
   act.Execute(_Items);
 end;
 
@@ -184,6 +188,14 @@ begin
   TExItemHoverForm(Parent).CancelHover();
 end;
 
+procedure TExContactHoverFrame.btnDeleteClick(Sender: TObject);
+var
+    act: IExodusAction;
+begin
+  act := IExodusAction(Pointer(TExGraphicButton(Sender).Tag));
+  act.Execute(_Items);
+end;
+
 procedure TExContactHoverFrame.btnDeleteMouseEnter(Sender: TObject);
 begin
   inherited;
@@ -194,6 +206,15 @@ procedure TExContactHoverFrame.btnDeleteMouseLeave(Sender: TObject);
 begin
   inherited;
   TExItemHoverForm(Parent).CancelHover();
+end;
+
+procedure TExContactHoverFrame.btnRenameClick(Sender: TObject);
+var
+    act: IExodusAction;
+begin
+  //inherited;
+  act := IExodusAction(Pointer(TExGraphicButton(Sender).Tag));
+  act.Execute(_Items);
 end;
 
 procedure TExContactHoverFrame.btnRenameMouseEnter(Sender: TObject);
@@ -240,8 +261,8 @@ begin
     else begin
         Rect.Top := 1;
         Rect.Left := 1;
-        Rect.Bottom := 49;
-        Rect.Right := 49;
+        Rect.Bottom := 33;
+        Rect.Right := 33;
         imgAvatar.Canvas.StretchDraw(Rect, _UnknownAvatar);
     end;
 end;
