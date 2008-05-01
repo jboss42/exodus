@@ -200,6 +200,8 @@ type
     function _GetTJabberMessage(const ritem: TResultListItem): TJabberMessage;
     procedure _setWindowCaption(txt: widestring);
     procedure _RemoveAnyJID(removeFromContact: boolean = true; removeFromRoom: boolean = true);
+    procedure _DropSearchObj();
+    procedure _DropResultObj();
 
     // Properties
     property _MsgList: TfBaseMsgList read _getMsgList;
@@ -651,18 +653,14 @@ begin
         _DoingSearch := false;
         _SearchingGUI(false);
 
-        _SearchObj.Free();
-        _SearchObj := nil;
-        _ResultObj.Free();
-        _ResultObj := nil;
+        _DropSearchObj();
+        _DropResultObj();
     end
     else begin
         _LastSelectedItem := nil;
 
-        _SearchObj.Free();
-        _SearchObj := nil;
-        _ResultObj.Free();
-        _ResultObj := nil;
+        _DropSearchObj();
+        _DropResultObj();
 
         _DropResults();
 
@@ -814,10 +812,8 @@ begin
     btnRemoveContact.Enabled := false;
     btnRemoveRoom.Enabled := false;
 
-    _SearchObj.Free();
-    _SearchObj := nil;
-    _ResultObj.Free();
-    _ResultObj := nil;
+    _DropSearchObj();
+    _DropResultObj();
 
     _DoingSearch := false;
 
@@ -852,10 +848,8 @@ end;
 {---------------------------------------}
 procedure TfrmHistorySearch.FormDestroy(Sender: TObject);
 begin
-    _SearchObj.Free();
-    _SearchObj := nil;
-    _ResultObj.Free();
-    _ResultObj := nil;
+    _DropSearchObj();
+    _DropResultObj();
 
     _parser.Free();
 
@@ -1587,10 +1581,8 @@ begin
         _DoingSearch := false;
         _SearchingGUI(false);
 
-        _SearchObj.Free();
-        _SearchObj := nil;
-        _ResultObj.Free();
-        _ResultObj := nil;
+        _DropSearchObj();
+        _DropResultObj();
     end
     else begin
         // Got another result so check to see if we should display it.
@@ -1742,10 +1734,8 @@ begin
         _DoingSearch := false;
         _SearchingGUI(false);
 
-        _SearchObj.Free();
-        _SearchObj := nil;
-        _ResultObj.Free();
-        _ResultObj := nil;
+        _DropSearchObj();
+        _DropResultObj();
 
         // Display the history
         _DisplayHistory();
@@ -1954,6 +1944,24 @@ begin
         _roomsJIDLimit := hsNone;
         lstRooms.SelectAll();
         lstRooms.DeleteSelected();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._DropSearchObj();
+begin
+    if (_SearchObj <> nil) then begin
+        _SearchObj.ObjRelease();
+        _SearchObj := nil;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._DropResultObj();
+begin
+    if (_ResultObj <> nil) then begin
+        _ResultObj.ObjRelease();
+        _ResultObj := nil;
     end;
 end;
 
