@@ -1,12 +1,12 @@
 inherited ExContactHoverFrame: TExContactHoverFrame
   Width = 238
-  Height = 214
+  Height = 180
   OnMouseEnter = TntFrameMouseEnter
   OnMouseLeave = TntFrameMouseLeave
   ExplicitWidth = 238
-  ExplicitHeight = 214
+  ExplicitHeight = 180
   object lblDisplayName: TTntLabel
-    Left = 68
+    Left = 60
     Top = 10
     Width = 7
     Height = 16
@@ -15,32 +15,34 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     OnMouseLeave = lblDisplayNameMouseLeave
   end
   object lblUID: TTntLabel
-    Left = 68
-    Top = 37
-    Width = 7
+    Left = 60
+    Top = 33
+    Width = 37
     Height = 16
     Caption = '1'
+    ParentShowHint = False
+    ShowHint = True
     OnMouseEnter = lblUIDMouseEnter
     OnMouseLeave = lblUIDMouseLeave
   end
   object lblPhoneNumber: TTntLabel
     Left = 10
-    Top = 64
-    Width = 148
+    Top = 56
+    Width = 40
     Height = 16
-    Caption = 'Phone:    1-800-111-1111'
+    Caption = 'Phone:'
     OnMouseEnter = lblPhoneNumberMouseEnter
     OnMouseLeave = lblPhoneNumberMouseLeave
   end
   object imgPresence: TImage
-    Left = 28
-    Top = 187
+    Left = 20
+    Top = 162
     Width = 16
     Height = 16
   end
   object lblPresence: TTntLabel
-    Left = 68
-    Top = 187
+    Left = 60
+    Top = 162
     Width = 4
     Height = 16
     OnMouseEnter = lblPresenceMouseEnter
@@ -49,15 +51,26 @@ inherited ExContactHoverFrame: TExContactHoverFrame
   object imgAvatar: TPaintBox
     Left = 10
     Top = 10
-    Width = 48
-    Height = 48
+    Width = 32
+    Height = 32
+    OnMouseEnter = imgAvatarMouseEnter
+    OnMouseLeave = imgAvatarMouseLeave
     OnPaint = imgAvatarPaint
+  end
+  object TntLabel1: TTntLabel
+    Left = 60
+    Top = 56
+    Width = 92
+    Height = 16
+    Caption = '1-800-111-1111'
+    OnMouseEnter = lblPhoneNumberMouseEnter
+    OnMouseLeave = lblPhoneNumberMouseLeave
   end
   object Separator1: TExGroupBox
     Left = 0
-    Top = 173
+    Top = 148
     Width = 238
-    Height = 41
+    Height = 32
     Align = alBottom
     BevelOuter = bvNone
     Caption = 'lblCaption'
@@ -65,13 +78,13 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     ParentColor = True
     TabOrder = 4
     AutoHide = False
-    ExplicitTop = 168
+    ExplicitTop = 151
   end
   object Separator2: TExGroupBox
     Left = 0
-    Top = 80
+    Top = 67
     Width = 238
-    Height = 93
+    Height = 81
     Align = alBottom
     BevelOuter = bvNone
     Caption = 'lblCaption'
@@ -79,11 +92,11 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     ParentColor = True
     TabOrder = 0
     AutoHide = False
-    ExplicitTop = 84
+    ExplicitTop = 64
   end
   object btnRename: TExGraphicButton
-    Left = 18
-    Top = 118
+    Left = 10
+    Top = 102
     Width = 183
     Height = 26
     BorderWidth = 0
@@ -145,13 +158,14 @@ inherited ExContactHoverFrame: TExContactHoverFrame
       FBB182DF5BDEF53F03C8F43AED953A4D1DD96836E7D10EF28A2565235353D34C
       4F4F4FA698702900DCD83258BBF7F1641E1F9CC277C9AFD3AFBE07258F2D017F
       7AFCFB806FEC97DAE061B3B0100000000049454E44AE426082}
+    OnClick = btnRenameClick
     OnMouseEnter = btnRenameMouseEnter
     OnMouseLeave = btnRenameMouseLeave
   end
   object btnDelete: TExGraphicButton
-    Left = 18
-    Top = 145
-    Width = 132
+    Left = 10
+    Top = 125
+    Width = 183
     Height = 26
     BorderWidth = 0
     Caption = '  Delete'
@@ -210,12 +224,13 @@ inherited ExContactHoverFrame: TExContactHoverFrame
       098AA2528B8B0B859A04156E2A95752000D6972FB5904E93148ACEFFD6A054DE
       A6D5D543B472080AE3E3E3B51DDA9FE054F0EF05BF00DF149FE09C0FAB970000
       000049454E44AE426082}
+    OnClick = btnDeleteClick
     OnMouseEnter = btnDeleteMouseEnter
     OnMouseLeave = btnDeleteMouseLeave
   end
   object btnChat: TExGraphicButton
-    Left = 18
-    Top = 91
+    Left = 10
+    Top = 79
     Width = 183
     Height = 26
     BorderWidth = 0
