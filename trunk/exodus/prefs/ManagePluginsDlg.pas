@@ -23,9 +23,22 @@ interface
 
 uses
     Unicode,
-    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, PrefPanel, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls,
-    ExtCtrls, TntExtCtrls,
+    Windows,
+    Messages,
+    SysUtils,
+    Variants,
+    Classes,
+    Graphics,
+    Controls,
+    Forms,
+    Dialogs,
+    PrefPanel,
+    ComCtrls,
+    TntComCtrls,
+    StdCtrls,
+    TntStdCtrls,
+    ExtCtrls,
+    TntExtCtrls,
     ExForm;
 
 type
@@ -65,14 +78,26 @@ type
 const
     sRegPluginError = 'The plug-in could not be registered with windows.';
     sExternalLibrary = 'External Library';
+    sPluginChangeWarning = 'Changes to enabled plugins require a restart before being active.';
 
 procedure showManagePluginDlg(AOwner: TComponent);
 
 implementation
 {$R *.dfm}
 uses
-    ActiveX, COMController, ComObj, Exodus_TLB, JabberUtils, ExUtils,
-    GnuGetText, PathSelector, Registry, Session, PrefController, BrowseForFolderU;
+    ActiveX,
+    COMController,
+    ComObj,
+    Exodus_TLB,
+    JabberUtils,
+    ExUtils,
+    GnuGetText,
+    PathSelector,
+    Registry,
+    Session,
+    PrefController,
+    BrowseForFolderU,
+    ShellAPI;
 
 procedure showManagePluginDlg(AOwner: TComponent);
 var
@@ -124,22 +149,22 @@ end;
 procedure TfrmPrefPlugins.scanPlugins();
 var
     sl: TWidestringList;
+    i: integer;
 begin
     // load the listview
     lstPlugins.Clear();
 
     // get the list of selected plugins..
     sl := TWidestringList.Create();
-    MainSession.Prefs.fillStringlist('plugin_selected', sl);
+
+    for i := 0 to plugs.Count - 1 do begin
+        sl.Add(plugs[i]);
+    end;
 
     // Scan the director
     scanPluginDir(sl);
 
-//    with lstPlugins do begin
-//        btnRemovePlugin.Enabled := (Items.Count > 0);
-//    end;
-
-    btnConfigPlugin.Enabled := false; // no item selected when rescaned. 
+    btnConfigPlugin.Enabled := false; // no item selected when rescaned.
 
     sl.Free();
 end;
@@ -155,30 +180,65 @@ procedure TfrmPrefPlugins.savePlugins();
 var
     i: integer;
     item: TTntListItem;
-    sl: TWidestringlist;
-    fl: TWidestringlist;
-
+    newenabledplugs: TWidestringlist;
+    currentplugs: TWidestringlist;
+    listchanged: boolean;
+    idx: integer;
 begin
     // save all "checked" captions
-    sl := TWidestringlist.Create();
-    fl := TWidestringlist.Create();
+    newenabledplugs := TWidestringlist.Create();
+    currentplugs := TWidestringlist.Create();
+    listchanged := false;
 
     //All we need to do here is to build the list of selected plug-ins
-    //ReloadPlugins code will take care of registering new plug-ins
+    //We do NOT load or register them here.
+    //Plugins only load on startup.
     for i := 0 to lstPlugins.Items.Count - 1 do begin
         item := lstPlugins.Items[i];
 
         if (item.Checked) then begin
             // save the Classname
-            sl.Add(item.Caption);
+            newenabledplugs.Add(item.Caption);
         end;
     end;
 
-    MainSession.Prefs.setStringlist('plugin_selected', sl);
-    //MainSession.Prefs.setStringlist('plugin_files', fl);
-    ReloadPlugins(sl);
-    sl.Free();
-    fl.Free();
+    // Get list of current loaded plugins
+    for i := 0 to plugs.count - 1 do begin
+        currentplugs.Add(plugs[i]);
+    end;
+
+    // See if all enabled plugs are in current plugs list
+    for i := 0 to newenabledplugs.count - 1 do begin
+        if (currentplugs.Find(newenabledplugs[i], idx)) then begin
+            currentplugs.Delete(idx);
+        end
+        else begin
+            // Not in current loaded plugs, so things changed
+            listchanged := true;
+            break;
+        end;
+    end;
+
+    // If any plugs in current list that aren't found in the check above,
+    // must be new
+    if (currentplugs.Count > 0) then begin
+        listchanged := true;
+    end;
+
+    // If the list changed, save list and ask for restart.
+    if (listchanged) then begin
+        // save out plugins to prefs file for loading next time.
+        MainSession.Prefs.setStringlist('plugin_selected', newenabledplugs);
+
+        MessageBoxW(Self.Handle,
+                    pWideChar(_(sPluginChangeWarning)),
+                    pWideChar(Self.Caption),
+                    MB_OK or MB_ICONWARNING);
+    end;
+
+    // cleanup
+    newenabledplugs.Free();
+    currentplugs.Free();
 end;
 
 {---------------------------------------}
