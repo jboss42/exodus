@@ -42,13 +42,12 @@ inherited frmChat: TfrmChat
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitHeight = 33
         object lblNick: TTntLabel
           AlignWithMargins = True
           Left = 53
           Top = 0
           Width = 45
-          Height = 13
+          Height = 28
           Cursor = crHandPoint
           Margins.Left = 6
           Margins.Top = 0
@@ -60,6 +59,7 @@ inherited frmChat: TfrmChat
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
+          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
           AlignWithMargins = True
@@ -85,7 +85,6 @@ inherited frmChat: TfrmChat
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
-          ExplicitHeight = 33
         end
       end
     end
@@ -96,7 +95,7 @@ inherited frmChat: TfrmChat
     Height = 319
     ExplicitTop = 28
     ExplicitWidth = 492
-    ExplicitHeight = 314
+    ExplicitHeight = 319
   end
   inherited pnlInput: TPanel
     Top = 351
