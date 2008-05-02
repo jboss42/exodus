@@ -487,9 +487,21 @@ function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
 var
     res : TSSLVerifyError;
     sl  : TStringList;
-    i   : integer;
     n   : TDateTime;
-    tmps: string;
+
+    function ValidateHostname(host: string): Boolean;
+    var
+        i: Integer;
+    begin
+        for i := 0 to sl.Count - 1 do begin
+            if (Lowercase(sl[i]) = ('cn=' + host)) then begin
+                Result := true;
+                exit;
+            end;
+        end;
+
+        Result := false;
+    end;
 begin
     _ssl_err := '';
     sl := TStringList.Create();
@@ -497,14 +509,8 @@ begin
     sl.QuoteChar := #0;
     sl.DelimitedText := Certificate.Subject.OneLine;
 
-    tmps := Lowercase(_profile.server);
     res := SVE_NONE;
-    for i := 0 to sl.Count - 1 do begin
-        if (Lowercase(sl[i]) = ('cn=' + tmps)) then begin
-            _ssl_ok := true;
-            break;
-        end;
-    end;
+    _ssl_ok := ValidateHostname(LowerCase(_profile.Server)) or ValidateHostname(LowerCase(_profile.Host));
     sl.Free();
 
     if (not _ssl_ok) then begin
