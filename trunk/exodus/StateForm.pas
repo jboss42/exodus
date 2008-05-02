@@ -626,6 +626,18 @@ begin
     _flasher.Enabled := false;
     _flasher.Interval := FLASH_TIMER_INTERVAL;
     _flasher.OnTimer := OnFlashTim;
+
+    //initial conditions for position and size, may be changed later
+    //when restoring state.
+     _pos.Left := 0;
+    _pos.Top := 0;
+    _pos.Width := Self.ExplicitWidth;
+    _pos.Height := Self.ExplicitHeight;
+    CenterOnMainformMonitor(_pos);
+    _origPos.Left := _pos.Left;
+    _origPos.width := _pos.width;
+    _origPos.Top := _pos.Top;
+    _origPos.height := _pos.height;
 end;
 
 
@@ -707,7 +719,11 @@ begin
     //  floating
     //  not creating the form
     //  in normal window state
-    if (not _skipWindowPosHandling and Self.Floating and (not (fsCreating in Self.FormState)) and (_windowState = wsNormal)) then begin
+    if (not _skipWindowPosHandling and
+        Self.Floating and
+        (not (fsCreating in Self.FormState)) and
+        (_windowState = wsNormal)) then
+    begin
         _pos.Left := Self.Left;
         _pos.width := Self.Width;
         _pos.Top := Self.Top;
@@ -875,10 +891,12 @@ begin
             _pos.Height := Self.ExplicitHeight;
             CenterOnMainformMonitor(_pos);
         end;
+        //check to make sure pos looks valid...
         _origPos.Left := _pos.Left;
         _origPos.width := _pos.width;
         _origPos.Top := _pos.Top;
         _origPos.height := _pos.height;
+
         normalizePos();
         SetWindowPos(Self.Handle, HWND_BOTTOM, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOACTIVATE or SWP_NOOWNERZORDER);
         _windowState := sToWindowState(windowState.GetAttribute('ws'));
