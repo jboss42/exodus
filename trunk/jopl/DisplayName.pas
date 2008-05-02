@@ -629,8 +629,10 @@ begin
     sTypes[1] := dntItemName;
     sTypes[2] := dntProfile;
     Self.SetSupportedDisplayNameTypes(sTypes);
-    
-    DisplayName[dntDefault] := _jid.removeJEP106(_jid.user);
+
+    if (_jid.user <> '') then
+        DisplayName[dntDefault] := _jid.removeJEP106(_jid.user);
+    //if service or server or something, default will be set to uid (jid) by parent class
 
     _ProfileIQ := nil;
     _DNFetch := false;
@@ -861,11 +863,15 @@ end;
 
 function TDisplayNameCache.getOrAddDNItem(JID: TJabberID): TDisplayNameItem;
 begin
-    Result := getDNItem(JID.jid);
-    if (Result = nil) then
-    begin
-        Result := TContactDisplayNameItem.create(jid, _profileParser);
-        addDNItem(Result);
+    if (JID.user = '') then
+        Result := getOrAddDNItem(JID.jid) //if service, just treat like a non jid
+    else begin
+        Result := getDNItem(JID.jid);
+        if (Result = nil) then
+        begin
+            Result := TContactDisplayNameItem.create(jid, _profileParser);
+            addDNItem(Result);
+        end;
     end;
 end;
 
