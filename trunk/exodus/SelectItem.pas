@@ -225,15 +225,13 @@ var
     item: IExodusItem;
     valid: Boolean;
 begin
-    if (Node = nil) then exit;
-    
-    valid := (IExodusItem(Node.Data).Type_ = _itemtype);
+    Item := _itemView.GetNodeItem(Node);
+    valid := (Item <> nil) and (Item.Type_ = _itemtype);
     if not valid then begin
         _selectedUID := '';
         txtJID.text := '';
     end
     else begin
-        item := IExodusItem(Node.Data);
         _selectedUID := item.UID;
         txtJID.text := item.UID;
     end;

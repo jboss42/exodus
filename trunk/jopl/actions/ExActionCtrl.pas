@@ -812,7 +812,7 @@ var
             typedInterests: TFilteringSet;
             applied: TObjectList);
     var
-        idx, jdx: Integer;
+        jdx: Integer;
         potentials: TPotentialActions;
         typedActs: TExodusTypedActions;
         proxy: TActionProxy;

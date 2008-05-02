@@ -37,37 +37,27 @@ type
    TExodusItemWrapper = class
    private
        _Item: IExodusItem;
-       _Callback: IExodusItemCallback;
-       _Pending: Boolean;
    public
-       constructor Create(ctrl: IExodusItemController;
-            Uid: WideString;
-            Type_: WideString;
-            cb: IExodusItemCallback);overload;
+       constructor Create(item: IExodusItem);
        destructor Destroy(); override;
 
        property ExodusItem: IExodusItem read _Item;
-       property Callback: IExodusItemCallback read _Callback;
-       property Pending: Boolean read _Pending write _Pending;
    end;
+   PExodusItemWrapper = ^TExodusItemWrapper;
 
 implementation
 
 {---------------------------------------}
-constructor TExodusItemWrapper.Create(ctrl: IExodusItemController;
-        Uid: WideString;
-        Type_: WideString;
-        cb: IExodusItemCallback);
+constructor TExodusItemWrapper.Create(item: IExodusItem);
 begin
-    _Item := TExodusItem.Create(ctrl, Uid, Type_, cb);
-    _Callback := cb;
+    _Item := item;
 end;
 
 {---------------------------------------}
 destructor TExodusItemWrapper.Destroy();
 begin
     _Item := nil;
-    
+
     inherited;
 end;
 

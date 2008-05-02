@@ -21,7 +21,7 @@ unit ExAllTreeView;
 
 interface
 
-uses SysUtils, Classes, ExTreeView, Exodus_TLB, Types, TntMenus;
+uses SysUtils, Classes, Controls, ExTreeView, Exodus_TLB, Types, TntMenus;
 
 type TExAllTreeView = class(TExTreeView)
 private
@@ -34,13 +34,21 @@ protected
     procedure mnuMoveClick(Sender: TObject); virtual;
     procedure mnuCopyClick(Sender: TObject); virtual;
     procedure mnuDeleteClick(Sender: TObject); virtual;
+
 public
     constructor Create(AOwner: TComponent; Session: TObject); override;
+
+    procedure DragOver(Source: TObject;
+            X, Y: Integer;
+            state: TDragState;
+            var accept: Boolean); override;
+    procedure DragDrop(Source: TObject;
+            X, Y: Integer); override;
 end;
 
 implementation
 
-uses ActionMenus, Graphics, ExActionCtrl, gnugettext, GrpManagement,
+uses ActionMenus, Graphics, ExActionCtrl, ExUtils, gnugettext, GrpManagement,
         COMExodusItemList, Session, TntComCtrls, Windows, Jabber1, RosterImages;
 
 const
@@ -57,6 +65,8 @@ var
     mi: TTntMenuItem;
 begin
     inherited Create(AOwner, Session);
+
+    DragMode := dmAutomatic;
 
     popup := TExActionPopupMenu.Create(Self);
     popup.ActionController := GetActionController();
@@ -111,24 +121,16 @@ end;
 
 procedure TExAllTreeView.mnuMoveClick(Sender: TObject);
 var
-    idx: Integer;
     items: IExodusItemList;
 begin
-    items := TExodusItemList.Create();
-    for idx := 0 to SelectionCount - 1 do
-        items.Add(IExodusItem(Selections[idx].Data));
-        
+    items := GetSelectedItems();
     ShowGrpManagement(items, tgoMove);
 end;
 procedure TExAllTreeView.mnuCopyClick(Sender: TObject);
 var
-    idx: Integer;
     items: IExodusItemList;
 begin
-    items := TExodusItemList.Create();
-    for idx := 0 to SelectionCount - 1 do
-        items.Add(IExodusItem(Selections[idx].Data));
-
+    items := GetSelectedItems();
     ShowGrpManagement(items, tgoCopy);
 end;
 procedure TExAllTreeView.mnuDeleteClick(Sender: TObject);
@@ -181,9 +183,9 @@ begin
     postitems := TExodusItemList.Create();
     for idx := 0 to ops.Count - 1 do begin
         node := TTntTreeNode(ops[idx]);
-        if (node.Data = nil) then continue;
+        item := GetNodeItem(node);
+        if (item = nil) then continue;
 
-        item := IExodusItem(node.Data);
         if (item.Type_ = 'group') then
             postitems.Add(item)
         else begin
@@ -230,6 +232,22 @@ begin
             PWideChar(_(sConfirmDeleteCaption)),
             MB_OK or MB_ICONWARNING);
     end;
+end;
+
+procedure TExAllTreeView.DragOver(
+        Source: TObject;
+        X: Integer; Y: Integer;
+        state: TDragState;
+        var accept: Boolean);
+var
+    msg: Widestring;
+begin
+    inherited;
+
+    //TODO:  figure out appropriate cursor for move-vs-copy??
+end;
+procedure TExAllTreeView.DragDrop(Source: TObject; X: Integer; Y: Integer);
+begin
 end;
 
 end.
