@@ -773,8 +773,10 @@ begin
         sstr := _('No Subject');
 
     tTag := dTag.GetFirstTag('body');
+    if (tTag.data <> '') then    
+        sstr := sstr + #13#10 + tTag.Data;
     tTag.ClearCData();
-    tTag.AddCData(_('Subject: ') + #13#10 + sstr);
+    tTag.AddCData(_('Subject: ') + sstr);
 
     ttag := dTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]/body[@xmlns="' + XMLNS_XHTML + '"]');
     if (ttag <> nil) then

@@ -266,6 +266,7 @@ const
     sMsgLocalTime = 'Local Time: ';
     sCannotOffline = 'This contact cannot receive offline messages.';
     sCannotStartChatWithSelf = 'A chat cannot be started with self.';
+    sCannotStartChatWithService = 'A chat cannot be started with a service or server';
 
     NOTIFY_CHAT_ACTIVITY = 0;
     NOTIFY_PRIORITY_CHAT_ACTIVITY = 1;
@@ -284,6 +285,15 @@ begin
     actctrl.addEnableFilter('contact', '{000-exodus.googlecode.com}-000-start-chat', 'selection=single');
 end;
 
+function IsAllowedChat(JID: TJAbberID): boolean;
+var
+    selfJID: TJabberID;
+begin
+    selfJID := TJabberID.Create(MainSession.jid);
+    Result := (selfJID.jid = JID.jid) and ((JID.resource = '') or
+              (JID.resource = selfJID.resource));
+
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -305,26 +315,33 @@ var
 //    exp: boolean;
     hist: string;
     anonymousChat: boolean;
-    tjid1, tjid2: TJabberID;
+    tjid1, selfJID: TJabberID;
 begin
     Result := nil;
 
     tjid1 := TJabberID.Create(sjid);
-    tjid2 := TJabberID.Create(MainSession.jid);
-    if ((tjid1.jid = tjid2.jid) and
-        ((resource = '') or
-         (resource = tjid2.resource))) then begin
-        // We are trying to start a conversation with ourselves
-        // or with our bare jid.  This causes an infinate loop
-        // when sending/receving messages.
-        // Don't allow - popup error message.
-        MessageBoxW(0, pWideChar(_(sCannotStartChatWithSelf)), PWideChar(sjid), MB_OK);
+    selfJID := TJabberID.Create(MainSession.jid);
+    try
+        if ((tjid1.jid = selfJID.jid) and
+            ((resource = '') or
+             (resource = selfJID.resource))) then
+        begin
+            // We are trying to start a conversation with ourselves
+            // or with our bare jid.  This causes an infinate loop
+            // when sending/receving messages.
+            // Don't allow - popup error message.
+            MessageBoxW(0, pWideChar(_(sCannotStartChatWithSelf)), PWideChar(sjid), MB_OK);
+            exit;
+        end;
+        if (tjid1.user = '') then
+        begin
+            //MessageBoxW(0, pWideChar(_(sCannotStartChatWithService)), PWideChar(sjid), MB_OK);
+            exit; //chat with server not allowed
+        end;
+    finally
         tjid1.Free();
-        tjid2.Free();
-        exit;
+        selfJID.Free();
     end;
-    tjid1.Free();
-    tjid2.Free();
 
     try
         // either show an existing chat or start one.
@@ -333,11 +350,7 @@ begin
         hist := '';
 
         // Determine if this chat is one started from an annonymous room.
-        if (FindRoom(sjid) <> nil) then
-            anonymousChat := true
-        else
-            anonymousChat := false;
-
+        anonymousChat := (FindRoom(sjid) <> nil);
 
         // If we have an existing chat, we may just want to raise it
         // or redock it, etc...
