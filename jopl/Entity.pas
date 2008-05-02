@@ -590,9 +590,12 @@ begin
         _iq.Send();
         {$ELSE}
         // FAIL!
-        // TODO:  fail
-        {$ENDIF}
+        _has_info := true;
+        if (tag.GetAttribute('type') = 'error') then
+            _disco_info_error := true;
+        js.FireEvent('/session/entity/info', tag);
         exit;
+        {$ENDIF}
     end;
 
     _processDiscoInfo(tag);
