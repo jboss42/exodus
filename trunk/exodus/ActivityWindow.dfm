@@ -40,19 +40,22 @@ object frmActivityWindow: TfrmActivityWindow
       TabOrder = 0
       Visible = False
       OnClick = pnlListScrollUpClick
+      OnMouseDown = pnlListScrollUpMouseDown
+      OnMouseUp = pnlListScrollUpMouseUp
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
       object imgScrollUp: TImage
         Left = 73
-        Top = 2
+        Top = 1
         Width = 16
         Height = 16
         Align = alCustom
         Anchors = [akTop]
         Transparent = True
         OnClick = pnlListScrollUpClick
-        ExplicitLeft = 75
+        OnMouseDown = pnlListScrollUpMouseDown
+        OnMouseUp = pnlListScrollUpMouseUp
       end
       object ScrollUpBevel: TColorBevel
         Left = 0
@@ -78,6 +81,8 @@ object frmActivityWindow: TfrmActivityWindow
       TabOrder = 1
       Visible = False
       OnClick = pnlListScrollDownClick
+      OnMouseDown = pnlListScrollDownMouseDown
+      OnMouseUp = pnlListScrollDownMouseUp
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
@@ -90,6 +95,8 @@ object frmActivityWindow: TfrmActivityWindow
         Anchors = [akBottom]
         Transparent = True
         OnClick = pnlListScrollDownClick
+        OnMouseDown = pnlListScrollDownMouseDown
+        OnMouseUp = pnlListScrollDownMouseUp
         ExplicitLeft = 75
         ExplicitTop = 2
       end
@@ -302,5 +309,12 @@ object frmActivityWindow: TfrmActivityWindow
       Caption = 'Undock All Windows'
       OnClick = mnuAW_FloatAllClick
     end
+  end
+  object timScrollTimer: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = timScrollTimerTimer
+    Left = 104
+    Top = 176
   end
 end

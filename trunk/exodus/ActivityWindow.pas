@@ -79,6 +79,7 @@ type
     mnuAW_CloseAll: TTntMenuItem;
     mnuAW_DockAll: TTntMenuItem;
     mnuAW_FloatAll: TTntMenuItem;
+    timScrollTimer: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -94,8 +95,18 @@ type
     procedure mnuAW_CloseAllClick(Sender: TObject);
     procedure mnuAW_DockAllClick(Sender: TObject);
     procedure mnuAW_FloatAllClick(Sender: TObject);
+    procedure pnlListScrollUpMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure pnlListScrollUpMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure timScrollTimerTimer(Sender: TObject);
+    procedure pnlListScrollDownMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure pnlListScrollDownMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
+    _timerScrollUp: boolean;
     _trackingList: TWidestringList;
     _docked: boolean;
     _activeitem: TfAWItem;
@@ -626,8 +637,26 @@ procedure TfrmActivityWindow.pnlListScrollDownClick(Sender: TObject);
 begin
     if (_canScrollDown) then begin
         Inc(_showingTopItem);
-        _updateDisplay(); 
+        _updateDisplay();
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.pnlListScrollDownMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+    inherited;
+    _timerScrollUp := false;
+    timScrollTimer.Interval := 250;
+    timScrollTimer.Enabled := true;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.pnlListScrollDownMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+    inherited;
+    timScrollTimer.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -639,6 +668,24 @@ begin
         end;
         _updateDisplay();
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.pnlListScrollUpMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+    inherited;
+    _timerScrollUp := true;
+    timScrollTimer.Interval := 250;
+    timScrollTimer.Enabled := true;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.pnlListScrollUpMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+    inherited;
+    timScrollTimer.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -1174,6 +1221,27 @@ begin
     end;
 
     _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.timScrollTimerTimer(Sender: TObject);
+begin
+    inherited;
+    timScrollTimer.Interval := 100;
+    if (_timerScrollUp) then begin
+        if (_canScrollUp) then begin
+            if (_showingTopItem > 0) then begin
+                Dec(_showingTopItem);
+            end;
+            _updateDisplay();
+        end;
+    end
+    else begin
+        if (_canScrollDown) then begin
+            Inc(_showingTopItem);
+            _updateDisplay();
+        end;
+    end;
 end;
 
 {---------------------------------------}
