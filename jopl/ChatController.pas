@@ -633,7 +633,6 @@ end;
 //Listen for incoming messages that belong to this chat
 procedure TChatController.RegisterMsgCB();
 var
-    event: widestring;
     from: widestring;
 begin
     UnRegisterMsgCB();
