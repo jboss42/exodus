@@ -122,7 +122,7 @@ implementation
 uses
     RosterForm, Session, PrefController,
     ActivityWindow, Jabber1, ExUtils,
-    ExSession;
+    ExSession, Notify;
 
 {$R *.dfm}
 
@@ -463,9 +463,6 @@ begin
         else if ((notifyEvents and notify_flash) > 0) then
             Self.Flash();
     end;
-    //tray notifications are always directed and dockmanager
-    if (((notifyEvents and notify_tray) > 0) and ((notifyEvents and notify_front) = 0))then
-        StartTrayAlert();
 end;
 
 {---------------------------------------}
@@ -664,7 +661,6 @@ var
 begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         checkFlash();
-        StopTrayAlert();
         if (_dockState = dsDocked) then begin
             frm := getTopDocked();
             if (frm <> nil) then begin
@@ -871,8 +867,14 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.checkFlash();
 begin
-    if (timFlasher.Enabled and
-       (not MainSession.Prefs.getBool('notify_docked_flasher'))) then
+    //notify_docked_flasher is a badly named pref that controls
+    //whether or not the docking window should continue to flash until
+    //every "notified" docked window has been brought to the front.
+    //This means walking the list and checking the IsNotifying flag
+    //however... this functionality will drive you crazy. It is
+    //turned off and invisible in Exodus' defaults.xml
+//    if (timFlasher.Enabled and
+//       (not MainSession.Prefs.getBool('notify_docked_flasher'))) then
         timFlasher.Enabled := false;
 end;
 

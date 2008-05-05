@@ -121,8 +121,6 @@ type
     procedure OnPersistWindowState(windowState : TXMLTag);override;
     procedure OnPersistedMessage(msg: TXMLTag);virtual;
 
-    procedure OnFlash();override;
-
     property NormalImageIndex: integer read _normalImageIndex write _normalImageIndex;
 
     procedure showDockbar(show: boolean);
@@ -569,22 +567,15 @@ end;
 procedure TfrmDockable.OnNotify(notifyEvents: integer);
 begin
     if (Docked) then begin
-        if ((notifyEvents and PrefController.notify_front) > 0) then
+        if ((notifyEvents and PrefController.notify_front) <> 0) then
             GetDockManager().BringDockedToTop(Self)
-        //if form is docked, all we need to do is update our presentation
-        else if ((notifyEvents and PrefController.notify_flash) > 0) then begin
+        //if form is docked, fire notify back to dock manager to handle flash
+        else if ((notifyEvents and PrefController.notify_flash) <> 0) then begin
+            GetDockManager().OnNotify(nil, notify_flash);
             isNotifying := true;
-            GetDockManager().UpdateDocked(Self);
         end;
     end;
     inherited; //inherited will handle floating window notifications
-end;
-
-procedure TfrmDockable.OnFlash();
-begin
-    //could implement flashing tabs here
-    if (not Docked) then
-        inherited;
 end;
 
 procedure TfrmDockable.addDockbarButton(button: TDockbarButton);

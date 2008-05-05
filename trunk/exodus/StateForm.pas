@@ -34,8 +34,6 @@ const
     WS_MAXIMIZED = 2;
     WS_TRAY = 3;
 
-    FLASH_TIMER_INTERVAL = 500;
-
     AOE_DISCONNECTED = 'disconnected';
     AOE_SHUTDOWN = 'shutdown';
     AOE_AUTHED = 'authed';
@@ -160,14 +158,12 @@ type
      _stateRestored: boolean;
      _skipWindowPosHandling: boolean;
      _isNotifying: boolean; //is this form handling some notify event (like flashing)?
-     _flasher: TTimer;
-     
+
     procedure NormalizePos(); //
     procedure CenterOnMainformMonitor(var pos: TPos);
 
     procedure setNotifying(newNotifyingState: boolean);
 
-    procedure OnFlashTim(Sender: TObject);
   protected
      procedure CreateParams(var Params: TCreateParams); override;
 
@@ -229,10 +225,6 @@ type
     }
     procedure PersistWindowState();virtual;
 
-    {
-        Event fired when the form should handle flash notification
-    }
-    procedure OnFlash();virtual;
   public
     {
         Show the window in its default configuration.
@@ -329,6 +321,7 @@ uses
     jabber1,
     types,
     Session,
+    Notify,
     GnuGetText,
     ExUtils,
     XMLUtils;
@@ -622,11 +615,6 @@ begin
     TranslateComponent(Self);
     _skipWindowPosHandling := false;
 
-    _flasher := TTimer.Create(Application);
-    _flasher.Enabled := false;
-    _flasher.Interval := FLASH_TIMER_INTERVAL;
-    _flasher.OnTimer := OnFlashTim;
-
     //initial conditions for position and size, may be changed later
     //when restoring state.
      _pos.Left := 0;
@@ -836,11 +824,13 @@ procedure TfrmState.gotActivate();
 begin
     //this is going to be a problem if tray should flash
     //until *all* notified windows become active
-    StopTrayAlert();
-
-    _flasher.enabled := false;
-    isNotifying := false;
-    OutputDebugMsg(Self.ClassName +  '.gotActivate');
+    if (IsNotifying) then
+    begin
+//        StopTrayAlert();
+        StopFlash(Self);
+        isNotifying := false;
+//    OutputDebugMsg(Self.ClassName +  '.gotActivate');
+    end;
 end;
 
 {
@@ -972,8 +962,8 @@ end;
 
 procedure TfrmState.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
+    inherited;
     PersistWindowState();
-    _flasher.Enabled := false;  //stop flashing
 end;
 
 function TfrmState.getPosition(): TRect;
@@ -981,30 +971,23 @@ begin
     Result := Bounds(_pos.Left, _pos.Top, _pos.Width, _pos.Height);
 end;
 
-procedure TfrmState.OnFlash();
-begin
-    FlashWindow(Self.Handle, true)
-end;
-
-procedure TfrmState.OnFlashTim(Sender: TObject);
-begin
-    if (not Self.Active and isNotifying and MainSession.prefs.GetBool('notify_flasher')) then
-        onFlash()
-    else
-        _flasher.Enabled := false;  //stop flashing
-end;
-
 procedure TfrmState.OnNotify(notifyEvents: integer);
 begin
-     if (Self.Floating and ((notifyEvents and notify_front) > 0)) then begin
-        ShowWindow(Self.Handle, SW_SHOWNORMAL);
-        Self.bringtofront();
-     end
-     else if ((notifyEvents and PrefController.notify_flash) > 0) then begin
-        isNotifying := true;
-        OnFlash(); //flash once
-        _flasher.Enabled := true; //OnFlash will handle rest
-     end;
+    //don't handle docked
+    if (Self.Floating) then
+    begin
+        if ((notifyEvents and notify_front) <> 0) then begin
+            ShowWindow(Self.Handle, SW_SHOWNORMAL);
+            Self.bringtofront();
+        end
+        else if ((notifyEvents and PrefController.notify_flash) <> 0) then begin
+            isNotifying := true;
+            if (MainSession.prefs.GetBool('notify_flasher')) then
+                Notify.StartFlash(Self)
+            else
+                FlashWindow(Self.Handle, true);
+        end;
+    end;
 end;
 
 function TfrmState.RestoreStateEnabled(): boolean;
