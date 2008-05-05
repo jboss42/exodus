@@ -4510,34 +4510,47 @@ procedure TfrmExodus.txtStatusKeyPress(Sender: TObject; var Key: Char);
 var
     pres: TJabberCustomPres;
     val: Widestring;
+    status, show: Widestring;
+    priority: Integer;
 begin
     //something to do
     if Key = #13 then begin
         //TODO:  save and change status
-        val := txtStatus.Text;
-        pres := MainSession.prefs.getPresence(val);
-        if pres = nil then begin
-            //no existing presence...create it!
-            pres := TJabberCustomPres.Create;
-            pres.title := val;
-            pres.Status := val;
-            pres.Show := MainSession.Show;
-            pres.Priority := MainSession.Priority;
+        val := Trim(txtStatus.Text);
+        if (val <> '') then begin
+            //custom status
+            pres := MainSession.prefs.getPresence(val);
+            if pres = nil then begin
+                //no existing presence...create it!
+                pres := TJabberCustomPres.Create;
+                pres.title := val;
+                pres.Status := val;
+                pres.Show := MainSession.Show;
+                pres.Priority := MainSession.Priority;
 
-            MainSession.Prefs.setPresence(pres);
-            SessionCallback('/session/prefs', nil);
+                MainSession.Prefs.setPresence(pres);
+                SessionCallback('/session/prefs', nil);
+            end;
+
+            status := pres.Status;
+            show := pres.Show;
+            priority := pres.Priority;
+        end
+        else begin
+            //default status
+            status := '';
+            show := MainSession.Show;
+            priority := MainSession.Priority;
         end;
-        MainSession.setPresence(pres.Show, pres.Status, pres.Priority);
-        txtStatusExit(Sender);
 
-        Key := #0;
-    end else if Key = #27 then begin
-        txtStatusExit(Sender);
-
-        Key := #0;
-    end else begin
+        MainSession.setPresence(show, status, priority);
+    end else if Key <> #27 then begin
         inherited;
+        exit;
     end;
+
+    txtStatusExit(Sender);
+    Key := #0;
 end;
 
 
