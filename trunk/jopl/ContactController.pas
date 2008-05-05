@@ -313,7 +313,9 @@ begin
          begin
              _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
          end;
-         _UpdateContacts();
+         //shouldn't have anything to update unless authed
+         if (TJabberSession(_JS).Authenticated) then
+            _UpdateContacts();
      end
      else if (Event = '/session/block') or (Event = '/session/unblock') then
      begin
