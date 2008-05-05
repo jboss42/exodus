@@ -169,7 +169,7 @@ const
 var
     // Various other key controllers
     _guibuilder: TGUIFactory;
-    _Notify: TNotifyController;
+    _Notify: TPresNotifier;
     _subcontroller: TSubController;
     _richedit: THandle;
     _mutex: THandle;
@@ -434,9 +434,8 @@ begin
     _guibuilder := TGUIFactory.Create();
     _guibuilder.SetSession(MainSession);
 
-    // Notification singlton
-    _Notify := TNotifyController.Create;
-    _Notify.SetSession(MainSession);
+    // Presence Notification singlton
+    _Notify := TPresNotifier.Create;
 
     // S10N controller singleton
     _subcontroller := TSubController.Create();

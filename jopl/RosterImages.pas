@@ -232,6 +232,8 @@ const
 
 {$ENDIF}
 
+function GetPresenceImage(Show: Widestring; Prefix:WideString): integer;
+
 var
     RosterTreeImages: TRosterImages;
 
@@ -342,6 +344,30 @@ begin
     _ids.Insert(RI_VIEW_HISTORY_INDEX, RI_VIEW_HISTORY_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
+end;
+
+function GetPresenceImage(Show: Widestring; Prefix:WideString): integer;
+begin
+    if (Show = 'offline') then
+        Result := RosterTreeImages.Find(Prefix + 'offline')
+    else if (Show = 'away') then
+        Result := RosterTreeImages.Find(Prefix + 'away')
+    else if (Show = 'xa') then
+        Result := RosterTreeImages.Find(Prefix + 'xa')
+    else if (Show = 'dnd') then
+        Result := RosterTreeImages.Find(Prefix + 'dnd')
+    else if (Show = 'chat') then
+        Result := RosterTreeImages.Find(Prefix + 'chat')
+    else if (Show = 'pending') then
+        Result := RosterTreeImages.Find(Prefix + 'pending')
+    else if (Show = 'online_blocked') then
+        Result := RosterTreeImages.Find(Prefix + 'online_blocked')
+    else if (Show = 'offline_blocked') then
+        Result := RosterTreeImages.Find(Prefix + 'offline_blocked')
+    else if (Show = 'observer') then
+        Result := RosterTreeImages.Find(Prefix + 'observer')
+    else
+        Result := RosterTreeImages.Find(Prefix + 'available');
 end;
 
 initialization

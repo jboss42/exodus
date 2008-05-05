@@ -823,8 +823,6 @@ uses
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, MsgController, MsgDisplay,
-//    MsgQueue,
-//    MsgRecv,
     Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow,
     Room, XferManager, Stringprep, SSLWarn,
@@ -1162,6 +1160,8 @@ procedure TfrmExodus.WMActivate(var msg: TMessage);
         OutputDebugMsg('exodus got activate');
 //        outputdebugMsg('TfrmExodus.WMActivate');
         checkFlash();
+
+        StopFlash(Self);
         StopTrayAlert();
 
         if ((_dockWindow <> nil) and
@@ -2975,6 +2975,7 @@ procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
 //    if (frmRoster <> nil) then
 //        frmRoster.RosterTree.Invalidate();
+    StopFlash(Self);
     StopTrayAlert();
 end;
 
@@ -3522,7 +3523,8 @@ end;
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
     checkFlash();
-    StopTrayAlert();        
+    StopFlash(Self);
+    StopTrayAlert();
 end;
 
 {---------------------------------------}
@@ -4549,11 +4551,7 @@ begin
             bringToFront()
         else if ((notifyEvents and notify_flash) > 0) then
             Self.Flash();
-    end;
-    //tray notifications are always directed and dockmanager
-    if (((notifyEvents and notify_tray) > 0) and ((notifyEvents and notify_front) = 0))then
-        StartTrayAlert();
-
+    end;    
     //updateNextNotifyButton();
 end;
 
