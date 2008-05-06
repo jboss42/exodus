@@ -5,7 +5,7 @@ inherited frmSelectItem: TfrmSelectItem
   ParentFont = False
   OnCreate = FormCreate
   ExplicitWidth = 287
-  ExplicitHeight = 354
+  ExplicitHeight = 348
   PixelsPerInch = 96
   TextHeight = 13
   object pnlInput: TPanel
