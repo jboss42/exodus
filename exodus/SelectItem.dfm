@@ -12,25 +12,27 @@ inherited frmSelectItem: TfrmSelectItem
     Left = 0
     Top = 0
     Width = 279
-    Height = 286
+    Height = 283
     Align = alClient
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
+    ExplicitHeight = 286
     object pnlSelect: TPanel
       AlignWithMargins = True
       Left = 3
       Top = 3
       Width = 273
-      Height = 251
+      Height = 248
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
+      ExplicitHeight = 251
     end
     object pnlEntry: TPanel
       Left = 0
-      Top = 257
+      Top = 254
       Width = 279
       Height = 29
       Align = alBottom
@@ -38,16 +40,18 @@ inherited frmSelectItem: TfrmSelectItem
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
+      ExplicitTop = 257
       object lblJID: TTntLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 47
-        Height = 13
+        Height = 23
         Align = alLeft
         Caption = 'Jabber ID'
         FocusControl = txtJID
         Layout = tlCenter
+        ExplicitHeight = 13
       end
       object txtJID: TTntEdit
         AlignWithMargins = True
@@ -64,14 +68,18 @@ inherited frmSelectItem: TfrmSelectItem
   end
   object pnlActions: TPanel
     Left = 0
-    Top = 286
+    Top = 283
     Width = 279
-    Height = 34
+    Height = 37
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
+    ExplicitTop = 286
+    DesignSize = (
+      279
+      37)
     object ColorBevel1: TColorBevel
       Left = 0
       Top = 0
@@ -85,20 +93,22 @@ inherited frmSelectItem: TfrmSelectItem
     end
     object btnCancel: TTntButton
       AlignWithMargins = True
-      Left = 203
+      Left = 208
       Top = 6
-      Width = 75
-      Height = 25
+      Width = 68
+      Height = 28
+      Anchors = [akTop, akRight]
       Caption = 'Cancel'
       ModalResult = 2
       TabOrder = 0
     end
     object btnOK: TTntButton
       AlignWithMargins = True
-      Left = 122
+      Left = 134
       Top = 6
-      Width = 75
-      Height = 25
+      Width = 68
+      Height = 28
+      Anchors = [akTop, akRight]
       Caption = 'OK'
       Enabled = False
       ModalResult = 1
