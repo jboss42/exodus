@@ -42,7 +42,7 @@ uses Classes, COMExodusItem;
 function  TExContactsTreeView.FilterItem(Item: IExodusItem): Boolean;
 begin
     if (Item.Type_= EI_TYPE_CONTACT) then
-        Result := true
+        Result := inherited FilterItem(Item)
     else
         Result := false;
 end;

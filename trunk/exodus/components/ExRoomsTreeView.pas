@@ -40,7 +40,7 @@ uses COMExodusItem;
 function  TExRoomsTreeView.FilterItem(Item: IExodusItem): Boolean;
 begin
     if (Item.Type_= EI_TYPE_ROOM) then
-        Result := true
+        Result := inherited FilterItem(Item)
     else
         Result := false;
 end;
