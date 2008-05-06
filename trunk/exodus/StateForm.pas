@@ -324,7 +324,8 @@ uses
     Notify,
     GnuGetText,
     ExUtils,
-    XMLUtils;
+    XMLUtils,
+    Dockable;
 
 class procedure TAutoOpenEventManager.onAutoOpenEvent(event: Widestring);
 type
@@ -602,6 +603,18 @@ begin
     inherited CreateParams(Params);
     with Params do begin
         ExStyle := ExStyle or WS_EX_APPWINDOW;
+        if (not (self is TfrmDockable)) then begin
+            // Set the parent to main handle
+            WndParent := Application.Handle;
+        end
+        else begin
+            // See if this is docking or not.
+            if (WndParent = frmExodus.Handle) then begin
+                // Not docking so set parent to main handle (not frmexodus)
+                WndParent := Application.Handle;
+            end;
+        end;
+
     end;
 end;
 
