@@ -843,6 +843,10 @@ begin
     _basicpanel_height := txtBasicKeywordSearch.Height + (2 * TOP_BOTTOM_GUTTER_HEIGHT);
     _advpanel_height := grpKeyword.Height + (2 * TOP_BOTTOM_GUTTER_HEIGHT);
 
+    if (not MainSession.Prefs.getBool('show_priority')) then begin
+        grpPriority.Visible := false;
+        grpDate.Height := grpKeyword.Height;
+    end;  
 end;
 
 {---------------------------------------}
