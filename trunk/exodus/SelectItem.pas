@@ -79,6 +79,8 @@ type
     procedure txtJIDChange(Sender: TObject);
 
   private
+    _skipTextChange: boolean;
+    
     function GetItemTypes(index: integer): widestring;
   protected
     _itemTypes: TWideStringList;
@@ -102,7 +104,7 @@ type
   end;
 
 function SelectUIDByType(itemtype: Widestring; title: Widestring = ''): Widestring;
-function SelectUIDByTypes(itemtypes: TWidestringList; title: Widestring = ''): Widestring;
+function SelectUIDByTypes(itemtypes: TWidestringList; var SelectedItemType :widestring; title: Widestring = ''): Widestring;
 
 implementation
 
@@ -118,25 +120,30 @@ uses
 function SelectUIDByType(itemtype: Widestring; title: Widestring): Widestring;
 var
     twsl: TWidestringList;
+    ignore: widestring;
 begin
     twsl := TWideStringList.create();
     twsl.add(itemType);
-    Result := SelectUIDByTypes(twsl, title);
+    Result := SelectUIDByTypes(twsl, ignore, title);
     twsl.free();
 end;
 
-function SelectUIDByTypes(itemtypes: TWidestringList; title: Widestring = ''): Widestring;
+function SelectUIDByTypes(itemtypes: TWidestringList; var SelectedItemType :widestring; title: Widestring): Widestring;
 var
     selector: TfrmSelectItem;
 begin
     Result := '';
+    SelectedItemType := '';
     selector := TfrmSelectItem.Create(nil, itemtypes);
     if (title <> '') then
         selector.Caption := title;
 
     if (selector.ShowModal = mrOk) then
+    begin
         Result := selector.SelectedUID;
-
+        SelectedItemType := selector.SelectedItemType;
+    end;
+    
     selector.Free;
 end;
 
@@ -260,6 +267,7 @@ begin
         _itemTypes.Add(itemTypes[i]);
     _selectedItemType := '';
     _selectedUID := '';
+    _skipTextChange := false;
 end;
 
 {
@@ -353,7 +361,9 @@ begin
     else begin
         _selectedUID := item.UID;
         _selectedItemType := item.Type_;
+        _skipTextChange := true; //skip as we assign selected stuff here
         txtJID.text := item.UID;
+        _skipTextChange := false;
     end;
 
     btnOK.Enabled := valid;
@@ -365,13 +375,37 @@ begin
     _itemView.ShowOnline := mnuShowOnline.Checked;
 end;
 
+function GetValidJID(instr: widestring; out outJID: TJabberID): boolean;
+var
+    tjid: TJabberID;
+begin
+    tjid := TJabberID.Create(instr, true); //assume its escaped to start
+    outJID := nil;
+    //first see if jid is valid without having to escape
+    if (tjid.isValid) then
+        outJID := tjid
+    else begin
+        tjid.free();
+        tjid := TJabberID.create(instr, false); //escape and see if it works
+        if (tjid.isValid) then
+            outJID := tjid
+        else
+            tjid.free();
+    end;
+    Result := (outJID <> nil);
+end;
+
 procedure TfrmSelectItem.txtJIDChange(Sender: TObject);
+var
+    tjid: TJabberID;
 begin
     inherited;
+    if (_skipTextChange) then exit;
 
-    if (isValidJID(txtJID.Text, false)) then
+    if (GetValidJID(txtJID.Text, tjid)) then
     begin
-        _selectedUID := txtJID.Text;
+        _selectedUID := tjid.full;
+        tjid.free();
         _selectedItemType := '';
         btnOK.Enabled := true;
     end
