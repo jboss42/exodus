@@ -10,7 +10,6 @@ inherited frmDockable: TfrmDockable
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown
   ExplicitWidth = 212
-  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   object pnlDockTop: TPanel
