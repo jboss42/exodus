@@ -47,6 +47,7 @@ type
             // Methods
             procedure _ProcessResultTable();
             procedure _OnResult();
+            procedure _GetTable();
 
         protected
             // Variables
@@ -120,7 +121,7 @@ begin
     if (_SQLStatement = '') then exit;
 
     if (_table <> nil) then begin
-        _DataStore.GetTable(_SQLStatement, _table);
+        Synchronize(Self._GetTable);
         _ProcessResultTable();
     end;
 
@@ -283,10 +284,16 @@ end;
 procedure TSQLSearchThread.AddKeyword(keyword: Widestring);
 begin
     if (Trim(keyword) = '') then exit; // Don't allow empty strings
-    
+
     _keywordList.Add(keyword);
 end;
 
+{---------------------------------------}
+procedure TSQLSearchThread._GetTable();
+begin
+    _DataStore.GetTable(_SQLStatement, _table);
+end;
 
 
 end.
+
