@@ -1138,6 +1138,7 @@ begin
         tstr := tstr + '<lastts-time>' + IntToStr(ts.Time) + '</lastts-time>';
         tstr := tstr + '<lastnick>' + _msgProcessor.lastMsgNick + '</lastnick>';
         tstr := tstr + '<msgcount>' + IntToStr(_msgCount) + '</msgcount>';
+        tstr := tstr + '<lastlineclass>' + _msgProcessor.lastLineClass + '</lastlineclass>';
         tstr := tstr + '</state>';
         Result := '<!--' + tstr + '-->' + Result;
     end;
@@ -1182,6 +1183,7 @@ begin
                 _msgCount := 0;
             end;
         end;
+        _msgProcessor.lastLineClass := stag.GetBasicText('lastlineclass');
     end;
 
     writeHTML(txt);
