@@ -425,6 +425,7 @@ uses
     CustomNotify,
     ExSession,
     ExActionCtrl,
+    ExTreeView,
     JabberUtils,
     ExUtils,
     Entity,
@@ -3072,40 +3073,40 @@ procedure TfrmRoom.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);
 begin
     inherited;
-    Accept := (Source = frmRoster.RosterTree);
+    Accept := (Source is TExTreeView);
 end;
 
 procedure TfrmRoom.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
-//var
-//    n: TTreeNode;
-//    ritem: TJabberRosterItem;
-//    i: integer;
-//    jids: TList;
-//    o: TObject;
+var
+    itemCtrl: IExodusItemController;
+    jids: TWidestringList;
+
+    procedure BuildInviteList(items: IExodusItemList);
+    var
+        item: IExodusItem;
+        idx: Integer;
+    begin
+        if (items = nil) or (items.Count = 0) then exit;
+
+        for idx := 0 to items.Count - 1 do begin
+            item := items.Item[idx];
+            if (item.Type_ = 'group') then
+                BuildInviteList(itemCtrl.GetGroupItems(item.UID))
+            else if (item.Type_ = 'contact') then
+                 jids.Add(item.UID);
+        end;
+    end;
 begin
-         { TODO : Roster refactor }
-//  inherited;
-//    // drag drop
-//    if (Source = frmRosterWindow.treeRoster) then begin
-//        // We want to invite someone into this TC room
-//        jids := TList.Create();
-//        with frmRosterWindow.treeRoster do begin
-//            for i := 0 to SelectionCount - 1 do begin
-//                n := Selections[i];
-//                o := TObject(n.Data);
-//                assert(o <> nil);
-//
-//                if (o is TJabberRosterItem) then begin
-//                    ritem := TJabberRosterItem(n.Data);
-//                    jids.Add(ritem);
-//                end
-//                else if (o is TJabberGroup) then begin
-//                    TJabberGroup(o).getRosterItems(jids, true);
-//                end;
-//            end;
-//        end;
-//        ShowInvite(Self.jid, jids);
-//    end;
+    inherited;
+
+    // drag drop
+    if (Source is TExTreeView) then begin
+        itemCtrl := MainSession.ItemController;
+        jids := TWidestringList.Create();
+
+        BuildInviteList(TExTreeView(Source).GetSelectedItems());
+        ShowInvite(Self.jid, jids);
+    end;
 end;
 
 {
