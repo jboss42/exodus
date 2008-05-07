@@ -66,7 +66,7 @@ type
     function GetGroupItems(const Group: WideString): IExodusItemList; safecall;
       function AddItemByUid(const UID, ItemType: WideString;
       const cb: IExodusItemCallback): IExodusItem; safecall;
-      procedure CopyItem(const UID, Group: WideString); safecall;
+      procedure CopyItem(const UID, GroupTo: WideString); safecall;
       procedure MoveItem(const UID, GroupFrom, GroupTo: WideString); safecall;
       procedure RemoveGroupMoveContent(const Group, groupTo: WideString); safecall;
       procedure RemoveItem(const Uid: WideString); safecall;
@@ -381,7 +381,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusItemController.CopyItem(const UID, Group: WideString);
+procedure TExodusItemController.CopyItem(const UID, GroupTo: WideString);
 var
     Wrapper: TExodusItemRetainer;
     Item: IExodusItem;
@@ -396,12 +396,18 @@ begin
     Item := Wrapper.ExodusItem;
     if (Item.Type_ = EI_TYPE_GROUP) then begin
         if (_GroupParser.Separator <> '') then begin
-            //Make this group a subgroup of Group...
-            subgrp := Group + _GroupParser.Separator + _GroupParser.GetGroupName(UID);
+            if (GroupTo <> '') then begin
+                //Make this group a subgroup of Group...
+                subgrp := GroupTo + _GroupParser.Separator + _GroupParser.GetGroupName(UID)
+            end
+            else begin
+                //Make this group a top-level Group...
+                subgrp := _GroupParser.GetGroupName(UID);
+            end;
         end
         else begin
             //Copy this group's items into Group...
-            subgrp := Group;
+            subgrp := GroupTo;
         end;
 
         subitems := GetGroupItems(UID);
@@ -411,7 +417,7 @@ begin
     else begin
         //Copy item from one group to another, or in other words,
         //add group to the item's group list.
-        Item.AddGroup(Group);
+        Item.AddGroup(GroupTo);
     end;
 end;
 
@@ -432,8 +438,14 @@ begin
     Item := Wrapper.ExodusItem;
     if (Item.Type_ = EI_TYPE_GROUP) then begin
         if (_GroupParser.Separator <> '') then begin
-            //Make this group a subgroup of Group...
-            subgrp := GroupTo + _GroupParser.Separator + _GroupParser.GetGroupName(UID);
+            if (GroupTo <> '') then begin
+                //Make this group a subgroup of Group...
+                subgrp := GroupTo + _GroupParser.Separator + _GroupParser.GetGroupName(UID)
+            end
+            else begin
+                //Make this group a top-level Group...
+                subgrp := _GroupParser.GetGroupName(UID);
+            end;
         end
         else begin
             //Move this group's items into GroupTo...
