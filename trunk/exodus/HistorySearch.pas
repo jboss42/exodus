@@ -67,6 +67,7 @@ type
         nick: widestring;
         havePartialDayResults: boolean;
         jid: widestring;
+        msgType: widestring;
 
         msg: TJabberMessage; // Else store the tag
 
@@ -861,14 +862,6 @@ begin
 
     _ResultList.Free();
 
-    case _MsglistType of
-        RTF_MSGLIST  : TfRTFMsgList(_ResultsHistoryFrame).Free();
-        HTML_MSGLIST : TfIEMsgList(_ResultsHistoryFrame).Free();
-        else begin
-            _ResultsHistoryFrame.Free();
-        end;
-    end;
-
     MainSession.UnRegisterCallback(_sessionCB);
 
     inherited;
@@ -1617,6 +1610,7 @@ begin
             ritem.time := newmsg.Time;
             ritem.nick := newmsg.Nick;
         end;
+        ritem.msgType := newmsg.MsgType;
 
         ritem.listitem := nil;
 
@@ -1636,10 +1630,12 @@ begin
                 jidfound := true;
                 dateList := TWidestringList(_ResultList.Objects[i]);
                 for j := 0 to dateList.Count - 1 do begin
-                    if (date = datelist[j]) then begin
-                        // found date - just add msg
+                    itemList := TWidestringList(dateList.Objects[j]);
+                    if ((date = datelist[j]) and
+                        (itemList.Count > 0) and
+                        (TResultListItem(itemList.Objects[0]).msgType = newmsg.MsgType)) then begin
+                        // found date and same msgtype - just add msg
                         datefound := true;
-                        itemList := TWidestringList(dateList.Objects[j]);
                         if (_MsglistType = HTML_MSGLIST) then begin
                             ritem.Free();
                             ritem := TResultListItemHTML(itemList.Objects[0]);
@@ -1839,6 +1835,7 @@ procedure TfrmHistorySearch.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     inherited;
+
     Action := caFree;
 end;
 
