@@ -663,7 +663,7 @@ var
     Item: IExodusItem;
 begin
     Item := TJabberSession(_js).ItemController.GetItem(bareJID);
-    if (Item = nil) then exit;
+    if (Item = nil) or (Item.Type_ <> EI_TYPE_CONTACT) then exit;
     Item.Text := DisplayName;
     TContactUpdateItemOp.Create(Self, item);
 end;
