@@ -107,7 +107,7 @@ begin
     _KeywordList := TWidestringList.Create();
     _MessageTypeList := TWidestringList.Create();
 
-    _minDate := StrToDateTime('01/01/1970 00:00:00'); 
+    _minDate := 25569; //01/01/1970 00:00:00
     _maxDate := Tomorrow(); // Makes sure we capture all of today by default
     _SearchID := Format('%8.6f', [Now()]);
     _ExactMatch := false;
