@@ -20,19 +20,22 @@
 unit RoomController;
 
 interface
-uses XMLTag, Exodus_TLB, Unicode, ComObj;
+uses XMLTag, DisplayName, Exodus_TLB, Unicode, ComObj;
 
 type TRoomController = class
      private
          _JS: TObject;
          _SessionCB: Integer;
          _ItemsCB: IExodusItemCallback;
+         _dnListener: TDisplayNameEventListener;
 
          //Methods
          procedure _GetRooms();
          procedure _ParseRooms(Event: string; Tag: TXMLTag);
          procedure _ParseRoom(Room: IExodusItem; Tag: TXMLTag);
          procedure _SessionCallback(Event: string; Tag: TXMLTag);
+         procedure _OnDisplayNameChange(bareJID: Widestring; DisplayName: Widestring);
+
      public
          constructor Create(JS: TObject);
          destructor  Destroy; override;
@@ -58,15 +61,16 @@ type TExodusRoomsCallback = class(TAutoIntfObject, IExodusItemCallback)
 end;
 
 implementation
-uses Session, IQ, JabberConst, SysUtils, COMExodusItem, JabberID, RosterImages,
-     DisplayName, ComServ;
+uses Session, IQ, JabberConst, SysUtils, COMExodusItem, JabberID, RosterImages, ComServ;
 
 {---------------------------------------}
 constructor TRoomController.Create(JS: TObject);
 begin
     _JS := JS;
-    _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
     _ItemsCB := TExodusRoomsCallback.Create(Self);
+    _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
+    _dnListener := TDisplayNameEventListener.Create();
+    _dnListener.OnDisplayNameChange := _OnDisplayNameChange;
 end;
 
 {---------------------------------------}
@@ -75,6 +79,7 @@ begin
     with TJabberSession(_js) do begin
         UnregisterCallback(_SessionCB);
     end;
+    _dnListener.Free();
 
     _ItemsCB := nil;
 end;
@@ -312,6 +317,15 @@ begin
    
     Grps.Free();
     TmpJid.Free();
+end;
+procedure TRoomController._OnDisplayNameChange(bareJID: WideString; DisplayName: WideString);
+var
+    item: IExodusItem;
+begin
+    item := TJabberSession(_JS).ItemController.GetItem(bareJID);
+    if (item = nil) or (item.Type_ <> EI_TYPE_ROOM) then exit;
+    Item.Text := DisplayName;
+    SaveRooms();
 end;
 
 constructor TExodusRoomsCallback.Create(rc: TRoomController);
