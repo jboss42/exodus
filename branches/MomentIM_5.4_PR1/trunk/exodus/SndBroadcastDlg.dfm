@@ -1,6 +1,6 @@
 inherited dlgSndBroadcast: TdlgSndBroadcast
   Caption = 'Broadcast Message'
-  ClientHeight = 452
+  ClientHeight = 475
   ClientWidth = 632
   Color = clBtnFace
   Position = poScreenCenter
@@ -8,64 +8,71 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   ExplicitWidth = 640
-  ExplicitHeight = 480
+  ExplicitHeight = 503
   PixelsPerInch = 96
   TextHeight = 13
   object splitter: TTntSplitter
     AlignWithMargins = True
     Left = 4
-    Top = 170
+    Top = 196
     Width = 624
     Height = 3
     Cursor = crVSplit
     Margins.Left = 4
+    Margins.Top = 0
     Margins.Right = 4
-    Align = alTop
-    ExplicitLeft = 20
-    ExplicitTop = 179
+    Margins.Bottom = 0
+    Align = alBottom
+    Beveled = True
+    OnMoved = splitterMoved
+    ExplicitLeft = 0
+    ExplicitTop = 167
+    ExplicitWidth = 285
   end
   object pnlHeader: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 632
-    Height = 167
-    Align = alTop
-    AutoSize = True
+    AlignWithMargins = True
+    Left = 4
+    Top = 6
+    Width = 624
+    Height = 184
+    Margins.Left = 4
+    Margins.Top = 6
+    Margins.Right = 4
+    Margins.Bottom = 6
+    Align = alClient
     BevelOuter = bvNone
-    Constraints.MinHeight = 150
     ParentColor = True
     TabOrder = 0
     object pnlRecipients: TTntPanel
+      AlignWithMargins = True
       Left = 0
       Top = 29
-      Width = 632
-      Height = 117
+      Width = 624
+      Height = 134
       Margins.Left = 0
-      Margins.Top = 0
       Margins.Right = 0
       Align = alClient
-      AutoSize = True
       BevelOuter = bvNone
       ParentColor = True
-      TabOrder = 0
-      ExplicitTop = 26
+      TabOrder = 1
+      ExplicitWidth = 632
+      ExplicitHeight = 117
       object lstJIDS: TTntListView
-        AlignWithMargins = True
-        Left = 54
-        Top = 3
+        Left = 50
+        Top = 0
         Width = 574
-        Height = 114
+        Height = 134
         Margins.Left = 4
         Margins.Right = 4
         Margins.Bottom = 0
         Align = alClient
+        Anchors = [akLeft, akTop, akRight]
         Columns = <
           item
             AutoSize = True
-            Caption = 'Name'
+            Caption = 'Recipients'
           end
           item
-            AutoSize = True
             Caption = 'Problems'
           end>
         IconOptions.Arrangement = iaLeft
@@ -74,30 +81,32 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         ReadOnly = True
         RowSelect = True
         ParentShowHint = False
+        PopupMenu = popTo
         ShowColumnHeaders = False
-        ShowWorkAreas = True
         ShowHint = True
         SortType = stText
-        StateImages = ImageList1
-        TabOrder = 0
+        TabOrder = 1
         ViewStyle = vsReport
         OnCustomDrawItem = lstJIDSCustomDrawItem
+        OnEnter = lstJIDSEnter
         OnInfoTip = lstJIDSInfoTip
-        ExplicitLeft = 66
-        ExplicitWidth = 565
+        OnKeyDown = lstJIDSKeyDown
+        ExplicitLeft = 54
+        ExplicitTop = 3
+        ExplicitHeight = 130
       end
       object Panel1: TPanel
         Left = 0
         Top = 0
         Width = 50
-        Height = 117
+        Height = 134
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
-        TabOrder = 1
-        ExplicitHeight = 114
+        TabOrder = 0
+        ExplicitHeight = 117
         object btnTo: TSpeedButton
-          Left = 4
+          Left = 0
           Top = 3
           Width = 43
           Height = 26
@@ -144,9 +153,8 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
       end
     end
     object pnlSubject: TPanel
-      AlignWithMargins = True
-      Left = 4
-      Top = 3
+      Left = 0
+      Top = 0
       Width = 624
       Height = 26
       Margins.Left = 4
@@ -155,10 +163,9 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
-      TabOrder = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 632
+      TabOrder = 0
+      ExplicitLeft = 4
+      ExplicitTop = 3
       object lblSubject: TTntLabel
         Left = 0
         Top = 0
@@ -168,6 +175,7 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         Align = alLeft
         AutoSize = False
         Caption = '&Subject: '
+        FocusControl = txtSendSubject
         Layout = tlCenter
       end
       object txtSendSubject: TTntMemo
@@ -182,37 +190,36 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         TabOrder = 0
         WantReturns = False
         WordWrap = False
-        ExplicitTop = 0
-        ExplicitHeight = 26
       end
     end
     object pnlRecipientWarning: TTntPanel
       AlignWithMargins = True
-      Left = 54
-      Top = 146
-      Width = 575
-      Height = 21
-      Margins.Left = 54
+      Left = 50
+      Top = 166
+      Width = 574
+      Height = 18
+      Margins.Left = 50
       Margins.Top = 0
+      Margins.Right = 0
       Margins.Bottom = 0
       Align = alBottom
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 2
       OnClick = pnlRecipientWarningClick
-      ExplicitLeft = 63
-      ExplicitTop = 143
-      ExplicitWidth = 569
+      DesignSize = (
+        574
+        18)
       object TntLabel2: TTntLabel
         Left = 0
-        Top = 5
-        Width = 93
+        Top = 1
+        Width = 91
         Height = 13
-        Caption = 'Items preceded by '
+        Caption = 'Recipients with the'
       end
       object Image1: TImage
-        Left = 95
-        Top = 5
+        Left = 97
+        Top = 1
         Width = 16
         Height = 13
         Center = True
@@ -255,302 +262,328 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         Transparent = True
       end
       object TntLabel3: TTntLabel
-        Left = 116
-        Top = 5
-        Width = 324
+        Left = 119
+        Top = 1
+        Width = 210
         Height = 13
-        Caption = 'have an issue preventing them from receiving broadcast messages.'
+        Caption = 'image can not receive a broadcast message'
+      end
+      object btnRemoveInvalid: TTntButton
+        Left = 432
+        Top = 1
+        Width = 142
+        Height = 16
+        Anchors = [akTop, akRight]
+        Caption = 'Remove &Invalid Recipients'
+        TabOrder = 0
+        OnClick = btnRemoveInvalidClick
       end
     end
   end
-  object pnlButtons: TTntPanel
-    Left = 0
-    Top = 416
-    Width = 632
-    Height = 36
+  object pnlSender: TTntPanel
+    AlignWithMargins = True
+    Left = 4
+    Top = 199
+    Width = 624
+    Height = 276
+    Margins.Left = 4
+    Margins.Top = 0
+    Margins.Right = 4
+    Margins.Bottom = 0
     Align = alBottom
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
-    DesignSize = (
-      632
-      36)
-    object btnSend: TTntButton
-      Left = 486
-      Top = 5
-      Width = 68
-      Height = 28
-      Anchors = [akTop, akRight]
-      Caption = 'Sen&d'
-      Default = True
-      TabOrder = 0
-      OnClick = btnSendClick
-    end
-    object btnCancel: TTntButton
-      Left = 560
-      Top = 5
-      Width = 68
-      Height = 28
-      Anchors = [akTop, akRight]
-      Cancel = True
-      Caption = 'Cancel'
+    ExplicitTop = 198
+    object pnlButtons: TTntPanel
+      Left = 0
+      Top = 238
+      Width = 624
+      Height = 38
+      Align = alBottom
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 1
-      OnClick = btnCancelClick
+      DesignSize = (
+        624
+        38)
+      object btnSend: TTntButton
+        Left = 482
+        Top = 6
+        Width = 68
+        Height = 28
+        Anchors = [akTop, akRight]
+        Caption = 'Sen&d'
+        Default = True
+        TabOrder = 0
+        OnClick = btnSendClick
+      end
+      object btnCancel: TTntButton
+        Left = 556
+        Top = 6
+        Width = 68
+        Height = 28
+        Anchors = [akTop, akRight]
+        Cancel = True
+        Caption = 'Cancel'
+        TabOrder = 1
+        OnClick = btnCancelClick
+      end
     end
-  end
-  object pnlComposer: TTntPanel
-    AlignWithMargins = True
-    Left = 4
-    Top = 179
-    Width = 624
-    Height = 237
-    Margins.Left = 4
-    Margins.Right = 4
-    Margins.Bottom = 0
-    Align = alClient
-    BevelOuter = bvNone
-    ParentColor = True
-    TabOrder = 2
-    ExplicitTop = 173
-    ExplicitHeight = 243
-    object tbMsgOutToolbar: TTntToolBar
+    object pnlComposer: TTntPanel
       Left = 0
       Top = 0
       Width = 624
-      Height = 21
-      ButtonWidth = 25
-      Images = frmExodus.ImageList1
+      Height = 238
+      Align = alClient
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 0
-      Transparent = True
-      object ChatToolbarButtonBold: TTntToolButton
+      object tbMsgOutToolbar: TTntToolBar
         Left = 0
         Top = 0
-        Hint = 'Bold'
-        AllowAllUp = True
-        ImageIndex = 70
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-      end
-      object ChatToolbarButtonUnderline: TTntToolButton
-        Left = 25
-        Top = 0
-        Hint = 'Underline'
-        AllowAllUp = True
-        Caption = 'Underline'
-        ImageIndex = 71
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-      end
-      object ChatToolbarButtonItalics: TTntToolButton
-        Left = 50
-        Top = 0
-        Hint = 'Italics'
-        AllowAllUp = True
-        Caption = 'Color'
-        ImageIndex = 72
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-        Visible = False
-      end
-      object ChatToolbarButtonColors: TTntToolButton
-        Left = 75
-        Top = 0
-        Hint = 'Colors'
-        AllowAllUp = True
-        Caption = 'Color'
-        ImageIndex = 84
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonSeparator1: TTntToolButton
-        Left = 100
-        Top = 0
-        Width = 8
-        Style = tbsSeparator
-      end
-      object ChatToolbarButtonCut: TTntToolButton
-        Left = 108
-        Top = 0
-        Hint = 'Cut'
-        Caption = 'Cut'
-        ImageIndex = 73
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonCopy: TTntToolButton
-        Left = 133
-        Top = 0
-        Hint = 'Copy'
-        Caption = 'Copy'
-        ImageIndex = 74
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonPaste: TTntToolButton
-        Left = 158
-        Top = 0
-        Hint = 'Paste'
-        Caption = 'Paste'
-        ImageIndex = 75
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonSeparator2: TTntToolButton
-        Left = 183
-        Top = 0
-        Width = 8
-        Style = tbsSeparator
-      end
-      object ChatToolbarButtonEmoticons: TTntToolButton
-        Left = 191
-        Top = 0
-        Hint = 'Emoticons'
-        Caption = 'Emoticons'
-        ImageIndex = 76
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonHotkeys: TTntToolButton
-        Left = 216
-        Top = 0
-        Hint = 'Hotkeys'
-        Caption = 'Hotkeys'
-        ImageIndex = 77
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object TntToolButton1: TTntToolButton
-        Left = 241
-        Top = 0
-        Width = 8
-        Caption = 'TntToolButton1'
-        Style = tbsSeparator
-      end
-      object cmbPriority: TTntComboBox
-        Left = 249
-        Top = 0
-        Width = 72
-        Height = 21
-        Hint = 'Hotkeys'
-        Style = csDropDownList
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ItemHeight = 13
-        ParentFont = False
-        ParentShowHint = False
-        ShowHint = True
+        Width = 624
+        Height = 22
+        Margins.Left = 0
+        Margins.Top = 1
+        Margins.Right = 0
+        Margins.Bottom = 1
+        AutoSize = True
+        ButtonWidth = 25
+        Images = frmExodus.ImageList1
         TabOrder = 0
+        Transparent = True
+        object ChatToolbarButtonBold: TTntToolButton
+          Left = 0
+          Top = 0
+          Hint = 'Bold'
+          AllowAllUp = True
+          ImageIndex = 70
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+        end
+        object ChatToolbarButtonUnderline: TTntToolButton
+          Left = 25
+          Top = 0
+          Hint = 'Underline'
+          AllowAllUp = True
+          Caption = 'Underline'
+          ImageIndex = 71
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+        end
+        object ChatToolbarButtonItalics: TTntToolButton
+          Left = 50
+          Top = 0
+          Hint = 'Italics'
+          AllowAllUp = True
+          Caption = 'Color'
+          ImageIndex = 72
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+          Visible = False
+        end
+        object ChatToolbarButtonColors: TTntToolButton
+          Left = 75
+          Top = 0
+          Hint = 'Colors'
+          AllowAllUp = True
+          Caption = 'Color'
+          ImageIndex = 84
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonCut: TTntToolButton
+          Left = 100
+          Top = 0
+          Hint = 'Cut'
+          Caption = 'Cut'
+          ImageIndex = 73
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonSeparator1: TTntToolButton
+          Left = 125
+          Top = 0
+          Width = 8
+          Style = tbsSeparator
+        end
+        object ChatToolbarButtonCopy: TTntToolButton
+          Left = 133
+          Top = 0
+          Hint = 'Copy'
+          Caption = 'Copy'
+          ImageIndex = 74
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonPaste: TTntToolButton
+          Left = 158
+          Top = 0
+          Hint = 'Paste'
+          Caption = 'Paste'
+          ImageIndex = 75
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonSeparator2: TTntToolButton
+          Left = 183
+          Top = 0
+          Width = 8
+          Style = tbsSeparator
+        end
+        object ChatToolbarButtonEmoticons: TTntToolButton
+          Left = 191
+          Top = 0
+          Hint = 'Emoticons'
+          Caption = 'Emoticons'
+          ImageIndex = 76
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonHotkeys: TTntToolButton
+          Left = 216
+          Top = 0
+          Hint = 'Hotkeys'
+          Caption = 'Hotkeys'
+          ImageIndex = 77
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object TntToolButton1: TTntToolButton
+          Left = 241
+          Top = 0
+          Width = 8
+          Caption = 'TntToolButton1'
+          Style = tbsSeparator
+        end
+        object cmbPriority: TTntComboBox
+          Left = 249
+          Top = 0
+          Width = 72
+          Height = 21
+          Hint = 'Hotkeys'
+          Style = csDropDownList
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ItemHeight = 13
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          TabStop = False
+        end
       end
-    end
-    object RTComposer: TExRichEdit
-      Left = 0
-      Top = 21
-      Width = 624
-      Height = 216
-      Align = alClient
-      AutoURLDetect = adNone
-      Ctl3D = True
-      CustomURLs = <
-        item
-          Name = 'e-mail'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'http'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'file'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'mailto'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'ftp'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'https'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'gopher'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'nntp'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'prospero'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'telnet'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'news'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'wais'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end>
-      LangOptions = [loAutoFont]
-      Language = 1033
-      ParentCtl3D = False
-      ScrollBars = ssVertical
-      ShowSelectionBar = False
-      TabOrder = 1
-      URLColor = clBlue
-      URLCursor = crHandPoint
-      WantTabs = True
-      WordWrap = False
-      AutoVerbMenu = False
-      InputFormat = ifUnicode
-      OutputFormat = ofUnicode
-      SelectedInOut = False
-      PlainRTF = False
-      UndoLimit = 0
-      AllowInPlace = False
+      object RTComposer: TExRichEdit
+        Left = 0
+        Top = 22
+        Width = 624
+        Height = 216
+        Align = alClient
+        AutoURLDetect = adNone
+        Ctl3D = True
+        CustomURLs = <
+          item
+            Name = 'e-mail'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'http'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'file'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'mailto'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'ftp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'https'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'gopher'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'nntp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'prospero'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'telnet'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'news'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'wais'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end>
+        LangOptions = [loAutoFont]
+        Language = 1033
+        ParentCtl3D = False
+        ScrollBars = ssVertical
+        ShowSelectionBar = False
+        TabOrder = 1
+        URLColor = clBlue
+        URLCursor = crHandPoint
+        WordWrap = False
+        AutoVerbMenu = False
+        InputFormat = ifUnicode
+        OutputFormat = ofUnicode
+        SelectedInOut = False
+        PlainRTF = False
+        UndoLimit = 0
+        AllowInPlace = False
+      end
     end
   end
-  object ImageList1: TImageList
+  object imgState: TImageList
     Left = 8
-    Top = 424
+    Top = 440
     Bitmap = {
       494C010101000300040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -692,14 +725,14 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
   end
   object popTo: TTntPopupMenu
     Left = 48
-    Top = 424
+    Top = 440
     object Add1: TTntMenuItem
-      Caption = '&Add...'
-      OnClick = Add1Click
+      Caption = '&Add Recipients...'
+      OnClick = btnAddClick
     end
     object Remove1: TTntMenuItem
-      Caption = '&Remove'
-      OnClick = Remove1Click
+      Caption = '&Remove Selected Recipients'
+      OnClick = btnRemoveClick
     end
   end
 end

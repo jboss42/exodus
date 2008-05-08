@@ -29,7 +29,8 @@ type
     _JID : TJabberID;
     _lastError: Widestring;
     _validated: boolean;
-
+    _itemTextColor: TColor;
+    
     function GetIsValid(): boolean;
   public
     Constructor Create(IUID: widestring; IItem: IExodusItem = nil);
@@ -46,6 +47,7 @@ type
     property IsValid: boolean read GetIsValid;
     property LastError: Widestring read _lastError;
     property JID: TJabberID read _JID;
+    property TextColor: TColor read _itemTextColor;
   end;
 
   TdlgSndBroadcast = class(TExForm)
@@ -57,8 +59,7 @@ type
     pnlRecipients: TTntPanel;
     lstJIDS: TTntListView;
     Panel1: TPanel;
-    splitter: TTntSplitter;
-    ImageList1: TImageList;
+    imgState: TImageList;
     RTComposer: TExRichEdit;
     tbMsgOutToolbar: TTntToolBar;
     ChatToolbarButtonBold: TTntToolButton;
@@ -85,6 +86,9 @@ type
     Add1: TTntMenuItem;
     Remove1: TTntMenuItem;
     btnTo: TSpeedButton;
+    pnlSender: TTntPanel;
+    splitter: TTntSplitter;
+    btnRemoveInvalid: TTntButton;
     procedure btnRemoveClick(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -98,8 +102,11 @@ type
     procedure FormActivate(Sender: TObject);
     procedure pnlRecipientWarningClick(Sender: TObject);
     procedure btnToClick(Sender: TObject);
-    procedure Add1Click(Sender: TObject);
-    procedure Remove1Click(Sender: TObject);
+    procedure splitterMoved(Sender: TObject);
+    procedure lstJIDSEnter(Sender: TObject);
+    procedure btnRemoveInvalidClick(Sender: TObject);
+    procedure lstJIDSKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     _supportedTypes: TWidestringList;
     _foundError: boolean;
@@ -113,9 +120,12 @@ type
     procedure SetPlaintextMessage(value: widestring);
     function GetPlaintextMessage(): widestring;
 
+    procedure SetListItemState(item: TTntLIstItem);
 
     procedure AddRecipient(itemInfo: TItemInfo);
     procedure ValidateList();
+    procedure FixupWarningPanel(show: boolean);
+    procedure RefreshRecipientList();
   protected
     procedure CreateParams(var Params: TCreateParams); override;
 
@@ -252,6 +262,8 @@ var
 begin
     _UID := IUID;
     _bareUID := _UID;
+    _itemTextColor := clWindowText;
+
     _imageIndex := -1; //no index
 //        _imageIndex := RosterImages.RosterTreeImages.Find(RosterImages.RI_UNKNOWN_KEY);
 
@@ -385,11 +397,7 @@ end;
 procedure TdlgSndBroadcast.FormActivate(Sender: TObject);
 begin
     inherited;
-    pnlRecipientWarning.Visible := false;  //will be adjusted during refresh paints
-    ValidateList();
-    pnlRecipientWarning.Visible := _foundError;
-    Self.Invalidate();
-    Self.Refresh();
+    RefreshRecipientList();
 end;
 
 {------------------------------------------------------------------------------}
@@ -415,6 +423,24 @@ begin
     Result := -1;
 end;
 
+procedure TdlgSndBroadcast.SetListItemState(item: TTntLIstItem);
+var
+    Info: TItemInfo;
+begin
+    Info := TItemINfo(item.Data);
+    item.Caption := info.DisplayName;
+    item.ImageIndex := info.ImageIndex;
+    info._itemTextColor := clWindowText;
+    item.SubItems.Clear;
+
+    if (not info.IsValid) then
+    begin
+        item.ImageIndex := RosterImages.RI_DELETE_INDEX;
+        item.SubItems.Add(Info.LastError);
+        info._itemTextColor := TColor(RGB(130,143,154)); //gray
+    end;
+end;
+
 {------------------------------------------------------------------------------}
 procedure TdlgSndBroadcast.lstJIDSCustomDrawItem(Sender: TCustomListView;
             Item: TListItem;
@@ -423,11 +449,14 @@ procedure TdlgSndBroadcast.lstJIDSCustomDrawItem(Sender: TCustomListView;
 begin
     inherited;
     //change font color to "inactive" if item is in an error state
-    if (not TItemInfo(item.Data).IsValid) then
-        Sender.Canvas.font.Color := TColor(RGB(130,143,154 ))
-    else Sender.Canvas.font.Color := clWindowText;
-    //show warning if needed
-    pnlRecipientWarning.Visible := pnlRecipientWarning.Visible or (not TItemInfo(item.Data).IsValid);
+    Sender.Canvas.font.Color := TItemInfo(item.Data).TextColor;
+end;
+
+procedure TdlgSndBroadcast.lstJIDSEnter(Sender: TObject);
+begin
+    inherited;
+    if (lstJIDS.SelCount = 0) and (lstJIDS.Items.Count > 0) then
+        lstJIDs.Items[0].Selected := true;
 end;
 
 {------------------------------------------------------------------------------}
@@ -440,10 +469,36 @@ begin
         InfoTip := InfoTip + #13#10 + _(IT_INVALID_ITEM) + ': ' + TItemInfo(Item.Data).LastError;
 end;
 
+procedure TdlgSndBroadcast.lstJIDSKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    inherited;
+    if (key = VK_DELETE) then
+        RemoveSelectedRecipients();
+end;
+
+procedure TdlgSndBroadcast.FixupWarningPanel(show: boolean);
+begin
+    if (pnlRecipientWarning.Visible <> show) then
+    begin
+        pnlRecipientWarning.Visible := show;
+        Self.Realign;
+    end;
+    //force a colum width resize
+    lstJIDs.Columns[0].Width := -1;
+    lstJIDs.Columns[1].Width := -1;
+end;
+
+procedure TdlgSndBroadcast.RefreshRecipientList();
+begin
+    ValidateList();
+    FixupWarningPanel(_foundError);
+    lstJIDs.Invalidate;
+end;
+
 procedure TdlgSndBroadcast.pnlRecipientWarningClick(Sender: TObject);
 begin
-  inherited;
-
+    inherited;
 end;
 
 {------------------------------------------------------------------------------}
@@ -451,7 +506,7 @@ procedure TdlgSndBroadcast.ClearRecipients();
 var
     i: integer;
 begin
-    // Remove all items
+    // remove all items
     for i := lstJIDS.Items.Count - 1 downto 0 do begin
         tItemInfo(lstJIDS.Items[i].Data).Free(); //free TItemInfo
         lstJIDS.Items.Delete(i);
@@ -462,6 +517,14 @@ end;
 procedure TdlgSndBroadcast.SetSubject(value: widestring);
 begin
     Self.txtSendSubject.Text := value;
+end;
+
+procedure TdlgSndBroadcast.splitterMoved(Sender: TObject);
+begin
+   inherited;
+   //force lv cloumns to autosize
+   lstJIDs.Columns[0].Width := -1;
+   lstJIDs.Columns[1].Width := -1;
 end;
 
 {------------------------------------------------------------------------------}
@@ -519,17 +582,6 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TdlgSndBroadcast.Add1Click(Sender: TObject);
-var
-    newRecipient: Widestring;
-    newType: widestring;
-begin
-    inherited;
-    newRecipient := SelectUIDByTypes(_supportedTypes, newType);
-    if (newRecipient <> '') then
-        AddRecipientByUID(newRecipient);
-end;
-
 procedure TdlgSndBroadcast.AddRecipient(itemInfo: TItemInfo);
 var
     entry: TTnTListItem;
@@ -539,14 +591,7 @@ begin
     else begin
         entry := lstJIDS.Items.Add();
         entry.Data := itemInfo;
-        entry.Caption := itemInfo.DisplayName;
-        entry.ImageIndex := itemInfo.ImageIndex;
-        //add itemInfo as the 0th sub item object
-        if (not itemInfo.IsValid) then
-        begin
-            entry.StateIndex := 0;
-            entry.SubItems.Add(itemInfo.LastError);
-        end;
+        SetListItemState(entry);
     end;
 end;
 
@@ -575,15 +620,10 @@ var
 begin
     for i  := 0 to uids.Count - 1 do
         Self.AddRecipientByUID(uids[i]);
+    RefreshRecipientList();
 end;
 
 {------------------------------------------------------------------------------}
-procedure TdlgSndBroadcast.Remove1Click(Sender: TObject);
-begin
-    inherited;
-    RemoveSelectedRecipients();
-end;
-
 procedure TdlgSndBroadcast.RemoveSelectedRecipients();
 var
     i: integer;
@@ -596,6 +636,7 @@ begin
             lstJIDS.Items.Delete(i);
         end;
     end;
+    RefreshRecipientList();
 end;
 
 {------------------------------------------------------------------------------}
@@ -608,6 +649,7 @@ begin
     begin
         tItemInfo(lstJIDS.Items[i].Data).Validate();
         _foundError := _foundError or (not tItemInfo(lstJIDS.Items[i].Data).IsValid);
+        SetListItemState(lstJIDS.Items[i]);
     end;
 end;
 
@@ -621,6 +663,7 @@ begin
     newRecipient := SelectUIDByTypes(_supportedTypes, newType);
     if (newRecipient <> '') then
         AddRecipientByUID(newRecipient);
+    RefreshRecipientList();
 end;
 
 {------------------------------------------------------------------------------}
@@ -637,6 +680,23 @@ begin
     RemoveSelectedRecipients();
 end;
 
+
+procedure TdlgSndBroadcast.btnRemoveInvalidClick(Sender: TObject);
+var
+    i: integer;
+begin
+    inherited;
+    ValidateList(); //state may have changed, given voice etc.
+    // Remove all the selected items
+    for i := lstJIDS.Items.Count - 1 downto 0 do begin
+        if ( not TItemInfo(lstJIDS.Items[i].Data).IsValid) then
+        begin
+            TItemInfo(lstJIDS.Items[i].Data).Free();
+            lstJIDS.Items.Delete(i);
+        end;
+    end;
+    RefreshRecipientList();
+end;
 
 {*******************************************************************************
 *********************** TSendBroadcastAction ***********************************
@@ -677,7 +737,6 @@ procedure SendBroadcastMessage(Subject: widestring;
 var
     oneMessage: TJabberMessage;
     i: integer;
-    mtag: TXMLTag;
     ent: TJabberEntity;
     nick: Widestring;
     oneInfo: TItemInfo;
