@@ -293,7 +293,8 @@ uses
   CommonActions in 'CommonActions.pas',
   ExContactHoverFrame in 'components\ExContactHoverFrame.pas' {ExContactHoverFrame: TTntFrame},
   ExItemHoverForm in 'components\ExItemHoverForm.pas' {ExItemHoverForm: TTntForm},
-  ExRoomHoverFrame in 'components\ExRoomHoverFrame.pas' {ExRoomHoverFrame: TTntFrame};
+  ExRoomHoverFrame in 'components\ExRoomHoverFrame.pas' {ExRoomHoverFrame: TTntFrame},
+  SndBroadcastDlg in 'SndBroadcastDlg.pas' {dlgSndBroadcast};
 
 {$R *.TLB}
 

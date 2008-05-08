@@ -279,7 +279,7 @@ type
     procedure OnFloat();override;
 
     property MyAffiliation: WideString read _my_affiliation;   
-
+    property MyRole: WideString read _my_membership_role;
   end;
 
   TJoinRoomAction = class(TExBaseAction)
