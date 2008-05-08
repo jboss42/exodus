@@ -88,7 +88,6 @@ type
     pnlBasicSearchBar: TTntPanel;
     lblBasicHistoryFor: TTntLabel;
     lblBasicKeywordSearch: TTntLabel;
-    txtBasicHistoryFor: TTntEdit;
     txtBasicKeywordSearch: TTntEdit;
     pnlBasicSearchHistoryFor: TTntPanel;
     pnlSearchBar: TTntPanel;
@@ -132,6 +131,8 @@ type
     btnDelete: TTntButton;
     grpPriority: TTntGroupBox;
     chkOnlyHighPriority: TTntCheckBox;
+    bvlBasicHistoryFor: TTntBevel;
+    lblBasicSearchHistoryForValue: TTntLabel;
     procedure FormResize(Sender: TObject);
     procedure btnAdvBasicSwitchClick(Sender: TObject);
     procedure radioAllClick(Sender: TObject);
@@ -462,20 +463,20 @@ begin
             // Contacts have something so it takes priority
             _simpleJIDIsRoom := false;
             _simpleJID := TJabberID(lstContacts.Items.Objects[0]).jid;
-            txtBasicHistoryFor.Text := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
+            lblBasicSearchHistoryForValue.Caption := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
         end
         else if ((lstRooms.Count > 0) and
             (_roomsJIDLimit = hsLimited)) then begin
             // Contacts have nothing and Rooms have something
             _simpleJIDIsRoom := true;
             _simpleJID := TJabberID(lstRooms.Items.Objects[0]).jid;
-            txtBasicHistoryFor.Text := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
+            lblBasicSearchHistoryForValue.Caption := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
         end
         else begin
             // Set simple search to any
             _simpleJIDIsRoom := false;
             _simpleJID := '';
-            txtBasicHistoryFor.Text := _(ANY_JID);
+            lblBasicSearchHistoryForValue.Caption := _(ANY_JID);
         end;
 
         // Make sure Search button is enabled;
@@ -734,7 +735,7 @@ begin
         end
         else begin
             // Basic Search
-            if (Trim(txtBasicHistoryFor.Text) <> '') then begin
+            if (Trim(lblBasicSearchHistoryForValue.Caption) <> '') then begin
                 _SearchObj.AddJid(_simpleJID);
             end;
 
@@ -778,7 +779,7 @@ procedure TfrmHistorySearch.FormCreate(Sender: TObject);
 begin
     inherited;
 
-    txtBasicHistoryFor.Text := _(ANY_JID);
+    lblBasicSearchHistoryForValue.Caption := _(ANY_JID);
     _simpleJIDIsRoom := false;
 
     lstContacts.AddItem(_(ANY_JID), nil);
@@ -1863,7 +1864,7 @@ begin
     _RemoveAnyJID(true, true);
 
     _simpleJID := Trim(jid);
-    txtBasicHistoryFor.Text := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
+    lblBasicSearchHistoryForValue.Caption := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
     _simpleJIDIsRoom := isroom;
 end;
 
