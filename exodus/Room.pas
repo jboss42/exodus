@@ -20,7 +20,7 @@ unit Room;
 interface
 
 uses
-    Unicode, XMLTag, RegExpr,
+    Unicode, XMLTag, RegExpr, DropTarget,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
@@ -185,6 +185,10 @@ type
     _notify: array[0..2] of integer;
 
     _session_callback: integer;
+    _dropSupport: TExDropTarget;
+    procedure _DragUpdate(Source: TExDropTarget; X, Y: Integer; var Action: TExDropActionType);
+    procedure _DragExecute(Source: TExDropTarget; X, Y: Integer);
+    procedure _DragEnd(Source: TExDropTarget);
 
     function  checkCommand(txt: Widestring): boolean;
     function _countPossibleNicks(tmps: Widestring): integer;
@@ -3069,14 +3073,7 @@ begin
     end;
 end;
 
-procedure TfrmRoom.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
-                               State: TDragState; var Accept: Boolean);
-begin
-    inherited;
-    Accept := (Source is TExTreeView);
-end;
-
-procedure TfrmRoom.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
+procedure TfrmRoom._DragUpdate(Source: TExDropTarget; X: Integer; Y: Integer; var Action: TExDropActionType);
 var
     itemCtrl: IExodusItemController;
     jids: TWidestringList;
@@ -3097,16 +3094,69 @@ var
         end;
     end;
 begin
+    itemCtrl := MainSession.ItemController;
+    jids := TWidestringList(Source.Data);
+    if (jids = nil) then begin
+        jids := TWidestringList.Create();
+        BuildInviteList(Source.DragItems);
+        Source.Data := jids;
+    end;
+
+    if (jids.Count <> 0) then
+        Action := datMove
+    else
+        Action := datNone;
+
+    case Action of
+        datNone: begin
+            Self.DragCursor := crNone;
+            MsgList.DragCursor := crNone;
+        end;
+        datMove: begin
+            Self.DragCursor := crDragMove;
+            MsgList.DragCursor := crDragMove;
+        end;
+    end;
+end;
+procedure TfrmRoom._DragEnd(Source: TExDropTarget);
+var
+    jids: TWidestringList;
+begin
+    jids := TWidestringList(Source.Data);
+    jids.Free();
+end;
+procedure TfrmRoom._DragExecute(Source: TExDropTarget; X: Integer; Y: Integer);
+var
+    jids: TWidestringList;
+begin
+    jids := TWidestringList(Source.Data);
+    if (jids <> nil) and (jids.Count <> 0) then
+        ShowInvite(Self.jid, jids);
+end;
+
+procedure TfrmRoom.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
+                               State: TDragState; var Accept: Boolean);
+begin
+    case State of
+        dsDragLeave: begin
+            Self.DragCursor := crDrag;
+            exit;
+        end;
+        dsDragEnter: begin
+            _dropSupport.Free();
+            _dropSupport := OpenDropTarget(Source, _DragUpdate, _DragExecute, _DragEnd);
+        end;
+    end;
+
+    Accept := (_dropSupport <> nil) and _dropSupport.Update(X, Y);
+end;
+
+procedure TfrmRoom.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
+begin
     inherited;
 
     // drag drop
-    if (Source is TExTreeView) then begin
-        itemCtrl := MainSession.ItemController;
-        jids := TWidestringList.Create();
-
-        BuildInviteList(TExTreeView(Source).GetSelectedItems());
-        ShowInvite(Self.jid, jids);
-    end;
+    if (_dropSupport <> nil) then _dropSupport.Execute(X, Y);
 end;
 
 {

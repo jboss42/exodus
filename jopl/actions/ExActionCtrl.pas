@@ -713,7 +713,7 @@ var
     info: TActionBuildInfo;
     mode: TActionBuildModeType;
     applied: TObjectList;
-    idx, jdx: Integer;
+    idx: Integer;
     typedActs, mainActs: TExodusTypedActions;
 
     procedure _PopulateItemDescendants(
