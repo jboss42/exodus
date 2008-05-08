@@ -331,6 +331,8 @@ var
   continue := SetupSession();
   if (not continue) then exit;
 
+  Screen.Cursors[crDragMove] := LoadCursor(hInstance, 'DragMove');
+  Screen.Cursors[crDragCopy] := LoadCursor(hInstance, 'DragCopy');
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
   Application.OnHelp := frmExodus.DisableHelp;

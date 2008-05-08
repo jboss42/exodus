@@ -21,43 +21,28 @@ unit ExAllTreeView;
 
 interface
 
-uses SysUtils, Classes, Controls, ExTreeView, Exodus_TLB, Types, TntMenus;
+uses SysUtils, Classes, Controls, DropTarget, ExTreeView, Exodus_TLB, Types, TntMenus;
 
 type
-  TTreeDropActionType = (tdatNone, tdatMove, tdatCopy);
-  TTreeDragSelectionType = (tdstNone, tdstOther, tdstGroup);
-  TTreeDropSupport = class
+  TTreeDragSelectionType = (tdstNone, tdstGroup, tdstOther);
+  TExAllTreeView = class(TExTreeView)
   private
-    _owner: TExTreeView;
-    _act: TTreeDropActionType;
-    _seltype: TTreeDragSelectionType;
-    _items: IExodusItemList;
-
-  public
-    constructor Create(owner: TExTreeView);
-    destructor Destroy(); override;
-
-    procedure Update(X,Y: Integer);
-
-    property Action: TTreeDropActionType read _act;
-    property SelectionType: TTreeDragSelectionType read _seltype;
-    property SelectionItems: IExodusItemList read _items;
-  end;
-type TExAllTreeView = class(TExTreeView)
-private
     _mnuCopy: TTntMenuItem;
     _mnuMove: TTntMenuItem;
     _mnuDelete: TTntMenuItem;
 
-    _dropSupport: TTreeDropSupport;
+    _dropSupport: TExDropTarget;
 
-protected
+  protected
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
+    procedure _DragUpdate(Source: TExDropTarget; X, Y: Integer; var Action: TExDropActionType);
+    procedure _DragExecute(Source: TExDropTarget; X, Y: Integer);
+
     procedure mnuMoveClick(Sender: TObject); virtual;
     procedure mnuCopyClick(Sender: TObject); virtual;
     procedure mnuDeleteClick(Sender: TObject); virtual;
 
-public
+  public
     constructor Create(AOwner: TComponent; Session: TObject); override;
 
     procedure DragOver(Source: TObject;
@@ -66,7 +51,7 @@ public
             var accept: Boolean); override;
     procedure DragDrop(Source: TObject;
             X, Y: Integer); override;
-end;
+  end;
 
 implementation
 
@@ -262,45 +247,69 @@ procedure TExAllTreeView.DragOver(
         state: TDragState;
         var accept: Boolean);
 begin
-    //First requirement:  only this tree
-    accept := (source = self);
-
-    if accept then begin
-        if (state = dsDragLeave) then begin
-            Screen.Cursor := Self.Cursor;
-            exit;   //just assume our previous state is still valid here...
+    case state of
+        dsDragLeave: begin
+            Self.DragCursor := crDrag;
+            exit;
         end;
-        if (state = dsDragEnter) then begin
+        dsDragEnter: begin
             //(re-) initialize support
             _dropSupport.Free();
-            _dropSupport := TTreeDropSupport.Create(Self);
+            _dropSupport := OpenDropTarget(Source, _DragUpdate, _DragExecute);
         end;
-
-        _dropSupport.Update(X, Y);
-        accept := (_dropSupport.Action <> tdatNone);
     end;
 
-    if accept then begin
-        //TODO:  show appropriate cursor...
-    end
-    else begin
+    accept := (_dropSupport <> nil) and _dropSupport.Update(X, Y);
+    if not accept then begin
         //TODO:  revert cursor??
         inherited DragOver(Source, X, Y, state, accept);
     end;
 end;
 procedure TExAllTreeView.DragDrop(Source: TObject; X: Integer; Y: Integer);
+begin
+    if (_dropSupport <> nil) then _dropSupport.Execute(X, Y);
+end;
+
+procedure TExAllTreeView._DragUpdate(Source: TExDroptarget;
+    X: Integer; Y: Integer;
+    var Action: TExDropActionType);
+var
+    target: IExodusItem;
+    valid: Boolean;
+    kbstate: TKeyboardState;
+begin
+    target := GetNodeItem(GetNodeAt(X, Y));
+    if (target = nil) then begin
+        valid := Source.DragItems.Count = Source.DragItems.CountOfType('group');
+    end
+    else begin
+        valid := (target.Type_ = 'group');
+    end;
+
+    if valid then begin
+        GetKeyboardState(kbstate);
+        if ((kbstate[VK_CONTROL] and 128) <> 0) then
+            Action := datCopy
+        else
+            Action := datMove;
+    end
+    else
+        Action := datNone;
+
+    case Action of
+        datNone: Self.DragCursor := crNone;
+        datMove: Self.DragCursor := crDragMove;
+        datCopy: Self.DragCursor := crDragCopy;
+    end;
+end;
+procedure TExAllTreeView._DragExecute(Source: TExDropTarget; X: Integer; Y: Integer);
 var
     itemCtrl: IExodusItemController;
-    items: IExodusItemList;
     target: IExodusItem;
     rootgrp: Widestring;
     idx: Integer;
 begin
-    if (_dropSupport = nil) or (_dropSupport.Action = tdatNone) then exit;
-
     target := GetNodeItem(GetNodeAt(X, Y));
-    if (target <> nil) and (target.Type_ <> 'group') then exit;
-
     if (target <> nil) then begin
         //move/copy to given group
         rootgrp := target.UID;
@@ -311,67 +320,12 @@ begin
     end;
 
     itemCtrl := TJabberSession(Session).ItemController;
-    items := _dropSupport.SelectionItems;
-    for idx := 0 to items.Count - 1 do begin
-        case _dropSupport.Action of
-            tdatCopy: itemCtrl.CopyItem(items.Item[idx].UID, rootgrp);
-            tdatMove: itemCtrl.MoveItem(items.Item[idx].UID, '', rootgrp);
+    for idx := 0 to Source.DragItems.Count - 1 do begin
+        case Source.DropAction of
+            datCopy: itemCtrl.CopyItem(Source.DragItems.Item[idx].UID, rootgrp);
+            datMove: itemCtrl.MoveItem(Source.DragItems.Item[idx].UID, '', rootgrp);
         end;
     end;
-end;
-
-{}
-constructor TTreeDropSupport.Create(owner: TExTreeView);
-var
-    idx: Integer;
-begin
-    _owner := owner;
-    _items := owner.GetSelectedItems();
-
-    if (_items.Count = 0) then
-        _seltype := tdstNone
-    else begin
-        //assume group to start
-        _seltype := tdstGroup;
-        for idx := 0 to _items.Count - 1 do begin
-            if (_items.Item[idx].Type_ <> 'group') then begin
-                _seltype := tdstOther;
-                break;
-            end;
-        end;
-    end;
-end;
-destructor TTreeDropSupport.Destroy;
-begin
-    _items := nil;
-
-    inherited;
-end;
-
-procedure TTreeDropSupport.Update(X: Integer; Y: Integer);
-var
-    target: IExodusItem;
-    valid: Boolean;
-    kbstate: TKeyboardState;
-begin
-    target := _owner.GetNodeItem(_owner.GetNodeAt(X, Y));
-    if (target = nil) then begin
-        valid := (_seltype = tdstGroup);
-    end
-    else begin
-        valid := (target.Type_ = 'group');
-    end;
-
-    if valid then begin
-        GetKeyboardState(kbstate);
-        if ((kbstate[VK_CONTROL] and 128) <> 0) then
-            _act := tdatCopy
-        else
-            _act := tdatMove;
-    end
-    else
-        //TODO: support "link" (e.g. invite/send)??
-        _act := tdatNone;
 end;
 
 end.
