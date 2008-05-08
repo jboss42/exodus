@@ -401,7 +401,7 @@ var
 begin
     inherited;
     if (_skipTextChange) then exit;
-
+    //only fires if user has modified the item UID somehow
     if (GetValidJID(txtJID.Text, tjid)) then
     begin
         _selectedUID := tjid.full;
