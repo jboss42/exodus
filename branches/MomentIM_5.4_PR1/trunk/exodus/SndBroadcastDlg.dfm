@@ -55,8 +55,6 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
-      ExplicitWidth = 632
-      ExplicitHeight = 117
       object lstJIDS: TTntListView
         Left = 50
         Top = 0
@@ -91,9 +89,6 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         OnEnter = lstJIDSEnter
         OnInfoTip = lstJIDSInfoTip
         OnKeyDown = lstJIDSKeyDown
-        ExplicitLeft = 54
-        ExplicitTop = 3
-        ExplicitHeight = 130
       end
       object Panel1: TPanel
         Left = 0
@@ -104,7 +99,6 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitHeight = 117
         object btnTo: TSpeedButton
           Left = 0
           Top = 3
@@ -164,8 +158,6 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitLeft = 4
-      ExplicitTop = 3
       object lblSubject: TTntLabel
         Left = 0
         Top = 0
@@ -294,7 +286,6 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
-    ExplicitTop = 198
     object pnlButtons: TTntPanel
       Left = 0
       Top = 238
