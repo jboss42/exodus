@@ -220,12 +220,16 @@ begin
         //notify active window, we are not active window -> notify
         //don't notify active window, we aren't active window -> notify
         //don't notify active window, we are active window -> bail (no notify)
-        if ((not MainSession.prefs.getBool('notify_active_win')) and
-            //window is active if it is the foreground window
-            //or the top docked window in an active dock manager
-            ((GetForegroundWindow() = win.handle) or
-             (GetDockManager().isActive and (GetDockManager().GetTopDocked() = win)))) then
-            exit;
+        if (not MainSession.prefs.getBool('notify_active_win')) then begin
+            if (GetForegroundWindow() = win.handle) then begin
+                exit
+            end;
+            if ((GetDockManager().isActive) and
+               (GetDockManager().GetTopDocked() = win) and
+               (GetForegroundWindow() = GetDockManager().getHWND())) then begin
+                exit;
+            end;
+        end;
     end;
 
     //pass off bring to front and flash to better handlers if we can
