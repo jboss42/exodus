@@ -83,7 +83,8 @@ type
 
 
         // Use of this method optional for JEP-33 support
-        procedure AddRecipient(jid: WideString; addrType: WideString = 'to');        
+//        procedure AddRecipient(jid: WideString; addrType: WideString = 'to');
+
         property Tag: TXMLTag read GetTagProp;
 
         property ToJID : WideString read _toJID write _toJID;
@@ -103,6 +104,7 @@ type
         property XML: Widestring read _xml write _xml;
         property Composing: boolean read _composing write _composing;
         property Priority: PriorityType read _priority write _priority;
+        property Addresses: TJabberAddressList read _addresses;
   end;
 
 
@@ -399,12 +401,6 @@ procedure TJabberMessage.SetThread(const Value: WideString);
 begin
     if _thread <> Value then
         _thread := Value;
-end;
-
-{---------------------------------------}
-procedure TJabberMessage.AddRecipient(jid: WideString; addrType: WideString = 'to');
-begin
-    _addresses.AddAddress(jid, addrType);
 end;
 
 end.

@@ -167,6 +167,7 @@ uses
     COMExodusItem,
     COMExodusItemList,
     JabberMsg,
+    AddressList,
     ExUtils,
     Entity,
     EntityCache,
@@ -193,6 +194,9 @@ const
 
     IT_INVALID_ITEM = 'This item has a problem that prevents sending of a broadcast messages.';
 
+    ROOMMSG_NO_SUBJECT = 'No subject specified';
+    ROOMMSG_SUBJECT_HEADER = 'Subject: ';
+    ROOMMSG_BROADCAST_HEADER = 'Broadcast Message';
 
 {------------------------------------------------------------------------------}
 procedure ExpandAndAddItems(item: IExodusItem;
@@ -726,6 +730,79 @@ begin
     GetActionController().registerAction('', TSendBroadcastAction.Create()); //reg for all types
 end;
 
+
+function FormatRoomBroadcastPlainText(Header: widestring;
+                                      Plaintext: widestring;
+                                      Subject: widestring): widestring;
+begin
+    Result := header;
+    if (Result <> '') then
+        Result := Result + ' ';
+    Result := Result + _(ROOMMSG_SUBJECT_HEADER);
+    if (Subject <> '') then
+        Result := Result + Subject
+    else
+        Result := Result + _(ROOMMSG_NO_SUBJECT);
+
+    Result := Result +  #13#10 + Plaintext;
+end;
+
+procedure FormatRoomBroadcastXHTML(Header: widestring;
+                                   xhtmlTag: TXMLTag;
+                                   Plaintext: widestring;
+                                   Subject: widestring;
+                                   var formattedTag: TXMLTag);
+var
+    sstr: WideString;
+    i: integer;
+    children: TXMLTagList;
+
+    tTag, topTag, dtag: TXMLTag;
+    m: TJabberMessage;
+    roomHeader: widestring;
+begin
+    //if no xhtml is given, dummy one from subject and plaintext. If
+    //chtml is gievn, preface it with room broadcast message header and subject
+    formattedTag := TXMLTag.create('html');
+    formattedTag.setAttribute('xmlns', XMLNS_XHTMLIM);
+    ttag := formattedTag.AddTag('body');
+    ttag.setAttribute('xmlns', XMLNS_XHTML);
+    //add header and subject
+    //JJF just using span tags right now, should use a table of somesort
+    topTag := tTag.AddTag('span');
+    //header
+    dtag := topTag.AddTag('span');
+    sstr := header;
+    if (header <> '') then
+    begin
+        ttag := toptag.AddBasicTag('span', header);
+        ttag.SetAttribute('style','font-weight:bold');
+    end;
+    //subject
+    dtag := topTag.AddTag('div');
+    dtag.AddBasicTag('span', _(ROOMMSG_SUBJECT_HEADER)).setAttribute('style','font-weight:bold');
+    sstr := Subject;
+    if (sstr = '') then
+        sstr := _(ROOMMSG_NO_SUBJECT);
+    dtag.AddBasicTag('span', sstr);
+    
+    dtag := topTag.AddTag('div');
+    //now add children of the given xhtml or use the plaintext
+    ttag := nil;
+    if (xhtmlTag <> nil) then
+        ttag := xhtmlTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]/body[@xmlns="' + XMLNS_XHTML + '"]');
+
+    if (ttag = nil) then
+        dTag.AddCData(plaintext)
+    else begin
+        //add all current children of xhtml body tag
+        children := tTag.ChildTags;
+        for i := 0 to children.Count -1 do
+        begin
+            dTag.AddTag(TXMLTag.Create(children[i]));
+        end;
+    end;
+end;
 {*******************************************************************************
 *********************** SendBroadcastMessage ***********************************
 *******************************************************************************}
@@ -743,7 +820,11 @@ var
     room: TfrmRoom;
     validContacts: TObjectList;
     xhtmlStr: widestring;
-    
+    roomMessage: widestring;
+    roomXhtml: TXMLTag;
+    roomXhtmlStr: widestring;
+    ttag: TXMLTag;
+
     function createMessage(jidStr: widestring): TJabberMessage;
     begin
         Result := TJabberMessage.Create(jidstr, 'normal', Plaintext, Subject);
@@ -791,9 +872,9 @@ begin
     //create another list with non room valid items
     //room will event plugins as needed
     validContacts := TObjectList.Create(false);
-    xhtmlStr := '';
-    if (xhtml <> nil) then
-        xhtmlStr := xhtml.XML;
+    roomMessage := formatRoomBroadcastPlaintext(_(ROOMMSG_BROADCAST_HEADER), Plaintext, Subject);
+    formatRoomBroadcastXHTML(_(ROOMMSG_BROADCAST_HEADER), xhtml, Plaintext, Subject, roomXhtml);
+    roomXHTMLStr := roomXHTML.XML;
 
     for i := 0 to Recipients.Count - 1 do
     begin
@@ -804,7 +885,7 @@ begin
             if (oneInfo.ItemType = EI_TYPE_ROOM) then
             begin
                 room := FindRoom(oneInfo.JID.jid);
-                room.SendRawMessage(Plaintext, Subject, xhtmlStr, true);
+                room.SendRawMessage(roomMessage, '', roomXhtmlStr, true);
             end
             else validContacts.Add(oneInfo);
         end;
@@ -823,8 +904,8 @@ begin
         begin
             oneInfo := TItemInfo(validContacts[i]);
             oneMessage := createMessage(oneInfo.JID.jid);
-
-            oneMessage.AddRecipient(oneInfo.JID.jid); //client hint
+            oneMessage.Addresses.AddAddress(oneInfo.JID.jid, ADDRESS_TYPE_TO); //client hint
+            oneMessage.Addresses.AddAddress(ADDRESS_REPLYTO_JID, ADDRESS_TYPE_NOREPLY);
             fireMessage(oneMessage);
             oneMessage.Free();
         end;
@@ -834,8 +915,8 @@ begin
         oneMessage := createMessage(ent.Jid.jid);
         // add recipient <address> elements to the message
         for i := 0 to validContacts.Count - 1 do
-            oneMessage.AddRecipient(TItemInfo(validContacts[i]).JID.jid);
-
+            oneMessage.Addresses.AddAddress(TItemInfo(validContacts[i]).JID.jid, ADDRESS_TYPE_TO);
+        oneMessage.Addresses.AddAddress(ADDRESS_REPLYTO_JID, ADDRESS_TYPE_NOREPLY);
         fireMessage(oneMessage);
         oneMessage.Free();
     end;
