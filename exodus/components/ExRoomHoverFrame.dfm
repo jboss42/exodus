@@ -1,9 +1,9 @@
 inherited ExRoomHoverFrame: TExRoomHoverFrame
-  Width = 303
+  Width = 238
   Height = 190
   OnMouseEnter = TntFrameMouseEnter
   OnMouseLeave = TntFrameMouseLeave
-  ExplicitWidth = 303
+  ExplicitWidth = 238
   ExplicitHeight = 190
   object imgRoom: TImage
     Left = 10
@@ -126,7 +126,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
   object Separator1: TExGroupBox
     Left = 0
     Top = 88
-    Width = 303
+    Width = 238
     Height = 102
     Align = alBottom
     BevelOuter = bvNone
@@ -135,6 +135,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     ParentColor = True
     TabOrder = 4
     AutoHide = False
+    ExplicitWidth = 303
   end
   object chkAutoJoin: TCheckBox
     Left = 52
