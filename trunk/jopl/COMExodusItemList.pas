@@ -43,6 +43,7 @@ type
     function IExodusItemList.Get_Count = IExodusItemList_Get_Count;
     function IExodusItemList_Get_Count: Integer; safecall;
     function IndexOfUid(const uid: WideString): Integer; safecall;
+    function CountOfType(const itemtype: WideString): Integer; safecall;
   private
     function _GetItems() : TInterfaceList;
   public
@@ -134,6 +135,19 @@ begin
             Result := idx;
             exit;
         end;
+    end;
+end;
+
+function TExodusItemList.CountOfType(const itemtype: WideString): Integer;
+var
+    idx: Integer;
+    items: TInterfaceList;
+begin
+    Result := 0;
+    items := _GetItems();
+    for idx := 0 to items.Count - 1 do begin
+        if IExodusItem(items[idx]).Type_ = itemtype then
+            Inc(Result);
     end;
 end;
 
