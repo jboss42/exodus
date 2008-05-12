@@ -43,7 +43,7 @@ uses
   XMLParser;
 
 type
-  TResultSort = (rsJIDAsc, rsJIDDec, rsDateAsc, rsDateDec);
+  TResultSort = (rsJIDAsc, rsJIDDec, rsDateAsc, rsDateDec, rsMsgAsc, rsMsgDec);
   THistorySearchJIDLimit = (hsNone, hsLimited, hsAny);
 
   {
@@ -1128,8 +1128,15 @@ begin
         lstResults.SortType := stNone;
         lstResults.SortType := stBoth;
     end
-    else begin
-        // Do nothing if Message column
+    else if (Column = lstResults.Columns.Items[2]) then begin
+        if (_resultSort = rsMsgAsc) then begin
+            _resultSort := rsMsgDec;
+        end
+        else begin
+            _resultSort := rsMsgAsc;
+        end;
+        lstResults.SortType := stNone;
+        lstResults.SortType := stBoth;
     end;
 end;
 
@@ -1139,6 +1146,7 @@ procedure TfrmHistorySearch.lstResultsCompare(Sender: TObject; Item1,
 var
     dt1: TDateTime;
     dt2: TDateTime;
+    strcompresult: integer;
 begin
     inherited;
 
@@ -1146,6 +1154,7 @@ begin
         rsJIDAsc: begin
             lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_up');
             lstResults.Columns.Items[1].ImageIndex := -1;
+            lstResults.Columns.Items[2].ImageIndex := -1;
             if (Item1.Caption > Item2.Caption) then begin
                 Compare := 1;
             end
@@ -1159,6 +1168,7 @@ begin
         rsJIDDec: begin
             lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_down');
             lstResults.Columns.Items[1].ImageIndex := -1;
+            lstResults.Columns.Items[2].ImageIndex := -1;
             if (Item1.Caption > Item2.Caption) then begin
                 Compare := -1;
             end
@@ -1172,6 +1182,7 @@ begin
         rsDateAsc: begin
             lstResults.Columns.Items[0].ImageIndex := -1;
             lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find('arrow_up');
+            lstResults.Columns.Items[2].ImageIndex := -1;
             try
                 if ((Item1.SubItems.Count > 0) and
                     (Item2.SubItems.Count > 0)) then begin
@@ -1196,6 +1207,7 @@ begin
         rsDateDec: begin
             lstResults.Columns.Items[0].ImageIndex := -1;
             lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find('arrow_down');
+            lstResults.Columns.Items[2].ImageIndex := -1;
             try
                 if ((Item1.SubItems.Count > 0) and
                     (Item2.SubItems.Count > 0)) then begin
@@ -1217,8 +1229,55 @@ begin
             except
             end;
         end;
+        rsMsgAsc: begin
+            lstResults.Columns.Items[0].ImageIndex := -1;
+            lstResults.Columns.Items[1].ImageIndex := -1;
+            lstResults.Columns.Items[2].ImageIndex := RosterTreeImages.Find('arrow_up');
+            try
+                if ((Item1.SubItems.Count > 0) and
+                    (Item2.SubItems.Count > 0)) then begin
+                    strcompresult := StrComp(PChar(Item1.SubItems[1]), PChar(Item2.SubItems[1]));
+                    if (strcompresult > 0) then begin
+                        Compare := 1;
+                    end
+                    else if (strcompresult < 0) then begin
+                        Compare := -1;
+                    end
+                    else begin
+                        Compare := 0;
+                    end;
+                end
+                else begin
+                    Compare := 0;
+                end;
+            except
+            end;
+        end;
+        rsMsgDec: begin
+            lstResults.Columns.Items[0].ImageIndex := -1;
+            lstResults.Columns.Items[1].ImageIndex := -1;
+            lstResults.Columns.Items[2].ImageIndex := RosterTreeImages.Find('arrow_down');
+            try
+                if ((Item1.SubItems.Count > 0) and
+                    (Item2.SubItems.Count > 0)) then begin
+                    strcompresult := StrComp(PChar(Item1.SubItems[1]), PChar(Item2.SubItems[1]));
+                    if (strcompresult > 0) then begin
+                        Compare := -1;
+                    end
+                    else if (strcompresult < 0) then begin
+                        Compare := 1;
+                    end
+                    else begin
+                        Compare := 0;
+                    end;
+                end
+                else begin
+                    Compare := 0;
+                end;
+            except
+            end;
+        end;
     end;
-
 end;
 
 {---------------------------------------}

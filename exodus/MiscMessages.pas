@@ -46,7 +46,10 @@ type
     procedure OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
 
     function GetMsgList(): TfBaseMsgList;
-
+    {
+        persist if we have unread messages
+    }
+    function CanPersist(): boolean;override;
   public
     Constructor Create(AOwner: TComponent);override;
 
@@ -58,8 +61,6 @@ type
 
     procedure OnDocked(); override;
     procedure OnFloat(); override;
-
-    function RestoreStateEnabled(): boolean; override;
 
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
 
@@ -193,6 +194,20 @@ begin
     end;
 end;
 
+function CreateMessage(tag: TXMLTag): TJabberMessage;
+var
+    jid: TJabberID;
+begin
+    result := TJabberMessage.Create(tag);
+    result.isMe := (tag.GetAttribute('from') = MainSession.JID);
+
+    if (result.isMe) then
+        jid := TJabberID.Create(MainSession.JID)
+    else
+        jid := TJabberID.Create(Result.FromJID);
+    result.Nick := DisplayName.getDisplayNameCache().getDisplayName(jid.jid);
+    jid.free();
+end;
 
 {*******************************************************************************
 *********************** simple display list management *************************
@@ -395,7 +410,8 @@ type
 
         _jid: TJabberID;
         _dnListener: TDisplayNameEventListener;
-
+        _displayFormat: widestring;
+        
         _avatar: TAvatar;
         _UnknownAvatar: TBitmap;
 
@@ -407,7 +423,7 @@ type
         Constructor Create(AOwner: TComponent);override;
         Destructor Destroy; Override;
 
-        procedure SetJID(jid: TJabberID);
+        procedure SetJID(jid: TJabberID; DisplayFormat: Widestring = '');
         procedure OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 
         procedure imgAvatarPaint(Sender: TObject);
@@ -500,24 +516,32 @@ begin
 end;
 
 procedure TExJIDHyperlinkLabel.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
+var
+    cap: widestring;
 begin
     if (_ShowDisplayName) then
-        _lblJID.Caption := displayName
-    else _lblJID.Caption := _jid.getDisplayFull();
+        cap := displayName
+    else cap := _jid.getDisplayFull();
 
+    if (_displayFormat <> '') then
+        cap := WideFormat(_displayFormat, [cap]);
+        
+    _lblJID.Caption := cap;
     _lblJID.Hint := _jid.getDisplayFull();
 end;
 
-procedure TExJIDHyperlinkLabel.SetJID(jid: TJabberID);
+procedure TExJIDHyperlinkLabel.SetJID(jid: TJabberID; DisplayFormat: Widestring);
 var
     a: TAvatar;
     m: integer;
 begin
+    _displayFormat := DisplayFormat;
     _jid := TJabberID.create(jid);
+
     _dnListener.UID := _jid.jid;
     OnDisplayNameChange(_jid.jid, _dnListener.GetDisplayName(_jid.jid));
 
-                // check for an avatar
+    // check for an avatar
     if (MainSession.Prefs.getBool('chat_avatars')) then begin
         a := Avatars.Find(_jid.jid);
         if ((a <> nil) and (a.isValid())) then begin
@@ -607,9 +631,11 @@ type
         procedure btnChatClick(Sender: TObject);
     public
         constructor Create(AOwner: TComponent);override;
-        
+        procedure DisplayMessage(MsgTag: TXMLTag); override;
         procedure InitializeJID(ijid: TJabberID); override;
         procedure OnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
+        procedure OnDocked();override;
+        procedure OnFloat();override;
         
         class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
     end;
@@ -667,7 +693,11 @@ procedure TfrmBroadcastDisplay.OnDisplayNameChange(bareJID: Widestring; displayN
 begin
     if (bareJID = _jid.jid) then
     begin
-        Caption := _('Messages from ') + displayName;
+
+        if (Self.docked) then
+            Caption := _('Messages from ') + displayName
+        else
+            Caption := _('Broadcast Messages from ') + displayName;
         Hint := _('Broadcast Messages from ') + _jid.getDisplayFull();
         MsgList.setTitle(displayName);
     end;
@@ -690,7 +720,56 @@ procedure TfrmBroadcastDisplay.InitializeJID(ijid: TJabberID);
 begin
     inherited;
     Self.ImageIndex := RI_HEADLINE_INDEX;
-    Self._lblJIDHyperlink.SetJID(JID);
+    Self._lblJIDHyperlink.SetJID(JID, _('Broadcast Messages from %s'));
+end;
+
+procedure TfrmBroadcastDisplay.OnDocked();
+begin
+    inherited;
+    Caption := _('Messages from ') + DNListener.GetDisplayName(_jid.jid)
+end;
+
+procedure TfrmBroadcastDisplay.OnFloat();
+begin
+    inherited;
+    Caption := _('Broadcast Messages from ') + DNListener.GetDisplayName(_jid.jid)
+end;
+
+procedure TfrmBroadcastDisplay.DisplayMessage(MsgTag: TXMLTag);
+var
+    msg: TJabberMessage;
+    sTag, mTag: TXMLTag;
+    subjectNick: widestring;
+begin
+    if (_initialMsgQueue = nil) then
+    begin
+    { build new tag, changing body for broadcast presentation}
+        mTag := TXMLTag.create(MsgTag);
+        sTag := mTag.GetFirstTag('subject');
+
+        subjectNick := '';
+        if (sTag <> nil) then begin
+            subjectNick := sTag.Data;
+            //remove it from msg, not a subject change!
+            mTag.RemoveTag(sTag); //sTag freed by RemoveTag
+        end;
+        if (subjectNick = '') then
+            subjectNick := _('No Subject');
+
+        subjectNick := _('Subject: ') + subjectNick;
+
+        msg := CreateMessage(mTag);
+        mTag.Free();
+        msg.Nick := subjectNick;
+
+        MsgList.DisplayMsg(msg);
+
+        updateMsgCount(MsgTag);
+        updateLastActivity(msg.Time);
+
+        msg.Free();
+    end
+    else inherited;
 end;
 
 Constructor TBroadcastHandler.Create();
@@ -707,20 +786,6 @@ begin
     inherited;
 end;
 
-function CreateMessage(tag: TXMLTag): TJabberMessage;
-var
-    jid: TJabberID;
-begin
-    result := TJabberMessage.Create(tag);
-    result.isMe := (tag.GetAttribute('from') = MainSession.JID);
-
-    if (result.isMe) then
-        jid := TJabberID.Create(MainSession.JID)
-    else
-        jid := TJabberID.Create(Result.FromJID);
-    result.Nick := DisplayName.getDisplayNameCache().getDisplayName(jid.jid);
-    jid.free();
-end;
 
 //add <feature var='http://jabber.org/protocol/address'/> somewhere
 
@@ -743,10 +808,8 @@ procedure TBroadcastHandler.MessageCallback(event: string; tag: TXMLTag);
 var
     DisplayWin: TfrmSimpleDisplay;
     sstr: WideString;
-    i: integer;
-    children: TXMLTagList;
 
-    nTag, sTag, tTag, dTag: TXMLTag;
+    dTag: TXMLTag;
     m: TJabberMessage;
 begin
     //bail if we picked up a mucuser message somehow
@@ -763,49 +826,9 @@ begin
         end;
     end;
 
-    { build new tag, changing body for broadcast presentation}
-    sTag := dTag.GetFirstTag('subject');
-
-    sstr := '';
-    if (sTag <> nil) then
-        sstr := sTag.Data;
-    if (sstr = '') then
-        sstr := _('No Subject');
-
-    tTag := dTag.GetFirstTag('body');
-    if (tTag.data <> '') then    
-        sstr := sstr + #13#10 + tTag.Data;
-    tTag.ClearCData();
-    tTag.AddCData(_('Subject: ') + sstr);
-
-    ttag := dTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]/body[@xmlns="' + XMLNS_XHTML + '"]');
-    if (ttag <> nil) then
-    begin
-        nTag := TXMLTag.create('body');
-        nTag.setAttribute('xmlns', XMLNS_XHTML);
-        //JJF just using span tags right now, should use a table of somesort
-        sTag := nTag.AddTag('span');
-        sTag.AddBasicTag('span', _('Subject: ')).SetAttribute('style','font-weight:bold');
-        sTag.addBasicTag('span', sstr);
-        nTag.AddTag('br');
-        //add all current children of xhtml body tag
-        children := tTag.ChildTags;
-        for i := 0 to children.Count -1 do
-        begin
-            nTag.AddTag(TXMLTag.Create(children[i]));
-        end;
-        nTag.AddTag('br');
-
-        //delete current body and replace with our new one
-        sTag := tTag;
-        ttag := dTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]');
-        tTag.RemoveTag(sTag);
-        ttag.AddTag(nTag);
-    end;
-
     DisplayWin := OpenFactory(TfrmBroadcastDisplay, 'broadcast', TJabberID.Create(tag.getAttribute('from')));
     DisplayWin.DisplayMessage(dTag);
-    
+
     //event the notification
     sstr := DisplayName.getDisplayNameCache().getDisplayName(tag.getAttribute('from'));
     Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, 0);
@@ -981,9 +1004,9 @@ begin
     _initialMsgQueue := TObjectList.create();
 end;
 
-function TfrmSimpleDisplay.RestoreStateEnabled(): boolean;
+function TfrmSimpleDisplay.CanPersist(): boolean;
 begin
-    Result := (Self.UnreadMsgCount > 0) or inherited RestoreStateEnabled();
+    Result := ((Self.UnreadMsgCount > 0) or inherited CanPersist());
 end;
 
 procedure TfrmSimpleDisplay.TntFormDestroy(Sender: TObject);
