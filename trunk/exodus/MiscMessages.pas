@@ -46,7 +46,10 @@ type
     procedure OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
 
     function GetMsgList(): TfBaseMsgList;
-
+    {
+        persist if we have unread messages
+    }
+    function CanPersist(): boolean;override;
   public
     Constructor Create(AOwner: TComponent);override;
 
@@ -58,8 +61,6 @@ type
 
     procedure OnDocked(); override;
     procedure OnFloat(); override;
-
-    function RestoreStateEnabled(): boolean; override;
 
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
 
@@ -981,9 +982,9 @@ begin
     _initialMsgQueue := TObjectList.create();
 end;
 
-function TfrmSimpleDisplay.RestoreStateEnabled(): boolean;
+function TfrmSimpleDisplay.CanPersist(): boolean;
 begin
-    Result := (Self.UnreadMsgCount > 0) or inherited RestoreStateEnabled();
+    Result := ((Self.UnreadMsgCount > 0) or inherited CanPersist());
 end;
 
 procedure TfrmSimpleDisplay.TntFormDestroy(Sender: TObject);

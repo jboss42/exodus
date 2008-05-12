@@ -79,16 +79,16 @@ type
     lblSubject: TTntLabel;
     txtSendSubject: TTntMemo;
     pnlRecipientWarning: TTntPanel;
-    TntLabel2: TTntLabel;
     Image1: TImage;
     TntLabel3: TTntLabel;
     popTo: TTntPopupMenu;
     Add1: TTntMenuItem;
     Remove1: TTntMenuItem;
-    btnTo: TSpeedButton;
     pnlSender: TTntPanel;
     splitter: TTntSplitter;
     btnRemoveInvalid: TTntButton;
+    btnAdd: TSpeedButton;
+    btnRemove: TSpeedButton;
     procedure btnRemoveClick(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -550,15 +550,8 @@ begin
 end;
 
 procedure TdlgSndBroadcast.btnToClick(Sender: TObject);
-var
-    cp: TPoint;
 begin
-    inherited;
-    // add a contact
-    //ShowAddContact();
-    cp := btnTo.ClientOrigin;
-    cp.Y := cp.Y + btnTo.ClientHeight;
-    popTo.Popup(cp.x, cp.y);
+
 end;
 
 {------------------------------------------------------------------------------}
@@ -758,8 +751,6 @@ var
     children: TXMLTagList;
 
     tTag, topTag, dtag: TXMLTag;
-    m: TJabberMessage;
-    roomHeader: widestring;
 begin
     //if no xhtml is given, dummy one from subject and plaintext. If
     //chtml is gievn, preface it with room broadcast message header and subject
@@ -771,7 +762,6 @@ begin
     //JJF just using span tags right now, should use a table of somesort
     topTag := tTag.AddTag('span');
     //header
-    dtag := topTag.AddTag('span');
     sstr := header;
     if (header <> '') then
     begin
@@ -823,7 +813,6 @@ var
     roomMessage: widestring;
     roomXhtml: TXMLTag;
     roomXhtmlStr: widestring;
-    ttag: TXMLTag;
 
     function createMessage(jidStr: widestring): TJabberMessage;
     begin

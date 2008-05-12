@@ -8,7 +8,7 @@ inherited frmState: TfrmState
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   ExplicitWidth = 206
-  ExplicitHeight = 197
+  ExplicitHeight = 191
   PixelsPerInch = 96
   TextHeight = 13
 end
