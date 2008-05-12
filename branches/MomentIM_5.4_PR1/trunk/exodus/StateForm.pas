@@ -156,13 +156,16 @@ type
      _origPos: TPos;      //position we last loaded/saved to prefs
      _windowState: TWindowState; //min max or normal
      _stateRestored: boolean;
-     _skipWindowPosHandling: boolean;
+     _skipWindowPosEvents: integer; //referenced counted flag to save position on pos chnage
      _isNotifying: boolean; //is this form handling some notify event (like flashing)?
 
-    procedure NormalizePos(); //
+
+    procedure NormalizePos(); //make us fit
     procedure CenterOnMainformMonitor(var pos: TPos);
 
-    procedure setNotifying(newNotifyingState: boolean);
+    procedure StopWindowPosEvents();
+    procedure StartWindowPosEvents();
+    function skipWindowPosEvents(): boolean;
 
   protected
      procedure CreateParams(var Params: TCreateParams); override;
@@ -225,6 +228,13 @@ type
     }
     procedure PersistWindowState();virtual;
 
+    {
+        Can this window persist its data? Can implies should.
+        subclasses can use this to override prefs for
+        specific windows (ie always saving unread messaged)
+    }
+    function CanPersist(): boolean;virtual;
+    
   public
     {
         Show the window in its default configuration.
@@ -295,14 +305,11 @@ type
         This flag will be true if the form is handling some received
         notification event. Is set to false when the form stops
         notifying. Typically when the form receives focus.
+        this can be used when some window manager needs to change its
+        state based on the notifying state of all the windows it manages.
+        This is the "Flash until all windows are seen" senario
     }
-    property IsNotifying: boolean read _isNotifying write setNotifying;
-
-    {
-        Should window state be loaded and persisted?
-        Default checks restore_window_state preference
-    }
-    function RestoreStateEnabled(): boolean; virtual;
+    property IsNotifying: boolean read _isNotifying write _isNotifying;
   end;
 
 var
@@ -549,12 +556,20 @@ begin
     useProfile := false;
 end;
 
-{---------------------------------------}
-procedure TfrmState.setNotifying(newNotifyingState: boolean);
+procedure TfrmState.StopWindowPosEvents();
 begin
-//perhaps update if state changed?
-//    if (_isNotifying <> newNotifyingState) then begin
-        _isNotifying := newNotifyingState;
+    inc(_skipWindowPosEvents);
+end;
+
+procedure TfrmState.StartWindowPosEvents();
+begin
+    if (_skipWindowPosEvents > 0) then
+        dec(_skipWindowPosEvents);
+end;
+
+function TfrmState.skipWindowPosEvents(): boolean;
+begin
+    Result := (_skipWindowPosEvents = 0);
 end;
 
 function toRect(pos: TPos): TRect;
@@ -603,38 +618,33 @@ begin
     inherited CreateParams(Params);
     with Params do begin
         ExStyle := ExStyle or WS_EX_APPWINDOW;
-        if (not (self is TfrmDockable)) then begin
-            // Set the parent to main handle
+        //if not dockable or floating (parent = mainform), make the parent the app
+        if (not (self is TfrmDockable)) or (WndParent = Application.Mainform.Handle) then
             WndParent := Application.Handle;
-        end
-        else begin
-            // See if this is docking or not.
-            if (WndParent = frmExodus.Handle) then begin
-                // Not docking so set parent to main handle (not frmexodus)
-                WndParent := Application.Handle;
-            end;
-        end;
-
     end;
 end;
 
 {---------------------------------------}
 procedure TfrmState.FormCreate(Sender: TObject);
 begin
+    inherited;
     _stateRestored := false;
+    _skipWindowPosEvents := 0;
+    
     //get state info from prefs
     // do translation magic
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-    _skipWindowPosHandling := false;
 
     //initial conditions for position and size, may be changed later
     //when restoring state.
-     _pos.Left := 0;
-    _pos.Top := 0;
+    _pos.Left := Self.ExplicitLeft;
+    _pos.Top := Self.ExplicitTop;
     _pos.Width := Self.ExplicitWidth;
     _pos.Height := Self.ExplicitHeight;
+
     CenterOnMainformMonitor(_pos);
+
     _origPos.Left := _pos.Left;
     _origPos.width := _pos.width;
     _origPos.Top := _pos.Top;
@@ -690,20 +700,23 @@ end;
 procedure TfrmState.WMActivate(var msg: TMessage);
 begin
     try
-        if (not _skipWindowPosHandling and (Msg.WParamLo <> WA_INACTIVE)) then begin
-            // we are getting activated
-            _skipWindowPosHandling := true;
-            SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
-                Self.Width, Self.Height, HWND_TOP);
-            _skipWindowPosHandling := false;
+        inherited; //hmm, shouldthis go first?
+        if (not skipWindowPosEvents()) and (Msg.WParamLo <> WA_INACTIVE) then
+        begin
+            // we are getting activated, bring to front
+            StopWindowPosEvents();
+            SetWindowPos(Self.Handle,
+                         HWND_BOTTOM,
+                         Self.Left, Self.Top, Self.Width, Self.Height,
+                         HWND_TOP);
+            StartWindowPosEvents();
+
             if (self.Visible) then
                 gotActivate();
         end;
-        inherited;
     except
         // Possible exception when dealing with an extreme amount of windows
     end;
-    inherited;
 end;
 
 {---------------------------------------}
@@ -711,16 +724,16 @@ procedure TfrmState.WMWindowPosChange(var msg: TWMWindowPosChanging);
 begin
     //only allow window to come to top if activating. Don't bring it
     //to front if resizing in code somewhere.
-    if (not _skipWindowPosHandling) then
+    if (not skipWindowPosEvents()) then
         msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
 
     inherited;
-    
+
     //save state if not
     //  floating
     //  not creating the form
     //  in normal window state
-    if (not _skipWindowPosHandling and
+    if (not skipWindowPosEvents() and
         Self.Floating and
         (not (fsCreating in Self.FormState)) and
         (_windowState = wsNormal)) then
@@ -738,7 +751,8 @@ procedure TfrmState.WMDisplayChange(var msg: TMessage);
 begin
     //check to make sure this is a floating window, if docked let parent deal
     if (Self.Floating) then
-        checkAndCenterForm(Self);
+        Self.MakeFullyVisible();
+    inherited;
 end;
 
 
@@ -759,16 +773,17 @@ begin
     begin
         prefHelper := TStateFormPrefsHelper.create();
         key := GetWindowStateKey();
-        if (not  RestoreStateEnabled()) then
-            prefHelper.setWindowState(key, nil) //clear out any persisted state
-        else if (prefHelper.getWindowState(key, stateTag)) then
+        if (CanPersist() and
+           (prefHelper.getWindowState(key, stateTag))) then
         begin
-            _skipWindowPosHandling := true;
+            StopWindowPosEvents();
             Self.OnRestoreWindowState(stateTag);
-            _skipWindowPosHandling := false;
+            StartWindowPosEvents();
 
             stateTag.Free();
-        end;
+        end
+        else prefHelper.setWindowState(key, nil); //clear out any persisted state
+
         _stateRestored := true;
         prefHelper.free();
     end;
@@ -782,7 +797,7 @@ var
 begin
         prefHelper := TStateFormPrefsHelper.create();
         key := getWindowStateKey();
-        if (RestoreStateEnabled()) then
+        if (CanPersist()) then
         begin
             stateTag := TXMLTag.Create(key);
             Self.OnPersistWindowState(stateTag);
@@ -802,32 +817,38 @@ end;
 procedure TfrmState.ShowDefault(bringtofront:boolean; dockOverride: string);
 begin
     try
-        if (Handle <> 0) then begin
-            if (not Self.Visible) then begin
-                RestoreWindowState();
-                _skipWindowPosHandling := true;
-                if (_windowState = wsMinimized) then
-                    ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-                else if (_windowState = wsMaximized) then
-                    ShowWindow(Handle, SW_MAXIMIZE)
-                else if(bringtofront) then begin
-                    ShowWindow(Handle, SW_SHOWNORMAL);
-                    Self.BringToFront;
-                end
-                else
-                    SetWindowPos(Self.Handle, HWND_BOTTOM, 0,0,0,0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
-                Self.Visible := true;
-                _skipWindowPosHandling := false;
-            end
-            else if (frmExodus.isMinimized() and not bringtofront) then
+        if (Self.Handle = 0) then exit; //nothing to do, we are fubared
+
+        RestoreWindowState();
+        StopWindowPosEvents();
+
+        if (bringtofront) then
+        begin
+            ShowWindow(Handle, SW_SHOWNORMAL);
+            Self.BringToFront;
+            Self.Visible := true;
+        end
+        else if (not Self.Visible) then begin
+            if (_windowState = wsMinimized) then
                 ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-            else if(not bringtofront) then
-                ShowWindow(Handle, SW_SHOWNOACTIVATE)
-            else begin
-                ShowWindow(Handle, SW_SHOWNORMAL);
-                Self.BringToFront;
-            end;
-        end;
+            else if (_windowState = wsMaximized) then
+                ShowWindow(Handle, SW_MAXIMIZE)
+            //otherwise our floating positions should be set, just show the window
+            //in-situ. not sure we need to do this before coming visible, but
+            //its working! voodoo magic
+            else SetWindowPos(Self.Handle,
+                              HWND_BOTTOM,
+                              0,0,0,0,
+                              SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
+
+            Self.Visible := true;
+        end
+        else if ((Self.WindowState = wsMinimized) and not bringtofront) then
+            ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+        else
+            ShowWindow(Handle, SW_SHOWNOACTIVATE);
+
+        StartWindowPosEvents();
     except
         // Possible exception when dealing with an extreme amount of windows
     end;
@@ -837,13 +858,8 @@ procedure TfrmState.gotActivate();
 begin
     //this is going to be a problem if tray should flash
     //until *all* notified windows become active
-    if (IsNotifying) then
-    begin
-//        StopTrayAlert();
-        StopFlash(Self);
-        isNotifying := false;
-//    OutputDebugMsg(Self.ClassName +  '.gotActivate');
-    end;
+     StopFlash(Self);
+     isNotifying := false;
 end;
 
 {
@@ -871,39 +887,41 @@ end;
 }
 procedure TfrmState.OnRestoreWindowState(windowState : TXMLTag);
 begin
-    if (MainSession.Prefs.getBool('restore_window_state')) then
+    _persistPos := true;
+    //pos is already set
+    if (windowState.GetAttribute('pos_w') <> '') then
     begin
-        _persistPos := true;
-        //center on parent
-        if (windowState.GetAttribute('pos_w') <> '') then begin
-            _pos.Left := SafeInt(windowState.getAttribute('pos_l'));
-            _pos.Top := SafeInt(windowState.getAttribute('pos_t'));
-            //if window is fixed size, don't try to overwrite
-            if (Self.BorderStyle = bsSizeable) then begin
-                _pos.height := SafeInt(windowState.getAttribute('pos_h'));
-                _pos.width := SafeInt(windowState.getAttribute('pos_w'));
-            end else begin
-                _pos.height := Self.ExplicitHeight;
-                _pos.width := Self.ExplicitWidth;
-            end;
-        end
-        else begin
-            _pos.Left := 0;
-            _pos.Top := 0;
-            _pos.Width := Self.ExplicitWidth;
-            _pos.Height := Self.ExplicitHeight;
-            CenterOnMainformMonitor(_pos);
-        end;
-        //check to make sure pos looks valid...
-        _origPos.Left := _pos.Left;
-        _origPos.width := _pos.width;
-        _origPos.Top := _pos.Top;
-        _origPos.height := _pos.height;
+        _pos.Left := SafeInt(windowState.getAttribute('pos_l'));
+        _pos.Top := SafeInt(windowState.getAttribute('pos_t'));
 
+        //if window is fixed size, don't try to overwrite
+        if (Self.BorderStyle = bsSizeable) then
+        begin
+            _pos.height := SafeInt(windowState.getAttribute('pos_h'));
+            _pos.width := SafeInt(windowState.getAttribute('pos_w'));
+        end;
         normalizePos();
-        SetWindowPos(Self.Handle, HWND_BOTTOM, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOACTIVATE or SWP_NOOWNERZORDER);
-        _windowState := sToWindowState(windowState.GetAttribute('ws'));
     end;
+    //skipping windowposchange handling, _skipWindowPosHandling is true during this event
+    SetWindowPos(Self.Handle,
+                 HWND_BOTTOM,
+                 _pos.Left, _pos.Top, _pos.Width, _pos.Height,
+                 SWP_NOACTIVATE or SWP_NOOWNERZORDER);
+
+    //check to make sure this all looks right, handling corrupted prefs
+    if (_pos.Height > Self.ClientHeight) and (_pos.width > Self.ClientWidth) then
+    begin
+        _pos.Height := Self.ExplicitHeight;
+        _pos.width := Self.ExplicitWidth;
+        CenterOnMainformMonitor(_pos);
+    end;
+    //finally cache our initial pos
+    _origPos.Left := _pos.Left;
+    _origPos.width := _pos.width;
+    _origPos.Top := _pos.Top;
+    _origPos.height := _pos.height;
+
+    _windowState := sToWindowState(windowState.GetAttribute('ws'));
 end;
 
 {
@@ -946,16 +964,19 @@ var
 begin
 
     // Netmeeting hack
+    {JJF I see this all over the place but don't know what the hack is, esp
+    since netmeeting is handled through a plugin
+    TODO JJF ask Joe H.
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
-
+    }
     //get screnn coords and see if we fit, adjust size/position as needed
     // Make it slightly bigger to acccomodate PtInRect
 
     Self.DefaultMonitor := dmDesktop;
     dtop := Screen.MonitorFromRect(toRect(_pos)).WorkareaRect;
-    inc(dtop.Bottom);// := dtop.Bottom + 1;
-    inc(dtop.Right);// := dtop.Right + 1;
+    inc(dtop.Bottom);
+    inc(dtop.Right);
 
     cp.X := _pos.left;
     cp.Y := _pos.Top;
@@ -965,7 +986,7 @@ begin
     cp.Y := _pos.Top + _pos.Height;
     ok := ok and PtInRect(dtop, cp);
 
-    if (ok = false) then begin
+    if (not ok) then begin
         //we had to move this window as it won't fit in our desktop.
         //don't save new coords.
         _persistPos := false;
@@ -989,10 +1010,8 @@ begin
     //don't handle docked
     if (Self.Floating) then
     begin
-        if ((notifyEvents and notify_front) <> 0) then begin
-            ShowWindow(Self.Handle, SW_SHOWNORMAL);
-            Self.bringtofront();
-        end
+        if ((notifyEvents and notify_front) <> 0) then
+            showDefault(true) //bring us to front
         else if ((notifyEvents and PrefController.notify_flash) <> 0) then begin
             isNotifying := true;
             if (MainSession.prefs.GetBool('notify_flasher')) then
@@ -1003,7 +1022,7 @@ begin
     end;
 end;
 
-function TfrmState.RestoreStateEnabled(): boolean;
+function TfrmState.CanPersist(): boolean;
 begin
     Result := MainSession.Prefs.getBool('restore_window_state');
 end;
