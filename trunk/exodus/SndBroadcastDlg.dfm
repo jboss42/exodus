@@ -1,6 +1,6 @@
 inherited dlgSndBroadcast: TdlgSndBroadcast
   Caption = 'Broadcast Message'
-  ClientHeight = 452
+  ClientHeight = 475
   ClientWidth = 632
   Color = clBtnFace
   Position = poScreenCenter
@@ -8,64 +8,69 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   ExplicitWidth = 640
-  ExplicitHeight = 480
+  ExplicitHeight = 503
   PixelsPerInch = 96
   TextHeight = 13
   object splitter: TTntSplitter
     AlignWithMargins = True
     Left = 4
-    Top = 170
+    Top = 196
     Width = 624
     Height = 3
     Cursor = crVSplit
     Margins.Left = 4
+    Margins.Top = 0
     Margins.Right = 4
-    Align = alTop
-    ExplicitLeft = 20
-    ExplicitTop = 179
+    Margins.Bottom = 0
+    Align = alBottom
+    Beveled = True
+    OnMoved = splitterMoved
+    ExplicitLeft = 0
+    ExplicitTop = 167
+    ExplicitWidth = 285
   end
   object pnlHeader: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 632
-    Height = 167
-    Align = alTop
-    AutoSize = True
+    AlignWithMargins = True
+    Left = 4
+    Top = 6
+    Width = 624
+    Height = 184
+    Margins.Left = 4
+    Margins.Top = 6
+    Margins.Right = 4
+    Margins.Bottom = 6
+    Align = alClient
     BevelOuter = bvNone
-    Constraints.MinHeight = 150
     ParentColor = True
     TabOrder = 0
     object pnlRecipients: TTntPanel
+      AlignWithMargins = True
       Left = 0
       Top = 29
-      Width = 632
-      Height = 117
+      Width = 624
+      Height = 134
       Margins.Left = 0
-      Margins.Top = 0
       Margins.Right = 0
       Align = alClient
-      AutoSize = True
       BevelOuter = bvNone
       ParentColor = True
-      TabOrder = 0
-      ExplicitTop = 26
+      TabOrder = 1
       object lstJIDS: TTntListView
-        AlignWithMargins = True
-        Left = 54
-        Top = 3
-        Width = 574
-        Height = 114
+        Left = 74
+        Top = 0
+        Width = 550
+        Height = 134
         Margins.Left = 4
         Margins.Right = 4
         Margins.Bottom = 0
         Align = alClient
+        Anchors = [akLeft, akTop, akRight]
         Columns = <
           item
             AutoSize = True
-            Caption = 'Name'
+            Caption = 'Recipients'
           end
           item
-            AutoSize = True
             Caption = 'Problems'
           end>
         IconOptions.Arrangement = iaLeft
@@ -74,79 +79,115 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         ReadOnly = True
         RowSelect = True
         ParentShowHint = False
+        PopupMenu = popTo
         ShowColumnHeaders = False
-        ShowWorkAreas = True
         ShowHint = True
         SortType = stText
-        StateImages = ImageList1
-        TabOrder = 0
+        TabOrder = 1
         ViewStyle = vsReport
         OnCustomDrawItem = lstJIDSCustomDrawItem
+        OnEnter = lstJIDSEnter
         OnInfoTip = lstJIDSInfoTip
-        ExplicitLeft = 66
-        ExplicitWidth = 565
+        OnKeyDown = lstJIDSKeyDown
+        ExplicitLeft = 68
+        ExplicitWidth = 556
       end
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 50
-        Height = 117
+        Width = 74
+        Height = 134
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
-        TabOrder = 1
-        ExplicitHeight = 114
-        object btnTo: TSpeedButton
-          Left = 4
-          Top = 3
-          Width = 43
+        TabOrder = 0
+        object btnAdd: TSpeedButton
+          Left = 0
+          Top = 0
+          Width = 69
           Height = 26
-          Caption = '&To...'
+          Caption = '&Add... '
           Flat = True
           Glyph.Data = {
             36040000424D3604000000000000360000002800000010000000100000000100
             2000000000000004000000000000000000000000000000000000FF00FF00FF00
-            FF00FF00FF00FF00FF0000000000390800000000000000000000FF00FF00FF00
             FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-            FF00FF00FF00FF00FF0021000000FF630000FF7B0000FFA5000000000000FF00
             FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-            FF00FF00FF000000000039101000FF6B0000FF7B0000FF940000180000000000
-            0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-            FF00FF00FF000000000039181000FF840000FF8C0000FF7B00002910100000BD
-            FF000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-            FF00000000000084AD0039291000FF940000FF9C0000FFB500002921100029E7
-            FF0000CEFF0000B5FF000000000000000000FF00FF00FF00FF00FF00FF00FF00
-            FF00000000000094BD0073420800FF940800FF940000FFAD0000313110006BF7
-            FF005AF7FF0031EFFF0008CEFF0000B5FF000000000000000000FF00FF000000
-            000000ADD60000A5CE00AD6B1800FFA52100FF9C2100FF940000D6840000315A
-            5A007BF7FF0063F7FF0052F7FF0031E7FF0008C6FF0000000000FF00FF000000
-            000000C6E700007B9400F7AD4A00FFB54A00FFA52900FFB50000FF9C00003952
-            52009CFFFF0084F7FF006BF7FF0052EFFF0000C6FF00000000000000000000E7
-            FF0000DEFF00008CA500FFB56300FFBD6300FFCE8C00FFDE6300FFBD21005A5A
-            5200F7FFFF009CFFFF007BF7FF0063F7FF0000B5FF0000000000000000000000
-            000008E7FF00009CAD00FFC68400FFE7A500FFD65A00FFBD1800AD7B1000FFFF
-            FF00FFFFFF00EFFFFF00CEFFFF0073F7FF0000BDFF0000000000FF00FF00FF00
-            FF000000000000000000947352006B4A210000000000392100005AA5AD00529C
-            AD0073F7FF00E7FFFF00D6FFFF00D6FFFF0000DEFF0000000000FF00FF00FF00
-            FF00FF00FF00FF00FF000000000008000000394A5A000008100000737B0000DE
-            FF00529CAD00529CAD0073F7FF00BDFFFF0000EFFF0000000000FF00FF00FF00
-            FF00FF00FF00FF00FF0000000000ADADAD00CECECE00ADADAD0000525A0008EF
-            FF0000E7FF0000E7FF00000000000000000000000000FF00FF00FF00FF00FF00
-            FF00FF00FF00FF00FF0000000000CECECE00FFFFFF00CECECE00000000000000
-            000010EFFF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-            FF00FF00FF00FF00FF0000000000ADADAD00CECECE00ADADAD0000000000FF00
-            FF000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-            FF00FF00FF00FF00FF00FF00FF00000000000000000000000000FF00FF00FF00
+            FF00FF00FF00FF00FF0000000000000000000000000000000000000000000000
+            00000000000000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+            FF00FF00FF00000000000000000012090300321B0F00472212003C1C0D000500
+            00000000000000000000400E1500FF00FF00FF00FF00FF00FF00FF00FF000000
+            000000000000A3622F00CE7D3C00F8C38E00D87F4600D06B3900CA633200B649
+            2100A13A18003F0E1300410F1400400F130037090900FF00FF00FF00FF003C2D
+            0F0083502900D78E4100DC934A00FCCF9C00E1935900D6764200CF6A3900B24B
+            2300973817005E200E00120003003A08080000000000FF00FF00FF00FF00AD74
+            3100BC7E2C00DCA04D00E4A75700FCD19E00FBC99400DE884E00D67A4300C85D
+            2E00BF4F24006B29180000000000FF00FF00FF00FF00FF00FF00FF00FF00BD86
+            3800CD963500DDA54E00E4AA5700EFC49500E6BD9000D3844D00D27A4200C85E
+            2E00C15226001C0B060000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00
+            FF00BA854000D49F4200C0904300535E5C003755640059554A00965F37008142
+            2D0000000000070700000505000000000000FF00FF00FF00FF00FF00FF00FF00
+            FF00FF00FF0097773F00735C3500416F8600437289002B5469001B3341000000
+            00000000330072792D006C722A0000000000FF00FF00FF00FF00FF00FF00FF00
+            FF00FF00FF00000000003B687E00709FB4006997AC004D7A8F0033586F000B18
+            21000A151500879337006E752C000A0A00000505000000000000FF00FF00FF00
+            FF00FF00FF00000000004D79910081ABBD0077A4B600537D920030546A007C85
+            32007F89330087933700777F30006C722A006C722A0000000000FF00FF00FF00
+            FF00FF00FF00475C75003B5E7900608398003A58720025405B001A335200B3BB
+            4900B3BC450094A13C008A98390098A53E008491370000000000FF00FF00FF00
+            FF00FF00FF0026406000264260002F4E6E002A496D00234062001F3A5C000F2E
+            450000152B0094A13C007F89330000000000FF00FF00FF00FF00FF00FF00FF00
+            FF00FF00FF00FF00FF0014273B00253F620025406200244360001C364F000000
+            0000FF00FF00A8B242008491370000000000FF00FF00FF00FF00FF00FF00FF00
+            FF00FF00FF00FF00FF00FF00FF00607C8E00506C8500677991002B2B5500FF00
+            FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+            FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
             FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
           Spacing = 3
-          OnClick = btnToClick
+          OnClick = btnAddClick
+        end
+        object btnRemove: TSpeedButton
+          Left = 0
+          Top = 32
+          Width = 69
+          Height = 30
+          Caption = '&Remove'
+          Flat = True
+          Glyph.Data = {
+            36030000424D3603000000000000360000002800000010000000100000000100
+            1800000000000003000000000000000000000000000000000000FF00FFFF00FF
+            FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF00000000
+            0000000000000000000000000000000000000000FF00FFFF00FFFF00FFFF00FF
+            FF00FFFF00FFFF00FF000000000000120903321B0F4722123C1C0D0500000000
+            00000000400E15FF00FFFF00FFFF00FFFF00FF000000000000A3622FCE7D3CF8
+            C38ED87F46D06B39CA6332B64921A13A183F0E13410F14FF00FFFF00FFFF00FF
+            FF00FF3C2D0F835029D78E41DC934AFCCF9CE19359D67642CF6A39B24B239738
+            175E200E120003FF00FFFF00FFFF00FFFF00FFAD7431BC7E2CDCA04DE4A757FC
+            D19EFBC994DE884ED67A43C85D2EBF4F246B2918000000FF00FFFF00FFFF00FF
+            FF00FFBD8638CD9635DDA54EE4AA57EFC495E6BD90D3844DD27A42C85E2EC152
+            261C0B06000000FF00FFFF00FFFF00FFFF00FFFF00FFBA8540D49F42C0904353
+            5E5C37556459554A965F3781422D000000070700FF00FFFF00FFFF00FFFF00FF
+            FF00FFFF00FF3F0E1397773F735C35416F864372892B54691B33410000000000
+            33000000FF00FFFF00FF00000000000000000000000000000000003300003300
+            00336997AC4D7A8F33586F0B1821000033000000FF00FFFF00FF000000000080
+            00008000008000008000008000008000008077A4B6537D9230546A0000332540
+            5BFF00FFFF00FFFF00FF0000000000FF0000FF0000FF0000FF0000FF0000FF00
+            00FF3A587225405B1A335225405B000033FF00FFFF00FFFF00FFFF00FFFF00FF
+            FF00FFFF00FFFF00FFFF00FF2642602F4E6E2A496D2340621F3A5C0F2E450015
+            2BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF14273B25
+            3F622540622443601C364F000000FF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+            FF00FFFF00FFFF00FFFF00FFFF00FF607C8E506C856779912B2B55FF00FFFF00
+            FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF}
+          Spacing = 3
+          OnClick = btnRemoveClick
         end
       end
     end
     object pnlSubject: TPanel
-      AlignWithMargins = True
-      Left = 4
-      Top = 3
+      Left = 0
+      Top = 0
       Width = 624
       Height = 26
       Margins.Left = 4
@@ -155,26 +196,24 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
-      TabOrder = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 632
+      TabOrder = 0
       object lblSubject: TTntLabel
         Left = 0
         Top = 0
-        Width = 50
+        Width = 74
         Height = 26
         Margins.Left = 4
         Align = alLeft
         AutoSize = False
         Caption = '&Subject: '
+        FocusControl = txtSendSubject
         Layout = tlCenter
       end
       object txtSendSubject: TTntMemo
         AlignWithMargins = True
-        Left = 50
+        Left = 74
         Top = 3
-        Width = 574
+        Width = 550
         Height = 20
         Margins.Left = 0
         Margins.Right = 0
@@ -182,37 +221,33 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         TabOrder = 0
         WantReturns = False
         WordWrap = False
-        ExplicitTop = 0
-        ExplicitHeight = 26
+        ExplicitLeft = 50
+        ExplicitWidth = 574
       end
     end
     object pnlRecipientWarning: TTntPanel
       AlignWithMargins = True
-      Left = 54
-      Top = 146
-      Width = 575
-      Height = 21
-      Margins.Left = 54
+      Left = 74
+      Top = 166
+      Width = 550
+      Height = 18
+      Margins.Left = 74
       Margins.Top = 0
+      Margins.Right = 0
       Margins.Bottom = 0
       Align = alBottom
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 2
       OnClick = pnlRecipientWarningClick
-      ExplicitLeft = 63
-      ExplicitTop = 143
-      ExplicitWidth = 569
-      object TntLabel2: TTntLabel
-        Left = 0
-        Top = 5
-        Width = 93
-        Height = 13
-        Caption = 'Items preceded by '
-      end
+      ExplicitLeft = 50
+      ExplicitWidth = 574
+      DesignSize = (
+        550
+        18)
       object Image1: TImage
-        Left = 95
-        Top = 5
+        Left = 0
+        Top = 1
         Width = 16
         Height = 13
         Center = True
@@ -255,302 +290,329 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         Transparent = True
       end
       object TntLabel3: TTntLabel
-        Left = 116
-        Top = 5
-        Width = 324
+        Left = 24
+        Top = 1
+        Width = 207
         Height = 13
-        Caption = 'have an issue preventing them from receiving broadcast messages.'
+        Caption = 'items can not receive Broadcast Messages.'
+      end
+      object btnRemoveInvalid: TTntButton
+        Left = 408
+        Top = 1
+        Width = 142
+        Height = 16
+        Anchors = [akTop, akRight]
+        Caption = 'Remove &Invalid Recipients'
+        TabOrder = 0
+        OnClick = btnRemoveInvalidClick
+        ExplicitLeft = 432
       end
     end
   end
-  object pnlButtons: TTntPanel
-    Left = 0
-    Top = 416
-    Width = 632
-    Height = 36
+  object pnlSender: TTntPanel
+    AlignWithMargins = True
+    Left = 4
+    Top = 199
+    Width = 624
+    Height = 276
+    Margins.Left = 4
+    Margins.Top = 0
+    Margins.Right = 4
+    Margins.Bottom = 0
     Align = alBottom
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
-    DesignSize = (
-      632
-      36)
-    object btnSend: TTntButton
-      Left = 486
-      Top = 5
-      Width = 68
-      Height = 28
-      Anchors = [akTop, akRight]
-      Caption = 'Sen&d'
-      Default = True
-      TabOrder = 0
-      OnClick = btnSendClick
-    end
-    object btnCancel: TTntButton
-      Left = 560
-      Top = 5
-      Width = 68
-      Height = 28
-      Anchors = [akTop, akRight]
-      Cancel = True
-      Caption = 'Cancel'
+    object pnlButtons: TTntPanel
+      Left = 0
+      Top = 238
+      Width = 624
+      Height = 38
+      Align = alBottom
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 1
-      OnClick = btnCancelClick
+      DesignSize = (
+        624
+        38)
+      object btnSend: TTntButton
+        Left = 482
+        Top = 6
+        Width = 68
+        Height = 28
+        Anchors = [akTop, akRight]
+        Caption = 'Sen&d'
+        Default = True
+        TabOrder = 0
+        OnClick = btnSendClick
+      end
+      object btnCancel: TTntButton
+        Left = 556
+        Top = 6
+        Width = 68
+        Height = 28
+        Anchors = [akTop, akRight]
+        Cancel = True
+        Caption = 'Cancel'
+        TabOrder = 1
+        OnClick = btnCancelClick
+      end
     end
-  end
-  object pnlComposer: TTntPanel
-    AlignWithMargins = True
-    Left = 4
-    Top = 179
-    Width = 624
-    Height = 237
-    Margins.Left = 4
-    Margins.Right = 4
-    Margins.Bottom = 0
-    Align = alClient
-    BevelOuter = bvNone
-    ParentColor = True
-    TabOrder = 2
-    ExplicitTop = 173
-    ExplicitHeight = 243
-    object tbMsgOutToolbar: TTntToolBar
+    object pnlComposer: TTntPanel
       Left = 0
       Top = 0
       Width = 624
-      Height = 21
-      ButtonWidth = 25
-      Images = frmExodus.ImageList1
+      Height = 238
+      Align = alClient
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 0
-      Transparent = True
-      object ChatToolbarButtonBold: TTntToolButton
+      object tbMsgOutToolbar: TTntToolBar
         Left = 0
         Top = 0
-        Hint = 'Bold'
-        AllowAllUp = True
-        ImageIndex = 70
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-      end
-      object ChatToolbarButtonUnderline: TTntToolButton
-        Left = 25
-        Top = 0
-        Hint = 'Underline'
-        AllowAllUp = True
-        Caption = 'Underline'
-        ImageIndex = 71
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-      end
-      object ChatToolbarButtonItalics: TTntToolButton
-        Left = 50
-        Top = 0
-        Hint = 'Italics'
-        AllowAllUp = True
-        Caption = 'Color'
-        ImageIndex = 72
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-        Visible = False
-      end
-      object ChatToolbarButtonColors: TTntToolButton
-        Left = 75
-        Top = 0
-        Hint = 'Colors'
-        AllowAllUp = True
-        Caption = 'Color'
-        ImageIndex = 84
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonSeparator1: TTntToolButton
-        Left = 100
-        Top = 0
-        Width = 8
-        Style = tbsSeparator
-      end
-      object ChatToolbarButtonCut: TTntToolButton
-        Left = 108
-        Top = 0
-        Hint = 'Cut'
-        Caption = 'Cut'
-        ImageIndex = 73
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonCopy: TTntToolButton
-        Left = 133
-        Top = 0
-        Hint = 'Copy'
-        Caption = 'Copy'
-        ImageIndex = 74
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonPaste: TTntToolButton
-        Left = 158
-        Top = 0
-        Hint = 'Paste'
-        Caption = 'Paste'
-        ImageIndex = 75
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonSeparator2: TTntToolButton
-        Left = 183
-        Top = 0
-        Width = 8
-        Style = tbsSeparator
-      end
-      object ChatToolbarButtonEmoticons: TTntToolButton
-        Left = 191
-        Top = 0
-        Hint = 'Emoticons'
-        Caption = 'Emoticons'
-        ImageIndex = 76
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object ChatToolbarButtonHotkeys: TTntToolButton
-        Left = 216
-        Top = 0
-        Hint = 'Hotkeys'
-        Caption = 'Hotkeys'
-        ImageIndex = 77
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object TntToolButton1: TTntToolButton
-        Left = 241
-        Top = 0
-        Width = 8
-        Caption = 'TntToolButton1'
-        Style = tbsSeparator
-      end
-      object cmbPriority: TTntComboBox
-        Left = 249
-        Top = 0
-        Width = 72
-        Height = 21
-        Hint = 'Hotkeys'
-        Style = csDropDownList
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ItemHeight = 13
-        ParentFont = False
-        ParentShowHint = False
-        ShowHint = True
+        Width = 624
+        Height = 22
+        Margins.Left = 0
+        Margins.Top = 1
+        Margins.Right = 0
+        Margins.Bottom = 1
+        AutoSize = True
+        ButtonWidth = 25
+        Images = frmExodus.ImageList1
         TabOrder = 0
+        Transparent = True
+        Visible = False
+        object ChatToolbarButtonBold: TTntToolButton
+          Left = 0
+          Top = 0
+          Hint = 'Bold'
+          AllowAllUp = True
+          ImageIndex = 70
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+        end
+        object ChatToolbarButtonUnderline: TTntToolButton
+          Left = 25
+          Top = 0
+          Hint = 'Underline'
+          AllowAllUp = True
+          Caption = 'Underline'
+          ImageIndex = 71
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+        end
+        object ChatToolbarButtonItalics: TTntToolButton
+          Left = 50
+          Top = 0
+          Hint = 'Italics'
+          AllowAllUp = True
+          Caption = 'Color'
+          ImageIndex = 72
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+          Visible = False
+        end
+        object ChatToolbarButtonColors: TTntToolButton
+          Left = 75
+          Top = 0
+          Hint = 'Colors'
+          AllowAllUp = True
+          Caption = 'Color'
+          ImageIndex = 84
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonCut: TTntToolButton
+          Left = 100
+          Top = 0
+          Hint = 'Cut'
+          Caption = 'Cut'
+          ImageIndex = 73
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonSeparator1: TTntToolButton
+          Left = 125
+          Top = 0
+          Width = 8
+          Style = tbsSeparator
+        end
+        object ChatToolbarButtonCopy: TTntToolButton
+          Left = 133
+          Top = 0
+          Hint = 'Copy'
+          Caption = 'Copy'
+          ImageIndex = 74
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonPaste: TTntToolButton
+          Left = 158
+          Top = 0
+          Hint = 'Paste'
+          Caption = 'Paste'
+          ImageIndex = 75
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonSeparator2: TTntToolButton
+          Left = 183
+          Top = 0
+          Width = 8
+          Style = tbsSeparator
+        end
+        object ChatToolbarButtonEmoticons: TTntToolButton
+          Left = 191
+          Top = 0
+          Hint = 'Emoticons'
+          Caption = 'Emoticons'
+          ImageIndex = 76
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object ChatToolbarButtonHotkeys: TTntToolButton
+          Left = 216
+          Top = 0
+          Hint = 'Hotkeys'
+          Caption = 'Hotkeys'
+          ImageIndex = 77
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object TntToolButton1: TTntToolButton
+          Left = 241
+          Top = 0
+          Width = 8
+          Caption = 'TntToolButton1'
+          Style = tbsSeparator
+        end
+        object cmbPriority: TTntComboBox
+          Left = 249
+          Top = 0
+          Width = 72
+          Height = 21
+          Hint = 'Hotkeys'
+          Style = csDropDownList
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ItemHeight = 13
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          TabStop = False
+        end
       end
-    end
-    object RTComposer: TExRichEdit
-      Left = 0
-      Top = 21
-      Width = 624
-      Height = 216
-      Align = alClient
-      AutoURLDetect = adNone
-      Ctl3D = True
-      CustomURLs = <
-        item
-          Name = 'e-mail'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'http'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'file'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'mailto'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'ftp'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'https'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'gopher'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'nntp'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'prospero'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'telnet'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'news'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'wais'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end>
-      LangOptions = [loAutoFont]
-      Language = 1033
-      ParentCtl3D = False
-      ScrollBars = ssVertical
-      ShowSelectionBar = False
-      TabOrder = 1
-      URLColor = clBlue
-      URLCursor = crHandPoint
-      WantTabs = True
-      WordWrap = False
-      AutoVerbMenu = False
-      InputFormat = ifUnicode
-      OutputFormat = ofUnicode
-      SelectedInOut = False
-      PlainRTF = False
-      UndoLimit = 0
-      AllowInPlace = False
+      object RTComposer: TExRichEdit
+        Left = 0
+        Top = 22
+        Width = 624
+        Height = 216
+        Align = alClient
+        AutoURLDetect = adNone
+        Ctl3D = True
+        CustomURLs = <
+          item
+            Name = 'e-mail'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'http'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'file'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'mailto'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'ftp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'https'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'gopher'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'nntp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'prospero'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'telnet'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'news'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'wais'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end>
+        LangOptions = [loAutoFont]
+        Language = 1033
+        ParentCtl3D = False
+        ScrollBars = ssVertical
+        ShowSelectionBar = False
+        TabOrder = 1
+        URLColor = clBlue
+        URLCursor = crHandPoint
+        WordWrap = False
+        AutoVerbMenu = False
+        InputFormat = ifUnicode
+        OutputFormat = ofUnicode
+        SelectedInOut = False
+        PlainRTF = False
+        UndoLimit = 0
+        AllowInPlace = False
+      end
     end
   end
-  object ImageList1: TImageList
+  object imgState: TImageList
     Left = 8
-    Top = 424
+    Top = 440
     Bitmap = {
       494C010101000300040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -692,14 +754,14 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
   end
   object popTo: TTntPopupMenu
     Left = 48
-    Top = 424
+    Top = 440
     object Add1: TTntMenuItem
-      Caption = '&Add...'
-      OnClick = Add1Click
+      Caption = '&Add Recipients...'
+      OnClick = btnAddClick
     end
     object Remove1: TTntMenuItem
-      Caption = '&Remove'
-      OnClick = Remove1Click
+      Caption = '&Remove Selected Recipients'
+      OnClick = btnRemoveClick
     end
   end
 end

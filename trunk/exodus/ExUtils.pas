@@ -1111,16 +1111,19 @@ end;
 {---------------------------------------}
 procedure checkAndCenterForm(f: TForm);
 var
-    ok: boolean;
-    dtop, tmp: TRect;
+//    ok: boolean;
+//    dtop, tmp: TRect;
     cp: TPoint;
-    m: TMonitor;
+//    m: TMonitor;
 begin
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
 
     // Get the nearest monitor to the form
+    f.MakeFullyVisible();
+{
     tmp := f.BoundsRect;
+
     cp := CenterPoint(tmp);
 
     m := Screen.MonitorFromPoint(cp, mdNearest);
@@ -1138,10 +1141,11 @@ begin
 
     if (ok = false) then begin
         // center it on the default monitor
-        cp := CenterPoint(dtop);
+}
+        cp := CenterPoint(f.Monitor.WorkareaRect);
         f.Left := cp.x - (f.Width div 2);
         f.Top := cp.y - (f.Height div 2);
-    end;
+{    end;}
 end;
 
 function IsUnicodeEnabled(): boolean;

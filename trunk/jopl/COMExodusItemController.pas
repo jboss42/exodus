@@ -114,7 +114,7 @@ var
 implementation
 
 uses ComServ, Classes,
-     JabberConst, IQ, Session, GroupInfo, Variants, Contnrs,
+     JabberConst, IQ, Session, {GroupInfo,} Variants, Contnrs,
      COMExodusItem, COMExodusItemList;
 
 
@@ -446,6 +446,9 @@ begin
                 //Make this group a top-level Group...
                 subgrp := _GroupParser.GetGroupName(UID);
             end;
+
+            //Now let's make sure the new group exists!
+            AddGroup(subgrp);
         end
         else begin
             //Move this group's items into GroupTo...
