@@ -425,6 +425,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       Height = 28
       Anchors = [akTop, akRight]
       Caption = 'Search'
+      Default = True
       TabOrder = 0
       OnClick = btnSearchClick
     end
