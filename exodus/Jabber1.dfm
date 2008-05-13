@@ -80,10 +80,6 @@ inherited frmExodus: TfrmExodus
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -193,9 +189,11 @@ inherited frmExodus: TfrmExodus
           AlignWithMargins = True
           Left = 24
           Top = 3
-          Width = 3
-          Height = 13
+          Width = 353
+          Height = 12
           Align = alClient
+          ExplicitWidth = 3
+          ExplicitHeight = 13
         end
         object pnlStatus: TPanel
           Left = 21
@@ -227,7 +225,7 @@ inherited frmExodus: TfrmExodus
             Left = 150
             Top = 0
             Width = 16
-            Height = 16
+            Height = 19
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
@@ -1021,7 +1019,7 @@ inherited frmExodus: TfrmExodus
         Caption = '&View'
         Visible = False
         object mnuWindows_View_ShowActivityWindow: TTntMenuItem
-          Caption = 'Show &Activity Window'
+          Caption = 'Show &Activity List'
           Visible = False
           OnClick = mnuWindows_View_ShowActivityWindowClick
         end
@@ -4402,7 +4400,7 @@ inherited frmExodus: TfrmExodus
       OnClick = trayShowClick
     end
     object trayShowActivityWindow: TTntMenuItem
-      Caption = 'Show Activity Window'
+      Caption = 'Show Activity List'
       Enabled = False
       Visible = False
       OnClick = trayShowActivityWindowClick
