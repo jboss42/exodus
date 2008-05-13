@@ -33,9 +33,9 @@ uses
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
     TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
-  ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
-  XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
-  SClrRGrp;
+    ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
+    XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
+    SClrRGrp, IEMsgList;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -470,6 +470,7 @@ type
     // Other
     _killshow: boolean;
     _glueRange: integer;
+    _hiddenIEMsgList: TfIEMsgList;
 
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
@@ -1380,6 +1381,15 @@ begin
         _glueRange := -1;
     end;
 
+    if (MainSession.Prefs.getInt('msglist_type') = 1) then begin
+        // msglist_type = HTML_MSGLIST
+        // Need to start up an instance of IE because the first IE startup
+        // can be VERY slow.
+        _hiddenIEMsgList := TfIEMsgList.Create(nil);
+    end
+    else begin
+        _hiddenIEMsgList := nil;
+    end;
 end;
 
 {---------------------------------------}
@@ -1473,6 +1483,13 @@ var
     req_srv, req_a: string;
     pw : WideString;
 begin
+    // Hack to deal with fact that the first time IE gets started
+    // it has a noticible delay.  By doing the reset here,
+    // the delay is "hidden" amongst other login steps
+    if (_hiddenIEMsgList <> nil) then begin
+        _hiddenIEMsgList.Reset();
+    end;
+
     // Make sure that the active profile
     // has the password field filled out.
     // If not, pop up the password prompt,
@@ -3123,6 +3140,7 @@ begin
         cleanup();
 
     try
+        _hiddenIEMsgList.Free();
         _dockWindow.Free();
     except
     end;
