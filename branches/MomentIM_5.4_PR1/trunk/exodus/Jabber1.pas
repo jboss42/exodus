@@ -33,9 +33,9 @@ uses
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
     TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
-    ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
-    XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
-    SClrRGrp, IEMsgList;
+  ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
+  XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
+  SClrRGrp;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -81,7 +81,6 @@ type
   TfrmExodus = class(TExForm)
     MainMenu1: TTntMainMenu;
     ImageList1: TImageList;
-    timFlasher: TTimer;
     timAutoAway: TTimer;
     popTray: TTntPopupMenu;
     AppEvents: TApplicationEvents;
@@ -306,7 +305,6 @@ type
     procedure btnDelPersonClick(Sender: TObject);
     procedure ShowXML1Click(Sender: TObject);
     procedure Exit2Click(Sender: TObject);
-    procedure timFlasherTimer(Sender: TObject);
     procedure JabberorgWebsite1Click(Sender: TObject);
     procedure JabberCentralWebsite1Click(Sender: TObject);
     procedure About1Click(Sender: TObject);
@@ -472,7 +470,6 @@ type
     // Other
     _killshow: boolean;
     _glueRange: integer;
-    _hiddenIEMsgList: TfIEMsgList;
 
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
@@ -508,13 +505,6 @@ type
      *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
     **}
     procedure waitForCleanup();
-
-    {
-        Forces a focus to the active tabs's docked form
-    }
-
-    procedure checkFlash();
-
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -903,23 +893,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Flash();
 begin
-    If (Self.Active and not MainSession.Prefs.getBool('notify_docked_flasher')) then begin
-        timFlasher.Enabled := false;
-        exit; //0.9.1.0 behavior
-    end;
-    // flash window
-    if (_hidden) then begin
-        Self.WindowState := wsMinimized;
-        Self.Visible := true;
-        ShowWindow(Handle, SW_SHOWMINNOACTIVE);
-    end;
-    if MainSession.Prefs.getBool('notify_flasher') then begin
-        timFlasher.Enabled := true;
-    end
-    else begin
-        timFlasher.Enabled := false;
-        timFlasherTimer(Self);
-    end;
 end;
 
 {---------------------------------------}
@@ -1158,12 +1131,10 @@ end;
 procedure TfrmExodus.WMActivate(var msg: TMessage);
  begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
-        OutputDebugMsg('exodus got activate');
 //        outputdebugMsg('TfrmExodus.WMActivate');
-        checkFlash();
 
-        StopFlash(Self);
-        StopTrayAlert();
+        Notify.StopFlash(Self);
+        stopTrayAlert();
 
         if ((_dockWindow <> nil) and
             (_dockWindow.Showing) and
@@ -1409,15 +1380,6 @@ begin
         _glueRange := -1;
     end;
 
-    if (MainSession.Prefs.getInt('msglist_type') = 1) then begin
-        // msglist_type = HTML_MSGLIST
-        // Need to start up an instance of IE because the first IE startup
-        // can be VERY slow.  
-        _hiddenIEMsgList := TfIEMsgList.Create(nil);
-    end
-    else begin
-        _hiddenIEMsgList := nil;
-    end;
 end;
 
 {---------------------------------------}
@@ -1511,13 +1473,6 @@ var
     req_srv, req_a: string;
     pw : WideString;
 begin
-    // Hack to deal with fact that the first time IE gets started
-    // it has a noticible delay.  By doing the reset here,
-    // the delay is "hidden" amongst other login steps
-    if (_hiddenIEMsgList <> nil) then begin
-        _hiddenIEMsgList.Reset();
-    end;
-
     // Make sure that the active profile
     // has the password field filled out.
     // If not, pop up the password prompt,
@@ -2466,9 +2421,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormResize(Sender: TObject);
 begin
-//    if (timFlasher.Enabled) then
-//        timFlasher.Enabled := false;
-
     // Check for constraints
     if (_enforceConstraints) then begin
         if (frmExodus.Width < frmExodus.Constraints.MinWidth) then
@@ -2595,13 +2547,6 @@ begin
     // Close the whole honkin' thing
     _shutdown := true;
     Self.Close;
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.timFlasherTimer(Sender: TObject);
-begin
-    // Flash the window
-    FlashWindow(Self.Handle, true);
 end;
 
 {---------------------------------------}
@@ -2990,9 +2935,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
-//    if (frmRoster <> nil) then
-//        frmRoster.RosterTree.Invalidate();
-    StopFlash(Self);
+    StopFlash(Self); 
     StopTrayAlert();
 end;
 
@@ -3180,7 +3123,6 @@ begin
         cleanup();
 
     try
-        _hiddenIEMsgList.Free();
         _dockWindow.Free();
     except
     end;
@@ -3540,8 +3482,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
-    checkFlash();
-    StopFlash(Self);
+    Notify.StopFlash(Self);
     StopTrayAlert();
 end;
 
@@ -4574,16 +4515,13 @@ end;
 
 procedure TfrmExodus.OnNotify(frm: TForm; notifyEvents: integer);
 begin
-    //if dockmanager is being notified directly or the given form is docked
     //handle bring to front and flash
-    if ((frm = nil) or (frm = Self) or
-        ((frm is TfrmDockable) and (TfrmDockable(frm).Docked))) then begin
-        if ((notifyEvents and notify_front) > 0) then
+    if (frm = Self) then begin
+        if ((notifyEvents and notify_front) <> 0) then
             bringToFront()
-        else if ((notifyEvents and notify_flash) > 0) then
+        else if ((notifyEvents and notify_flash) <> 0) then
             Self.Flash();
-    end;    
-    //updateNextNotifyButton();
+    end;
 end;
 
 procedure TfrmExodus.imgAdClick(Sender: TObject);
@@ -4766,13 +4704,6 @@ begin
 
     root.Add(mi);
   end
-end;
-
-procedure TfrmExodus.checkFlash();
-begin
-    if (timFlasher.Enabled and
-       (not MainSession.Prefs.getBool('notify_docked_flasher'))) then
-        timFlasher.Enabled := false;
 end;
 
 //Reset menu items for contacts and groups based on the roster selection

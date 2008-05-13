@@ -182,7 +182,7 @@ type
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
 
     procedure SendMsg; override;
-    function  SetJID(cjid: widestring): boolean;
+    procedure  SetJID(cjid: widestring);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     
     procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
@@ -306,15 +306,12 @@ function StartChat(sjid, resource: widestring;
                    chat_nick: widestring;
                    bring_to_front:boolean): TfrmChat;
 var
-    r, m: integer;
     chat: TChatController;
     win: TfrmChat;
     cjid: widestring;
     new_chat: boolean;
     do_scroll: boolean;
-//    exp: boolean;
     hist: string;
-    anonymousChat: boolean;
     tjid1, selfJID: TJabberID;
 begin
     Result := nil;
@@ -344,67 +341,48 @@ begin
     end;
 
     try
+        if resource <> '' then
+            cjid := sjid + '/' + resource
+        else
+            cjid := sjid;
         // either show an existing chat or start one.
         chat := MainSession.ChatList.FindChat(sjid, resource, '');
-        do_scroll := false;
-        hist := '';
-
-        // Determine if this chat is one started from an annonymous room.
-        anonymousChat := (FindRoom(sjid) <> nil);
-
-        // If we have an existing chat, we may just want to raise it
-        // or redock it, etc...
-        r := MainSession.Prefs.getInt(P_CHAT);
-        m := MainSession.Prefs.getInt('chat_memory');
-
-        if (((r = msg_existing_chat) and (m > 0)) and (chat <> nil)) then begin
-            win := TfrmChat(chat.window);
-            if (win <> nil) then begin //ignore showwindow param, bring window to front
-                win.ShowDefault(bring_to_front);
-                Result := win;
-                exit;
-            end;
-
-            DebugMsg('Existing chat refcount: ' + IntToStr(chat.RefCount));
-        end;
-
         // Create a new chat controller if we don't have one
-        if chat = nil then begin
-            chat := MainSession.ChatList.AddChat(sjid, resource, anonymousChat);
-        end
+        if chat = nil then
+            chat := MainSession.ChatList.AddChat(sjid, resource, (FindRoom(sjid) <> nil))
         else begin
            //We need to do this for existing chat controllers to make sure
            //callbacks are re-registered if they
            //have been unregistered before due to blocking
-           chat.SetJID(sjid);
+           chat.SetJID(cjid);
         end;
 
-        chat.AnonymousChat := anonymousChat;
+        do_scroll := false;
+        hist := '';
 
         // Create a window if we don't have one.
-        if (chat.window = nil) then begin
-            new_chat := true;
-            win := TfrmChat.Create(Application);
-            chat.Window := win;
-            chat.stopTimer();
-            win.chat_object := chat;
-            win.chat_object.AddRef();
-            win.com_controller := TExodusChat.Create();
-            win.com_controller.setChatSession(chat);
-            win.com_controller.ObjAddRef();
-
-            hist := TrimRight(chat.getHistory());
-            DebugMsg('new window chat refcount: ' + IntToStr(chat.RefCount));
-            if (new_chat) then begin
-               assert(win <> nil);
-               ExCOMController.fireNewChat(sjid, win.com_controller);
-            end;
+        if (chat.window <> nil) then begin
+            TfrmChat(chat.window).ShowDefault(bring_to_front); //ignore showwindow param, bring window to front ??
+            Result := TfrmChat(chat.window);
+            exit;
         end;
+
+        new_chat := true;
+        win := TfrmChat.Create(Application);
+        chat.Window := win;
+        win.chat_object := chat;
+
+        win.com_controller := TExodusChat.Create();
+        win.com_controller.setChatSession(chat);
+        win.com_controller.ObjAddRef();
+
+        hist := TrimRight(chat.getHistory());
 
         // Setup the properties of the window,
         // and hook it up to the chat controller.
         with TfrmChat(chat.window) do begin
             _displayName := chat_nick;
+            _anonymousChat := chat.AnonymousChat;
             _isRoom := IsRoom(sjid);
             if (_isRoom) then begin
                 popAddContact.Enabled := false;
@@ -412,7 +390,6 @@ begin
                 popResources.Enabled  := false;
                 mnuSendFile.Enabled   := false;
                 mnuBlock.Enabled      := false;
-//                _dnLocked := true;
             end
             else PersistUnreadMessages := true;
 
@@ -421,18 +398,9 @@ begin
             else
               mnuBlock.Caption := _('Block');
 
-            if resource <> '' then
-                cjid := sjid + '/' + resource
-            else
-                cjid := sjid;
 
-            if (SetJID(cjid) = false) then begin
-                // we can't chat with this person for some reason
-                Result := nil;
-                chat.Free();
-                exit;
-            end;
 
+            SetJID(cjid);
             SetupResources();
 
             //Assign incoming message event
@@ -455,7 +423,11 @@ begin
                 ShowDefault(bring_to_front);
             Application.ProcessMessages();
 
+            //finally, event new chat to plugins
+            if (new_chat) then
+                ExCOMController.fireNewChat(sjid, com_controller);
         end;
+
 
 
         Result := TfrmChat(chat.window);
@@ -719,16 +691,14 @@ end;
 
 
 {---------------------------------------}
-function TfrmChat.SetJID(cjid: widestring): boolean;
+procedure TfrmChat.SetJID(cjid: widestring);
 var
     Item: IExodusItem;
-    m, i: integer;
+    m: integer;
     a: TAvatar;
     nickjid: Widestring;
     rm: TfrmRoom;
 begin
-    Result := true;
-
     setUID(cjid);
 
     _receivedXIMNode := false;
@@ -811,25 +781,12 @@ begin
     end;
     }
 
-    // synchronize the session chat list with this JID
-    i := MainSession.ChatList.indexOfObject(chat_object);
-    if (i >= 0) then
-        MainSession.ChatList[i] := cjid;
 end;
 
 procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
-var
- chat: TChatController;
 begin
-    //
-    chat := MainSession.ChatList.FindChat(_jid.jid, _jid.resource, '');
-    if (chat <> nil) then
-       if (MainSession.IsBlocked(_jid.jid)) then begin
-         chat.DisableChat;
-         chat.Window := nil;
-       end;
-    Action := caFree;
     inherited;
+    Action := caFree;
 end;
 
 {---------------------------------------}
@@ -897,7 +854,7 @@ begin
 
     // make sure we are visible..
     if (not visible) then begin
-outputdebugmsg('Chat is not visible but we received a message. Showing');    
+        outputdebugmsg('Chat is not visible but we received a message. Showing');    
         ShowDefault(false);
     end;
 
@@ -1752,15 +1709,15 @@ begin
     if (_sent_composing) then
         _sendComposing('');
 
-    if ((MainSession.Prefs.getInt('chat_memory') > 0) and
-        (not MsgList.empty()) and (chat_object <> nil)) then
-    begin
-        s := MsgList.getHistory();
-        chat_object.SetHistory(s);
-        chat_object.Window := nil;
-        DebugMsg('(close) chat refcount: ' + IntToStr(chat_object.RefCount));
-        chat_object := nil;
-    end;
+    //if we had a chat going with a blocked contact, make sure we
+    //stop the conversation but still maintain state
+    if (MainSession.IsBlocked(_jid.jid)) then
+        chat_object.DisableChat;
+
+    s := MsgList.getHistory();
+    chat_object.SetHistory(s);
+    chat_object.Window := nil; //stop any eventing to this now closed window
+    chat_object := nil; //object will handle its own destruction
     inherited;
 end;
 
