@@ -1026,16 +1026,14 @@ begin
     // manually handle popping up the tray menu..
     // since the delphi/vcl impl isn't quite right.
     if (Msg.LParam = WM_LBUTTONDBLCLK) then begin
-        if (_hidden) then begin
-            // restore our app
-            doRestore();
-            _hidden := false;
+        // restore our app
+        doRestore();
+        _hidden := false;
 
-            getDockManager().BringToFront(); // takes focus
-            Self.BringToFront(); // take back focus
+        SetForegroundWindow(getDockManager().getHWND()); // takes focus
+        SetForegroundWindow(Self.Handle); // take back focus
 
-            msg.Result := 0;
-        end;
+        msg.Result := 0;
     end
     else if ((Msg.LParam = WM_LBUTTONDOWN) and (not Application.Active) and (not _hidden))then begin
         SetForegroundWindow(Self.Handle);
