@@ -630,7 +630,7 @@ begin
     inherited;
     _stateRestored := false;
     _skipWindowPosEvents := 0;
-    
+
     //get state info from prefs
     // do translation magic
     AssignUnicodeFont(Self);
@@ -820,7 +820,6 @@ begin
         if (Self.Handle = 0) then exit; //nothing to do, we are fubared
 
         RestoreWindowState();
-        StopWindowPosEvents();
 
         if (bringtofront) then
         begin
@@ -828,27 +827,30 @@ begin
             Self.BringToFront;
             Self.Visible := true;
         end
-        else if (not Self.Visible) then begin
-            if (_windowState = wsMinimized) then
+        else begin
+            StopWindowPosEvents();
+            if (not Self.Visible) then begin
+                if (_windowState = wsMinimized) then
+                    ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+                else if (_windowState = wsMaximized) then
+                    ShowWindow(Handle, SW_MAXIMIZE)
+                //otherwise our floating positions should be set, just show the window
+                //in-situ. not sure we need to do this before coming visible, but
+                //its working! voodoo magic
+                else SetWindowPos(Self.Handle,
+                                  HWND_BOTTOM,
+                                  0,0,0,0,
+                                  SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
+
+                Self.Visible := true;
+            end
+            else if ((Self.WindowState = wsMinimized) and not bringtofront) then
                 ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-            else if (_windowState = wsMaximized) then
-                ShowWindow(Handle, SW_MAXIMIZE)
-            //otherwise our floating positions should be set, just show the window
-            //in-situ. not sure we need to do this before coming visible, but
-            //its working! voodoo magic
-            else SetWindowPos(Self.Handle,
-                              HWND_BOTTOM,
-                              0,0,0,0,
-                              SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
+            else
+                ShowWindow(Handle, SW_SHOWNOACTIVATE);
 
-            Self.Visible := true;
-        end
-        else if ((Self.WindowState = wsMinimized) and not bringtofront) then
-            ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-        else
-            ShowWindow(Handle, SW_SHOWNOACTIVATE);
-
-        StartWindowPosEvents();
+            StartWindowPosEvents();
+        end;
     except
         // Possible exception when dealing with an extreme amount of windows
     end;

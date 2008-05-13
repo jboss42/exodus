@@ -1030,8 +1030,8 @@ begin
         doRestore();
         _hidden := false;
 
-        SetForegroundWindow(getDockManager().getHWND()); // takes focus
-        SetForegroundWindow(Self.Handle); // take back focus
+        getDockManager().BringToFront(); // takes focus
+        Self.BringToFront(); // take back focus
 
         msg.Result := 0;
     end
@@ -3201,11 +3201,7 @@ begin
     inherited;
     if (_dockwindow = nil) then exit;
 
-    if (not _dockWindow.Showing) then begin
-        getDockManager().ShowDockManagerWindow(true, false);
-    end;
-
-    getDockManager().BringToFront();
+    getDockManager().ShowDockManagerWindow(true, true);
 end;
 
 {---------------------------------------}
@@ -4971,6 +4967,7 @@ begin
 
     typedActs.execute(act.Name);
 end;
+
 
 
 initialization
