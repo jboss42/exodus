@@ -46,8 +46,6 @@ type
         _history: Widestring;
         _memory: TTimer;
         _window: TObject; //The ChatWin associated with this chat
-        _refs: integer;
-//        _queued: boolean;
         _threadid: Widestring; //The thread for this chat
         _SessionCB: integer;    // Session callback
         _send_msg_cb: integer;  // Outgoing message callback
@@ -55,13 +53,16 @@ type
         _last_msg_id: Widestring; //ID of the last message sent
         _anonymous_chat: boolean; // Is chat from annonymous room
         procedure SetWindow(new_window: TObject);
-    protected
+
+   protected
         procedure timMemoryTimer(Sender: TObject);
         procedure SessionCallback(event: string; tag: TXMLTag);
+        procedure startTimer();
+        procedure stopTimer();
     public
         msg_queue: TQueue;
 //        last_session_msg_queue: TQueue; //Number of newly received offline messages
- 
+
         constructor Create(sjid, sresource: Widestring; anonymousChat: boolean);
         destructor Destroy; override;
 
@@ -73,10 +74,9 @@ type
         procedure SendMsgCallback(event: string; tag: TXMLTag);
         procedure SetHistory(s: Widestring);
         procedure setThreadID(id: Widestring);
-        procedure startTimer();
-        procedure stopTimer();
-        procedure unassignEvent1();
-        procedure unassignSendMsgEvent1();
+
+        procedure unassignOnMessageEvent();
+        procedure unassignOnSendMessageEvent();
 
         procedure PushMessage(tag: TXMLTag; last_session_queue: boolean = false);
 
@@ -89,9 +89,6 @@ type
         function GenerateThreadID: Widestring;
         function getTags: TXMLTagList;
 
-        procedure addRef();
-        procedure Release();
-        procedure TimedRelease();
         procedure DisableChat();
         procedure RegisterSessionCB(event: widestring);
         procedure RegisterMsgCB();
@@ -105,7 +102,6 @@ type
         property Window: TObject read _window write SetWindow;
         property OnMessage: TChatMessageEvent read _OnMessageEvent write _OnMessageEvent;
         property OnSendMessage: TChatMessageEvent read _OnSendMessageEvent write _OnSendMessageEvent;
-        property RefCount: integer read _refs;
         property LastMsgId: Widestring read _last_msg_id;
         property AnonymousChat: boolean read _anonymous_chat write _anonymous_chat;
     end;
@@ -126,6 +122,7 @@ implementation
 uses
     PrefController,
     DisplayName,
+    windows,
     JabberConst, XMLUtils, Session, Chat,
     Forms, IdGlobal, ChatWin, Debug, Presence;
 
@@ -197,68 +194,59 @@ begin
     else
         self.SetJID(_jid);
 end;
-
-{---------------------------------------}
-procedure TChatController.addRef();
+procedure OutputDebugMsg(Message : String);
 begin
-    inc(_refs);
-end;
-
-{---------------------------------------}
-procedure TChatController.Release();
-begin
-    dec(_refs);
-    assert(_refs >= 0);
-    if (_refs = 0) then
-        Self.Free();
-end;
-
-{---------------------------------------}
-procedure TChatController.TimedRelease();
-begin
-    dec(_refs);
-    if (_refs = 0) then
-        StartTimer();
+    OutputDebugString(PChar(Message));
 end;
 
 {---------------------------------------}
 procedure TChatController.SetJID(sjid: Widestring);
 var
     tjid: TJabberID;
+    i: integer;
 begin
     tjid := TJabberID.create(sjid);
     if (tjid.resource <> '') then
         _resource := tjid.resource;
     tjid.free();
-    
+
     RegisterSessionCB('/session/presence');
     RegisterMsgCB();
+    UnRegisterSendMsgCB();
     RegisterSendMsgCB();
+    
+    // synchronize the session chat list with this JID
+    i := MainSession.ChatList.indexOfObject(Self);
+    if (i >= 0) then
+        MainSession.ChatList[i] := sjid;
 end;
 
 procedure TChatController.DisableChat();
 begin
     UnRegisterMsgCB();
     UnRegisterSendMsgCB();
-    Self.unassignSendMsgEvent1();
-    Self.unassignEvent1();
-    StopTimer();
+    Self.unassignOnSendMessageEvent();
+    Self.unassignOnMessageEvent();
 end;
-
 
 {---------------------------------------}
 procedure TChatController.SetWindow(new_window: TObject);
 var
     tag : TXMLTag;
 begin
+
     // this controller has a new window.
     // make sure to let the plugins know about it
     if (_window = new_window) then exit;
-    
+
     _window := new_window;
 
     if (new_window <> nil) then
     begin
+        stopTimer();
+        //start listeneing for presence only, not other session events        
+        RegisterSessionCB('/session/presence');
+
         tag := TXMLTag.Create('chat');
         tag.setAttribute('handle', IntToStr(TForm(new_window).Handle));
         tag.setAttribute('jid', self._jid);
@@ -266,9 +254,13 @@ begin
         tag.Free;
     end else
     begin
-        Self.unassignSendMsgEvent1();
-        Self.unassignEvent1();
-        TimedRelease();
+        //listen for all session events
+        RegisterSessionCB('/session');
+        //listen for all incoming jids
+        Self.setJID(Self._jid);
+        Self.unassignOnSendMessageEvent();
+        Self.unassignOnMessageEvent();
+        startTimer();
     end;
 end;
 
@@ -281,16 +273,17 @@ begin
     if (MainSession <> nil) then begin
         UnRegisterMsgCB();
         UnRegisterSendMsgCB();
+        UnregisterSessionCB();
+
         idx := MainSession.ChatList.IndexOfObject(Self);
         if (idx >= 0) then
             MainSession.ChatList.Delete(idx);
-        Self.UnregisterSessionCB();
     end;
 
     // Free stuff
     _memory.Free();
     msg_queue.Free();
-//JJF msgqueue refactor     last_session_msg_queue.Free();
+    OutputDebugMsg('chat Controller (jid: ' + Self._jid + ') removed from memory');
     inherited;
 end;        
 
@@ -303,7 +296,16 @@ var
     isComposingEvent: boolean;
     auto_resp_body: WideString;
     auto_resp_msg: TJabberMessage;
+    tjid: TJabberID;
 begin
+    //if blocked just ignore this message
+    tjid := TJabberID.Create(tag.getAttribute('from'));
+    if (MainSession.IsBlocked(tjid)) then
+    begin
+        tjid.free();
+        exit;
+    end;
+    tjid.free();
     // do stuff
     // if we don't have a window, then ignore composing events
     etag := tag.QueryXPTag(XP_MSGXEVENT);
@@ -328,27 +330,20 @@ begin
         end;
     end;
 
-    // if we are paused, put on a delay tag.
-{**JJF msgqueue refactor
-    if (MainSession.IsPaused) then begin
-        with tag.AddTag('x') do begin
-            setAttribute('xmlns', 'jabber:x:delay');
-            setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
-        end;
-    end;
-**}
-    if Assigned(_OnMessageEvent) then begin
-        _OnMessageEvent(tag);
-    end
+    {If GUI does not exist, defined as no event handlers, then push
+     the message onto a queue which will be emptied by the gui after
+     its creation.
+    }
+    if Assigned(_OnMessageEvent) then
+        _OnMessageEvent(tag)
     else begin
         PushMessage(tag);
 
         // if this is the first msg into the queue, fire gui event
-        if (msg_queue.Count = 1) then begin
+        if (msg_queue.Count = 1) then
             MainSession.FireEvent('/session/gui/chat', tag)
-        end
         else
-          MainSession.FireEvent('/session/gui/update-chat', tag)
+            MainSession.FireEvent('/session/gui/update-chat', tag)
     end;
 
     //Send auto response message?
@@ -555,14 +550,8 @@ end;
 {---------------------------------------}
 procedure TChatController.timMemoryTimer(Sender: TObject);
 begin
-    // time to free the window if we still have no refs.
-{** JJF msgqueue rfactor... hmmm
-    if ((msg_queue.AtLeast(1)) or (_queued)) then begin
-        stopTimer();
-        exit;
-    end;
-**}    
-    if (_refs = 0) then Self.Free();
+    _memory.Enabled := false;
+    Self.Free();
 end;
 
 {---------------------------------------}
@@ -572,32 +561,28 @@ end;
 procedure TChatController.startTimer();
 begin
     _memory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
-    _memory.Enabled := true;
-    if (Self.Window = nil) then
-        RegisterSessionCB('/session');
+    if (_memory.Interval = 0) then
+        Self.Free()
+    else
+        _memory.Enabled := true;
 end;
 
 {---------------------------------------}
 procedure TChatController.stopTimer();
 begin
     _memory.Enabled := false;
-    // Only unregister session callback if control has been handed to a window
-    if (Self.Window <> nil) then begin
-        UnregisterSessionCB();
-        RegisterSessionCB('/session/presence');
-    end;
 end;
 
 {---------------------------------------}
 //Unassign the incoming message event for this chat
-procedure TChatController.unassignEvent1();
+procedure TChatController.unassignOnMessageEvent();
 begin
     _OnMessageEvent := nil;
 end;
 
 {---------------------------------------}
 //Unassign the outgoing message event for this chat
-procedure TChatController.unassignSendMsgEvent1();
+procedure TChatController.unassignOnSendMessageEvent();
 begin
     _OnSendMessageEvent := nil;
 end;
