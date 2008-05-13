@@ -3243,11 +3243,7 @@ begin
     inherited;
     if (_dockwindow = nil) then exit;
 
-    if (not _dockWindow.Showing) then begin
-        getDockManager().ShowDockManagerWindow(true, false);
-    end;
-
-    getDockManager().BringToFront();
+    getDockManager().ShowDockManagerWindow(true, true);
 end;
 
 {---------------------------------------}
