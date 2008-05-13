@@ -57,10 +57,8 @@ inherited frmExodus: TfrmExodus
     Align = alClient
     Style = tsButtons
     TabOrder = 1
-    ExplicitHeight = 503
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitHeight = 493
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -73,13 +71,11 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
-        ExplicitHeight = 493
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
-      ExplicitHeight = 493
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -89,7 +85,6 @@ inherited frmExodus: TfrmExodus
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitHeight = 456
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -1020,7 +1015,7 @@ inherited frmExodus: TfrmExodus
         Caption = '&View'
         Visible = False
         object mnuWindows_View_ShowActivityWindow: TTntMenuItem
-          Caption = 'Show &Activity Window'
+          Caption = 'Show &Activity List'
           Visible = False
           OnClick = mnuWindows_View_ShowActivityWindowClick
         end
