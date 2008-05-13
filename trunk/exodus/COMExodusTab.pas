@@ -89,7 +89,8 @@ end;
 {---------------------------------------}
 destructor TExodusTab.Destroy();
 begin
-    _AxControl.Free;
+    if (_AxControl <> nil) then
+       _AxControl := nil;
     _Page.Free;
     inherited;
 end;
