@@ -205,7 +205,7 @@ type
         constructor Create(xpath: Widestring; obj: IExodusListener); overload;
 
         destructor Destroy; override;
-        procedure RosterCallback(event: string; tag: TXMLTag; ritem: IExodusItem);
+        procedure RosterCallback(event: string; ritem: IExodusItem);
         procedure PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
         procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
         procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
@@ -777,6 +777,8 @@ begin
         id := MainSession.RegisterCallback(Self.DataCallback)
     else if (LeftStr(xpath, Length('/chat')) = '/chat') then
         id := MainSession.RegisterCallback(Self.ChatCallback)
+    else if (LeftStr(xpath, Length('/item')) = '/item') then
+        id := MainSession.RegisterCallback(Self.RosterCallback, xpath)
     else
         id := MainSession.RegisterCallback(Self.Callback, xpath);
 
@@ -832,9 +834,17 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPluginProxy.RosterCallback(event: string; tag: TXMLTag; ritem: IExodusItem);
+procedure TPluginProxy.RosterCallback(event: string; ritem: IExodusItem);
+var
+   Tag: TXMLTag;
 begin
-    Callback(event, tag);
+   Tag := nil;
+    //Callback(event, tag);
+   if (ritem <> nil) then
+      Tag := TXMLTag.Create('uid', ritem.UID);
+   Callback(event, Tag);
+   if (Tag <> nil) then   
+      Tag.Destroy;
 end;
 
 {---------------------------------------}
