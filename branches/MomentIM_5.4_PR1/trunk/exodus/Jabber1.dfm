@@ -3,7 +3,7 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 558
+  ClientHeight = 598
   ClientWidth = 404
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -20,12 +20,12 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 612
+  ExplicitHeight = 652
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 549
+    Top = 589
     Width = 404
     Height = 9
     Align = alBottom
@@ -52,18 +52,20 @@ inherited frmExodus: TfrmExodus
     Left = 0
     Top = 66
     Width = 404
-    Height = 483
+    Height = 523
     ActivePage = tabRoster
     Align = alClient
     Style = tsButtons
     TabOrder = 1
+    ExplicitHeight = 503
     object tabLogin: TTabSheet
       TabVisible = False
+      ExplicitHeight = 493
       object pnlLogin: TPanel
         Left = 0
         Top = 0
         Width = 396
-        Height = 473
+        Height = 513
         Align = alClient
         BevelInner = bvSpace
         BevelOuter = bvNone
@@ -71,20 +73,23 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
+        ExplicitHeight = 493
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
+      ExplicitHeight = 493
       object pnlRoster: TPanel
         Left = 0
         Top = 37
         Width = 396
-        Height = 436
+        Height = 476
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitHeight = 456
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -4389,7 +4394,7 @@ inherited frmExodus: TfrmExodus
       OnClick = trayShowClick
     end
     object trayShowActivityWindow: TTntMenuItem
-      Caption = 'Show Activity Window'
+      Caption = 'Show Activity List'
       Enabled = False
       Visible = False
       OnClick = trayShowActivityWindowClick
