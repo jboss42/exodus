@@ -124,7 +124,7 @@ var
 begin
     if ((MainSession.Active) and (not MainSession.Authenticated)) then exit;
 
-    f := TfrmPrefs.Create(Application);
+    f := TfrmPrefs.Create(nil);
     f.LoadPrefs;
 
     if (start_page = pref_roster) then s := f.imgContactList
