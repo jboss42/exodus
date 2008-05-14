@@ -645,10 +645,16 @@ var
     skip_notification: Boolean;
     msgDelayTag: TXMLTag;
 begin
+    from := tag.GetAttribute('from');
+    i := _roster.indexOf(from);
     // display the body of the msg
+    if (i <> -1) and
+       (TRoomMember(_roster.Objects[i]).Show = _(sBlocked)) then exit;
+
     Msg := TJabberMessage.Create(tag);
 
     if (Msg.isXdata) then exit;
+
     if (Msg.Time < _disconTime) then exit;
 
     // Check to see if we need to increment the
@@ -664,8 +670,6 @@ begin
         updateLastActivity(Msg.Time);
     end;
 
-    from := tag.GetAttribute('from');
-    i := _roster.indexOf(from);
 
     if (i < 0) then begin
         // some kind of server msg..
@@ -701,7 +705,7 @@ begin
             DisplayMsg(Msg, MsgList);
             exit;
         end;
-        
+
         // Room config update?
         etag := tag.GetFirstTag('x');
         if (etag <> nil) and
@@ -721,9 +725,6 @@ begin
     end
     else begin
         rm := TRoomMember(_roster.Objects[i]);
-        // if blocked ignore anything they say, even subject changes.
-        if (rm.Show = _(sBlocked)) then
-           exit;
         Msg.Nick := rm.Nick;
         Msg.IsMe := (Msg.Nick = MyNick);
         server := false;
@@ -796,8 +797,6 @@ begin
             end;
         end;
     end;
-
-
     Msg.Free();
 end;
 
