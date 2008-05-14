@@ -651,9 +651,11 @@
     <!-- Should the internal SQL logger log chat or room messages -->
     <brand_history_search value="1"/>
     <brand_log_chat_messages value="1"/>
-    <brand_log_groupchat_messages value="1"/>
-    <brand_log_normal_messages value="1"/>
+	<brand_log_groupchat_messages value="1"/>
+	<brand_log_normal_messages value="1"/>
 
+	 <!-- brand value for most active plug in time interval in days -->
+	 <brand_most_active_time_interval value="30"/>
   </prefs>
 
   <!-- default custom presence stuff -->
