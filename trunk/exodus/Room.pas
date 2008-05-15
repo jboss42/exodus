@@ -273,7 +273,7 @@ type
         is fired after all other docking events are complete.
     }
     procedure OnDocked();override;
-
+    function GetRoomRosterOnlineCount(): Integer;
     {
         Event fired when a float (undock) is complete.
 
@@ -3319,6 +3319,19 @@ begin
     Result := 0;
     for i := 0 to _roster.Count - 1 do begin
         if (not TRoomMember(_roster.Objects[i]).hideUnavailable) then
+            Inc(Result);
+    end;
+end;
+
+{---------------------------------------}
+//This function returns total number of visible members.
+function TfrmRoom.GetRoomRosterOnlineCount(): Integer;
+var
+   i: integer;
+begin
+    Result := 0;
+    for i := 0 to _roster.Count - 1 do begin
+        if (TRoomMember(_roster.Objects[i]).show <> 'offline') then
             Inc(Result);
     end;
 end;
