@@ -575,7 +575,8 @@ end;
 procedure TfAWItem.newMessage(setNewMessage:boolean);
 begin
     _newMessageHighlight := setNewMessage;
-    if (not _newWindowHighlight) then begin
+    if ((not _newWindowHighlight) and
+        (not _priority)) then begin
         if (setNewMessage) then begin
             _setPnlColors(_newMessageStartColor, _newMessageEndColor);
             if (_timNewMsgTimer <> nil) then begin

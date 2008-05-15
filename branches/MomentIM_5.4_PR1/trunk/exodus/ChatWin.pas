@@ -1034,7 +1034,7 @@ begin
     // unread msg count
     if ((not msg.isMe) and
         (msg.Body <> '')) then begin
-        updateMsgCount(tag);
+        updateMsgCount(msg);
         updateLastActivity(msg.Time);
     end;
 
@@ -1919,7 +1919,7 @@ begin
     //Create, assign nickname & directionality
     m := chat_object.CreateMessage(msg);
     
-    updateMsgCount(msg);
+    updateMsgCount(m);
     updateLastActivity(m.Time);
 
     //Render
