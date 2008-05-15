@@ -655,6 +655,8 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
+    function IsShortcut(var Message: TWMKey): Boolean; override;
+    function AppKeyDownHook(var Msg: TMessage): Boolean;
 
     property dockManager:IExodusDockManager read _dockManager;
   end;
@@ -1162,6 +1164,8 @@ var
     adVal: Widestring;
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
+
+    Application.HookMainWindow(AppKeyDownHook);
 
     _killshow := false;
 
@@ -4967,6 +4971,32 @@ begin
 
     typedActs.execute(act.Name);
 end;
+
+function TfrmExodus.IsShortcut(var Message: TWMKey): Boolean;
+begin
+    if (GetForegroundWindow <> Handle) then
+    begin
+        Result := false
+    end
+    else
+    begin
+        Result := inherited IsShortCut(Message)
+    end;
+end;
+
+function TfrmExodus.AppKeyDownHook(var Msg: TMessage): Boolean;
+begin
+    // Prevent Alt and F10 from accessing main menu unless this form has focus
+    case Msg.Msg of
+    Cm_AppSysCommand:
+        Result := (msg.WParam = SC_KEYMENU) and (GetForegroundWindow <> Handle);
+    else
+        Result := false;
+    end;
+end;
+
+
+
 
 
 

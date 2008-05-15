@@ -141,7 +141,6 @@ type
     (min/max/tray or restored).
   }
   TfrmState = class(TExForm)
-    mnuStatefrmMainMenu: TTntMainMenu;
     procedure WMWindowPosChange(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
 
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
