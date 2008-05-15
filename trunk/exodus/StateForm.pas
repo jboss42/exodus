@@ -570,7 +570,7 @@ end;
 
 function TfrmState.skipWindowPosEvents(): boolean;
 begin
-    Result := (_skipWindowPosEvents = 0);
+    Result := (_skipWindowPosEvents > 0);
 end;
 
 function toRect(pos: TPos): TRect;
@@ -725,7 +725,7 @@ procedure TfrmState.WMWindowPosChange(var msg: TWMWindowPosChanging);
 begin
     //only allow window to come to top if activating. Don't bring it
     //to front if resizing in code somewhere.
-    if (not skipWindowPosEvents()) then
+    if (skipWindowPosEvents()) then
         msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
 
     inherited;

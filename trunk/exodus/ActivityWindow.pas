@@ -160,11 +160,12 @@ type
     { Public declarations }
     procedure activateItem(awitem: TfAWItem);
     procedure DockActivityWindow(dockSite : TWinControl);
-    procedure removeItem(item:TAWTrackerItem); 
+    procedure removeItem(item:TAWTrackerItem);
     function addItem(frm:TfrmDockable): TAWTrackerItem;
     function findItem(id:widestring): TAWTrackerItem; overload;
     function findItem(frm:TfrmDockable): TAWTrackerItem; overload;
     function findItem(awitem: TfAWItem): TAWTrackerItem; overload;
+    function findItem(index: integer): TAWTrackerItem; overload;
     function findItemIndex(awitem: TfAWItem): integer;
     procedure scrollToActive();
     procedure setDockingSpacers(dockstate: TDockStates);
@@ -587,6 +588,16 @@ begin
             exit;
         end;
     end;
+end;
+
+{---------------------------------------}
+function TfrmActivityWindow.findItem(index: integer): TAWTrackerItem; 
+begin
+    Result := nil;
+    if (index < 0) then exit;
+    if (index >= _trackingList.Count) then exit;
+
+    Result := TAWTrackerItem(_trackingList.Objects[index]);     
 end;
 
 {---------------------------------------}
