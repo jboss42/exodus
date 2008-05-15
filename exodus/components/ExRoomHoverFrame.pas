@@ -90,7 +90,7 @@ begin
         Subject.Caption := Room.lblSubject.Caption;
         Subject.Hint := Room.lblSubject.Caption;
         Subject.ShowHint := true;
-        Participants.Caption := IntToStr(Room.lstRoster.Items.Count);
+        Participants.Caption := IntToStr(Room.GetRoomRosterOnlineCount());
         Affiliation.Caption := Room.MyAffiliation;
     end
     else
@@ -154,8 +154,6 @@ begin
 end;
 
 procedure TExRoomHoverFrame.TntFrameMouseLeave(Sender: TObject);
-var
-    Point: TPoint;
 begin
     TExItemHoverForm(Parent).CancelHover();
 end;

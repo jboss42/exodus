@@ -60,7 +60,7 @@ begin
         exit;
     end;
 
-    if (Item.Type_ = EI_TYPE_GROUP) then
+    if ((Item.Type_ <> EI_TYPE_ROOM) and (Item.Type_ <> EI_TYPE_CONTACT)) then
     begin
         Hide;
         exit;
@@ -124,8 +124,6 @@ end;
 
 
 procedure TExItemHoverForm.TntFormCreate(Sender: TObject);
-var
-   MouseEvent: TTrackMouseEvent;
 begin
     inherited;
     _ContactFrame := TExContactHoverFrame.Create(Self);
