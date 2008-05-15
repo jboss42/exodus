@@ -349,7 +349,7 @@ end;
 function TExodusChat.Get_jid: WideString;
 begin
     Result := '';
-    if (_chat <> nil) then Result := _chat.JID
+    if (_chat <> nil) then Result := _chat.BareJID
 //JJF TODO msgqueue refactor    else if (_im <> nil) then Result := _im.JID
     else if (_room <> nil) then Result := _room.getJid;
 end;

@@ -414,6 +414,7 @@ function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 procedure CloseAllRooms();
 
+procedure FormatMUCError(msgTag: TXMLTag; var formattedTag: TXMLTag; useXHTML:boolean = true);
 {---------------------------------------}
 function ItemCompare(Item1, Item2: Pointer): integer;
 
@@ -467,6 +468,7 @@ uses
     Dockable,
     ExodusDockManager,
     DockWindow,
+    DisplayName,
     HistorySearch;
 
 {$R *.DFM}
@@ -562,6 +564,73 @@ begin
     end;
 end;
 
+
+{ expect a tag like this
+    <message from='plugh@conference.jfuhrman.corp.jabber.com'
+             id=''
+             to='jtest2@jfuhrman.corp.jabber.com/Jabber MomentIM'
+             type='error'>
+        <body>/me has changed the subject to: attempt subject chnage4</body>
+        <error code='403' type='auth'>
+            <forbidden xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+        </error>
+    </message>
+}
+
+procedure FormatMUCError(msgTag: TXMLTag; var formattedTag: TXMLTag; useXHTML:boolean);
+const
+    sMessageError = 'Your last message to %s was returned with an error: %s (%s,%s).';
+var
+    ErrStr: widestring;
+    ecode: widestring;
+    etype: widestring;
+
+    errTag: TXMLTag;
+    ttag: TXMLTag;
+    tJID: TJabberID;
+    dname: widestring;
+begin
+    formattedTag := nil;
+    if (msgTag.getAttribute('type') = 'error') then begin
+        tJID := TJabberID.Create(msgTag.GetAttribute('from'));
+        dname := DisplayName.getDisplayNameCache.getDisplayName(tjid);
+        ErrStr := _('Unknown error');
+        ecode := 'unknown';
+        etype := 'unknown';
+
+        errTag := msgTag.GetFirstTag('error');
+
+        if (errTag <> nil) then
+        begin
+            ErrStr := errTag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
+            ecode :=  errTag.GetAttribute('code');
+            etype :=  errTag.GetAttribute('type');
+
+            if (ErrStr = '') then
+                ErrStr := errTag.Data;
+            if (ErrStr = '') and (etype = 'auth') and
+                ((ecode = '403') or (ecode = '401')) then
+                ErrStr := _('Not authorized.')
+            else
+                ErrStr := _('Unknown error');
+        end;
+        WideFmtStr(ErrStr, _(sMessageError), [dname, errStr, ecode, etype]);
+        formattedTag := TXMLTag.create(msgTag);
+        ttag := formattedTag.GetFirstTag('body');
+        if (ttag = nil) then
+            ttag := formattedTag.AddTag('body');
+        ttag.ClearCData();
+        ttag.AddCData(ErrStr);
+
+        //no xhtml?
+//        ttag := formattedTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]/body[@xmlns="' + XMLNS_XHTML + '"]');
+//        if (useXHTML or (ttag <> nil)) then
+//        begin
+
+//        end;
+    end;
+end;
+
 class procedure TfrmRoom.AutoOpenFactory(autoOpenInfo: TXMLTag);
 begin
     StartRoom(autoOpenInfo.getAttribute('j'), {jid}
@@ -636,40 +705,35 @@ procedure TfrmRoom.showMsg(tag: TXMLTag);
 var
     i : integer;
     Msg: TJabberMessage;
-    emsg, from: Widestring;
+    from, mtype: Widestring;
     tmp_jid: TJabberID;
     server: boolean;
     rm: TRoomMember;
-    etag: TXMLTag;
     e: TJabberEntity;
-    skip_notification: Boolean;
     msgDelayTag: TXMLTag;
+    errTag: TXMLtag;
 begin
-    from := tag.GetAttribute('from');
-    i := _roster.indexOf(from);
-    // display the body of the msg
-    if (i <> -1) and
-       (TRoomMember(_roster.Objects[i]).Show = _(sBlocked)) then exit;
-
-    Msg := TJabberMessage.Create(tag);
+    mtype := tag.GetAttribute('type');
+    if (mtype = 'error')  then
+    begin
+        FormatMUCError(tag, errTag);
+        Msg := TJabberMessage.Create(errTag);
+    end else
+        Msg := TJabberMessage.Create(tag);
 
     if (Msg.isXdata) then exit;
 
     if (Msg.Time < _disconTime) then exit;
 
-    // Check to see if we need to increment the
+        // Check to see if we need to increment the
     // unread msg count
     msgDelayTag := Msg.Tag.QueryXPTag(XP_MSGDELAY);
-    if ((msgDelayTag = nil) and
-        (not Msg.IsMe) and
-        (Msg.FromJID <> self.jid)) then begin
-        // We don't want to update counts on delayed (history) msgs
-        // or on msgs from "me"
-        // or on msgs that are "system messages"
-        updateMsgCount(Msg);
-        updateLastActivity(Msg.Time);
-    end;
 
+    from := tag.GetAttribute('from');
+    i := _roster.indexOf(from);
+    // display the body of the msg
+    if (i <> -1) and
+       (TRoomMember(_roster.Objects[i]).Show = _(sBlocked)) then exit;
 
     if (i < 0) then begin
         // some kind of server msg..
@@ -677,51 +741,29 @@ begin
         if (tmp_jid.resource <> '') then
             Msg.Nick := tmp_jid.resource
         else
-            Msg.Nick := '';
+            Msg.Nick := '';//DisplayName.getDisplayNameCache.getDisplayName(tmp_jid);
         tmp_jid.Free();
-        if (Msg.Nick = MyNick) then
-            Msg.IsMe := true
-        else
-            Msg.IsMe := false;
+
+        Msg.IsMe := (Msg.Nick = MyNick);  //?
         server := true;
 
-        if (tag.getAttribute('type') = 'error') then begin
-            etag := tag.GetFirstTag('error');
-            if (etag <> nil) then begin
-                emsg := etag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
-                if (emsg = '') then
-                    emsg := etag.Data;
-                if (emsg = '') and
-                    ((etag.GetAttribute('code') = '403') or
-                     (etag.GetAttribute('code') = '401')) and
-                    (etag.GetAttribute('type') = 'auth') then
-                    emsg := _('Not authorized.');
-                if (emsg = '') then
-                    emsg := _('Your message to the room bounced.');
-                Msg.Body := _('ERROR: ') + emsg;
-            end
-            else
-                Msg.Body := _('ERROR: ') + _('Your message to the room bounced.');
+        //error?
+        if (mtype = 'error') then
+        begin
             DisplayMsg(Msg, MsgList);
             exit;
         end;
 
         // Room config update?
-        etag := tag.GetFirstTag('x');
-        if (etag <> nil) and
-           (etag.GetAttribute('xmlns') = XMLNS_MUCUSER) then begin
-            etag := etag.GetFirstTag('status');
-            if (etag <> nil) and
-               (etag.GetAttribute('code') = '104') then begin
-                // We did get a room update notification.
-                // Need to disco.
-                e := jEntityCache.getByJid(Self.jid, '');
-                // e can be null, not doing this check can cause crashes
-                if ( e <> nil ) then
-                    e.refresh(MainSession);
-            end;
-        end;
+        if (tag.QueryXPTag('/x[@xmlns="' + XMLNS_MUCUSER + '"]/status[@code="104"]') <> nil) then
+        begin
+            // Need to disco.
+            e := jEntityCache.getByJid(Self.jid, '');
 
+            // e can be null, not doing this check can cause crashes
+            if ( e <> nil ) then
+                e.refresh(MainSession);
+        end;
     end
     else begin
         rm := TRoomMember(_roster.Objects[i]);
@@ -729,43 +771,33 @@ begin
         Msg.IsMe := (Msg.Nick = MyNick);
         server := false;
     end;
-{** JJF msgqueue refactor
 
-    skip_notification := MainSession.Prefs.getBool('queue_not_avail') and
-                         ((MainSession.Show = 'away') or
-                          (MainSession.Show = 'xa') or
-                          (MainSession.Show = 'dnd'));
-**}
-    skip_notification := false;                          
-    if (skip_notification = false) then begin
-      // this check is needed only to prevent extraneous regexing.
-        if (not server)
-{** JJF msgqueue refactor
-        and (not MainSession.IsPaused)
-**}
-        then begin
-            // check for keywords
-            if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
-                DoNotify(Self, _notify[NOTIFY_KEYWORD],
-                         _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
-                         RosterTreeImages.Find('conference'), 'notify_keyword');
-                Msg.highlight := true;
-            end
-            else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (msgDelayTag = nil) then
-              if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
+    if (not server) then
+    begin
+        // check for keywords
+        if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then
+        begin
+            DoNotify(Self, _notify[NOTIFY_KEYWORD],
+                     _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
+                     RosterTreeImages.Find('conference'), 'notify_keyword');
+            Msg.highlight := true;
+        end
+        else if (not Msg.IsMe) and (msgDelayTag = nil) and (Msg.Subject = '') then
+            if ((Msg.Priority = High) or (Msg.Priority = Low)) then
                 DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
-                         GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
-                         RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
-              else
+                     GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
+                     RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
+            else
                 DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
-                         _(sNotifyActivity) + Self.Caption,
-                         RosterTreeImages.Find('conference'), 'notify_roomactivity');
-        end;
+                     _(sNotifyActivity) + Self.Caption,
+                     RosterTreeImages.Find('conference'), 'notify_roomactivity');
     end;
 
-    if (Msg.Subject <> '') then begin
-        _subject := Msg.Subject;
-        if (_subject = '') then begin
+    if (tag.QueryXPTag('/subject') <> nil) then
+    begin
+        _subject := tag.QueryXPData('/subject');
+        if (_subject = '') then
+        begin
             if (SpeedButton1.Enabled = false) then
               lblSubject.Hint := ''
             else
@@ -782,14 +814,25 @@ begin
             DisplayMsg(Msg, MsgList);
         end;
     end
-    else if (Msg.Body <> '') then begin
+    else if (Msg.Body <> '') then
+    begin
+        if ((msgDelayTag = nil) and (not Msg.IsMe) and (not server)) then
+        begin
+            // We don't want to update counts on delayed (history) msgs
+            // or on msgs from "me"
+            // or on msgs that are "system messages"
+            updateMsgCount(Msg);
+            updateLastActivity(Msg.Time);
+        end;
+
         DisplayMsg(Msg, MsgList);
 
         // log if we have logs for TC turned on.
         Msg.isMe := False;
         LogMessage(Msg);
 
-        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) and (MsgOut.Enabled) then begin
+        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) and (MsgOut.Enabled) then
+        begin
             try
                 MsgOut.SetFocus();
             except
@@ -2086,8 +2129,7 @@ var
     msg: TJabberMessage;
 begin
     // send the msg out
-    msg := TJabberMessage.Create(jid, 'groupchat',
-                                 _(sRoomSubjChange) + subj, subj);
+    msg := TJabberMessage.Create(jid, 'groupchat',{_(sRoomSubjChange) + subj}'', subj);
     MainSession.SendTag(msg.GetTag);
     msg.Free;
 end;

@@ -1229,8 +1229,8 @@ begin
        for j := Count - 1 downto 0 do begin
            c := TChatController(Objects[j]);
            if (c <> nil) then
-             if (c.jid = jid.jid) then
-                c.SetJid(c.jid);
+             if (c.BareJID = jid.jid) then
+                c.SetJid(c.BareJID);
        end;
     end;
     block.Free();
@@ -1248,16 +1248,16 @@ begin
     with MainSession.ChatList do begin
        for j := Count - 1 downto 0 do begin
            c := TChatController(Objects[j]);
-           block.setAttribute('jid', c.jid);
+           block.setAttribute('jid', c.BareJID);
            if (c <> nil) then begin
-             if (IsBlocked(c.jid)) then begin
+             if (IsBlocked(c.BareJID)) then begin
                 //If blocked, chat window will be closed and will
                 //disable controller for this jid
                 MainSession.FireEvent('/session/block', block);
              end
              else begin
                 //Enable controller just in case window is not open
-                c.SetJid(c.jid);
+                c.SetJid(c.BareJID);
                 //MainSession.FireEvent('/session/unblock', block);
              end;
            end;

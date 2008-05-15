@@ -341,20 +341,27 @@ begin
     end;
 
     try
+        cjid := sjid;
         if resource <> '' then
-            cjid := sjid + '/' + resource
-        else
-            cjid := sjid;
+            cjid := cjid + '/' + resource;
+
         // either show an existing chat or start one.
-        chat := MainSession.ChatList.FindChat(sjid, resource, '');
+        //if we should use an existing chat for all messages, then we just want
+        //to get the first one that matches barejid.
+        if (MainSession.Prefs.getBool('all-messages-one-chat')) then
+            chat := MainSession.ChatList.FindChat(sjid, '', '')
+        //a new chat for each new resourcfe found.
+        else
+            chat := MainSession.ChatList.FindChat(sjid, resource, '');
+
         // Create a new chat controller if we don't have one
         if chat = nil then
             chat := MainSession.ChatList.AddChat(sjid, resource, (FindRoom(sjid) <> nil))
         else begin
-           //We need to do this for existing chat controllers to make sure
-           //callbacks are re-registered if they
-           //have been unregistered before due to blocking
-           chat.SetJID(cjid);
+            //We need to do this for existing chat controllers to make sure
+            //callbacks are re-registered if they
+            //have been unregistered before due to blocking
+            chat.SetJID(cjid);
         end;
 
         do_scroll := false;
@@ -362,14 +369,14 @@ begin
 
         // Create a window if we don't have one.
         if (chat.window <> nil) then begin
-            TfrmChat(chat.window).ShowDefault(bring_to_front); //ignore showwindow param, bring window to front ??
             Result := TfrmChat(chat.window);
-            exit;
+            Result.ShowDefault(bring_to_front); //ignore showwindow param, bring window to front ??
+            exit; //done
         end;
 
         new_chat := true;
-        win := TfrmChat.Create(Application);
-        chat.Window := win;
+        win := TfrmChat.Create(nil);
+        chat.Window := win; //controller modifies its state on this
         win.chat_object := chat;
 
         win.com_controller := TExodusChat.Create();
@@ -394,11 +401,9 @@ begin
             else PersistUnreadMessages := true;
 
             if (MainSession.IsBlocked(sjid)) then
-              mnuBlock.Caption := _('Unblock')
+                mnuBlock.Caption := _('Unblock')
             else
-              mnuBlock.Caption := _('Block');
-
-
+                mnuBlock.Caption := _('Block');
 
             SetJID(cjid);
             SetupResources();
