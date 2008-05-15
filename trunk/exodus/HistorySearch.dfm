@@ -5,7 +5,6 @@ inherited frmHistorySearch: TfrmHistorySearch
   Constraints.MinHeight = 480
   Constraints.MinWidth = 735
   ParentFont = False
-  Menu = mnuHistorySearchMainMenu
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -489,9 +488,5 @@ inherited frmHistorySearch: TfrmHistorySearch
   object dlgPrint: TPrintDialog
     Left = 72
     Top = 288
-  end
-  object mnuHistorySearchMainMenu: TTntMainMenu
-    Left = 8
-    Top = 320
   end
 end

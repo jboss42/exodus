@@ -133,7 +133,6 @@ type
     chkOnlyHighPriority: TTntCheckBox;
     bvlBasicHistoryFor: TTntBevel;
     lblBasicSearchHistoryForValue: TTntLabel;
-    mnuHistorySearchMainMenu: TTntMainMenu;
     procedure FormResize(Sender: TObject);
     procedure btnAdvBasicSwitchClick(Sender: TObject);
     procedure radioAllClick(Sender: TObject);
