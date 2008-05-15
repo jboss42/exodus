@@ -36,7 +36,6 @@ type
     chkUseProfileDN: TTntCheckBox;
     chkHideBlocked: TTntCheckBox;
     chkGroupCounts: TTntCheckBox;
-    chkOnlineOnly: TTntCheckBox;
     pnlManageBtn: TExBrandPanel;
     btnManageBlocked: TTntButton;
     grpAdvanced: TExGroupBox;
@@ -153,9 +152,6 @@ begin
     AssignTntStrings(gs, txtGatewayGrp.Items);
     gs.Free();
 
-    //reverse the "Show Offline" (since the pref is "show online")
-    chkOnlineOnly.Checked := not chkOnlineOnly.Checked;
-
     trkRosterAlpha.Visible := chkRosterAlpha.Visible;
     txtRosterAlpha.Visible := chkRosterAlpha.Visible;
     if (chkRosterAlpha.Visible) then
@@ -186,13 +182,8 @@ end;
 
 procedure TfrmPrefRoster.SavePrefs();
 begin
-    //reverse "Show Offline" (since the pref is "show online")
-    chkOnlineOnly.Checked := not chkOnlineOnly.Checked;
-
     inherited;
 
-    //Now reverse *again*, so UI is correct...
-    chkOnlineOnly.Checked := not chkOnlineOnly.Checked;
     MainSession.prefs.setStringlist('blockers', _blockedContacts);
     // XXX: save nested group separator per JEP-48
 end;
