@@ -88,6 +88,7 @@ uses
     Jabber1,
     TnTStdCtrls,
     FloatingImage,
+    Room,
     Avatar,
     ChatWin,
     GnuGetText;
@@ -811,10 +812,12 @@ var
 
     dTag: TXMLTag;
     m: TJabberMessage;
+    fromJID: TJabberID;
 begin
-    //bail if we picked up a mucuser message somehow
-    if (tag.QueryXPTag('//x[@xmlns="' + XMLNS_MUCUSER + '"]') <> nil) then
-        exit;
+    fromJID := TJabberID.Create(tag.getAttribute('from'));
+
+    //if from a room, bail
+    if (Room.FindRoom(fromJID.jid) <> nil) then exit;
 
     dTag := TXMLTag.create(tag);
     //set a DT stamp if it doesn't exist
@@ -826,13 +829,14 @@ begin
         end;
     end;
 
-    DisplayWin := OpenFactory(TfrmBroadcastDisplay, 'broadcast', TJabberID.Create(tag.getAttribute('from')));
+    DisplayWin := OpenFactory(TfrmBroadcastDisplay, 'broadcast', fromJID);
     DisplayWin.DisplayMessage(dTag);
 
     //event the notification
     sstr := DisplayName.getDisplayNameCache().getDisplayName(tag.getAttribute('from'));
     Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, 0);
     dTag.free();
+    fromJID.free();
 
     m := CreateMessage(tag);
     ExUtils.LogMessage(m);
