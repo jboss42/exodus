@@ -107,6 +107,7 @@ type
     procedure moveGlued();
     procedure SessionCallback(event: string; tag: TXMLTag);
     function GetActiveTabSheet(): TTntTabSheet;
+    procedure changeGotoAcitivityWindowButton();
 
     property glueEdge: TGlueEdge read _glueEdge write _glueEdge;
   end;
@@ -515,6 +516,9 @@ begin
             checkFlash();
             _needToBeShowingCheck();
         end;
+
+        // Make sure right color button is showing on contact list toolbar
+        changeGotoAcitivityWindowButton();
     end;
 end;
 
@@ -833,6 +837,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmDockWindow.timFlasherTimer(Sender: TObject);
 begin
     inherited;
@@ -1038,6 +1043,44 @@ begin
         end;
     end;
 end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.changeGotoAcitivityWindowButton();
+const
+    ALBUTTON_NORMAL = 8;
+    ALBUTTON_UNREAD = 9;
+    ALBUTTON_PRI = 10;
+var
+    i: integer;
+    imgref: integer;
+    frm: TfrmDockable;
+    aw: TfrmActivityWindow;
+begin
+    imgref := ALBUTTON_NORMAL;
+
+    aw := GetActivityWindow();
+
+    if (aw <> nil) then
+    begin
+        for i := 0 to aw.itemCount - 1 do
+        begin
+            frm := aw.findItem(i).frm;
+
+            if (frm.PriorityFlag) then begin
+                // Priority always takes precedence, so don't need to look farther
+                imgref := ALBUTTON_PRI;
+                break;
+            end
+            else if (frm.UnreadMsgCount > 0) then begin
+                // Still need to look incase there is a priority msg.
+                imgref := ALBUTTON_UNREAD;
+            end;
+        end;
+    end;
+
+    frmExodus.btnActivityWindow.ImageIndex := imgref;
+end;
+
 
 
 end.

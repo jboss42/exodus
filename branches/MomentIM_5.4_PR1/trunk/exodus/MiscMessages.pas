@@ -1147,7 +1147,7 @@ end;
 procedure TfrmSimpleDisplay.Update;
 begin
     inherited;
-    GetDockManager().UpdateDocked(Self);
+    updateDocked();
 end;
 
 procedure TfrmSimpleDisplay.OnDocked();
