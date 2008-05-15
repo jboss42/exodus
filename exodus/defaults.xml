@@ -19,7 +19,7 @@
     <restore_desktop value="0" control="chkRestoreDesktop" state="rw"/>
     <debug value="0" control="chkDebug" state="rw"/>
     <!-- Other System Preferences -->
-	<restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
+    <restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
     <start_docked value="1" state="rw"/>
 
     <recon_tries value="25" control="txtAttempts" state="rw">
@@ -53,12 +53,12 @@
     <displayname_profile_enabled value='1' control="chkUseProfileDN" state="rw"/>
     <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
     <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
-	<roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
-	<roster_tabs control="btnManageTabs" state="rw"/>
-	<!-- timeout values are in milliseconds -->
-	<roster_hint_delay value="750"/>
-	<roster_hint_hide_delay value="10000"/>
-	<roster_hint_reentry_delay value="500"/>
+    <roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
+    <roster_tabs control="btnManageTabs" state="rw"/>
+    <!-- timeout values are in milliseconds -->
+    <roster_hint_delay value="750"/>
+    <roster_hint_hide_delay value="10000"/>
+    <roster_hint_reentry_delay value="500"/>
 
     <!-- advanced roster prefs -->
     <inline_color value="$808000" control="cboStatusColor" state="rw">
@@ -394,7 +394,7 @@
     <activity_window_non_selected_font_color value="$00000000"/>
     <activity_window_unread_msgs_font_color value="$00322dc1"/>
     <activity_window_high_priority_font_color value="$00ffffff"/>
-    <activity_window_unread_msgs_high_priority_font_color value="$000000ff"/>
+    <activity_window_unread_msgs_high_priority_font_color value="$00ffffff"/>
 
     <!-- Activity Window Sort type -->
     <activity_window_sort value="1"/>
@@ -431,12 +431,12 @@
         This option is never exposed to the user -->
     <search_component_only value="0"/>
 
-	<!-- What level of file synchronisity should the internal sqlogger (sqlite database) use.
-		 The higher the level the slower the performance
-		0 - OFF
-		1 - NORMAL
-		2 - FULL
-	-->
+    <!-- What level of file synchronisity should the internal sqlogger (sqlite database) use.
+         The higher the level the slower the performance
+        0 - OFF
+        1 - NORMAL
+        2 - FULL
+    -->
     <sqlite_table_synchronous_level value="0"/>
 
 
@@ -651,11 +651,11 @@
     <!-- Should the internal SQL logger log chat or room messages -->
     <brand_history_search value="1"/>
     <brand_log_chat_messages value="1"/>
-	<brand_log_groupchat_messages value="1"/>
-	<brand_log_normal_messages value="1"/>
+    <brand_log_groupchat_messages value="1"/>
+    <brand_log_normal_messages value="1"/>
 
-	 <!-- brand value for most active plug in time interval in days -->
-	 <brand_most_active_time_interval value="30"/>
+     <!-- brand value for most active plug in time interval in days -->
+     <brand_most_active_time_interval value="30"/>
   </prefs>
 
   <!-- default custom presence stuff -->
