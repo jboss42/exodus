@@ -118,9 +118,6 @@ type
 
     _isRoom:  boolean;      // true if this is a muc chat - a chat via a room
 
-    // custom notification options to use..
-    _notify: array[0..1] of integer;
-
     // the current contact's avatar
     _avatar: TAvatar;
     _unknown_avatar: TBitmap;
@@ -267,9 +264,6 @@ const
     sCannotOffline = 'This contact cannot receive offline messages.';
     sCannotStartChatWithSelf = 'A chat cannot be started with self.';
     sCannotStartChatWithService = 'A chat cannot be started with a service or server';
-
-    NOTIFY_CHAT_ACTIVITY = 0;
-    NOTIFY_PRIORITY_CHAT_ACTIVITY = 1;
 
 {$R *.dfm}
 
@@ -495,9 +489,6 @@ begin
     _res_menus := TWidestringlist.Create();
     _unknown_avatar := TBitmap.Create();
     frmExodus.bigImages.GetBitmap(0, _unknown_avatar);
-                                 _notify[NOTIFY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_chatactivity');
-    
-    _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_priority_chatactivity');
 
     _receivedXIMNode := false;
     _receivedMessage := false;
@@ -858,10 +849,10 @@ begin
         exit;
 
     // make sure we are visible..
-    if (not visible) then begin
-        outputdebugmsg('Chat is not visible but we received a message. Showing');    
-        ShowDefault(false);
-    end;
+//    if (not visible) then begin
+//        outputdebugmsg('Chat is not visible but we received a message. Showing');
+//        ShowDefault(false);
+//    end;
 
     showMsg(tag);
 
@@ -1005,7 +996,6 @@ var
     m, etag: TXMLTag;
     subj_msg, msg: TJabberMessage;
     emsg, err: Widestring;
-    notify: Boolean;
 begin
     // display the body of the msg
     if (_warn_busyclose) then begin
@@ -1053,28 +1043,16 @@ begin
         subj_msg.Free();
     end;
 
-    notify := true;
     if (Msg.Body <> '') then begin
         //Notify
-{** JJF msgqueue refactor
-        if (not Msg.isMe) then begin
-           if ((MainSession.Prefs.getBool('queue_not_avail')) and
-               ((MainSession.Show = 'away') or
-                (MainSession.Show = 'xa') or
-                (MainSession.Show = 'dnd'))) then
-               notify := false;
-        end
-        else
-           notify := false;
-**}
-        if (notify) then begin
-            if ((Msg.Priority = High) or (Msg.Priority = Low)) then
-               DoNotify(Self, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
-                   RosterTreeImages.Find('contact'), 'notify_chatactivity')
-             else
-               DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + DisplayName,
-                   RosterTreeImages.Find('contact'), 'notify_chatactivity');
-        end;
+        if ((Msg.Priority = High) or (Msg.Priority = Low)) then
+           DoNotify(Self, 'notify_priority_chatactivity',
+                    GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
+                    RosterTreeImages.Find('contact'))
+         else
+           DoNotify(Self, 'notify_chatactivity',
+                    _(sChatActivity) + DisplayName,
+                    RosterTreeImages.Find('contact'));
 
 
         if (Msg.isMe = false ) and ( _isRoom ) then
