@@ -394,7 +394,7 @@
     <activity_window_non_selected_font_color value="$00000000"/>
     <activity_window_unread_msgs_font_color value="$00322dc1"/>
     <activity_window_high_priority_font_color value="$00ffffff"/>
-    <activity_window_unread_msgs_high_priority_font_color value="$000000ff"/>
+    <activity_window_unread_msgs_high_priority_font_color value="$00ffffff"/>
 
     <!-- Activity Window Sort type -->
     <activity_window_sort value="1"/>
