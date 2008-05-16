@@ -144,6 +144,12 @@ type
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
+    function GetPrefAsXML(const key: WideString): WideString; safecall;
+    procedure SetPrefAsXML(const xml: WideString); safecall;
+    function SelectItem(const ItemType, Title: WideString;
+      IncludeAnyOption: WordBool): WideString; safecall;
+    function SelectRoom(const Title: WideString; IncludeJoinedRoomList,
+      IncludeAnyOption: WordBool): WideString; safecall;
 
     { Protected declarations }
   private
@@ -264,7 +270,7 @@ uses
     Jabber1, Session, RemoveContact, ContactController, RosterAdd, RosterForm, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ,
     ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXWindow,
-    ExActionCtrl;
+    ExActionCtrl, SelectItem, SelectItemRoom, SelectItemAny, SelectItemAnyRoom;
 
 const
     sPluginErrCreate = 'Plug-in could not be created. (%s)';
@@ -2125,6 +2131,68 @@ begin
     Result := HistorySearchManager;
 end;
 
+
+function TExodusController.GetPrefAsXML(const key: WideString): WideString;
+var
+    tag: TXMLTag;
+begin
+    Result := '';
+    tag := MainSession.Prefs.getXMLPref(key);
+    if (tag <> nil) then begin
+        Result := tag.XML();
+    end;
+end;
+
+procedure TExodusController.SetPrefAsXML(const xml: WideString);
+var
+    tag: TXMLTag;
+    parser: TXMLTagParser;
+begin
+    parser := TXMLTagParser.Create();
+    try
+        parser.ParseString(xml, '');
+        tag := parser.popTag;
+        if (tag <> nil) then begin
+            MainSession.Prefs.setXMLPref(tag);
+        end;
+        tag.free();
+    except
+
+    end;
+    parser.free();
+end;
+
+function TExodusController.SelectItem(const ItemType, Title: WideString;
+  IncludeAnyOption: WordBool): WideString;
+begin
+    if (IncludeAnyOption) then begin
+        Result := SelectUIDByTypeAny(ItemType, Title);
+    end
+    else begin
+        Result := SelectUIDByType(ItemType, Title);
+    end;
+end;
+
+function TExodusController.SelectRoom(const Title: WideString;
+  IncludeJoinedRoomList, IncludeAnyOption: WordBool): WideString;
+begin
+    if (IncludeJoinedRoomList) then begin
+        if (IncludeAnyOption) then begin
+            Result := SelectUIDByTypeAnyRoom(Title);
+        end
+        else begin
+            Result := SelectUIDByTypeRoom(Title);
+        end;
+    end
+    else begin
+        if (IncludeAnyOption) then begin
+            Result := SelectUIDByTypeAny('room', Title);
+        end
+        else begin
+            Result := SelectUIDByType('room', Title);
+        end;
+    end;
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,
