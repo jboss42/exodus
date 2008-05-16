@@ -264,7 +264,7 @@
          particular bareJID? If true, all incoming messages will be routed to one
          chat that will change its "locked" resource as needed. False -> one chat
          per resource -->
-    <multi_resource_chat value="1" state="inv"/>
+    <multi_resource_chat value="1" state="inv">
         <control name="chkMultiChat"/>
     </multi_resource_chat>
 
