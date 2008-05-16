@@ -259,7 +259,7 @@ begin
     begin
         //listen for all session events
         RegisterSessionCB('/session');
-        if (MainSession.Prefs.getBool('all-messages-one-chat')) then
+        if (MainSession.Prefs.getBool('multi_resource_chat')) then
             //change our jid to be bare, get all messages from this jid
             //listen for all incoming jids
             Self.setJID(Self._bareJID, not MainSession.IsBlocked(_bareJID));
@@ -622,7 +622,7 @@ begin
     from := XPLiteEscape(Lowercase(Self.BareJID));
     if (_anonymous_chat) then //lock into anon chats directly
         from := from + XPLiteEscape(Lowercase('/' + Self.Resource))
-    else if (MainSession.Prefs.getBool('all-messages-one-chat') or (_Resource = '')) then
+    else if (MainSession.Prefs.getBool('multi_resource_chat') or (_Resource = '')) then
         from := from + '*'
     else //lock into a resource
         from := from + XPLiteEscape(Lowercase('/' + Self.Resource));

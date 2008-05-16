@@ -342,7 +342,7 @@ begin
         // either show an existing chat or start one.
         //if we should use an existing chat for all messages, then we just want
         //to get the first one that matches barejid.
-        if (MainSession.Prefs.getBool('all-messages-one-chat')) then
+        if (MainSession.Prefs.getBool('multi_resource_chat')) then
             chat := MainSession.ChatList.FindChat(sjid, '', '')
         //a new chat for each new resourcfe found.
         else
