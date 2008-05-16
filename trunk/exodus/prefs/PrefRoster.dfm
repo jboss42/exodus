@@ -40,7 +40,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       Left = 0
       Top = 60
       Width = 353
-      Height = 94
+      Height = 76
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -101,23 +101,11 @@ inherited frmPrefRoster: TfrmPrefRoster
           'ne)'
         TabOrder = 3
       end
-      object chkOnlineOnly: TTntCheckBox
-        AlignWithMargins = True
-        Left = 0
-        Top = 76
-        Width = 350
-        Height = 15
-        Margins.Left = 0
-        Margins.Top = 0
-        Align = alTop
-        Caption = 'Show &offline contacts'
-        TabOrder = 4
-      end
     end
     object pnlManageBtn: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 157
+      Top = 139
       Width = 350
       Height = 21
       Margins.Left = 0
@@ -127,6 +115,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 3
       AutoHide = True
+      ExplicitTop = 157
       object btnManageBlocked: TTntButton
         Left = 17
         Top = 0
@@ -140,7 +129,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     object grpAdvanced: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 187
+      Top = 169
       Width = 353
       Height = 99
       Margins.Left = 0
@@ -153,6 +142,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 4
       AutoHide = True
+      ExplicitTop = 187
       object pnlStatusColor: TExBrandPanel
         AlignWithMargins = True
         Left = 0
@@ -246,7 +236,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     object gbDepricated: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 295
+      Top = 277
       Width = 353
       Height = 298
       Margins.Left = 0
@@ -259,6 +249,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 5
       AutoHide = True
+      ExplicitTop = 295
       object chkSort: TTntCheckBox
         Left = 0
         Top = 18
@@ -293,8 +284,8 @@ inherited frmPrefRoster: TfrmPrefRoster
         object lblFilter: TTntLabel
           Left = 0
           Top = 2
-          Width = 128
-          Height = 15
+          Width = 121
+          Height = 13
           Caption = '"Online" minimum status: '
           WordWrap = True
         end
@@ -326,7 +317,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         ParentColor = True
         TabOrder = 4
         AutoHide = True
-        ExplicitTop = 191
         object lblGatewayGrp: TTntLabel
           Left = 0
           Top = 2
@@ -395,7 +385,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         ParentColor = True
         TabOrder = 9
         AutoHide = True
-        ExplicitTop = 218
         object lblDblClick: TTntLabel
           Left = 0
           Top = 2
@@ -430,7 +419,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         ParentColor = True
         TabOrder = 10
         AutoHide = True
-        ExplicitTop = 245
         object lblGrpSeparator: TTntLabel
           Left = 0
           Top = 2
@@ -457,8 +445,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         ParentColor = True
         TabOrder = 11
         AutoHide = True
-        ExplicitTop = 269
-        ExplicitHeight = 45
         object chkRosterAlpha: TTntCheckBox
           Left = 0
           Top = 0
@@ -488,7 +474,7 @@ inherited frmPrefRoster: TfrmPrefRoster
           Left = 143
           Top = 20
           Width = 53
-          Height = 24
+          Height = 25
           BevelOuter = bvNone
           Enabled = False
           ParentColor = True
@@ -499,7 +485,7 @@ inherited frmPrefRoster: TfrmPrefRoster
           OnChange = txtRosterAlphaChange
           DesignSize = (
             53
-            24)
+            25)
         end
       end
       object chkCollapsed: TTntCheckBox

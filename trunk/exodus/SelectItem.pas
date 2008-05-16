@@ -80,7 +80,7 @@ type
 
   private
     _skipTextChange: boolean;
-    
+    _parenthWnd: HWND; //parent handle to use during creation, 0 (default) means use application
     function GetItemTypes(index: integer): widestring;
   protected
     _itemTypes: TWideStringList;
@@ -90,8 +90,9 @@ type
 
     _itemView: TTypedTreeView;
 
-    constructor Create(AOwner: TComponent; itemtype: Widestring);overload;
-    constructor Create(AOwner: TComponent; itemtypes: TWidestringList);overload;
+    constructor Create(AOwner: TComponent; itemtype: Widestring; parentHwnd: HWND = 0);overload;
+    constructor Create(AOwner: TComponent; itemtypes: TWidestringList; parentHwnd: HWND = 0);overload;
+    procedure CreateParams(var Params: TCreateParams);override;
   public
     destructor Destroy; override;
 
@@ -103,8 +104,8 @@ type
 
   end;
 
-function SelectUIDByType(itemtype: Widestring; title: Widestring = ''): Widestring;
-function SelectUIDByTypes(itemtypes: TWidestringList; var SelectedItemType :widestring; title: Widestring = ''): Widestring;
+function SelectUIDByType(itemtype: Widestring; title: Widestring = ''; parentHwnd: HWND = 0): Widestring;
+function SelectUIDByTypes(itemtypes: TWidestringList; var SelectedItemType :widestring; title: Widestring = ''; parentHwnd: HWND = 0): Widestring;
 
 implementation
 
@@ -117,24 +118,24 @@ uses
 
 {$R *.dfm}
 
-function SelectUIDByType(itemtype: Widestring; title: Widestring): Widestring;
+function SelectUIDByType(itemtype: Widestring; title: Widestring; parentHwnd: HWND): Widestring;
 var
     twsl: TWidestringList;
     ignore: widestring;
 begin
     twsl := TWideStringList.create();
     twsl.add(itemType);
-    Result := SelectUIDByTypes(twsl, ignore, title);
+    Result := SelectUIDByTypes(twsl, ignore, title, parenthWnd);
     twsl.free();
 end;
 
-function SelectUIDByTypes(itemtypes: TWidestringList; var SelectedItemType :widestring; title: Widestring): Widestring;
+function SelectUIDByTypes(itemtypes: TWidestringList; var SelectedItemType :widestring; title: Widestring; parentHwnd: HWND): Widestring;
 var
     selector: TfrmSelectItem;
 begin
     Result := '';
     SelectedItemType := '';
-    selector := TfrmSelectItem.Create(nil, itemtypes);
+    selector := TfrmSelectItem.Create(nil, itemtypes, parenthWnd);
     if (title <> '') then
         selector.Caption := title;
 
@@ -257,10 +258,11 @@ begin
 end;
 
 
-constructor TfrmSelectItem.Create(AOwner: TComponent; itemtypes: TWidestringList);
+constructor TfrmSelectItem.Create(AOwner: TComponent; itemtypes: TWidestringList; parentHwnd: HWND);
 var
     i: integer;
 begin
+    _parenthWnd := parenthWnd;
     inherited Create(AOwner);
     _itemTypes := TWideStringList.create();
     for i := 0 to itemtypes.Count - 1 do
@@ -272,13 +274,13 @@ end;
 
 {
 }
-constructor TfrmSelectItem.Create(AOwner: TComponent; itemtype: Widestring);
+constructor TfrmSelectItem.Create(AOwner: TComponent; itemtype: Widestring; parentHwnd: HWND);
 var
     twsl: TWidestringList;
 begin
     twsl := TWideStringList.create();
     twsl.add(itemType);
-    Create(AOwner, twsl);
+    Create(AOwner, twsl, parentHwnd);
     twsl.free();
 end;
 
@@ -288,6 +290,15 @@ begin
     _itemView := nil;
     _itemTypes.free();
     inherited;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TfrmSelectItem.CreateParams(var Params: TCreateParams);
+begin
+    // Make each window appear on the task bar.
+    inherited CreateParams(Params);
+    if (_parenthWnd <> 0) then
+        Params.WndParent := _parenthWnd;
 end;
 
 procedure TfrmSelectItem.FormCreate(Sender: TObject);

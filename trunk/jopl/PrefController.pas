@@ -60,9 +60,6 @@ const
     proxy_socks5 = 3;
     proxy_http = 4;
 
-    roster_chat = 0;
-    roster_msg = 1;
-
     // Different consts for ssl int on profiles.
     ssl_tls = 0;
     ssl_only_tls = 1;
@@ -75,16 +72,6 @@ const
     notify_sound = 8;
     notify_tray  = 16;
     notify_front = 32;
-
-    // normal msg options
-    msg_normal = 0;
-    msg_all_chat = 1;
-    msg_existing_chat = 2;
-
-    // invite options
-    invite_normal = 0;
-    invite_popup = 1;
-    invite_accept = 2;
 
     // roster visible levels
     show_offline = -1;
@@ -99,7 +86,6 @@ const
     P_OFFLINEGROUP = 'roster_offline_group';
     P_TIMESTAMP = 'timestamp';
     P_AUTOUPDATE = 'auto_updates';
-    P_CHAT = 'roster_chat';
     P_SUB_AUTO = 's10n_auto_accept';
     P_SUB_AUTO_ADD = 's10n_auto_add';
     P_AUTO_COMPLETE_JIDS = 'brand_auto_complete_jids';

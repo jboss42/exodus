@@ -32,6 +32,7 @@ type
     _itemTextColor: TColor;
     
     function GetIsValid(): boolean;
+
   public
     Constructor Create(IUID: widestring; IItem: IExodusItem = nil);
     Destructor Destroy();override;
@@ -57,7 +58,6 @@ type
     btnCancel: TTntButton;
     pnlComposer: TTntPanel;
     pnlRecipients: TTntPanel;
-    lstJIDS: TTntListView;
     Panel1: TPanel;
     imgState: TImageList;
     RTComposer: TExRichEdit;
@@ -78,17 +78,20 @@ type
     pnlSubject: TPanel;
     lblSubject: TTntLabel;
     txtSendSubject: TTntMemo;
-    pnlRecipientWarning: TTntPanel;
-    Image1: TImage;
-    TntLabel3: TTntLabel;
     popTo: TTntPopupMenu;
     Add1: TTntMenuItem;
     Remove1: TTntMenuItem;
     pnlSender: TTntPanel;
     splitter: TTntSplitter;
+    TntLabel1: TTntLabel;
+    btnAddRecipients: TTntBitBtn;
+    btnRemoveRecipient: TTntBitBtn;
+    pnlRecipList: TTntPanel;
+    lstJIDS: TTntListView;
+    pnlRecipientWarning: TTntPanel;
+    Image1: TImage;
+    TntLabel3: TTntLabel;
     btnRemoveInvalid: TTntButton;
-    btnAdd: TSpeedButton;
-    btnRemove: TSpeedButton;
     procedure btnRemoveClick(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -107,6 +110,7 @@ type
     procedure btnRemoveInvalidClick(Sender: TObject);
     procedure lstJIDSKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure btnRemoveRecipientClick(Sender: TObject);
   private
     _supportedTypes: TWidestringList;
     _foundError: boolean;
@@ -198,6 +202,11 @@ const
     ROOMMSG_SUBJECT_HEADER = 'Subject: ';
     ROOMMSG_BROADCAST_HEADER = 'Broadcast Message';
 
+    ERROR_NO_RECIPIENTS = 'You must have at least one valid recipient to send a Broadcast Message.' + #10#13#10#13 + 'Would you like to add a recipient now?';
+    WARNING_NO_SUBJECT = 'Are you sure you want to send this message with no Subject?"';
+    ERROR_NO_MESSAGE = 'You must enter a message to send a Broadcast.';
+    ERROR_WRONG = 'You''re doing it wrong.';
+    ERROR_BROADCAST_TITLE = 'Broadcast Message';
 {------------------------------------------------------------------------------}
 procedure ExpandAndAddItems(item: IExodusItem;
                             itemList: IExodusItemList);
@@ -259,6 +268,22 @@ end;
 {*******************************************************************************
 **************************** TItemInfo *****************************************
 *******************************************************************************}
+
+procedure RemoveInvalid(IList: TList; var valid: TList);
+var
+    i: integer;
+    oneInfo: TItemInfo;
+begin
+    valid := TObjectList.Create(false);
+    for i := 0 to IList.Count - 1 do
+    begin
+        oneInfo := TItemInfo(IList[i]);
+        oneInfo.Validate();
+        if (oneInfo.IsValid) then
+            valid.add(oneInfo);
+    end;
+end;
+
 Constructor TItemInfo.Create(IUID: widestring; IItem: IExodusItem);
 var
     item: IExodusItem;
@@ -394,7 +419,7 @@ begin
     // Make each window appear on the task bar.
     inherited CreateParams(Params);
     Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
-    Params.WndParent := Application.Handle;
+    Params.WndParent := GetDesktopWindow();
 end;
 
 {------------------------------------------------------------------------------}
@@ -531,18 +556,66 @@ begin
    lstJIDs.Columns[1].Width := -1;
 end;
 
+procedure TdlgSndBroadcast.btnRemoveRecipientClick(Sender: TObject);
+begin
+  inherited;
+
+end;
+
 {------------------------------------------------------------------------------}
 procedure TdlgSndBroadcast.btnSendClick(Sender: TObject);
 var
     IList: TObjectList;
     i: integer;
     xhtml: TXMLTag;
+    oneInfo: TItemInfo;
 begin
     inherited;
     // Send the outgoing msg
     IList := TObjectList.create(false);
     for i := lstJIDS.Items.Count - 1 downto 0 do
-        ILIst.add(tItemInfo(lstJIDS.Items[i].Data)); //free TItemInfo
+    begin
+        oneInfo := tItemInfo(lstJIDS.Items[i].Data);
+        oneInfo.Validate();
+        if (oneInfo.IsValid) then
+            ILIst.add(oneInfo); //free TItemInfo
+    end;
+    
+    if (IList.Count = 0) then
+    begin
+        if MessageBoxW(Self.Handle,
+                       PWideChar(_(ERROR_NO_RECIPIENTS)),
+                       PWideChar(_(ERROR_BROADCAST_TITLE)),
+                       MB_ICONQUESTION or MB_YESNO) = IDYES then
+        begin
+            btnAddClick(Sender)
+        end
+        else Self.lstJIDS.SetFocus();
+        exit;
+    end;
+
+    if (trim(PlaintextMessage) = '') then
+    begin
+        MessageBoxW(Self.Handle,
+                    PWideChar(_(ERROR_NO_MESSAGE)),
+                    PWideChar(_(ERROR_BROADCAST_TITLE)),
+                    MB_ICONINFORMATION or MB_OK);
+        Self.RTComposer.SetFocus();
+        exit;
+    end;
+
+    if (Trim(Subject) = '') then
+    begin
+        if MessageBoxW(Self.Handle,
+                       PWideChar(_(WARNING_NO_SUBJECT)),
+                       PWideChar(_(ERROR_BROADCAST_TITLE)),
+                       MB_ICONQUESTION or MB_YESNOCANCEL) <> IDYES then
+        begin
+            Self.txtSendSubject.SetFocus();
+            exit;
+        end
+    end;
+
     GetXHTMLMessage(xhtml);
     SendBroadcastMessage(Subject, IList, PlaintextMessage, xhtml);
     IList.free();
@@ -657,7 +730,7 @@ var
     newType: widestring;
 begin
     inherited;
-    newRecipient := SelectUIDByTypes(_supportedTypes, newType);
+    newRecipient := SelectUIDByTypes(_supportedTypes, newType, '', Self.Handle);
     if (newRecipient <> '') then
         AddRecipientByUID(newRecipient);
     RefreshRecipientList();

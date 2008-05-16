@@ -24,7 +24,8 @@ interface
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ImgList, Buttons, ToolWin, Contnrs,
-    ExtCtrls, TntComCtrls, StateForm, Unicode, XMLTag, buttonFrame, JabberMsg;
+    ExtCtrls, TntComCtrls, StateForm, Unicode, XMLTag, buttonFrame, JabberMsg,
+  Menus, TntMenus;
 
   function generateUID(): widestring;
 
@@ -117,6 +118,8 @@ type
     procedure dockAllCallback(event: string; tag: TXMLTag);
     procedure floatAllCallback(event: string; tag: TXMLTag);
   protected
+    updateDockedCnt: integer;
+
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
     procedure OnPersistedMessage(msg: TXMLTag);virtual;
@@ -136,6 +139,9 @@ type
     //state as the state of these properties change
     procedure SetUnreadMsgCount(value : integer);virtual;
     function GetUnreadMsgCount(): Integer;virtual;
+    procedure updateDocked(); virtual;
+
+
   public
     _windowType: widestring; // what kind of dockable window is this
 
@@ -308,7 +314,7 @@ procedure TfrmDockable.setImageIndex(idx: integer);
 begin
     _normalImageIndex := idx;
     RosterTreeImages.GetIcon(idx, Self.Icon);
-    GetDockManager().UpdateDocked(self);
+    updateDocked();
 end;
 
 function TfrmDockable.getImageIndex(): Integer;
@@ -319,7 +325,7 @@ end;
 procedure TfrmDockable.SetUnreadMsgCount(value : integer);
 begin
     _unreadmsg := value;
-    GetDockManager().UpdateDocked(self);
+    updateDocked();
 end;
 
 function TfrmDockable.GetUnreadMsgCount(): integer;
@@ -371,11 +377,8 @@ begin
     _activating := true;
     ClearUnreadMsgCount();
 
-    try
-        GetDockManager().UpdateDocked(Self);
-    except
+    updateDocked();
 
-    end;
     _activating := false;
 end;
 
@@ -407,6 +410,8 @@ begin
 
     _unreadMessages.clear();
     _priorityflag := false;
+
+    updateDocked();
 end;
 
 {---------------------------------------}
@@ -452,7 +457,7 @@ begin
             Self.OnFloat(); //fire float event so windows can fix up
         end;
     end;
-    GetDockManager().UpdateDocked(Self); // Make sure activity list is updated.
+    updateDocked(); // Make sure activity list is updated.
 end;
 
 {---------------------------------------}
@@ -695,7 +700,7 @@ begin
             end;
         end;
 
-        GetDockManager().UpdateDocked(self);
+        updateDocked();
     end;
 end;
 
@@ -730,6 +735,19 @@ begin
     end;
 end;
 
+procedure TfrmDockable.updateDocked();
+begin
+    Inc(updateDockedCnt);
+
+    if (updateDockedCnt <= 1) then begin
+        try
+            getDockManager().UpdateDocked(Self);
+        except
+        end;
+    end;
+
+    Dec(updateDockedCnt);
+end;
 
 
 initialization

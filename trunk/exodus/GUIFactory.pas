@@ -123,56 +123,11 @@ begin
     else if (event = '/session/gui/contact') then begin
         // new outgoing message/chat window
         tmp_jid := TJabberID.Create(tag.getAttribute('jid'));
-        //0 -> A new one to one chat window
-        //1 -> An instant message window
-        //2 -> A new or existing chat window
-{** TODO : Roster refactor
-        r := MainSession.Prefs.getInt(P_CHAT);
-        ri := MainSession.Roster.Find(tmp_jid.jid);
-        if (ri <> nil) then begin
-            if (not ri.IsNative) then begin
-                if (not ri.IsOnline) then begin
-                    MessageBoxW(Application.Handle, PWideChar(_(sCannotOffline)), PWideChar(PrefController.getAppInfo.Caption), MB_OK);
-                    exit;
-                end;
-            end;
-        end;
-**}
         getDockManager().ShowDockManagerWindow(true, false);
-
-//JJF msgqueue refactor        if ((r = 0) or (r = 2)) then begin
-            if (tmp_jid.resource <> '') then
-                StartChat(tmp_jid.jid, tmp_jid.resource, true)
-            else
-                StartChat(tmp_jid.jid, '', true);
-{** JJF msgqueue refactor
-        end
-        else if (r = 1) then
-            StartMsg(tmp_jid.jid);
-**}
+        StartChat(tmp_jid.jid, tmp_jid.resource, true);
         tmp_jid.Free();
     end
     else if (event = '/session/gui/chat') then begin
-{** JJF msg queue refactor
-        // if we are DND, or this is an offline msg, then possibly queue it,
-        // depending on prefs.
-        if ((MainSession.Prefs.getBool('queue_dnd_chats') and
-            (MainSession.Show = 'dnd')) or
-           (MainSession.Prefs.getBool('queue_offline') and
-            (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil))) then begin
-            // queue the chat window. Event now owned by msg queue, don't free
-            RenderEvent(CreateJabberEvent(tag));
-        end
-        else if ((MainSession.Prefs.getBool('queue_not_avail') and
-                ((MainSession.Show = 'away') or
-                 (MainSession.Show = 'xa') or
-                 (MainSession.Show = 'dnd'))) or
-                (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil)) then begin
-            // queue the chat window. Event now owned by msg queue, don't free
-            RenderEvent(CreateJabberEvent(tag));
-        end
-        else begin
-**}
         // New Chat Window
         tmp_jid := TJabberID.Create(tag.getAttribute('from'));
         try
@@ -197,8 +152,9 @@ begin
 
 {** JJF msgqueue refactor
         end;
-**}        
+**}
     end
+    //this cannot be called now, windows are always created therefore
     else if (event = '/session/gui/update-chat') then begin
         tmp_jid := TJabberID.Create(tag.getAttribute('from'));
         c := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
@@ -206,46 +162,15 @@ begin
         if (c <> nil) then
             chat := TfrmChat(c.Window);
         if (chat = nil) then
+        begin
             chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
-
-{** JJF msg queue refactor
-        //Delayed messages processing
-        if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil) then begin
-            //Check the status of message queue for the chat controller
-            c := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
-            if (c <> nil) then begin
-              //First new delayed messate, show queue ant notifications
-               if (c.msg_queue.Count = 1) then begin
-                 DoNotify(showMsgQueue, 'notify_newchat', _('Chat with ') + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid), RosterTreeImages.Find('contact'));
-               end;
-            end;
-            MainSession.EventQueue.SaveEvents();
-        end
-        else begin
-            //If not delayed messages, it was queued due to user
-            //being in not Available state, check current presence.
-            if ((MainSession.Show <> 'away') and
-                (MainSession.Show <> 'xa') and
-                (MainSession.Show <> 'dnd')) then
-            chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
-**}
             if (chat <> nil) then
-            begin
                 DoNotify(chat, 'notify_newchat', _(sNotifyChat) + chat.DisplayName,
                          RosterTreeImages.Find('contact'));
-            end;
-{** JJF msgqueue refactor
         end;
-**}        
-       tmp_jid.Free;
+
+    tmp_jid.Free;
     end
-{** JJF msgqueue refactor
-    else if (event = '/session/gui/msgevent') then begin
-        // New Msg-Event style window
-        //event is now referenced by msg queue. do not free
-        RenderEvent(CreateJabberEvent(tag));
-    end
-**}
     else if (event = '/session/gui/no-inband-reg') then begin
         if (MainSession.Prefs.getBool('brand_show_in_band_registration_warning')) then begin
             if (MessageDlgW(_('This server does not advertise support for in-band registration. Try to register a new account anyway?'),

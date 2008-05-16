@@ -19,7 +19,7 @@
     <restore_desktop value="0" control="chkRestoreDesktop" state="rw"/>
     <debug value="0" control="chkDebug" state="rw"/>
     <!-- Other System Preferences -->
-    <restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
+	<restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
     <start_docked value="1" state="rw"/>
 
     <recon_tries value="25" control="txtAttempts" state="rw">
@@ -53,7 +53,7 @@
     <displayname_profile_enabled value='1' control="chkUseProfileDN" state="rw"/>
     <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
     <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
-    <roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
+    <roster_only_online value="1" state="rw"/>
     <roster_tabs control="btnManageTabs" state="rw"/>
     <!-- timeout values are in milliseconds -->
     <roster_hint_delay value="750"/>
@@ -241,7 +241,7 @@
     <keywords state="rw"/> <!-- value is ignored -->
 
     <!-- deprecated message handling options -->
-    <log value="1" control="chkLog"/>
+    <log value="1" control="chkLog" state="rw"/>
     <log_rooms value="0" control="chkLogRooms" state="inv"/>
     <log_roster value="0" control="chkLogRoster" state="inv"/>
     <log_path control="txtLogPath" state="inv"/>
@@ -249,18 +249,25 @@
     <spool_path control="txtSpoolPath" state="inv">
       <control name="lblSpoolPath"/>
     </spool_path>
-<!-- JJF msgqueue refactor
-    <invite_treatment value="0" control="cboInviteOptions" state="inv">
-      <control name="lblInviteOptions"/>
-    </invite_treatment>
-    <msg_treatment value="0" control="cboMsgOptions" state="inv">
-      <control name="lblMsgOptions"/>
-    </msg_treatment>
-    <msg_queue value="0" control="chkMsgQueue" state="inv"/>
-    <queue_offline value="0" control="chkQueueOffline" state="inv"/>
-    <queue_dnd_chats value="0" control="chkQueueDNDChats" state="inv"/>
-    <queue_not_avail value="1" control="chkQueueNotAvail" state="inv"/>
--->
+
+    <!--
+    	Should notifications be suspended while user is away? This pref may
+        be one of the followiing values:
+        	none - do not suspend notifications
+                away - all notifications will be supressed when away, xa or dnd
+                extaway - all notifications will be supressed when xa or dnd
+                dnd - all notifications will be supressed when dnd
+    -->
+    <suspend_notification_level value="none" control="lblNotifyQueue" state="inv"/>
+
+    <!-- should one chat show and send chat messages to all resources of a
+         particular bareJID? If true, all incoming messages will be routed to one
+         chat that will change its "locked" resource as needed. False -> one chat
+         per resource -->
+    <multi_resource_chat value="1" state="inv">
+        <control name="chkMultiChat"/>
+    </multi_resource_chat>
+
     <!-- AutoAway Preferences -->
     <auto_away value="1" control="chkAutoAway" state="rw"/>
     <away_time value="5" control="txtAwayTime" state="rw">
@@ -287,9 +294,8 @@
 
     <!-- Presence Preferences -->
     <client_caps value="1" control="chkClientCaps" state="rw"/>
-    <!-- Client capabilities identifier -->
-    <client_caps_uri value="http://jmomentim.jabber.com/caps"/>
-
+    <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
+    
     <room_joins value="0" control="chkRoomJoins" state="rw"/>
     <!-- hmm, why two of these? -->
     <presence_message_listen value="1" control="chkPresenceSync" state="rw"/>
@@ -333,32 +339,32 @@
     <roster_width value="215"/>
 
     <!-- file xfer Options -->
-    <xfer_path control="txtXferPath">
+    <xfer_path control="txtXferPath" state="rw">
       <control name="lblXferPath"/>
       <control name="btnTransferBrowse"/>
-    </xfer_path>        
-    <xfer_port value="5280" control="txtXferPort">
+    </xfer_path>
+    <xfer_port value="5280" control="txtXferPort" state="rw">
       <control name="lblXferPort"/>
     </xfer_port>
-    <xfer_ip control="txtXferIP">
+    <xfer_ip control="txtXferIP" state="rw">
       <control name="chkXferIP"/>
     </xfer_ip>
-    <xfer_davhost control="txtDavHost">
+    <xfer_davhost control="txtDavHost" state="rw">
       <control name="lblDavHost"/>
     </xfer_davhost>
-    <xfer_davport control="txtDavPort">
+    <xfer_davport control="txtDavPort" state="rw">
       <control name="lblDavPort"/>
     </xfer_davport>
-    <xfer_davpath control="txtDavPath">
+    <xfer_davpath control="txtDavPath" state="rw">
       <control name="lblDavPath"/>
     </xfer_davpath>
-    <xfer_davusername control="txtDavUsername">
+    <xfer_davusername control="txtDavUsername" state="rw">
       <control name="lblDavUsername"/>
     </xfer_davusername>
-    <xfer_davpassword control="txtDavPassword">
+    <xfer_davpassword control="txtDavPassword" state="rw">
       <control name="lblDavPassword"/>
     </xfer_davpassword>
-    <xfer_prefproxy control="txt65Proxy">
+    <xfer_prefproxy control="txt65Proxy" state="rw">
       <control name="lbl65Proxy"/>
     </xfer_prefproxy>
 
@@ -366,7 +372,7 @@
     <!-- Activity Window Colors -->
     <activity_window_default_color>
         <start>$00D1BFAB</start>
-        <end>$00BDAA92</end>
+        <end>$00B9A48C</end>
     </activity_window_default_color>
     <activity_window_selected_color>
         <start>$00D0C3AF</start>
@@ -431,12 +437,12 @@
         This option is never exposed to the user -->
     <search_component_only value="0"/>
 
-    <!-- What level of file synchronisity should the internal sqlogger (sqlite database) use.
-         The higher the level the slower the performance
-        0 - OFF
-        1 - NORMAL
-        2 - FULL
-    -->
+	<!-- What level of file synchronisity should the internal sqlogger (sqlite database) use.
+		 The higher the level the slower the performance
+		0 - OFF
+		1 - NORMAL
+		2 - FULL
+	-->
     <sqlite_table_synchronous_level value="0"/>
 
 
@@ -651,11 +657,11 @@
     <!-- Should the internal SQL logger log chat or room messages -->
     <brand_history_search value="1"/>
     <brand_log_chat_messages value="1"/>
-    <brand_log_groupchat_messages value="1"/>
-    <brand_log_normal_messages value="1"/>
+	<brand_log_groupchat_messages value="1"/>
+	<brand_log_normal_messages value="1"/>
 
-     <!-- brand value for most active plug in time interval in days -->
-     <brand_most_active_time_interval value="30"/>
+	 <!-- brand value for most active plug in time interval in days -->
+	 <brand_most_active_time_interval value="30"/>
   </prefs>
 
   <!-- default custom presence stuff -->
