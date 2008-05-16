@@ -77,6 +77,11 @@ const
     XMLNS_XHTMLIM    = 'http://jabber.org/protocol/xhtml-im';
     XMLNS_XHTML      = 'http://www.w3.org/1999/xhtml';
     XMLNS_SHIM       = 'http://jabber.org/protocol/shim';
+
+    //"known" or expected Item properties
+    IE_PROP_IMAGEPREFIX = 'ImagePrefix';
+
+
 var
     XP_MSGXDATA: TXPLite;
     XP_MUCADMINMSG : TXPLite;

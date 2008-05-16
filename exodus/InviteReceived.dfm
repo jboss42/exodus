@@ -2,27 +2,32 @@ inherited frmInviteReceived: TfrmInviteReceived
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Conference Room Invitation'
+  ClientHeight = 160
   ClientWidth = 436
   Position = poDefault
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy
   OnShow = TntFormShow
   ExplicitWidth = 442
-  ExplicitHeight = 178
+  ExplicitHeight = 186
   PixelsPerInch = 96
   TextHeight = 13
   object pnlHeader: TFlowPanel
     AlignWithMargins = True
-    Left = 3
+    Left = 9
     Top = 9
-    Width = 430
+    Width = 418
     Height = 16
+    Margins.Left = 9
     Margins.Top = 9
+    Margins.Right = 9
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
+    ExplicitLeft = 3
+    ExplicitWidth = 430
     object lblInvitor: TTntLabel
       AlignWithMargins = True
       Left = 6
@@ -70,7 +75,7 @@ inherited frmInviteReceived: TfrmInviteReceived
     Left = 3
     Top = 126
     Width = 430
-    Height = 20
+    Height = 28
     Margins.Top = 12
     Margins.Bottom = 6
     Align = alTop
@@ -79,29 +84,30 @@ inherited frmInviteReceived: TfrmInviteReceived
     ParentColor = True
     TabOrder = 1
     object btnAccept: TTntButton
-      Left = 234
+      Left = 210
       Top = 0
-      Width = 61
-      Height = 20
+      Width = 68
+      Height = 28
       Caption = '&Join'
       Default = True
       TabOrder = 0
       OnClick = btnAcceptClick
     end
     object btnDecline: TTntButton
-      Left = 300
+      Left = 284
       Top = 0
-      Width = 61
-      Height = 20
+      Width = 68
+      Height = 28
       Caption = '&Decline'
       TabOrder = 1
       OnClick = btnDeclineClick
     end
     object btnIgnore: TTntButton
-      Left = 366
+      Left = 359
       Top = 0
-      Width = 61
-      Height = 20
+      Width = 68
+      Height = 28
+      Margins.Right = 6
       Caption = '&Ignore'
       TabOrder = 2
       OnClick = btnIgnoreClick
@@ -111,11 +117,11 @@ inherited frmInviteReceived: TfrmInviteReceived
     AlignWithMargins = True
     Left = 24
     Top = 37
-    Width = 388
+    Width = 406
     Height = 31
     Margins.Left = 24
     Margins.Top = 9
-    Margins.Right = 24
+    Margins.Right = 6
     Margins.Bottom = 9
     Align = alTop
     AutoSize = True
@@ -124,26 +130,28 @@ inherited frmInviteReceived: TfrmInviteReceived
     ParentColor = True
     TabOrder = 2
     AutoHide = False
+    ExplicitWidth = 388
     object lblInviteMessage: TTntLabel
       Left = 0
       Top = 18
-      Width = 125
+      Width = 406
       Height = 13
       Align = alTop
       Caption = 'No message was specified'
       Transparent = True
       WordWrap = True
+      ExplicitWidth = 125
     end
   end
   object ExGroupBox2: TExGroupBox
     AlignWithMargins = True
     Left = 24
     Top = 77
-    Width = 388
+    Width = 406
     Height = 37
     Margins.Left = 24
     Margins.Top = 0
-    Margins.Right = 24
+    Margins.Right = 6
     Margins.Bottom = 0
     Align = alTop
     AutoSize = True
@@ -152,18 +160,19 @@ inherited frmInviteReceived: TfrmInviteReceived
     ParentColor = True
     TabOrder = 3
     AutoHide = False
+    ExplicitWidth = 388
     object txtReason: TTntEdit
       Left = 0
       Top = 18
-      Width = 388
+      Width = 406
       Height = 19
       Margins.Left = 24
       Margins.Right = 24
       Align = alTop
       AutoSize = False
-      Color = clCaptionText
       TabOrder = 1
       Text = 'Sorry, I'#39'm not interested in joining right now.'
+      ExplicitWidth = 388
     end
   end
 end

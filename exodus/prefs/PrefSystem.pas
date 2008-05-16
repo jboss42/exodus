@@ -110,7 +110,7 @@ uses
     LocalUtils, JabberUtils, ExUtils,  GnuGetText,
     AutoUpdate, FileCtrl,
     PathSelector, PrefController, Registry, Session, StrUtils,
-    jabber1, PrefFile, ManagePluginsDlg;
+    jabber1, PrefFile, ManagePluginsDlg, Debug;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -336,7 +336,9 @@ begin
     // wasn't selected when the prefs window was created.
     if (chkDebug.Checked) then begin
         if (_initial_chkdebug_state = false) then begin
-            frmExodus.ShowXML1Click(nil);
+            if (not isDebugShowing()) then begin
+                frmExodus.ShowXML1Click(nil);
+            end;
             _initial_chkdebug_state := true;
         end
     end

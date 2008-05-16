@@ -81,7 +81,6 @@ type
   TfrmExodus = class(TExForm)
     MainMenu1: TTntMainMenu;
     ImageList1: TImageList;
-    timFlasher: TTimer;
     timAutoAway: TTimer;
     popTray: TTntPopupMenu;
     AppEvents: TApplicationEvents;
@@ -306,7 +305,6 @@ type
     procedure btnDelPersonClick(Sender: TObject);
     procedure ShowXML1Click(Sender: TObject);
     procedure Exit2Click(Sender: TObject);
-    procedure timFlasherTimer(Sender: TObject);
     procedure JabberorgWebsite1Click(Sender: TObject);
     procedure JabberCentralWebsite1Click(Sender: TObject);
     procedure About1Click(Sender: TObject);
@@ -508,13 +506,6 @@ type
      *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
     **}
     procedure waitForCleanup();
-
-    {
-        Forces a focus to the active tabs's docked form
-    }
-
-    procedure checkFlash();
-
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -664,6 +655,8 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
+    function IsShortcut(var Message: TWMKey): Boolean; override;
+    function AppKeyDownHook(var Msg: TMessage): Boolean;
 
     property dockManager:IExodusDockManager read _dockManager;
   end;
@@ -903,23 +896,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Flash();
 begin
-    If (Self.Active and not MainSession.Prefs.getBool('notify_docked_flasher')) then begin
-        timFlasher.Enabled := false;
-        exit; //0.9.1.0 behavior
-    end;
-    // flash window
-    if (_hidden) then begin
-        Self.WindowState := wsMinimized;
-        Self.Visible := true;
-        ShowWindow(Handle, SW_SHOWMINNOACTIVE);
-    end;
-    if MainSession.Prefs.getBool('notify_flasher') then begin
-        timFlasher.Enabled := true;
-    end
-    else begin
-        timFlasher.Enabled := false;
-        timFlasherTimer(Self);
-    end;
 end;
 
 {---------------------------------------}
@@ -1052,16 +1028,14 @@ begin
     // manually handle popping up the tray menu..
     // since the delphi/vcl impl isn't quite right.
     if (Msg.LParam = WM_LBUTTONDBLCLK) then begin
-        if (_hidden) then begin
-            // restore our app
-            doRestore();
-            _hidden := false;
+        // restore our app
+        doRestore();
+        _hidden := false;
 
-            getDockManager().BringToFront(); // takes focus
-            Self.BringToFront(); // take back focus
+        getDockManager().BringToFront(); // takes focus
+        Self.BringToFront(); // take back focus
 
-            msg.Result := 0;
-        end;
+        msg.Result := 0;
     end
     else if ((Msg.LParam = WM_LBUTTONDOWN) and (not Application.Active) and (not _hidden))then begin
         SetForegroundWindow(Self.Handle);
@@ -1158,12 +1132,10 @@ end;
 procedure TfrmExodus.WMActivate(var msg: TMessage);
  begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
-        OutputDebugMsg('exodus got activate');
 //        outputdebugMsg('TfrmExodus.WMActivate');
-        checkFlash();
 
-        StopFlash(Self);
-        StopTrayAlert();
+        Notify.StopFlash(Self);
+        stopTrayAlert();
 
         if ((_dockWindow <> nil) and
             (_dockWindow.Showing) and
@@ -1192,6 +1164,8 @@ var
     adVal: Widestring;
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
+
+    Application.HookMainWindow(AppKeyDownHook);
 
     _killshow := false;
 
@@ -1412,7 +1386,7 @@ begin
     if (MainSession.Prefs.getInt('msglist_type') = 1) then begin
         // msglist_type = HTML_MSGLIST
         // Need to start up an instance of IE because the first IE startup
-        // can be VERY slow.  
+        // can be VERY slow.
         _hiddenIEMsgList := TfIEMsgList.Create(nil);
     end
     else begin
@@ -2466,9 +2440,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormResize(Sender: TObject);
 begin
-//    if (timFlasher.Enabled) then
-//        timFlasher.Enabled := false;
-
     // Check for constraints
     if (_enforceConstraints) then begin
         if (frmExodus.Width < frmExodus.Constraints.MinWidth) then
@@ -2595,13 +2566,6 @@ begin
     // Close the whole honkin' thing
     _shutdown := true;
     Self.Close;
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.timFlasherTimer(Sender: TObject);
-begin
-    // Flash the window
-    FlashWindow(Self.Handle, true);
 end;
 
 {---------------------------------------}
@@ -2990,9 +2954,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
-//    if (frmRoster <> nil) then
-//        frmRoster.RosterTree.Invalidate();
-    StopFlash(Self);
+    StopFlash(Self); 
     StopTrayAlert();
 end;
 
@@ -3536,8 +3498,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
-    checkFlash();
-    StopFlash(Self);
+    Notify.StopFlash(Self);
     StopTrayAlert();
 end;
 
@@ -4570,16 +4531,13 @@ end;
 
 procedure TfrmExodus.OnNotify(frm: TForm; notifyEvents: integer);
 begin
-    //if dockmanager is being notified directly or the given form is docked
     //handle bring to front and flash
-    if ((frm = nil) or (frm = Self) or
-        ((frm is TfrmDockable) and (TfrmDockable(frm).Docked))) then begin
-        if ((notifyEvents and notify_front) > 0) then
+    if (frm = Self) then begin
+        if ((notifyEvents and notify_front) <> 0) then
             bringToFront()
-        else if ((notifyEvents and notify_flash) > 0) then
+        else if ((notifyEvents and notify_flash) <> 0) then
             Self.Flash();
-    end;    
-    //updateNextNotifyButton();
+    end;
 end;
 
 procedure TfrmExodus.imgAdClick(Sender: TObject);
@@ -4762,13 +4720,6 @@ begin
 
     root.Add(mi);
   end
-end;
-
-procedure TfrmExodus.checkFlash();
-begin
-    if (timFlasher.Enabled and
-       (not MainSession.Prefs.getBool('notify_docked_flasher'))) then
-        timFlasher.Enabled := false;
 end;
 
 //Reset menu items for contacts and groups based on the roster selection
@@ -5020,6 +4971,33 @@ begin
 
     typedActs.execute(act.Name);
 end;
+
+function TfrmExodus.IsShortcut(var Message: TWMKey): Boolean;
+begin
+    if (GetForegroundWindow <> Handle) then
+    begin
+        Result := false
+    end
+    else
+    begin
+        Result := inherited IsShortCut(Message)
+    end;
+end;
+
+function TfrmExodus.AppKeyDownHook(var Msg: TMessage): Boolean;
+begin
+    // Prevent Alt and F10 from accessing main menu unless this form has focus
+    case Msg.Msg of
+    Cm_AppSysCommand:
+        Result := (msg.WParam = SC_KEYMENU) and (GetForegroundWindow <> Handle);
+    else
+        Result := false;
+    end;
+end;
+
+
+
+
 
 
 initialization
