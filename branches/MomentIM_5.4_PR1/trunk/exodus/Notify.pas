@@ -48,6 +48,7 @@ procedure StopFlash(win: TForm);
 implementation
 uses
     Windows, MMSystem,
+    Sysutils, 
     Exodus_TLB, COMExodusItem,
     JabberConst, JabberID, Dockable, RosterImages,StateForm, DisplayName,
     ExUtils, GnuGetText, Jabber1, PrefController, RiserWindow, Debug, Session;
@@ -123,15 +124,18 @@ end;
 procedure StartFlash(win: TForm);
 var
     fi: TFlashWInfo;
+    tf: TCustomForm;
 begin
-    if (not win.Visible) then
+    tf := Forms.GetParentForm(win, true);
+    
+    if (not tf.Visible) then
     begin
-        win.WindowState := wsMinimized;
-        win.Visible := true;
-        ShowWindow(win.Handle, SW_SHOWMINNOACTIVE);
+        tf.WindowState := wsMinimized;
+        tf.Visible := true;
+        ShowWindow(tf.Handle, SW_SHOWMINNOACTIVE);
     end;
 
-    fi.hwnd:= win.Handle;
+    fi.hwnd:= tf.Handle;
     //fi.dwFlags := FLASHW_TIMERNOFG + FLASHW_TRAY;
     fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
     fi.dwTimeout := 0;
