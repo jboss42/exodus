@@ -31,6 +31,7 @@ uses Session;
 constructor TGroupParser.Create(Session: TObject);
 var
     sep: Widestring;
+    i: Integer;
 begin
    _Session := Session;
    //Spaces are no longer word boundaries, but group separators are.
@@ -39,7 +40,12 @@ begin
        _GroupSeparator := sep;
        _NestedGroups := TRegExpr.Create();
        _NestedGroups.SpaceChars :=  PWideChar(sep)^;
-       _NestedGroups.WordChars := _NestedGroups.WordChars + chr(32) + chr(45);
+       for i := 32 to 126 do
+       begin
+           if (chr(i) = sep) then continue;
+           _NestedGroups.WordChars := _NestedGroups.WordChars + chr(i);
+       end;
+
        _NestedGroups.Expression := '\b\w+';
        _NestedGroups.Compile();
    end;
