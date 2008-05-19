@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 5/19/2008 9:01:50 AM from Type Library described below.
+// File generated on 2008-05-09 13:49:25 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -473,11 +473,6 @@ type
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
     function Get_ActionController: IExodusActionController; safecall;
-    function GetPrefAsXML(const key: WideString): WideString; safecall;
-    procedure SetPrefAsXML(const XML: WideString); safecall;
-    function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
-    function SelectRoom(const Title: WideString; IncludeAnyOption: WordBool): WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -607,11 +602,6 @@ type
     property DataStore: IExodusDataStore readonly dispid 226;
     property HistorySearchManager: IExodusHistorySearchManager readonly dispid 227;
     property ActionController: IExodusActionController readonly dispid 228;
-    function GetPrefAsXML(const key: WideString): WideString; dispid 229;
-    procedure SetPrefAsXML(const XML: WideString); dispid 230;
-    function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; dispid 231;
-    function SelectRoom(const Title: WideString; IncludeAnyOption: WordBool): WideString; dispid 232;
   end;
 
 // *********************************************************************//

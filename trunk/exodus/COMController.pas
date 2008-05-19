@@ -144,12 +144,6 @@ type
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
-    function GetPrefAsXML(const key: WideString): WideString; safecall;
-    function SelectItem(const ItemType, Title: WideString;
-      IncludeAnyOption: WordBool): WideString; safecall;
-    function SelectRoom(const Title: WideString;
-      IncludeAnyOption: WordBool): WideString; safecall;
-    procedure SetPrefAsXML(const XML: WideString); safecall;
 
     { Protected declarations }
   private
@@ -270,7 +264,7 @@ uses
     Jabber1, Session, RemoveContact, ContactController, RosterAdd, RosterForm, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ,
     ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXWindow,
-    ExActionCtrl, SelectItem, SelectItemRoom, SelectItemAny, SelectItemAnyRoom;
+    ExActionCtrl;
 
 const
     sPluginErrCreate = 'Plug-in could not be created. (%s)';
@@ -1946,7 +1940,6 @@ var
     jid: TJabberID;
     x: TXMLTag;
 //    ri: TJabberRosterItem;
-    Item: IExodusItem;
     p: TJabberPres;
 begin
     _parser.Clear();
@@ -1957,21 +1950,14 @@ begin
         x := nil;
     _parser.Clear();
 
-//    if (LeftStr(Event, Length('/roster')) = '/roster') then begin
-//            { TODO : Roster refactor }
+    if (LeftStr(Event, Length('/roster')) = '/roster') then begin
+            { TODO : Roster refactor }
 //        ri := nil;
 //        if (Arg <> '') then begin
 //            ri := MainSession.roster.Find(Arg);
 //            x := TXmlTag.Create(ri.Tag); // copy the ri tag so it is good for freeing below
 //        end;
         //MainSession.FireEvent(Event, x, ri);
-//    end
-    if (LeftStr(Event, Length('/item')) = '/item') then begin
-        Item := nil;
-        if (Arg <> '') then begin
-            Item := MainSession.ItemController.GetItem(Arg);
-        end;
-        MainSession.FireEvent(Event, Item);
     end
     else if (LeftStr(Event, Length('/presence')) = '/presence') then begin
         p := nil;
@@ -2139,58 +2125,6 @@ begin
     Result := HistorySearchManager;
 end;
 
-
-function TExodusController.GetPrefAsXML(const key: WideString): WideString;
-var
-    tag: TXMLTag;
-begin
-    Result := '';
-    tag := MainSession.Prefs.getXMLPref(key);
-    if (tag <> nil) then begin
-        Result := tag.XML();
-    end;
-end;
-
-function TExodusController.SelectItem(const ItemType, Title: WideString;
-  IncludeAnyOption: WordBool): WideString;
-begin
-    if (IncludeAnyOption) then begin
-        Result := SelectUIDByTypeAny(ItemType, Title);
-    end
-    else begin
-        Result := SelectUIDByType(ItemType, Title);
-    end;
-end;
-
-function TExodusController.SelectRoom(const Title: WideString;
-  IncludeAnyOption: WordBool): WideString;
-begin
-    if (IncludeAnyOption) then begin
-        Result := SelectUIDByTypeAnyRoom(Title);
-    end
-    else begin
-        Result := SelectUIDByTypeRoom(Title);
-    end;
-end;
-
-procedure TExodusController.SetPrefAsXML(const XML: WideString);
-var
-    tag: TXMLTag;
-    parser: TXMLTagParser;
-begin
-    parser := TXMLTagParser.Create();
-    try
-        parser.ParseString(xml, '');
-        tag := parser.popTag;
-        if (tag <> nil) then begin
-            MainSession.Prefs.setXMLPref(tag);
-        end;
-        tag.free();
-    except
-
-    end;
-    parser.free();
-end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,
