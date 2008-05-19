@@ -1947,6 +1947,7 @@ var
     x: TXMLTag;
 //    ri: TJabberRosterItem;
     p: TJabberPres;
+    Item: IExodusItem;
 begin
     _parser.Clear();
     _parser.ParseString(XML, '');
@@ -1956,14 +1957,21 @@ begin
         x := nil;
     _parser.Clear();
 
-    if (LeftStr(Event, Length('/roster')) = '/roster') then begin
-            { TODO : Roster refactor }
+//    if (LeftStr(Event, Length('/roster')) = '/roster') then begin
+//            { TODO : Roster refactor }
 //        ri := nil;
 //        if (Arg <> '') then begin
 //            ri := MainSession.roster.Find(Arg);
 //            x := TXmlTag.Create(ri.Tag); // copy the ri tag so it is good for freeing below
 //        end;
         //MainSession.FireEvent(Event, x, ri);
+//    end
+    if (LeftStr(Event, Length('/item')) = '/item') then begin
+        Item := nil;
+        if (Arg <> '') then begin
+            Item := MainSession.ItemController.GetItem(Arg);
+        end;
+        MainSession.FireEvent(Event, Item);
     end
     else if (LeftStr(Event, Length('/presence')) = '/presence') then begin
         p := nil;
