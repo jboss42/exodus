@@ -412,22 +412,22 @@ begin
                 do_scroll := true;
             end;
 
+            //get the window ready for messages
+            if (show_window) then
+                ShowDefault(bring_to_front);
+
             PlayQueue();
 
             // scroll to the bottom..
             if (do_scroll) then
                 _scrollBottom();
 
-            if (show_window) then
-                ShowDefault(bring_to_front);
             Application.ProcessMessages();
 
             //finally, event new chat to plugins
             if (new_chat) then
                 ExCOMController.fireNewChat(sjid, com_controller);
         end;
-
-
 
         Result := TfrmChat(chat.window);
     except
