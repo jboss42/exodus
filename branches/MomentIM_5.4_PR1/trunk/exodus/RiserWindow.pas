@@ -164,7 +164,7 @@ begin
     inherited CreateParams(Params);
     with Params do begin
         ExStyle := ExStyle or WS_EX_NOPARENTNOTIFY;
-        //WndParent := 0;
+        WndParent := GetDesktopWindow();
     end;
 end;
 
