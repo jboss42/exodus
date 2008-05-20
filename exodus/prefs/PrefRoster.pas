@@ -96,12 +96,13 @@ type
 //  frmPrefRoster: TfrmPrefRoster;
 
 implementation
+
 {$R *.dfm}
 
 uses
     JabberUtils, ExUtils,  Session,
     PrefFile, PrefController,
-    ManageBlockDlg;
+    ManageBlockDlg, Exodus_TLB;
 
 procedure TfrmPrefRoster.btnManageBlockedClick(Sender: TObject);
 var
@@ -132,6 +133,8 @@ end;
 procedure TfrmPrefRoster.LoadPrefs();
 var
     gs: TWidestringList;
+    Items: IExodusItemList;
+    i: Integer;
 begin
     inherited;
     //blocked contacts
@@ -139,13 +142,18 @@ begin
 
     // populate grp drop-downs.
     gs := TWidestringList.Create();
-    
+
+    Items := MainSession.ItemController.GetItemsByType('group');
+    for i := 0 to items.Count - 1 do
+        gs.Add(items.Item[i].UID);
+
     gs.Sorted := true;
     gs.Sort();
 
     AssignTntStrings(gs, txtDefaultGrp.Items);
 
-    //populate gateway group cbo
+
+  //populate gateway group cbo
     if (gs.IndexOf(txtGatewayGrp.Text) = -1) then
         gs.Add(txtGatewayGrp.Text);
     gs.Sort();
@@ -181,9 +189,11 @@ begin
 end;
 
 procedure TfrmPrefRoster.SavePrefs();
+var
+   Idx: integer;
 begin
     inherited;
-
+        
     MainSession.prefs.setStringlist('blockers', _blockedContacts);
     // XXX: save nested group separator per JEP-48
 end;
