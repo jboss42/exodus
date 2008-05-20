@@ -34,6 +34,9 @@ type
     procedure btnDeclineClick(Sender: TObject);
     procedure TntFormShow(Sender: TObject);
     procedure lblInvitorClick(Sender: TObject);
+    procedure TntFormClose(Sender: TObject; var Action: TCloseAction);
+
+    procedure WMNCActivate(var msg: TMessage); message WM_NCACTIVATE;
   private
     _dnListener: TDisplayNameEventListener;
     _InvitePacket: TXMLTag;
@@ -466,12 +469,11 @@ begin
     frm.InitializeFromTag(InvitePacket);
     frm.Show();
     _ReceivedPosHelper.AddWindow(frm);
-    Notify.DoNotify(frm, 'notify_invite', 'You have received an invitation to join ' + frm.lblRoom.Caption, 0);
+    Notify.DoNotify(Application.Mainform, 'notify_invite', 'You have received an invitation to join ' + frm.lblRoom.Caption, 0);
 end;
 
 procedure TInviteHandler.OnFormClose(Sender: TObject; var Action: TCloseAction);
 begin
-
     if (Sender is TForm) then
         RemoveWindow(TForm(Sender));
     inherited;
@@ -506,6 +508,13 @@ begin
     end
 end;
 
+procedure TfrmInviteReceived.TntFormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+    inherited;
+    Action := caFree;
+end;
+
 procedure TfrmInviteReceived.TntFormCreate(Sender: TObject);
 begin
     inherited;
@@ -527,6 +536,13 @@ begin
         _FromJID.free();
     if (_RoomJID <> nil) then
         _RoomJID.free();
+end;
+
+procedure TfrmInviteReceived.WMNCActivate(var msg: TMessage);
+begin
+    if (Msg.WParamLo <> WA_INACTIVE) then
+        StopFlash(Application.MainForm);
+    inherited;
 end;
 
 procedure TfrmInviteReceived.TntFormShow(Sender: TObject);
