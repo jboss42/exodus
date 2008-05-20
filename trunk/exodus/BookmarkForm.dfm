@@ -40,14 +40,13 @@ inherited BookMarkForm: TBookMarkForm
     ParentFont = False
     TabOrder = 0
     TabStop = True
-    ExplicitLeft = -31
-    ExplicitTop = 73
-    ExplicitWidth = 329
+    ExplicitTop = 117
+    ExplicitWidth = 345
     ExplicitHeight = 39
     inherited Panel2: TPanel
       Width = 345
       Height = 39
-      ExplicitWidth = 329
+      ExplicitWidth = 345
       ExplicitHeight = 39
       inherited Bevel1: TBevel
         Width = 345
@@ -60,7 +59,7 @@ inherited BookMarkForm: TBookMarkForm
         Top = 6
         Width = 197
         Height = 33
-        ExplicitLeft = 132
+        ExplicitLeft = 148
         ExplicitTop = 6
         ExplicitWidth = 197
         ExplicitHeight = 33
@@ -91,7 +90,7 @@ inherited BookMarkForm: TBookMarkForm
     Height = 24
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
-    ExplicitWidth = 282
+    OnChange = txtNameChange
   end
   object cboGroup: TTntComboBox
     Left = 8
@@ -103,6 +102,5 @@ inherited BookMarkForm: TBookMarkForm
     Sorted = True
     TabOrder = 2
     OnChange = cboGroupChange
-    ExplicitWidth = 282
   end
 end
