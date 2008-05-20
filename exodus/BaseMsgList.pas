@@ -22,18 +22,41 @@ unit BaseMsgList;
 interface
 
 uses
-    TntMenus, JabberMsg,
-    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ExFrame;
+{$IFNDEF EXODUS}
+    Exodus_TLB,
+{$ENDIF}
+    TntMenus,
+    JabberMsg,
+    Windows,
+    Messages,
+    SysUtils,
+    Variants,
+    Classes,
+    Graphics,
+    Controls,
+    Forms,
+    Dialogs,
+    ExFrame;
 
 type
   TfBaseMsgList = class(TExFrame)
   protected
     _base: TObject; // this is our base form
+{$IFNDEF EXODUS}
+    _controller: IExodusController;
+{$ENDIF}
+
+    function _getPrefBool(prefName: Widestring): boolean; virtual;
+    function _getPrefString(prefName: Widestring): widestring; virtual;
+    function _getPrefInt(prefName: Widestring): integer; virtual;
 
   public
     { Public declarations }
+{$IFDEF EXODUS}
     constructor Create(Owner: TComponent); override;
+{$ELSE}
+    constructor Create(Owner: TComponent; controller: IExodusController);
+{$ENDIF}
 
     procedure Invalidate(); override;
     procedure CopyAll(); virtual;
@@ -66,23 +89,28 @@ type
     property winObject: TObject read getObject;
   end;
 
+{$IFDEF EXODUS}
   function MsgListFactory(Owner: TComponent;
                           Parent: TWinControl;
                           ListName: widestring = 'msg_list_frame'): TfBaseMsgList;
+{$ENDIF}
 
 implementation
 
 {$R *.dfm}
 
+{$IFDEF EXODUS}
 uses
+    Session,
     RTFMsgList,
-    IEMsgList,
-    Session;
+    IEMsgList;
+{$ENDIF}
 
 const
     RTF_MSGLIST = 0;
     HTML_MSGLIST = 1;
 
+{$IFDEF EXODUS}
 function MsgListFactory(Owner: TComponent; Parent: TWinControl; ListName: widestring): TfBaseMsgList;
  var
     mtype: integer;
@@ -91,7 +119,7 @@ begin
     if (mtype = HTML_MSGLIST) then
         Result := TfIEMsgList.Create(Owner)
     else if (mtype = RTF_MSGLIST) then
-        Result := TfRTFMsgList.Create(Owner)         
+        Result := TfRTFMsgList.Create(Owner)
     else Result := TfRTFMsgList.Create(Owner);
 
     Result.Parent := Parent;
@@ -99,11 +127,19 @@ begin
     Result.Align := alClient;
     Result.Visible := true;
 end;
+{$ENDIF}
 
+{$IFDEF EXODUS}
 constructor TfBaseMsgList.Create(Owner: TComponent);
+{$ELSE}
+constructor TfBaseMsgList.Create(Owner: TComponent; controller: IExodusController);
+{$ENDIF}
 begin
-    inherited;
+    inherited Create(Owner);
     _base := Owner;
+{$IFNDEF EXODUS}
+    _controller := controller;
+{$ENDIF}
 end;
 
 procedure TfBaseMsgList.Invalidate();
@@ -230,5 +266,45 @@ function TfBaseMsgList.IsComposing(): boolean;
 begin
     result := false;
 end;
+
+{---------------------------------------}
+function TfBaseMsgList._getPrefBool(prefName: Widestring): boolean;
+begin
+{$IFDEF EXODUS}
+    Result := MainSession.Prefs.getBool(prefName);
+{$ELSE}
+    Result := false;
+    if (_controller = nil) then exit;
+
+    Result := _controller.GetPrefAsBool(prefName);
+{$ENDIF}
+end;
+
+{---------------------------------------}
+function TfBaseMsgList._getPrefString(prefName: Widestring): widestring;
+begin
+{$IFDEF EXODUS}
+    Result := MainSession.Prefs.getString(prefName);
+{$ELSE}
+    Result := '';
+    if (_controller = nil) then exit;
+
+    Result := _controller.GetPrefAsString(prefName);
+{$ENDIF}
+end;
+
+{---------------------------------------}
+function TfBaseMsgList._getPrefInt(prefName: Widestring): integer;
+begin
+{$IFDEF EXODUS}
+    Result := MainSession.Prefs.getInt(prefName);
+{$ELSE}
+    Result := 0;
+    if (_controller = nil) then exit;
+
+    Result := _controller.GetPrefAsInt(prefName);
+{$ENDIF}
+end;
+
 
 end.
