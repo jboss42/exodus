@@ -433,11 +433,21 @@ end;
 
 
 procedure TInviteHandler.InviteCallback(event: string; InvitePacket: TXMLTag);
+var
+    ttag: TXMLtag;
+    tjid: TJabberID;
 begin
-    if (Session.prefs.getBool('auto_join_on_invite')) then
-        JoinRoom(InvitePacket)
-    else
-        ShowInviteReceived(InvitePacket);
+    ttag := InvitePacket.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
+    //make sure this is contact is not blocked
+    tjid := TJabberID.create(ttag.GetAttribute('from'));
+    if (not Session.IsBlocked(tjid.jid)) then
+    begin
+        if (Session.prefs.getBool('auto_join_on_invite')) then
+            JoinRoom(InvitePacket)
+        else
+            ShowInviteReceived(InvitePacket);
+    end;
+    tjid.free();
 end;
 
 procedure TInviteHandler.ShowInviteReceived(InvitePacket: TXMLTag);
