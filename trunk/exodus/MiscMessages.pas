@@ -995,7 +995,6 @@ Constructor TfrmSimpleDisplay.Create(AOwner: TComponent);
 begin
     inherited;
     _initialMsgQueue := nil; //side effect of refreshmsglist
-    RefreshMsgList();
 
     _SessionListener := TSessionListener.create(OnAuthenticated, OnDisconnected);
 
@@ -1005,7 +1004,12 @@ begin
 
     _dnListener := nil;
     _jid := nil;
+    
     _initialMsgQueue := TObjectList.create();
+    _MsgList := BaseMsgList.MsgListFactory(Self, pnlMsgDisplay);
+    _MsgList.setContextMenu(mnuSimplePopup);
+    _MsgList.setDragOver(OnDockedDragOver);
+    _MsgList.setDragDrop(OnDragDrop);
 end;
 
 function TfrmSimpleDisplay.CanPersist(): boolean;
