@@ -126,21 +126,27 @@ var
     fi: TFlashWInfo;
     tf: TCustomForm;
 begin
+    //get the topmost parent form of win
     tf := Forms.GetParentForm(win, true);
+    if (tf = nil) then
+        tf := win;
 
-    if (not tf.Visible) then
+    if (not tf.Showing) then
     begin
         tf.WindowState := wsMinimized;
         tf.Visible := true;
         ShowWindow(tf.Handle, SW_SHOWMINNOACTIVE);
     end;
-
-    fi.hwnd:= tf.Handle;
-    //fi.dwFlags := FLASHW_TIMERNOFG + FLASHW_TRAY;
-    fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
-    fi.dwTimeout := 0;
-    fi.cbSize:=SizeOf(fi);
-    FlashWindowEx(fi);
+    //check flasher pref to see if tf should be flashed once or flashed until focused
+    if (not MainSession.Prefs.getBool('notify_flasher')) then
+        FlashWindow(tf.Handle, false)
+    else begin
+        fi.hwnd:= tf.Handle;
+        fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
+        fi.dwTimeout := 0;
+        fi.cbSize:=SizeOf(fi);
+        FlashWindowEx(fi);
+    end;
 end;
 
 procedure StopFlash(win: TForm);
@@ -149,8 +155,10 @@ var
     tf: TCustomForm;
 begin
     tf := Forms.GetParentForm(win, true);
+    if (tf = nil) then
+        tf := win;
+
     fi.hwnd:= tf.Handle;
-    
     fi.dwFlags := FLASHW_STOP;
     fi.dwTimeout := 0;
     fi.cbSize:=SizeOf(fi);
@@ -169,7 +177,15 @@ begin
         ShowRiserWindow(win, msg, icon);
 
     if ((notify and notify_front) <> 0) then
-        ForceForegroundWindow(win.Handle)
+    begin
+        //make sure window is visible
+        if (not win.Showing) then
+        begin
+            win.Visible := true;
+            ShowWindow(win.handle, SW_SHOW)
+        end;
+        ForceForegroundWindow(win.Handle);
+    end
     else begin //tray and flash alert only if not bringtofront
         if ((notify and notify_tray) <> 0) then
             StartTrayAlert();
