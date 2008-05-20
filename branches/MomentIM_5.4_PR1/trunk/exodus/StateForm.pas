@@ -234,7 +234,8 @@ type
         specific windows (ie always saving unread messaged)
     }
     function CanPersist(): boolean;virtual;
-    
+
+    procedure ClearIsRestored();
   public
     {
         Show the window in its default configuration.
@@ -705,10 +706,12 @@ begin
         begin
             // we are getting activated, bring to front
             StopWindowPosEvents();
+            {
             SetWindowPos(Self.Handle,
                          HWND_BOTTOM,
                          Self.Left, Self.Top, Self.Width, Self.Height,
                          HWND_TOP);
+            }
             StartWindowPosEvents();
 
             if (self.Visible) then
@@ -789,6 +792,11 @@ begin
     end;
 end;
 
+procedure TfrmState.ClearIsRestored();
+begin
+    _stateRestored := false;
+end;
+
 procedure TfrmState.PersistWindowState();
 var
     stateTag: TXMLTag;
@@ -821,36 +829,30 @@ begin
 
         RestoreWindowState();
 
-        if (bringtofront) then
+        if (not Self.Showing) then
         begin
-            ShowWindow(Handle, SW_SHOWNORMAL);
-            Self.BringToFront;
-            Self.Visible := true;
-        end
-        else begin
             StopWindowPosEvents();
-            if (not Self.Visible) then begin
-                if (_windowState = wsMinimized) then
-                    ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-                else if (_windowState = wsMaximized) then
-                    ShowWindow(Handle, SW_MAXIMIZE)
-                //otherwise our floating positions should be set, just show the window
-                //in-situ. not sure we need to do this before coming visible, but
-                //its working! voodoo magic
-                else SetWindowPos(Self.Handle,
-                                  HWND_BOTTOM,
-                                  0,0,0,0,
-                                  SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
 
-                Self.Visible := true;
-            end
-            else if ((Self.WindowState = wsMinimized) and not bringtofront) then
+            if (_windowState = wsMinimized) then
                 ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-            else
-                ShowWindow(Handle, SW_SHOWNOACTIVATE);
-
+            else if (_windowState = wsMaximized) then
+                ShowWindow(Handle, SW_MAXIMIZE)
+            //otherwise our floating positions should be set, just show the window
+            //in-situ.
+            else SetWindowPos(Self.Handle,
+                              HWND_BOTTOM,
+                              _pos.Left, _pos.Top, _pos.Width, _pos.Height,
+                              SWP_NOMOVE + SWP_NOSIZE + SWP_NOACTIVATE + SWP_NOZORDER + SWP_SHOWWINDOW + SWP_NOSENDCHANGING);
+            Self.Visible := true;
             StartWindowPosEvents();
-        end;
+        end
+        else if (Self.WindowState = wsMinimized) and (not bringtofront) then
+            ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+        else
+            ShowWindow(Handle, SW_SHOWNOACTIVATE);
+
+        if (bringtofront) then
+            ForceForegroundWindow(Self.Handle);
     except
         // Possible exception when dealing with an extreme amount of windows
     end;
@@ -904,19 +906,20 @@ begin
         end;
         normalizePos();
     end;
-    //skipping windowposchange handling, _skipWindowPosHandling is true during this event
-    SetWindowPos(Self.Handle,
-                 HWND_BOTTOM,
-                 _pos.Left, _pos.Top, _pos.Width, _pos.Height,
-                 SWP_NOACTIVATE or SWP_NOOWNERZORDER);
 
     //check to make sure this all looks right, handling corrupted prefs
-    if (_pos.Height > Self.ClientHeight) and (_pos.width > Self.ClientWidth) then
+    if (_pos.Height < 30) and (_pos.width < 30) then
     begin
         _pos.Height := Self.ExplicitHeight;
         _pos.width := Self.ExplicitWidth;
         CenterOnMainformMonitor(_pos);
     end;
+    //skipping windowposchange handling, _skipWindowPosHandling is true during this event
+    SetWindowPos(Self.Handle,
+                 HWND_BOTTOM,
+                 _pos.Left, _pos.Top, _pos.Width, _pos.Height,
+                 SWP_NOACTIVATE or SWP_NOOWNERZORDER + SWP_NOSENDCHANGING);
+
     //finally cache our initial pos
     _origPos.Left := _pos.Left;
     _origPos.width := _pos.width;
@@ -1010,12 +1013,13 @@ end;
 procedure TfrmState.OnNotify(notifyEvents: integer);
 begin
     //don't handle docked
+    isNotifying := isNotifying or ((notifyEvents and PrefController.notify_flash) <> 0);
     if (Self.Floating) then
     begin
         if ((notifyEvents and notify_front) <> 0) then
             showDefault(true) //bring us to front
-        else if ((notifyEvents and PrefController.notify_flash) <> 0) then begin
-            isNotifying := true;
+        else if (isNotifying) then //notify only if not bringtofront
+        begin 
             if (MainSession.prefs.GetBool('notify_flasher')) then
                 Notify.StartFlash(Self)
             else

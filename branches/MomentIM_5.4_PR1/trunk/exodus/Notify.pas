@@ -127,7 +127,7 @@ var
     tf: TCustomForm;
 begin
     tf := Forms.GetParentForm(win, true);
-    
+
     if (not tf.Visible) then
     begin
         tf.WindowState := wsMinimized;
@@ -146,8 +146,11 @@ end;
 procedure StopFlash(win: TForm);
 var
     fi: TFlashWInfo;
+    tf: TCustomForm;
 begin
-    fi.hwnd:= win.Handle;
+    tf := Forms.GetParentForm(win, true);
+    fi.hwnd:= tf.Handle;
+    
     fi.dwFlags := FLASHW_STOP;
     fi.dwTimeout := 0;
     fi.cbSize:=SizeOf(fi);
@@ -166,17 +169,8 @@ begin
         ShowRiserWindow(win, msg, icon);
 
     if ((notify and notify_front) <> 0) then
-    begin
-        if ((not win.Visible) or (win.WindowState = wsMinimized))then
-        begin
-            win.WindowState := wsNormal;
-            win.Visible := true;
-        end;
-        ShowWindow(win.Handle, SW_SHOWNORMAL);
-        ForceForegroundWindow(win.Handle);
-    end
-    //tray and flash alert only if not bringtofront
-    else begin
+        ForceForegroundWindow(win.Handle)
+    else begin //tray and flash alert only if not bringtofront
         if ((notify and notify_tray) <> 0) then
             StartTrayAlert();
 
@@ -225,24 +219,28 @@ begin
         //don't notify active window, we aren't active window -> notify
         //don't notify active window, we are active window -> bail (no notify)
         if (not MainSession.prefs.getBool('notify_active_win')) then begin
-            if (GetForegroundWindow() = win.handle) then begin
-                exit
-            end;
+            if (GetForegroundWindow() = win.handle) then
+                exit;
+
             if ((GetDockManager().isActive) and
                (GetDockManager().GetTopDocked() = win) and
-               (GetForegroundWindow() = GetDockManager().getHWND())) then begin
+               (GetForegroundWindow() = GetDockManager().getHWND())) then
                 exit;
-            end;
         end;
     end;
 
     //pass off bring to front and flash to better handlers if we can
     tn := notify - ((notify and notify_front) or (notify and notify_flash));
-
-    if (win is TfrmState) then
+    //but dockmanager should handle docked
+    if (win is TfrmDockable) or (win.Handle = GetDockManager().getHWND) then
+    begin
+        if (win is TfrmDockable) then
+            TfrmDockable(win).OnNotify(notify);
+        GetDockManager().OnNotify(win, notify);
+    end
+    //let stateform have a shot at notifying...
+    else if (win is TfrmState) then
         TfrmState(win).OnNotify(notify)
-    else if (win.Handle = GetDockManager().getHWND) then
-        GetDockManager().OnNotify(win, notify)
     else tn := notify;  //include front and flash if not handled elsewhere
 
     HandleNotifications(win, tn, msg, icon, sound_name);

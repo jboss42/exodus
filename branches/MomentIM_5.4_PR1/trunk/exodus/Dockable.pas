@@ -366,9 +366,16 @@ begin
     if (Docked) then
         FloatForm()
     else
+    begin
         DockForm();
-
-    _doActivate();
+        //if dockman is not iconizied, bring tab to front
+        if (not IsIconic(GetDockManager().getHWND)) then
+        begin
+            GetDockManager().BringToFront();
+            GetDockManager.BringDockedToTop(Self);
+        end;
+    end;
+//will be activated by float or when brought to front    _doActivate();
 end;
 
 {---------------------------------------}
@@ -436,8 +443,8 @@ procedure TfrmDockable.ShowDefault(bringtofront:boolean; dockOverride: string);
 begin
     if (self.Visible and Docked) then begin
         if (bringtofront) then begin
-            GetDockManager().BringDockedToTop(Self);
             GetDockManager().BringToFront();
+            GetDockManager().BringDockedToTop(Self);
         end;
     end
     else if (Self.Visible) then
@@ -446,10 +453,11 @@ begin
         RestoreWindowState();
         // show this form using the default behavior
         if (not self.Visible and _initiallyDocked and (dockOverride <> 'f')) then begin
-            Self.DockForm();
+            Self.DockForm();//will cause dockmanager to be shown
+
             if (bringtofront) then begin
+               GetDockManager().BringToFront();
                GetDockManager().BringDockedToTop(Self);
-               GetDockManager().ShowDockManagerWindow(); //Make sure window is showing here.
             end;
         end
         else begin
@@ -571,16 +579,9 @@ end;
 
 procedure TfrmDockable.OnNotify(notifyEvents: integer);
 begin
-    if (Docked) then begin
-        if ((notifyEvents and PrefController.notify_front) <> 0) then
-            GetDockManager().BringDockedToTop(Self)
-        //if form is docked, fire notify back to dock manager to handle flash
-        else if ((notifyEvents and PrefController.notify_flash) <> 0) then begin
-            GetDockManager().OnNotify(nil, notify_flash);
-            isNotifying := true;
-        end;
-    end;
-    inherited; //inherited will handle floating window notifications
+    if (Docked) and ((notifyEvents and PrefController.notify_front) <> 0) then
+        GetDockManager().BringDockedToTop(Self);
+    inherited; //inherited will handle isNotifying and floating window notifications
 end;
 
 procedure TfrmDockable.addDockbarButton(button: TDockbarButton);
