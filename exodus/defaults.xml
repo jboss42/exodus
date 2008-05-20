@@ -71,7 +71,7 @@
     <roster_show_observers value="1" control="chkObservers" state="rw"/>
 
     <!-- DEPRICATED (unsupported) roster prefs -->
-    <nested_groups value="0" control="chkNestedGrps" state="inv"/>
+    <nested_groups value="1" control="chkNestedGrps" state="inv"/>
     <roster_collapsed value="0" control="chkCollapsed" state="inv"/>
     <roster_avatars value="0" control="chkRosterAvatars" state="inv"/>
     <roster_unicode value="1" control="chkRosterUnicode" state="inv"/>
