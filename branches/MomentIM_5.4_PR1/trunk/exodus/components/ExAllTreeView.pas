@@ -56,7 +56,7 @@ type
 implementation
 
 uses ActionMenus, Graphics, ExActionCtrl, ExUtils, gnugettext, GrpManagement, Forms,
-        COMExodusItemList, Session, TntComCtrls, Windows, Jabber1, RosterImages;
+        Messages, COMExodusItemList, Session, TntComCtrls, Windows, Jabber1, RosterImages;
 
 const
     sConfirmDeleteCaption: Widestring = 'Delete Item(s)';
@@ -246,6 +246,8 @@ procedure TExAllTreeView.DragOver(
         X: Integer; Y: Integer;
         state: TDragState;
         var accept: Boolean);
+var
+    scrollMsg:  TWMVScroll;
 begin
     case state of
         dsDragLeave: begin
@@ -257,12 +259,31 @@ begin
             _dropSupport.Free();
             _dropSupport := OpenDropTarget(Source, _DragUpdate, _DragExecute);
         end;
+        dsDragMove: begin
+        end;
     end;
 
     accept := (_dropSupport <> nil) and _dropSupport.Update(X, Y);
+
     if not accept then begin
         //TODO:  revert cursor??
         inherited DragOver(Source, X, Y, state, accept);
+    end;
+
+    if (state = dsDragMove) then begin
+        //See if we need to scroll...
+        if (Y < 50) then begin
+            scrollMsg.Msg := WM_VSCROLL;
+            scrollMsg.ScrollCode := SB_LINEUP;
+            scrollMsg.Pos := 0;
+            Self.Dispatch(scrollMsg);
+        end
+        else if (Y > (ClientHeight - 50)) then begin
+            scrollMsg.Msg := WM_VSCROLL;
+            scrollMsg.ScrollCode := SB_LINEDOWN;
+            scrollMsg.Pos := 0;
+            Self.Dispatch(scrollMsg);
+        end;
     end;
 end;
 procedure TExAllTreeView.DragDrop(Source: TObject; X: Integer; Y: Integer);
