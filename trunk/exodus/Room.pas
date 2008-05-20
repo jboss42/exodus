@@ -467,7 +467,8 @@ uses
     Dockable,
     ExodusDockManager,
     DockWindow,
-    HistorySearch;
+    HistorySearch,
+    BookmarkForm;
 
 {$R *.DFM}
 {---------------------------------------}
@@ -2162,16 +2163,18 @@ procedure TfrmRoom.popBookmarkClick(Sender: TObject);
 var
     bm_name: WideString;
     tmp_jid: TJabberID;
+    groups: TWideStringList;
 begin
   inherited;
     // bookmark this room..
     tmp_jid := TJabberID.Create(Self.jid);
-    bm_name := tmp_jid.getDisplayJID();
-
-    if (inputQueryW(_(sRoomBMPrompt), _(sRoomNewBookmark), bm_name)) then
+    bm_name := tmp_jid.userDisplay;
+    groups := TWideStringList.Create();
+    if (ShowAddBookmark(bm_name, groups)) then
     begin
-        MainSession.rooms.AddRoom(Self.jid, bm_name, myNick, false, false, nil);
+        MainSession.rooms.AddRoom(Self.jid, bm_name, myNick, false, false, groups);
     end;
+    groups.Free();
 end;
 
 {---------------------------------------}
