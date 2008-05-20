@@ -113,6 +113,7 @@ begin
             
         item.value['Name'] := name;
         dnc.UpdateDisplayName(item);
+        MainSession.FireEvent('/item/update', item);
     end;
 end;
 

@@ -99,6 +99,7 @@ var
     GroupName: WideString;
 begin
    Result := TWideStringList.Create();
+   GroupName := '';
    for i := 0 to Groups.Count - 1 do
    begin
        if (i <> 0) then
