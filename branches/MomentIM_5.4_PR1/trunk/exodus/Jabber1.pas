@@ -3538,7 +3538,7 @@ var
 begin
      _tray_notify := not _tray_notify;
      if (_tray_notify) then begin
-        iconNum := _tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
+        iconNum := 0;//_tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
         if (iconNum > RosterImages.RI_XAATTN_INDEX) then
             iconNum := RosterImages.RI_XAATTN_INDEX;
     end
