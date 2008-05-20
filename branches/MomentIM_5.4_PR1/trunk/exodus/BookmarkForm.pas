@@ -16,6 +16,7 @@ type
     GroupLabel: TTntLabel;
     procedure TntFormCreate(Sender: TObject);
     procedure cboGroupChange(Sender: TObject);
+    procedure txtNameChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -41,6 +42,7 @@ begin
    f := TBookMarkForm.Create(Application);
 
    f.txtName.Text := Value;
+   f.frameButtons1.btnOK.Enabled := true;
    if (f.ShowModal = mrOK) then
    begin
        Groups.Add(f.cboGroup.Text);
@@ -67,6 +69,16 @@ begin
     for i := 0 to items.Count - 1 do begin
         cboGroup.Items.Add(items.Item[i].UID);
     end;
+    cboGroup.Text := MainSession.Prefs.getString('roster_default');
+end;
+
+procedure TBookMarkForm.txtNameChange(Sender: TObject);
+begin
+  inherited;
+  if (WideTrim(txtName.Text)) <> '' then
+      frameButtons1.btnOK.Enabled := true
+  else
+      frameButtons1.btnOK.Enabled := false;
 end;
 
 end.
