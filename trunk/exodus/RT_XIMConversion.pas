@@ -23,8 +23,12 @@ unit RT_XIMConversion;
 }
 interface
 uses
+{$IFNDEF EXODUS}
+    Exodus_TLB,
+{$ENDIF}
     XMLTag,
     ExRichEdit;
+
 
     {
         Convert the contents of the given RT component to an XHTML-IM tag.
@@ -35,7 +39,12 @@ uses
       populate the given rt with the given xhtml-im.
       Starts at current selection point and populates the rt with cdata, changing
       selection font as needed. }
+{$IFDEF EXODUS}
     procedure XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString = ''; ignoreFontProps: boolean = true);
+{$ELSE}
+    procedure XIMToRT(controller: IExodusController; rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString = ''; ignoreFontProps: boolean = true);
+{$ENDIF}
+
 
     {
     Remove any tags, attributes and style properties we do not handle.
@@ -43,17 +52,29 @@ uses
     "Ignores" as specified by JEP-71, by moving any cdata in an unknown tag
     to its parent.
     }
+{$IFDEF EXODUS}
     function cleanXIMTag(xhtmlTag: TXMLTag; cleanIgnoredProps: boolean = true; cleanProprietaryProps: boolean = true): TXMLTag;
+{$ELSE}
+    function cleanXIMTag(controller: IExodusController; xhtmlTag: TXMLTag; cleanIgnoredProps: boolean = true; cleanProprietaryProps: boolean = true): TXMLTag;
+{$ENDIF}
 
 implementation
 uses
-    SysUtils, COMCtrls, StdCtrls, ExtCtrls, Classes, Graphics, Windows,
+{$IFDEF EXODUS}
+    ExUtils,
+    Session,
+{$ENDIF}
+    SysUtils,
+    COMCtrls,
+    StdCtrls,
+    ExtCtrls,
+    Classes,
+    Graphics,
+    Windows,
     XMLConstants,
     XMLCData,
-    ExUtils,
     RichEdit2,
     JabberConst,
-    Session,
     Emote;
 
 const
@@ -329,7 +350,9 @@ begin
     currSelPos := 1;
     currCData := '';
     allTxt := rtSource.WideText;
+{$IFDEF EXODUS}
     ExUtils.DebugMsg('rt: ' + tstr);
+{$ENDIF}
     while(currSelPos <= Length(allTxt)) do begin
       if ((allTxt[currSelPos] = #13) or // Carriage Return 
           (allTxt[currSelPos] = #11)) then begin // Vertical Tab (Shift-Return)
@@ -567,17 +590,34 @@ end;
     "Ignores" as specified by JEP-71, by moving any cdata in an unknown tag
     to its parent.
 }
+{$IFDEF EXODUS}
 function cleanXIMTag(xhtmlTag: TXMLTag; cleanIgnoredProps: boolean = true; cleanProprietaryProps: boolean = true): TXMLTag;
+{$ELSE}
+function cleanXIMTag(controller: IExodusController; xhtmlTag: TXMLTag; cleanIgnoredProps: boolean = true; cleanProprietaryProps: boolean = true): TXMLTag;
+{$ENDIF}
 var
     tstr: WideString;
 begin
+{$IFDEF EXODUS}
 DebugMsg('xim cleanTags orig: ' + xhtmlTag.XML, true);
+{$ENDIF}
+{$IFNDEF EXODUS}
+    assert(controller <> nil);
+{$ENDIF}
     Result := TXMLtag.create(xhtmlTag); //copy for cleaning
     tstr := '';
-    if (cleanIgnoredProps) then
+
+    if (cleanIgnoredProps) then begin
+{$IFDEF EXODUS}
         tstr := MainSession.Prefs.getString('richtext_ignored_font_styles');
+{$ELSE}
+        tstr := controller.getPrefAsString('richtext_ignored_font_styles');
+{$ENDIF}
+    end;
     filterTags(Result, tstr, cleanProprietaryProps);
+{$IFDEF EXODUS}
 DebugMsg('cleaned: ' + Result.XML, true);
+{$ENDIF}
 end;
 
 {---------------------------------------}
@@ -727,7 +767,11 @@ begin
     end;
 end;
 
+{$IFDEF EXODUS}
 procedure XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString; ignoreFontProps: boolean);
+{$ELSE}
+procedure XIMToRT(controller: IExodusController; rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString; ignoreFontProps: boolean);
+{$ENDIF}
 var
     cleanedTag, bTag: TXMLtag;
     idx: integer;
@@ -736,13 +780,26 @@ var
     foundEmoticon: boolean;
     tstr : WideString;
 begin
+{$IFNDEF EXODUS}
+    assert(controller <> nil);
+{$ENDIF}
     if (xhtmlTag = nil) then exit;
     tstr := xhtmlTag.Data;
+{$IFDEF EXODUS}
     cleanedTag := cleanXIMTag(xhtmlTag, ignoreFontProps);
+{$ELSE}
+    cleanedTag := cleanXIMTag(controller, xhtmlTag, ignoreFontProps);
+{$ENDIF}
     bTag := cleanedTag.GetFirstTag('body');
+{$IFDEF EXODUS}
     foundEmoticon := (plainText <> '') and
                       MainSession.Prefs.getBool('emoticons') and
                       emoticon_regex.Exec(plaintext);
+{$ELSE}
+    foundEmoticon := (plainText <> '') and
+                      controller.getPrefAsBool('emoticons') and
+                      emoticon_regex.Exec(plaintext);
+{$ENDIF}
 
     origSelFont := TFont.Create;
     defFont := TFont.Create;

@@ -22,8 +22,17 @@ unit Emote;
 interface
 
 uses
-    ExRichEdit, RichEdit2,
-    Types, Graphics, GIFImage, Unicode, iniFiles, RegExpr;
+{$IFNDEF EXODUS}
+    Exodus_TLB,
+{$ENDIF}
+    ExRichEdit,
+    RichEdit2,
+    Types,
+    Graphics,
+    GIFImage,
+    Unicode,
+    iniFiles,
+    RegExpr;
 
 type
     {---------------------------------------}
@@ -58,7 +67,11 @@ type
         _gif: TGifImage;
         _bmp: Graphics.TBitmap;
     protected
+{$IFDEF EXODUS}
         function getRTF(): string; override;
+{$ELSE}
+        function getRTF(controller: IExodusController): string;
+{$ENDIF}
         function getBitmap(): Graphics.TBitmap; override;
     public
         constructor Create(filename: string); overload;
@@ -73,7 +86,11 @@ type
     private
         _bmp: Graphics.TBitmap;
     protected
+{$IFDEF EXODUS}
         function getRTF(): string; override;
+{$ELSE}
+        function getRTF(controller: IExodusController): string;
+{$ENDIF}
         function getBitmap(): Graphics.TBitmap; override;
     public
         constructor Create(filename: string); overload;
@@ -100,7 +117,9 @@ type
 
         function AddResourceFile(resdll: WideString): boolean;
         procedure AddIconDefsFile(filename: string);
+{$IFDEF EXODUS}
         procedure SaveIconDefsFile(filename: string);
+{$ENDIF}
         procedure Clear();
         procedure setText(index: integer; txt: Widestring);
         procedure Remove(e: TEmoticon);
@@ -118,11 +137,19 @@ type
     end;
 
 {---------------------------------------}
+{$IFDEF EXODUS}
 procedure InitializeEmoticonLists();
+{$ELSE}
+procedure InitializeEmoticonLists(controller: IExodusController);
+{$ENDIF}
 function ProcessRTFEmoticons(txt: Widestring) : string;
 function ProcessIEEmoticons(txt: Widestring): WideString;
 function BitmapToRTF(pict: Graphics.TBitmap): string;
+{$IFDEF EXODUS}
 function EmoteToRTF(e: TEmoticon): string;
+{$ELSE}
+function EmoteToRTF(e: TEmoticon; controller: IExodusController): string;
+{$ENDIF}
 function EscapeRTF(plain: WideString): string;
 function TextileToRTF(plain: WideString): string;
 
@@ -139,9 +166,21 @@ var
 implementation
 
 uses
+{$IFDEF EXODUS}
     PrefController,
-    Emoticons, Windows, SysUtils, Session, XmlUtils, Forms,
-    XMLParser, XMLTag, Classes, StrUtils, JabberUtils, GnuGetText,
+    Emoticons,
+    Session,
+{$ENDIF}
+    Windows,
+    SysUtils,
+    XmlUtils,
+    Forms,
+    XMLParser,
+    XMLTag,
+    Classes,
+    StrUtils,
+    JabberUtils,
+    GnuGetText,
     Dialogs;
 
 {---------------------------------------}
@@ -191,13 +230,21 @@ begin
 end;
 
 {---------------------------------------}
+{$IFDEF EXODUS}
 function TGifEmoticon.getRTF(): string;
+{$ELSE}
+function TGifEmoticon.getRTF(controller: IExodusController): string;
+{$ENDIF}
 begin
     if (_rtf <> '') then begin
         result := _rtf;
         exit;
     end;
+{$IFDEF EXODUS}
     _rtf := EmoteToRTF(self);
+{$ELSE}
+    _rtf := EmoteToRTF(self, controller);
+{$ENDIF}
     result := _rtf;
 end;
 
@@ -268,13 +315,21 @@ begin
 end;
 
 {---------------------------------------}
+{$IFDEF EXODUS}
 function TBMPEmoticon.getRTF(): string;
+{$ELSE}
+function TBMPEmoticon.getRTF(controller: IExodusController): string;
+{$ENDIF}
 begin
     if (_rtf <> '') then begin
         result := _rtf;
         exit;
     end;
+{$IFDEF EXODUS}
     _rtf := EmoteToRTF(Self);
+{$ELSE}
+    _rtf := EmoteToRTF(Self, controller);
+{$ENDIF}
     result := _rtf;
 end;
 
@@ -310,11 +365,18 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+{$IFDEF EXODUS}
 function EmoteToRTF(e: TEmoticon): string;
+{$ELSE}
+function EmoteToRTF(e: TEmoticon; controller: IExodusController): string;
+{$ENDIF}
 var
     r: TRect;
     tbmp: Graphics.TBitmap;
 begin
+{$IFNDEF EXODUS}
+    assert(controller <> nil);
+{$ENDIF}
     // transparent fu.. The idea here, is that we create a temp bitmap which
     // is the same size, and we first draw the bg color onto it,
     // THEN draw the pict bitmap over the top. When we draw pict, if it's
@@ -326,7 +388,11 @@ begin
     with tbmp.Canvas do begin
         Pen.Width := 0;
         Brush.Style := bsSolid;
+{$IFDEF EXODUS}
         Brush.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+{$ELSE}
+        Brush.Color := TColor(controller.getPrefAsInt('color_bg'));
+{$ENDIF}
         Pen.Color := Brush.Color;
         Rectangle(0, 0, tbmp.Width, tbmp.Height);
     end;
@@ -501,6 +567,7 @@ begin
 end;
 
 {---------------------------------------}
+{$IFDEF EXODUS}
 procedure TEmoticonList.SaveIconDefsFile(filename: string);
 var
     idx, i: integer;
@@ -543,6 +610,7 @@ begin
     end;
     sl.Free();
 end;
+{$ENDIF}
 
 {---------------------------------------}
 function TEmoticonList.AddResourceFile(resdll: WideString): boolean;
@@ -743,22 +811,36 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+{$IFDEF EXODUS}
 procedure InitializeEmoticonLists();
+{$ELSE}
+procedure InitializeEmoticonLists(controller: IExodusController);
+{$ENDIF}
 var
     dlls : TWideStringList;
     i : integer;
     fn: Widestring;
     dlgrslt: integer;
+{$IFNDEF EXODUS}
+    slcnt: integer;
+{$ENDIF}
 begin
+{$IFNDEF EXODUS}
+    assert(controller <> nil);
+{$ENDIF}
     dlls := TWideStringList.Create();
     EmoticonList.Clear();
-
     // Load up any custom ones we have..
+{$IFDEF EXODUS}
     fn := MainSession.Prefs.getString('custom_icondefs');
+{$ELSE}
+    fn := controller.getPrefAsString('custom_icondefs');
+{$ENDIF}
     if ((fn <> '') and (FileExists(fn))) then
         EmoticonList.AddIconDefsFile(fn);
 
     // Load up any icon sets we have...
+{$IFDEF EXODUS}
     MainSession.Prefs.fillStringlist('emoticon_dlls', dlls);
     for i := dlls.Count - 1 downto 0 do begin
         if (not EmoticonList.AddResourceFile(dlls[i])) then begin
@@ -768,12 +850,23 @@ begin
         end;
     end;
     MainSession.Prefs.setStringlist('emoticon_dlls', dlls);
+{$ELSE}
+    for i := 0 to controller.GetStringListCount('emoticon_dlls') - 1 do
+    begin
+        dlls.Add(controller.GetStringListValue('emoticon_dlls', i));
+    end;
+    for i := dlls.Count - 1 downto 0 do begin
+        EmoticonList.AddResourceFile(dlls[i]);
+    end;
+{$ENDIF}
     dlls.Free();
 
     // Make sure the GUI form is updated.
+{$IFDEF EXODUS}
     if (frmEmoticons = nil) then
         frmEmoticons := TfrmEmoticons.Create(Application);
     frmEmoticons.Reset();
+{$ENDIF}
 end;
 
 {---------------------------------------}
