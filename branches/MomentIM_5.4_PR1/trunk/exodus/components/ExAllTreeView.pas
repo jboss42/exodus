@@ -65,6 +65,8 @@ const
     sWarnSingleNotDeletedTxt: Widestring = 'The group %s is not empty and could not be deleted.' + #13#10 + 'Make sure all items in the group are removed, then try again.';
     sWarnMultiNotDeletedTxt: Widestring = '%d groups are not empty and could not be deleted.' + #13#10 + 'Make sure all items in the groups areremoved, then try again.';
 
+    SCROLL_MARGIN: Integer = 20;
+
 {---------------------------------------}
 constructor TExAllTreeView.Create(AOwner: TComponent; Session: TObject);
 var
@@ -272,13 +274,13 @@ begin
 
     if (state = dsDragMove) then begin
         //See if we need to scroll...
-        if (Y < 50) then begin
+        if (Y < SCROLL_MARGIN) then begin
             scrollMsg.Msg := WM_VSCROLL;
             scrollMsg.ScrollCode := SB_LINEUP;
             scrollMsg.Pos := 0;
             Self.Dispatch(scrollMsg);
         end
-        else if (Y > (ClientHeight - 50)) then begin
+        else if (Y > (ClientHeight - SCROLL_MARGIN)) then begin
             scrollMsg.Msg := WM_VSCROLL;
             scrollMsg.ScrollCode := SB_LINEDOWN;
             scrollMsg.Pos := 0;
