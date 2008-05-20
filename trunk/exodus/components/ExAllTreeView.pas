@@ -283,7 +283,7 @@ begin
         valid := Source.DragItems.Count = Source.DragItems.CountOfType('group');
     end
     else begin
-        valid := (target.Type_ = 'group');
+        valid := true;
     end;
 
     if valid then begin
@@ -308,8 +308,23 @@ var
     target: IExodusItem;
     rootgrp: Widestring;
     idx: Integer;
+
+    function FindGroupAt(X, Y: Integer): IExodusItem;
+    var
+        node: TTntTreeNode;
+        item: IExodusItem;
+    begin
+        Result := nil;
+        node := GetNodeAt(X, Y);
+        while (Result = nil) and (node <> nil) do begin
+            item := GetNodeItem(node);
+            node := node.Parent;
+            if (item <> nil) and (item.Type_ = 'group') then
+                Result := item;
+        end;
+    end;
 begin
-    target := GetNodeItem(GetNodeAt(X, Y));
+    target := FindGroupAt(X, Y);
     if (target <> nil) then begin
         //move/copy to given group
         rootgrp := target.UID;
