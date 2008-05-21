@@ -453,7 +453,6 @@ begin
             if (item <> nil) then begin
                 removeItem(item);
             end;
-            _trackingList.Delete(i);
         end;
     except
     end;
