@@ -73,7 +73,7 @@ inherited frmGrpManagement: TfrmGrpManagement
     Width = 355
     Height = 17
     Align = alTop
-    Caption = 'Move the selected contacts to the following group:'
+    Caption = 'Move the selected items to the following group:'
     Checked = True
     TabOrder = 1
     TabStop = True
@@ -86,7 +86,7 @@ inherited frmGrpManagement: TfrmGrpManagement
     Width = 355
     Height = 17
     Align = alTop
-    Caption = 'Copy the selected contacts to the following group:'
+    Caption = 'Copy the selected items to the following group:'
     TabOrder = 2
     OnClick = optChangeGroupOpClick
   end
