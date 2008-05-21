@@ -162,7 +162,6 @@ const
 
     sNewGroup = 'New Group';
     sNewGroupPrompt = 'Enter new group name below. ';
-    sNewGroupNested = 'To create a nested group, use a name like foo%sbar.';
     sNewGroupExists = 'This group already exists!';
 
 var
@@ -1085,15 +1084,18 @@ begin
     Result := nil;
 
     new_grp := _(sDefaultGroup);
-    msg := _(sNewGroupPrompt);
 
     with MainSession.Prefs do begin
         grpSeparator := getString('group_separator');
         nesting := getBool('nested_groups') and (grpSeparator <> '');
     end;
-    if nesting then
-        msg := msg + ''#13#10 + WideFormat(_(sNewGroupNested),
-            [grpSeparator]);
+    if nesting then begin
+        //TODO:  use a different msg when nesting?
+        msg := _(sNewGroupPrompt);
+    end
+    else begin
+        msg := _(sNewGroupPrompt);
+    end;
     if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
 
     // add the new grp.
