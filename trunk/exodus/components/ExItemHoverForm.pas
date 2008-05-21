@@ -38,7 +38,7 @@ type
   end;
 
 implementation
-uses COMExodusItem, ExTreeView, Jabber1, Presence, Session;
+uses COMExodusItem, ExTreeView, Jabber1, Presence, Session, RosterForm;
 
 procedure TExItemHoverForm._NewWndProc(var Message: TMessage);
 begin
@@ -184,10 +184,7 @@ begin
         Point.X := (CurMonitor.Left + CurMonitor.Width) - Width;
 
     if Point.X < CurMonitor.Left then
-    begin
-        //Point.Y := Point.Y - _TitleBarHeight;
-        Point.X := CurMonitor.Left;
-    end;
+        Point.X := Point.X + GetRosterWindow().Width + Width;
     
     SetWindowPos(Handle, HWND_TOPMOST, Point.X, Point.Y, Width, Height,
       0);
