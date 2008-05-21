@@ -52,6 +52,8 @@ type
     procedure Set_ImageIndex(value: Integer); safecall;
     function Get_PriorityFlag: WordBool; safecall;
     procedure Set_PriorityFlag(Value: WordBool); safecall;
+    procedure RegisterCallback(const callback: IExodusAXWindowCallback); safecall;
+    procedure UnRegisterCallback; safecall;
 
   end;
 
@@ -180,6 +182,17 @@ begin
     if (_frm <> nil) then begin
         _frm.PriorityFlag := value;
     end;
+end;
+
+procedure TExodusAXWindow.RegisterCallback(
+  const callback: IExodusAXWindowCallback);
+begin
+    _frm.callback := callback;
+end;
+
+procedure TExodusAXWindow.UnRegisterCallback;
+begin
+    _frm.callback := nil;
 end;
 
 initialization
