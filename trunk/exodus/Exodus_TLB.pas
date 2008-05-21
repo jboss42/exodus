@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 5/16/2008 11:27:52 AM from Type Library described below.
+// File generated on 5/21/2008 4:00:00 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -143,6 +143,7 @@ const
   CLASS_ExodusActionController: TGUID = '{0C473B97-BF10-4FEF-B20B-8C6724E3A395}';
   IID_IExodusItemSelection: TGUID = '{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}';
   IID_IExodusItemCallback: TGUID = '{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}';
+  IID_IExodusAXWindowCallback: TGUID = '{87D6C026-3A1C-43CF-B153-BB6472A956AD}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -324,6 +325,8 @@ type
   IExodusItemSelectionDisp = dispinterface;
   IExodusItemCallback = interface;
   IExodusItemCallbackDisp = dispinterface;
+  IExodusAXWindowCallback = interface;
+  IExodusAXWindowCallbackDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -4477,6 +4480,8 @@ type
     procedure Set_WindowType(const value: WideString); safecall;
     function Get_ImageIndex: Integer; safecall;
     procedure Set_ImageIndex(value: Integer); safecall;
+    procedure RegisterCallback(const callback: IExodusAXWindowCallback); safecall;
+    procedure UnRegisterCallback; safecall;
     property OleObject: OleVariant read Get_OleObject;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
@@ -4502,6 +4507,8 @@ type
     property PriorityFlag: WordBool dispid 208;
     property WindowType: WideString dispid 209;
     property ImageIndex: Integer dispid 210;
+    procedure RegisterCallback(const callback: IExodusAXWindowCallback); dispid 211;
+    procedure UnRegisterCallback; dispid 212;
   end;
 
 // *********************************************************************//
@@ -5242,6 +5249,30 @@ type
     ['{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}']
     procedure ItemDeleted(const Item: IExodusItem); dispid 201;
     procedure ItemGroupsChanged(const Item: IExodusItem); dispid 202;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusAXWindowCallback
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {87D6C026-3A1C-43CF-B153-BB6472A956AD}
+// *********************************************************************//
+  IExodusAXWindowCallback = interface(IDispatch)
+    ['{87D6C026-3A1C-43CF-B153-BB6472A956AD}']
+    procedure OnDocked; safecall;
+    procedure OnClose; safecall;
+    procedure OnFloat; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusAXWindowCallbackDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {87D6C026-3A1C-43CF-B153-BB6472A956AD}
+// *********************************************************************//
+  IExodusAXWindowCallbackDisp = dispinterface
+    ['{87D6C026-3A1C-43CF-B153-BB6472A956AD}']
+    procedure OnDocked; dispid 201;
+    procedure OnClose; dispid 203;
+    procedure OnFloat; dispid 206;
   end;
 
 // *********************************************************************//
