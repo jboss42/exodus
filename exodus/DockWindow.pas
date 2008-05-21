@@ -91,7 +91,7 @@ type
     procedure BringDockedToTop(form: TfrmDockable);
     function getTopDocked(): TfrmDockable;
     procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
-    procedure OnNotify(frm: TForm; notifyEvents: integer);
+    procedure OnNotify(frm: TForm; notifyEvents: integer);reintroduce; overload;
     procedure UpdateDocked(frm: TfrmDockable);
     procedure BringToFront();
     function isActive(): boolean;
@@ -418,7 +418,8 @@ begin
         tsheet := GetTabSheet(form);
         if (tsheet <> nil) then begin
             Self.AWTabControl.ActivePage := tsheet;
-            form.gotActivate();
+            if (Self.Active)  then            
+                form.gotActivate();
         end;
     end;
 end;
@@ -460,7 +461,7 @@ begin
     if ((frm = nil) or (frm = Self) or
         ((frm is TfrmDockable) and (TfrmDockable(frm).Docked))) then begin
         if ((notifyEvents and notify_front) > 0) then
-            bringToFront()
+             bringToFront()
         else if ((notifyEvents and notify_flash) > 0) then
             Self.Flash();
     end;
@@ -525,7 +526,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.BringToFront();
 begin
-    ShowDockManagerWindow(true, true);
+    ForceForegroundWindow(Self.Handle);//Self.ShowDockManagerWindow(true, true);
 end;
 
 {---------------------------------------}
@@ -547,19 +548,19 @@ begin
 
     if ((Show) and
         (_canShowWindow())) then begin
+
         Self.ShowDefault(BringWindowToFront);
 
         // Make sure that if we are starting up and we are supposed to
         // start minimized to systray, then be sure to be minimized to systray
         if ((StateForm.restoringDesktopFlag) and
             (not frmExodus.Showing)) then begin
-            ShowWindow(Self.Handle, SW_HIDE);
+            Self.close();
         end;
-        
         Result := true;
     end
     else if (not Show) then begin
-        ShowWindow(Self.Handle, SW_HIDE);
+        close(); //hide, sets Showing property to false
         Result := true;
     end;
 end;
@@ -667,7 +668,7 @@ begin
         checkFlash();
         if (_dockState = dsDocked) then begin
             frm := getTopDocked();
-            if (frm <> nil) then begin
+            if (frm <> nil) and (frm.visible) then begin
                 frm.gotActivate();
             end;
         end;
@@ -931,12 +932,12 @@ begin
         if ((aw.itemCount <= 0) and
             (not _undocking)) then begin
             // We shouldn't be showing
-            ShowDockManagerWindow(false, false);
             frmExodus.mnuWindows_View_ShowActivityWindow.Checked := false;
             frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
             frmExodus.trayShowActivityWindow.Enabled := false;
             frmExodus.btnActivityWindow.Enabled := false;
             frmExodus.trayShowActivityWindow.Enabled := false;
+            Self.Close(); //hide
         end
         else begin
             // We CAN be shown, but don't HAVE to be shown so

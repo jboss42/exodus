@@ -22,29 +22,13 @@ unit IEMsgListUIHandler;
 interface
 
 uses
-{$IFNDEF EXODUS}
-    Exodus_TLB,
-{$ENDIF}
-    TntMenus,
-    JabberMsg,
-    Windows,
-    Messages,
-    SysUtils,
-    Variants,
-    Classes,
-    Graphics,
-    Controls,
-    Forms,
-    Dialogs,
-    BaseMsgList,
-    StdCtrls,
-    ComCtrls,
-    Unicode,
-    OleCtrls,
-    SHDocVw,
-    ExtCtrls,
-    mshtml,
-    ActiveX;
+    TntMenus, JabberMsg, Windows,
+    Messages, SysUtils, Variants,
+    Classes, Graphics, Controls,
+    Forms, Dialogs, BaseMsgList,
+    StdCtrls, ComCtrls, Unicode,
+    OleCtrls, SHDocVw, ExtCtrls,
+    mshtml, ActiveX;
 
 type
     // WebBrowser Events that need IDocHostUIHandler
@@ -78,9 +62,6 @@ type
 
     TWebBrowserUIObject = class(TObject, IUnknown, IOleClientSite, IDocHostUIHandler)
     private
-{$IFNDEF EXODUS}
-        _controller: IExodusController;
-{$ENDIF}
     protected
         // IUnknown Interface
         function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
@@ -113,11 +94,7 @@ type
         function FilterDataObject(const pDO: IDataObject; out ppDORet: IDataObject): HRESULT; stdcall;
 
     public
-{$IFDEF EXODUS}
         constructor Create();
-{$ELSE}
-        constructor Create(controller: IExodusController);
-{$ENDIF}
 
     end;
 
@@ -127,33 +104,16 @@ type
 implementation
 
 uses
-{$IFDEF EXODUS}
-    ExUtils,
-    Session,
-    PrefController,
-    BaseChat,
-    Jabber1,
-{$ENDIF}
-    Emote,
-    XMLTag,
-    JabberUtils,
-    ShellAPI,
-    DateUtils,
-    StrUtils;
+    Emote, XMLTag, JabberUtils,
+    ExUtils,  Session, ShellAPI,
+    BaseChat, Jabber1, DateUtils,
+    StrUtils, PrefController;
 
 {---------------------------------------}
 {---------------------------------------}
-{$IFDEF EXODUS}
 constructor TWebBrowserUIObject.Create();
-{$ELSE}
-constructor TWebBrowserUIObject.Create(controller: IExodusController);
-{$ENDIF}
 begin
     inherited Create;
-{$IFNDEF EXODUS}
-    assert(controller = nil);
-    _controller := controller;
-{$ENDIF}
 end;
 
 {---------------------------------------}
@@ -281,14 +241,7 @@ var
     reg: widestring;
     len: integer;
 begin
-{$IFNDEF EXODUS}
-    assert(_controller <> nil);
-{$ENDIF}
-{$IFDEF EXODUS}
     reg := '\Software\Jabber\' + PrefController.GetAppInfo().ID + '\IEMsgList';
-{$ELSE}
-    reg := '\Software\Jabber\' + _controller.getPrefAsString('appID') + '\IEMsgList';
-{$ENDIF}
     len := (length(reg) + 1) * 2; // widestring is 2 byte per char, +1 for null term
     pchKey := CoTaskMemAlloc(len);
     if (pchKey <> nil) then begin

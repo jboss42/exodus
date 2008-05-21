@@ -288,7 +288,6 @@ uses
   GroupParser in '..\jopl\GroupParser.pas',
   GroupActions in 'GroupActions.pas',
   MiscMessages in 'MiscMessages.pas' {frmSimpleDisplay: TTntForm},
-  SelectItemRoom in 'SelectItemRoom.pas' {frmSelectItemRoom: TTntForm},
   SelectItemAnyRoom in 'SelectItemAnyRoom.pas' {frmSelectItemAnyRoom: TTntForm},
   ExAllTreeView in 'components\ExAllTreeView.pas',
   CommonActions in 'CommonActions.pas',

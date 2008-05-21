@@ -160,7 +160,7 @@ const
 
     sTurnOnBlocking = 'You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)';
 
-    sNewGroup = 'New Roster Group';
+    sNewGroup = 'New Group';
     sNewGroupPrompt = 'Enter new group name below. ';
     sNewGroupNested = 'To create a nested group, use a name like foo%sbar.';
     sNewGroupExists = 'This group already exists!';

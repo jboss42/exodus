@@ -44,6 +44,27 @@ implementation
 uses Classes, ExActionCtrl, ExUtils, gnugettext, JabberID, SelectItem,
     Session, RosterAdd;
 
+procedure ToggleBlockState(item: IExodusItem; block: Boolean);
+var
+    jid: TJabberID;
+    subitems: IExodusItemList;
+    idx: Integer;
+begin
+    if (item.Type_ = 'group') then begin
+        subitems := MainSession.ItemController.GetGroupItems(item.UID);
+        for idx := 0 to subitems.Count - 1 do
+            ToggleBlockState(subitems.Item[idx], block);
+    end
+    else if (item.Type_ = 'contact') then begin
+        jid := TJabberID.Create(item.UID);
+        if block then
+            MainSession.Block(jid)
+        else
+            MainSession.UnBlock(jid);
+        jid.Free();
+    end;
+end;
+
 constructor TAddContactAction.Create;
 begin
     inherited Create('{000-exodus.googlecode.com}-000-add-contact');
@@ -98,14 +119,9 @@ end;
 procedure TBlockContactAction.execute(const items: IExodusItemList);
 var
     idx: Integer;
-    item: IExodusItem;
-    jid: TJabberID;
 begin
     for idx := 0 to items.Count - 1 do begin
-        item := items.Item[idx];
-        jid := TJabberID.Create(item.UID);
-        MainSession.Block(jid);
-        jid.Free;
+        ToggleBlockState(items.Item[idx], true);
     end;
 end;
 
@@ -122,14 +138,9 @@ end;
 procedure TUnblockContactAction.execute(const items: IExodusItemList);
 var
     idx: Integer;
-    item: IExodusItem;
-    jid: TJabberID;
 begin
     for idx := 0 to items.Count - 1 do begin
-        item := items.Item[idx];
-        jid := TJabberID.Create(item.UID);
-        MainSession.UnBlock(jid);
-        jid.Free;
+        ToggleBlockState(items.Item[idx], false);
     end;
 end;
 
@@ -153,14 +164,14 @@ begin
     //Setup block contact
     act := TBlockContactAction.Create() as IExodusAction;
     actCtrl.registerAction('contact', act);
-    actCtrl.addEnableFilter('contact', act.Name, 'blocked=false');
-    actCtrl.addDisableFilter('contact', act.Name, 'selection=multi');
+    
+    actCtrl.registerAction('group', act);
 
     //Setup unblock contact
     act := TUnblockContactAction.Create() as IExodusAction;
     actCtrl.registerAction('contact', act);
-    actCtrl.addEnableFilter('contact', act.Name, 'blocked=true');
-    actCtrl.addDisableFilter('contact', act.Name, 'selection=multi');
+
+    actCtrl.registerAction('group', act);
 end;
 
 

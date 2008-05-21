@@ -398,6 +398,7 @@ type
     procedure popCreatePopup(Sender: TObject);
     procedure clickCreatePopupItem(Sender: TObject);
     procedure PeopleClick(Sender: TObject);
+    procedure AppEventsRestore(Sender: TObject);
 
   private
     { Private declarations }
@@ -996,7 +997,7 @@ begin
     SC_MINIMIZE: begin
         _hidden := true;
         _was_max := (Self.WindowState = wsMaximized);
-//        Self.Visible := false;
+        Self.Visible := false;
         ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
     end;
@@ -1007,7 +1008,7 @@ begin
     SC_CLOSE: begin
         if ((_close_min) and (not _shutdown)) then begin
             _hidden := true;
-//            Self.Visible := false;
+            Self.Visible := false;
             ShowWindow(Handle, SW_HIDE);
             msg.Result := 0;
         end
@@ -2468,7 +2469,7 @@ begin
         while (lstEvents.Items.Count > 0) do
             frmMsgQueue.RemoveItem(0);
     end;
-}    
+}
 end;
 
 {---------------------------------------}
@@ -2957,8 +2958,6 @@ begin
     StopFlash(Self); 
     StopTrayAlert();
 end;
-
-
 
 {---------------------------------------}
 procedure TfrmExodus.WinJabWebsite1Click(Sender: TObject);
@@ -3498,7 +3497,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
-    Notify.StopFlash(Self);
+//    Notify.StopFlash(Self);
     StopTrayAlert();
 end;
 
@@ -3531,6 +3530,10 @@ begin
     end;
 end;
 
+procedure TfrmExodus.AppEventsRestore(Sender: TObject);
+begin
+end;
+
 {---------------------------------------}
 procedure TfrmExodus.timTrayAlertTimer(Sender: TObject);
 var
@@ -3538,7 +3541,7 @@ var
 begin
      _tray_notify := not _tray_notify;
      if (_tray_notify) then begin
-        iconNum := _tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
+        iconNum := 0;//_tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
         if (iconNum > RosterImages.RI_XAATTN_INDEX) then
             iconNum := RosterImages.RI_XAATTN_INDEX;
     end
@@ -3559,7 +3562,8 @@ end;
 {---------------------------------------}
 procedure StopTrayAlert();
 begin
-    if (frmExodus = nil) then exit;
+    //events might get this called pretty early
+    if (frmExodus = nil) or (frmExodus.timTrayAlert = nil) then exit;
 
     if (frmExodus.timTrayAlert.Enabled) then begin
         frmExodus.timTrayAlert.Enabled := false;

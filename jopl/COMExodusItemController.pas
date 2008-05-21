@@ -413,6 +413,9 @@ begin
         subitems := GetGroupItems(UID);
         for idx := 0 to subitems.Count - 1 do
             CopyItem(subitems.Item[idx].UID, subgrp);
+
+        //Update expanded-state??
+        Set_GroupExpanded(subgrp, Get_GroupExpanded(UID));
     end
     else begin
         //Copy item from one group to another, or in other words,
@@ -459,6 +462,9 @@ begin
         for idx := 0 to subitems.Count - 1 do
             MoveItem(subitems.Item[idx].UID, UID, subgrp);
 
+        //Update expanded-state??
+        Set_GroupExpanded(subgrp, Get_GroupExpanded(UID));
+        
         RemoveItem(UID);
     end
     else begin
@@ -518,9 +524,6 @@ begin
     cb := ItemWrapper.Callback;
     if (cb <> nil) then cb.ItemDeleted(ItemWrapper.ExodusItem);
 
-    //fire event
-    TJabberSession(_js).FireEvent('/item/remove', ItemWrapper.ExodusItem);
-    
     //then finally, we delete
     ItemWrapper.Free;
 end;
@@ -640,24 +643,46 @@ end;
 procedure TExodusItemController.Set_GroupExpanded(const Group: WideString;
   Value: WordBool);
 var
+    session: TJabberSession;
     Wrapper: TExodusItemRetainer;
     state: Widestring;
+    path: TWidestringList;
+    idx: Integer;
+
+    procedure ModifyGroupExpanded(retainer: TExodusItemRetainer);
+    var
+        item: IExodusItem;
+    begin
+        if (retainer = nil) then exit;
+        item := retainer.ExodusItem;
+        if (item = nil) then exit;
+        
+        try
+            if (item.value['Expanded'] <> state) then begin
+                item.value['Expanded'] := state;
+                session.FireEvent('/item/update', item);
+            end;
+        except
+        end;
+    end;
 begin
     Wrapper := _GetItemRetainer(Group);
     if (Wrapper = nil) then exit;
-    if Value then
-        state := 'true'
-    else
-        state := 'false';
 
-    try
-       if (Wrapper.ExodusItem.value['Expanded'] <> state) then begin
-           Wrapper.ExodusItem.value['Expanded'] := state;
-           TJabberSession(_JS).FireEvent('/item/update', Wrapper.ExodusItem);
-       end;
-    except
+    session := TJabberSession(_JS);
+    if not Value then
+        state := 'false'
+    else begin
+        state := 'true';
 
+        //make sure parent(s) are expanded as well
+        path := _GroupParser.GetNestedGroups(Group);
+        for idx := 0 to path.Count - 1 do begin
+            ModifyGroupExpanded(_GetItemRetainer(path[idx]));
+        end;
     end;
+
+    ModifyGroupExpanded(Wrapper);
 end;
 
 function TExodusItemController.GetItemsByType(

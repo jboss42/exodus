@@ -21,7 +21,7 @@ unit GUIFactory;
 
 interface
 uses
-    XMLTag, Unicode,
+    XMLTag, Unicode, Exodus_TLB,
     Forms, Classes, SysUtils;
 
 type
@@ -29,9 +29,11 @@ type
     private
         _js: TObject;
         _cb: integer;
+        _icb: integer;
         _blockers: TWidestringlist;
     published
         procedure SessionCallback(event: string; tag: TXMLTag);
+        procedure SessionItemCallback(event: string; item: IExodusItem);
     public
         constructor Create;
         destructor Destroy; override;
@@ -50,7 +52,7 @@ uses
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
     JabberID, Session, JabberMsg, windows, DisplayName,
-    ChatController, Presence, Exodus_TLB;
+    ChatController, Presence;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
@@ -78,8 +80,24 @@ begin
     _js := js;
     s := TJabberSession(js);
     _cb := s.RegisterCallback(SessionCallback, '/session');
+    _icb := s.RegisterCallback(SessionItemCallback, '/session');
+    
     _blockers.Clear();
     s.Prefs.fillStringlist('blockers', _blockers);
+end;
+
+procedure TGUIFactory.SessionItemCallback(event: string; item: IExodusItem);
+begin
+  if (event = '/session/gui/conference') then begin
+        getDockManager().ShowDockManagerWindow(true, false);
+
+        StartRoom(item.uid,
+                  item.value['nick'],
+                  item.value['password'],
+                  true,
+                  false,
+                  (item.value['reg_nick'] = 'true'));
+    end
 end;
 
 {---------------------------------------}

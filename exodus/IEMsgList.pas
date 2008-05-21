@@ -30,39 +30,12 @@ interface
 
 
 uses
-{$IFNDEF EXODUS}
-    Exodus_TLB,
-{$ENDIF}
-{$IFDEF EXODUS}
-    Session,
-{$ENDIF}
-    TntMenus,
-    JabberMsg,
-    Windows,
-    Messages,
-    SysUtils,
-    Variants,
-    Classes,
-    Graphics,
-    Controls,
-    Forms,
-    Dialogs,
-    Regexpr,
-    iniFiles,
-    BaseMsgList,
-    gnugettext,
-    unicode,
-    XMLTag,
-    XMLNode,
-    XMLConstants,
-    XMLCdata,
-    LibXmlParser,
-    XMLUtils,
-    OleCtrls,
-    SHDocVw,
-    MSHTML,
-    mshtmlevents,
-    ActiveX,
+    TntMenus, JabberMsg,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, Regexpr, iniFiles,
+    BaseMsgList, Session, gnugettext, unicode,
+    XMLTag, XMLNode, XMLConstants, XMLCdata, LibXmlParser, XMLUtils,
+    OleCtrls, SHDocVw, MSHTML, mshtmlevents, ActiveX,
     IEMsgListUIHandler;
 
   function HTMLColor(color_pref: integer) : widestring;
@@ -76,9 +49,6 @@ type
     _idCount: integer;
     _displayDateSeparator: boolean;
     _lastTimeStamp: TDateTime;
-{$IFNDEF EXODUS}
-    _controller: IExodusController;
-{$ENDIF}
 
     function _processUnicode(txt: widestring): WideString;
     function _genElementID(): WideString;
@@ -86,17 +56,9 @@ type
     function _getLineClass(nick: widestring): WideString; overload;
     function _checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean; overload;
     function _checkLastNickForMsgGrouping(nick: widestring): boolean; overload;
-
-    function _getPrefBool(prefName: Widestring): boolean;
-    function _getPrefString(prefName: Widestring): widestring;
-    function _getPrefInt(prefName: Widestring): integer;
   protected
   public
-{$IFDEF EXODUS}
     constructor Create();
-{$ELSE}
-    constructor Create(controller: IExodusController);
-{$ENDIF}
 
     function dateSeperator(const msg: TJabberMessage): widestring;
     function ProcessDisplayMsg(const Msg: TJabberMessage): widestring; overload;
@@ -198,11 +160,7 @@ type
 
   public
     { Public declarations }
-{$IFDEF EXODUS}
     constructor Create(Owner: TComponent); override;
-{$ELSE}
-    constructor Create(Owner: TComponent; controller: IExodusController);
-{$ENDIF}
     destructor Destroy; override;
 
     procedure Invalidate(); override;
@@ -275,18 +233,16 @@ implementation
 
 uses
     JabberConst,
-{$IFDEF EXODUS}
     Jabber1,
     BaseChat,
-    PrefController,
-    ExUtils,
-{$ENDIF}
-    RT_XIMConversion,
     JabberUtils,
+    ExUtils,
     ShellAPI,
     Emote,
     StrUtils,
+    RT_XIMConversion,
     Registry,
+    PrefController,
     TntSysUtils;
 
 {$R *.dfm}
@@ -409,17 +365,12 @@ end;
 
 {---------------------------------------}
 {---------------------------------------}
-{$IFDEF EXODUS}
 constructor TIEMsgListProcessor.Create();
-{$ELSE}
-constructor TIEMsgListProcessor.Create(controller: IExodusController);
-{$ENDIF}
 begin
-{$IFNDEF EXODUS}
-    _controller := controller;
-{$ENDIF}
-    _displayDateSeparator := _getPrefBool('display_date_separator');
-    _exeName := _getPrefString('exe_FullPath');
+    with MainSession.Prefs do begin
+        _displayDateSeparator := getBool('display_date_separator');
+        _exeName := getString('exe_FullPath');
+    end;
 end;
 
 {---------------------------------------}
@@ -508,17 +459,13 @@ begin
     if (Msg = nil) then exit;
 
     if ((not Msg.Action) and
-        (_getPrefBool('richtext_enabled'))) then begin
+        (MainSession.Prefs.getBool('richtext_enabled'))) then begin
         // ignore HTML for actions.  it's harder than you think.
         body := Msg.Tag.QueryXPTag(xp_xhtml);
 
         if (body <> nil) then begin
             // Strip out font tags we wish to ignore
-{$IFDEF EXODUS}
             cleanXIM := cleanXIMTag(body);
-{$ELSE}
-            cleanXIM := cleanXIMTag(_controller, body);
-{$ENDIF}
             if (cleanXIM <> nil) then begin
                 // if first node is a p tag, make it a span...
                 if ((cleanXIM.Nodes.Count > 0) and
@@ -574,15 +521,15 @@ begin
     dv := dv + '<div class="msgts">';
 
     // Timestamp
-    if (_getPrefBool('timestamp')) then begin
+    if (MainSession.Prefs.getBool('timestamp')) then begin
         try
             dv := dv + '<span class="ts">' +
-                HTML_EscapeChars(FormatDateTime(_getPrefString('timestamp_format'), Msg.Time), false, true) +
+                HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time), false, true) +
                 '</span>';
         except
             on EConvertError do begin
                 dv := dv + '<span class="ts">' +
-                    HTML_EscapeChars(FormatDateTime(_getPrefString('timestamp_format'), Now()), false, true) +
+                    HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now()), false, true) +
                     '</span>';
             end;
         end;
@@ -757,53 +704,11 @@ begin
     Result := HTML_EscapeChars(txt, false, false);
 end;
 
-{---------------------------------------}
-function TIEMsgListProcessor._getPrefBool(prefName: Widestring): boolean;
-begin
-{$IFDEF EXODUS}
-    Result := MainSession.Prefs.getBool(prefName);
-{$ELSE}
-    Result := false;
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsBool(prefName);
-{$ENDIF}
-end;
-
-{---------------------------------------}
-function TIEMsgListProcessor._getPrefString(prefName: Widestring): widestring;
-begin
-{$IFDEF EXODUS}
-    Result := MainSession.Prefs.getString(prefName);
-{$ELSE}
-    Result := '';
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsString(prefName);
-{$ENDIF}
-end;
-
-{---------------------------------------}
-function TIEMsgListProcessor._getPrefInt(prefName: Widestring): integer;
-begin
-{$IFDEF EXODUS}
-    Result := MainSession.Prefs.getInt(prefName);
-{$ELSE}
-    Result := 0;
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsInt(prefName);
-{$ENDIF}
-end;
 
 
 {---------------------------------------}
 {---------------------------------------}
-{$IFDEF EXODUS}
 constructor TfIEMsgList.Create(Owner: TComponent);
-{$ELSE}
-constructor TfIEMsgList.Create(Owner: TComponent; controller: IExodusController);
-{$ENDIF}
 var
     OleObj: IOleObject;
     reg: TRegistry;
@@ -811,11 +716,7 @@ var
     tstring: widestring;
 begin
     inherited;
-{$IFDEF EXODUS}
     _msgProcessor := TIEMsgListProcessor.Create();
-{$ELSE}
-    _msgProcessor := TIEMsgListProcessor.Create(_controller);
-{$ENDIF}
     _queue := TWideStringList.Create();
     _ready := true;
     _composing := -1;
@@ -829,9 +730,7 @@ begin
     try
         reg := TRegistry.Create();
         if (reg <> nil) then begin
-            IEOverrideReg := '\Software\Jabber\' +
-                             _getPrefString('appID') +
-                             '\IEMsgList';
+            IEOverrideReg := '\Software\Jabber\' + PrefController.GetAppInfo().ID + '\IEMsgList';
 
             tstring := IEOverrideReg + '\Settings';
             reg.RootKey := HKEY_CURRENT_USER;
@@ -852,46 +751,44 @@ begin
     except
     end;
 
-    _maxMsgCountHigh := _getPrefInt('maximum_displayed_messages');
-    _maxMsgCountLow := _getPrefInt('maximum_displayed_messages_drop_down_to');
-    if ((_maxMsgCountHigh <> 0) and
-        (_maxMsgCountHigh >= _maxMsgCountLow)) then begin
-        _doMessageLimiting := true;
-        if (_maxMsgCountLow <= 0) then begin
-            // High water mark set, but low water mark not set.
-            // So, we will make the low water mark equal to the  high water mark.
-            // This will only drop 1 message at a time.
-            _maxMsgCountLow := _maxMsgCountHigh;
+    with MainSession.Prefs do begin
+        _maxMsgCountHigh := getInt('maximum_displayed_messages');
+        _maxMsgCountLow := getInt('maximum_displayed_messages_drop_down_to');
+        if ((_maxMsgCountHigh <> 0) and
+            (_maxMsgCountHigh >= _maxMsgCountLow)) then begin
+            _doMessageLimiting := true;
+            if (_maxMsgCountLow <= 0) then begin
+                // High water mark set, but low water mark not set.
+                // So, we will make the low water mark equal to the  high water mark.
+                // This will only drop 1 message at a time.
+                _maxMsgCountLow := _maxMsgCountHigh;
+            end;
         end;
-    end;
 
-    _stylesheet_name := _getPrefString('ie_css');
-    _font_name := _getPrefString('font_name');
-    _font_size := _getPrefString('font_size');
-    _font_bold := _getPrefBool('font_bold');
-    _font_italic := _getPrefBool('font_italic');
-    _font_underline := _getPrefBool('font_underline');
-    _font_color := _getPrefInt('font_color');
-    _color_bg := _getPrefInt('color_bg');
-    _color_alt_bg := _getPrefInt('color_alt_bg');
-    _color_date_bg := _getPrefInt('color_date_bg');
-    _color_date := _getPrefInt('color_date');
-    _color_me := _getPrefInt('color_me');
-    _color_other := _getPrefInt('color_other');
-    _color_time := _getPrefInt('color_time');
-    _color_action := _getPrefInt('color_action');
-    _color_server := _getPrefInt('color_server');
+        _stylesheet_name := getString('ie_css');
+        _font_name := getString('font_name');
+        _font_size := getString('font_size');
+        _font_bold := getBool('font_bold');
+        _font_italic := getBool('font_italic');
+        _font_underline := getBool('font_underline');
+        _font_color := getInt('font_color');
+        _color_bg := getInt('color_bg');
+        _color_alt_bg := getInt('color_alt_bg');
+        _color_date_bg := getInt('color_date_bg');
+        _color_date := getInt('color_date');
+        _color_me := getInt('color_me');
+        _color_other := getInt('color_other');
+        _color_time := getInt('color_time');
+        _color_action := getInt('color_action');
+        _color_server := getInt('color_server');
+    end;
 
     // Set IDocHostUIHandler interface to handle override of IE settings
     try
         if (browser <> nil) then begin
             if (Supports(browser.DefaultInterface, IOleObject, OleObj)) then begin
                 _webBrowserUI.Free();
-{$IFDEF EXODUS}
                 _webBrowserUI := TWebBrowserUIObject.Create();
-{$ELSE}
-                _webBrowserUI := TWebBrowserUIObject.Create(_controller);
-{$ENDIF}
                 OleObj.SetClientSite(_webBrowserUI as IOleClientSite);
             end
             else begin
@@ -1093,7 +990,7 @@ var
     tmsg : TJabberMessage;
     ds: widestring;
 begin
-    pt := _getPrefInt('pres_tracking');
+    pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
 
     if ((pt = 1) and (_content <> nil)) then begin
@@ -1186,22 +1083,24 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.setupPrefs();
 begin
-    _stylesheet_name := _getPrefString('ie_css');
-    _color_me := _getPrefInt('color_me');
-    _color_other := _getPrefInt('color_other');
-    _color_action := _getPrefInt('color_action');
-    _color_server := _getPrefInt('color_server');
-    _color_time := _getPrefInt('color_time');
-    _color_bg := _getPrefInt('color_bg');
-    _color_alt_bg := _getPrefInt('color_alt_bg');
-    _color_date_bg := _getPrefInt('color_date_bg');
-    _color_date := _getPrefInt('color_date');
-    _font_name := _getPrefString('font_name');
-    _font_size := IntToStr(_getPrefInt('font_size'));
-    _font_bold := _getPrefBool('font_bold');
-    _font_italic := _getPrefBool('font_italic');
-    _font_underline := _getPrefBool('font_underline');
-    _font_color := _getPrefInt('font_color');
+    with MainSession.Prefs do begin
+        _stylesheet_name := getString('ie_css');
+        _color_me := getInt('color_me');
+        _color_other := getInt('color_other');
+        _color_action := getInt('color_action');
+        _color_server := getInt('color_server');
+        _color_time := getInt('color_time');
+        _color_bg := getInt('color_bg');
+        _color_alt_bg := getInt('color_alt_bg');
+        _color_date_bg := getInt('color_date_bg');
+        _color_date := getInt('color_date');
+        _font_name := getString('font_name');
+        _font_size := IntToStr(getInt('font_size'));
+        _font_bold := getBool('font_bold');
+        _font_italic := getBool('font_italic');
+        _font_underline := getBool('font_underline');
+        _font_color := getInt('font_color');
+    end;
 end;
 
 {---------------------------------------}
@@ -1426,7 +1325,6 @@ begin
 end;
 
 {---------------------------------------}
-{$IFDEF EXODUS}
 function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
 var
     bc: TfrmBaseChat;
@@ -1452,7 +1350,7 @@ begin
             end;
         end;
     end
-    else if ((_getPrefBool('esc_close')) and (key = 27)) then begin
+    else if ((MainSession.Prefs.getBool('esc_close')) and (key = 27)) then begin
         if (Self.Parent <> nil) then begin
             if (Self.Parent.Parent <> nil) then begin
                 SendMessage(Self.Parent.Parent.Handle, WM_CLOSE, 0, 0);
@@ -1484,12 +1382,6 @@ begin
     PostMessage(bc.Handle, WM_SETFOCUS, 0, 0);
     Result := false;
 end;
-{$ELSE}
-function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
-begin
-    Result := false;
-end;
-{$ENDIF}
 
 {---------------------------------------}
 function TfIEMsgList.onDrop(Sender: TObject): WordBool;
@@ -1738,7 +1630,6 @@ begin
         _MessageDumpModeHTML := '';
     end;
 end;
-
 
 
 initialization
