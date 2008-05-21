@@ -151,7 +151,7 @@ constructor TWebBrowserUIObject.Create(controller: IExodusController);
 begin
     inherited Create;
 {$IFNDEF EXODUS}
-    assert(controller = nil);
+    assert(controller <> nil);
     _controller := controller;
 {$ENDIF}
 end;
