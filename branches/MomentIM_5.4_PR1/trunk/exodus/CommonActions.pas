@@ -82,8 +82,12 @@ begin
                 WideFormat(_(sRenameText), [item.Type_]),
                 name) then
             exit;
-                
-        path := parser.GetGroupParent(item.UID) + parser.Separator + name;
+
+        path := parser.GetGroupParent(item.UID);
+        if (path <> '') then
+            path := path + parser.Separator + name
+        else
+            path := name;
         itemCtrl := MainSession.ItemController;
 
         //add group explicitly
