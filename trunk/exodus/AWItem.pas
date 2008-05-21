@@ -340,7 +340,13 @@ begin
             _setPnlColors(_newMessageStartColor, _newMessageEndColor);
         end
         else begin
-            _setPnlColors(_startColor, _endColor);
+            if (Self._active) then
+            begin
+                _setPnlColors(_activeStartColor, _activeEndColor);
+            end
+            else begin
+                _setPnlColors(_startColor, _endColor);
+            end;
         end;
     end;
 end;
