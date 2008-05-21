@@ -173,7 +173,11 @@ type
     _font_bold: boolean;
     _font_italic: boolean;
     _font_underline: boolean;
+{$IFDEF EXODUS}
     _stylesheet_name: widestring;
+{$ELSE}
+    _stylesheet_raw: widestring;
+{$ENDIF}
     _webBrowserUI: TWebBrowserUIObject;
 
     _ForceIgnoreScrollToBottom: boolean;
@@ -232,7 +236,11 @@ type
     function  isComposing(): boolean; override;
     procedure DisplayRawText(txt: Widestring); override;
 
+{$IFDEF EXODUS}
     procedure ChangeStylesheet( resname: WideString);
+{$ELSE}
+    procedure SetStylesheet(stylesheet: WideString);
+{$ENDIF}
     procedure ResetStylesheet();
     procedure print(ShowDialog: boolean);
     procedure writeHTML(html: WideString);
@@ -249,14 +257,18 @@ type
     property color_time: integer read _color_time write _color_time;
     property color_action: integer read _color_action write _color_action;
     property color_server: integer read _color_server write _color_server;
+{$IFDEF EXODUS}
     property stylesheet_name: widestring read _stylesheet_name write _stylesheet_name;
+{$ELSE}
+    property stylesheet_raw: widestring read _stylesheet_raw write _stylesheet_raw;
+{$ENDIF}
     property font_bold: boolean read _font_bold write _font_bold;
     property font_italic: boolean read _font_italic write _font_italic;
     property font_underline: boolean read _font_underline write _font_underline;
     property ForceIgnoreScrollToBottom: boolean read _ForceIgnoreScrollToBottom write _ForceIgnoreScrollToBottom;
     property IgnoreMsgLimiting: boolean read _IgnoreMsgLimiting write _IgnoreMsgLimiting;
-
     property InMessageDumpMode: boolean read _InMessageDumpMode write _SetInMessageDumpMode;
+    property msgProcessor: TIEMsgListProcessor read _msgProcessor;
 
   end;
 
@@ -865,7 +877,11 @@ begin
         end;
     end;
 
+{$IFDEF EXODUS}
     _stylesheet_name := _getPrefString('ie_css');
+{$ELSE}
+    _stylesheet_raw := '';
+{$ENDIF}
     _font_name := _getPrefString('font_name');
     _font_size := _getPrefString('font_size');
     _font_bold := _getPrefBool('font_bold');
@@ -1186,7 +1202,11 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.setupPrefs();
 begin
+{$IFDEF EXODUS}
     _stylesheet_name := _getPrefString('ie_css');
+{$ELSE}
+    _stylesheet_raw := '';
+{$ENDIF}
     _color_me := _getPrefInt('color_me');
     _color_other := _getPrefInt('color_other');
     _color_action := _getPrefInt('color_action');
@@ -1307,11 +1327,19 @@ begin
 end;
 
 {---------------------------------------}
+{$IFDEF EXODUS}
 procedure TfIEMsgList.ChangeStylesheet(resname: WideString);
 begin
     _stylesheet_name := resname;
     ResetStylesheet();
 end;
+{$ELSE}
+procedure TfIEMsgList.SetStylesheet(stylesheet: WideString);
+begin
+    _stylesheet_raw := stylesheet;
+    ResetStylesheet();
+end;
+{$ENDIF}
 
 {---------------------------------------}
 procedure TfIEMsgList.ResetStylesheet();
@@ -1340,6 +1368,7 @@ var
     i: integer;
 begin
     try
+{$IFDEF EXODUS}
         // Get CSS template from resouce
         stream := TResourceStream.Create(HInstance, _stylesheet_name, 'CSS');
 
@@ -1348,10 +1377,12 @@ begin
         css := '';
         for i := 0 to tmp.Count - 1 do
             css := css + tmp.Strings[i];
-
         tmp.Clear;
         tmp.Free;
-        stream.Free(); 
+        stream.Free();
+{$ELSE}
+        css := _stylesheet_raw;
+{$ENDIF}
 
         // Place colors in CSS
         if (css <> '') then begin
