@@ -570,7 +570,6 @@ published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
-    procedure RosterCallback(event: string; item: IExodusItem);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
     // This is only used for testing..
@@ -1260,7 +1259,6 @@ begin
 //
 //    // Setup our session callback
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
-    _rostercb := MainSession.RegisterCallback(RosterCallback, '/contact/item/end');
 //
     // setup some branding stuff
     with (MainSession.Prefs) do begin
@@ -2044,14 +2042,10 @@ begin
                    PWideChar(MainSession.Prefs.GetString('brand_caption')),
                    MB_OK or MB_ICONERROR);
         Application.Terminate();
-    end;
+    end
+    else if (event = '/session/roster_ready') then
+        _sendInitPresence();
 
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.RosterCallback(event: string; item: IExodusItem);
-begin
-    _sendInitPresence();
 end;
 
 {---------------------------------------}
