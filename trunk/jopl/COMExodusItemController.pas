@@ -660,7 +660,6 @@ var
         try
             if (item.value['Expanded'] <> state) then begin
                 item.value['Expanded'] := state;
-                session.FireEvent('/item/update', item);
             end;
         except
         end;
