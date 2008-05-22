@@ -118,12 +118,21 @@ var
 
   function dockWindowKeyboardHookProc(code: Integer; wParam: Word; lParam: LongInt): LongInt; stdcall;
 
+const
+    ACTIVITYLIST_CAPTION = 'Activity List';
+
 implementation
 
 uses
-    RosterForm, Session, PrefController,
-    ActivityWindow, Jabber1, ExUtils,
-    ExSession, Notify;
+    RosterForm,
+    Session,
+    PrefController,
+    ActivityWindow,
+    Jabber1,
+    ExUtils,
+    ExSession,
+    Notify,
+    gnugettext;
 
 {$R *.dfm}
 
@@ -829,12 +838,12 @@ end;
 procedure TfrmDockWindow.setWindowCaption(txt: widestring);
 begin
     if (txt = '') then begin
-        Caption := MainSession.Prefs.getString('brand_caption');
+        Caption := _(ACTIVITYLIST_CAPTION);
     end
     else begin
-        Caption := txt +
+        Caption := _(ACTIVITYLIST_CAPTION) +
                    ' - ' +
-                   MainSession.Prefs.getString('brand_caption');
+                   txt;
     end;
 end;
 
