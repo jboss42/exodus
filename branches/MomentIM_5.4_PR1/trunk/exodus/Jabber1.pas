@@ -454,7 +454,7 @@ type
 
     // Some callbacks
     _sessioncb: integer;
-    _rostercb: integer;
+    //_rostercb: integer;
     _dns_cb: integer;
 
     // Reconnect variables
