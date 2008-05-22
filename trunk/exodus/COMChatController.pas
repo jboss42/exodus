@@ -80,6 +80,7 @@ type
     procedure fireMenuClick(Sender: TObject);
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
+    procedure fireSentMessageXML(tag: TXMLTag);
 
   private
     //JJF TODO msgqueue refactor _im: TfrmMsgRecv;
@@ -256,6 +257,20 @@ begin
     end;
 
     Result := buff;
+end;
+
+{---------------------------------------}
+procedure TExodusChat.fireSentMessageXML(tag: TXMLTag);
+var
+    i: integer;
+begin
+    for i := 0 to _plugs.Count - 1 do begin
+        try
+            TChatPlugin(_plugs[i]).com.OnSentMessageXML(tag.xml());
+        except
+            DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
+        end;
+    end;
 end;
 
 {---------------------------------------}

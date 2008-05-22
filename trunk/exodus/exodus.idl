@@ -2144,6 +2144,10 @@ library Exodus
     id(0x000000C9)
     ]
     HRESULT _stdcall OnKeyDown([in] long key, [in] long shiftState, [out, retval] VARIANT_BOOL * handled );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall OnSentMessageXML([in] BSTR XML );
   };
 
   [

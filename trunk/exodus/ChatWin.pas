@@ -982,6 +982,10 @@ begin
         newTag.RemoveTag(ttag);
       end;
       MainSession.SendTag(TXMLTag.create(newTag));
+      if (com_controller <> nil) then
+      begin
+          com_controller.fireSentMessageXML(newTag);
+      end;
       newTag.Free();
     end;
   end
