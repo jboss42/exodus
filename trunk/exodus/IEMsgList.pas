@@ -68,6 +68,8 @@ uses
   function HTMLColor(color_pref: integer) : widestring;
 
 type
+  TIEMsgListNavigateHandler = procedure(url: widestring; var handled: boolean) of object;
+
   TIEMsgListProcessor = class
   private
     _lastLineClass: WideString;
@@ -202,6 +204,9 @@ type
 
   public
     { Public declarations }
+    NavigateHandler: TIEMsgListNavigateHandler;
+
+
 {$IFDEF EXODUS}
     constructor Create(Owner: TComponent); override;
 {$ELSE}
@@ -244,6 +249,7 @@ type
     procedure ResetStylesheet();
     procedure print(ShowDialog: boolean);
     procedure writeHTML(html: WideString);
+    procedure DefaultNavHandler(url: widestring; var handled: boolean);
 
     property font_name: widestring read _font_name write _font_name;
     property font_size: widestring read _font_size write _font_size;
@@ -681,8 +687,7 @@ begin
         if (_displayDateSeparator) then begin
             t := msg.Time;
             if ((Trunc(t) <> Trunc(_lastTimeStamp)) and
-                (msg.Subject = '') and
-                (msg.Nick <> ''))then begin
+                (msg.Subject = '')) then begin
                 Result := '<div class="date">' +
                        '<span>' +
                        DateToStr(t) +
@@ -823,6 +828,7 @@ var
     tstring: widestring;
 begin
     inherited;
+    NavigateHandler := Self.DefaultNavHandler;
 {$IFDEF EXODUS}
     _msgProcessor := TIEMsgListProcessor.Create();
 {$ELSE}
@@ -1116,10 +1122,10 @@ begin
         // if previous is a presence, replace with this one.
         // Pres looks like:
         // <DIV class=line1>
-	    //     <SPAN class=other>user</SPAN>
-	    //     <DIV class=msgts>
-		//         <SPAN class=ts>9:32 am</SPAN>
-		//         <SPAN class=pres>user is now available.</SPAN>
+        //     <SPAN class=other>user</SPAN>
+        //     <DIV class=msgts>
+        //         <SPAN class=ts>9:32 am</SPAN>
+        //         <SPAN class=pres>user is now available.</SPAN>
         //     </DIV>
         // </DIV>
         tags := _content.children as IHTMLElementCollection;
@@ -1617,10 +1623,25 @@ procedure TfIEMsgList.browserBeforeNavigate2(Sender: TObject;
   Headers: OleVariant; var Cancel: WordBool);
 var
     u: string;
+    handled: boolean;
 begin
     u := URL;
+    // If this navigate is NOT for the internal blank page,
+    // try to handle it.
     if (u <> _home + '/iemsglist') then begin
-        ShellExecute(Application.Handle, 'open', pAnsiChar(u), '', '', SW_SHOW);
+        handled := false;
+
+        try
+            NavigateHandler(u, handled);
+        except
+            handled := true;
+        end;
+
+        if (not handled) then
+        begin
+            ShellExecute(Application.Handle, 'open', pAnsiChar(u), '', '', SW_SHOW);
+        end;
+
         cancel := true;
     end;
     inherited;
@@ -1770,7 +1791,11 @@ begin
     end;
 end;
 
-
+{---------------------------------------}
+procedure TfIEMsgList.DefaultNavHandler(url: widestring; var handled: boolean);
+begin
+    handled := false;
+end;
 
 initialization
     TP_GlobalIgnoreClassProperty(TWebBrowser, 'StatusText');
