@@ -187,12 +187,18 @@ end;
 procedure TExodusAXWindow.RegisterCallback(
   const callback: IExodusAXWindowCallback);
 begin
-    _frm.callback := callback;
+    if (_frm <> nil) then
+    begin
+        _frm.callback := callback;
+    end;
 end;
 
 procedure TExodusAXWindow.UnRegisterCallback;
 begin
-    _frm.callback := nil;
+    if (_frm <> nil) then
+    begin
+        _frm.callback := nil;
+    end;
 end;
 
 initialization
