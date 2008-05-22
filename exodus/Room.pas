@@ -831,6 +831,11 @@ begin
         mtag.AddInsertedXML(xml);
 
     MainSession.SendTag(mtag);
+    if (comcontroller <> nil) then
+    begin
+        TExodusChat(ComController).fireSentMessageXML(mtag);
+    end;
+
     msg.Free();
 end;
 

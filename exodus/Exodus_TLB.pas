@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 5/21/2008 4:00:00 PM from Type Library described below.
+// File generated on 5/22/2008 12:23:54 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -678,6 +678,7 @@ type
     procedure OnAfterRecvMessage(var Body: WideString); safecall;
     function OnKeyUp(key: Integer; shiftState: Integer): WordBool; safecall;
     function OnKeyDown(key: Integer; shiftState: Integer): WordBool; safecall;
+    procedure OnSentMessageXML(const XML: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -695,6 +696,7 @@ type
     procedure OnAfterRecvMessage(var Body: WideString); dispid 204;
     function OnKeyUp(key: Integer; shiftState: Integer): WordBool; dispid 301;
     function OnKeyDown(key: Integer; shiftState: Integer): WordBool; dispid 201;
+    procedure OnSentMessageXML(const XML: WideString); dispid 205;
   end;
 
 // *********************************************************************//
