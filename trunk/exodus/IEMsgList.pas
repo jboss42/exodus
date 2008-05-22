@@ -616,8 +616,7 @@ begin
         if (_displayDateSeparator) then begin
             t := msg.Time;
             if ((Trunc(t) <> Trunc(_lastTimeStamp)) and
-                (msg.Subject = '') and
-                (msg.Nick <> ''))then begin
+                (msg.Subject = '')) then begin
                 Result := '<div class="date">' +
                        '<span>' +
                        DateToStr(t) +
