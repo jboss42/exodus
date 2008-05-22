@@ -653,7 +653,6 @@ begin
     try
        if (Wrapper.ExodusItem.value['Expanded'] <> state) then begin
            Wrapper.ExodusItem.value['Expanded'] := state;
-           TJabberSession(_JS).FireEvent('/item/update', Wrapper.ExodusItem);
        end;
     except
 
