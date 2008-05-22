@@ -292,6 +292,7 @@ type
     popShowOnline: TTntMenuItem;
     popShowAll: TTntMenuItem;
     mnuContacts_ViewHistory: TTntMenuItem;
+    pnlStatusLabel: TPanel;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -399,7 +400,9 @@ type
     procedure clickCreatePopupItem(Sender: TObject);
     procedure PeopleClick(Sender: TObject);
     procedure AppEventsRestore(Sender: TObject);
-
+    procedure pnlStatusLabelMouseEnter(Sender: TObject);
+    procedure pnlStatusLabelMouseLeave(Sender: TObject);
+  
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -655,7 +658,7 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
-    function IsShortcut(var Message: TWMKey): Boolean; override;
+    function IsShortCut(var Message: TWMKey): Boolean; override;
     function AppKeyDownHook(var Msg: TMessage): Boolean;
 
     property dockManager:IExodusDockManager read _dockManager;
@@ -4651,6 +4654,20 @@ begin
   typedActs := getActionController().actionsForType('{create}');
   SetupMenuItem(mnuPeople_Contacts_AddContact, '{000-exodus.googlecode.com}-000-add-contact');
   SetupMenuItem(mnuPeople_Group_AddNewRoster, '{000-exodus.googlecode.com}-090-add-group');
+end;
+
+procedure TfrmExodus.pnlStatusLabelMouseEnter(Sender: TObject);
+begin
+  inherited;
+
+  pnlStatusLabel.BevelKind := bkFlat;
+end;
+
+procedure TfrmExodus.pnlStatusLabelMouseLeave(Sender: TObject);
+begin
+  inherited;
+
+  pnlStatusLabel.BevelKind := bkNone;
 end;
 
 procedure TfrmExodus.popChangeView(Sender: TObject);
