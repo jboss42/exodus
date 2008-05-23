@@ -43,7 +43,7 @@ type
     function Get_UnreadMsgCount: Integer; safecall;
     procedure Dock; safecall;
     procedure Set_UnreadMsgCount(Value: Integer); safecall;
-    procedure UnDock; safecall;
+    procedure Float; safecall;
     function Get_LastActivityTime: TDateTime; safecall;
     procedure Set_LastActivityTime(Value: TDateTime); safecall;
     function Get_WindowType: WideString; safecall;
@@ -116,7 +116,7 @@ begin
     end;
 end;
 
-procedure TExodusAXWindow.UnDock;
+procedure TExodusAXWindow.Float;
 begin
     if (_frm <> nil) then begin
         _frm.FloatForm;

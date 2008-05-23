@@ -2101,6 +2101,22 @@ library Exodus
     id(0x000000DF)
     ]
     HRESULT _stdcall MsgOutToolbar([out, retval] IExodusMsgOutToolbar ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000E0)
+    ]
+    HRESULT _stdcall Close( void );
+    [
+    id(0x000000E1)
+    ]
+    HRESULT _stdcall BringToFront( void );
+    [
+    id(0x000000E2)
+    ]
+    HRESULT _stdcall Dock( void );
+    [
+    id(0x000000E3)
+    ]
+    HRESULT _stdcall Float( void );
   };
 
   [
@@ -8761,7 +8777,7 @@ library Exodus
     [
     id(0x000000CE)
     ]
-    HRESULT _stdcall UnDock( void );
+    HRESULT _stdcall Float( void );
     [
     propget, 
     id(0x000000CF)
