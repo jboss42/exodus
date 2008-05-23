@@ -61,6 +61,10 @@ type
     procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
+    procedure Close; safecall;
+    procedure BringToFront; safecall;
+    procedure Dock; safecall;
+    procedure Float; safecall;
 
     { Protected declarations }
 
@@ -771,6 +775,71 @@ begin
         Result := _room
         .MsgOutToolbar;
 end;
+
+{---------------------------------------}
+procedure TExodusChat.Close;
+begin
+    if (_chat <> nil) then
+    begin
+        TfrmChat(_chat).Close();
+    end
+    else if (_room <> nil) then
+    begin
+        _room.Close();
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusChat.BringToFront;
+begin
+    if (_chat <> nil) then
+    begin
+        TfrmChat(_chat).BringToFront();
+    end
+    else if (_room <> nil) then
+    begin
+        _room.BringToFront();
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusChat.Dock;
+begin
+    if (_chat <> nil) then
+    begin
+        if (not TfrmChat(_chat).Docked) then
+        begin
+            TfrmChat(_chat).DockForm();
+        end;
+    end
+    else if (_room <> nil) then
+    begin
+        if (not _room.Docked) then
+        begin
+            _room.DockForm();
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusChat.Float;
+begin
+    if (_chat <> nil) then
+    begin
+        if (TfrmChat(_chat).Docked) then
+        begin
+            TfrmChat(_chat).FloatForm();
+        end;
+    end
+    else if (_room <> nil) then
+    begin
+        if (_room.Docked) then
+        begin
+            _room.FloatForm();
+        end;
+    end;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusChat, Class_ExodusChat,

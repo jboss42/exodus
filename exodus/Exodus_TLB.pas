@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 5/22/2008 12:23:54 PM from Type Library described below.
+// File generated on 5/23/2008 9:15:10 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -628,6 +628,10 @@ type
     ['{51385483-0B0F-45A3-95C7-579A8DDF62DF}']
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
+    procedure Close; safecall;
+    procedure BringToFront; safecall;
+    procedure Dock; safecall;
+    procedure Float; safecall;
     property DockToolbar: IExodusDockToolbar read Get_DockToolbar;
     property MsgOutToolbar: IExodusMsgOutToolbar read Get_MsgOutToolbar;
   end;
@@ -641,6 +645,10 @@ type
     ['{51385483-0B0F-45A3-95C7-579A8DDF62DF}']
     property DockToolbar: IExodusDockToolbar readonly dispid 212;
     property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
+    procedure Close; dispid 224;
+    procedure BringToFront; dispid 225;
+    procedure Dock; dispid 226;
+    procedure Float; dispid 227;
   end;
 
 // *********************************************************************//
@@ -3019,6 +3027,10 @@ type
     property Caption: WideString dispid 211;
     property DockToolbar: IExodusDockToolbar readonly dispid 212;
     property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
+    procedure Close; dispid 224;
+    procedure BringToFront; dispid 225;
+    procedure Dock; dispid 226;
+    procedure Float; dispid 227;
   end;
 
 // *********************************************************************//
@@ -4473,7 +4485,7 @@ type
     function Get_UnreadMsgCount: Integer; safecall;
     procedure Set_UnreadMsgCount(value: Integer); safecall;
     procedure Dock; safecall;
-    procedure UnDock; safecall;
+    procedure Float; safecall;
     function Get_LastActivityTime: TDateTime; safecall;
     procedure Set_LastActivityTime(value: TDateTime); safecall;
     function Get_PriorityFlag: WordBool; safecall;
@@ -4504,7 +4516,7 @@ type
     procedure BringToFront; dispid 203;
     property UnreadMsgCount: Integer dispid 204;
     procedure Dock; dispid 205;
-    procedure UnDock; dispid 206;
+    procedure Float; dispid 206;
     property LastActivityTime: TDateTime dispid 207;
     property PriorityFlag: WordBool dispid 208;
     property WindowType: WideString dispid 209;
