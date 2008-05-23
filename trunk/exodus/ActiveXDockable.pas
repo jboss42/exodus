@@ -50,6 +50,7 @@ type
     _AXControl: TAXControl;
     _callback: IExodusAXWindowCallback;
   protected
+    function GetWindowStateKey() : WideString; override;
 
   public
     { Public declarations }
@@ -76,7 +77,10 @@ implementation
 {$R *.dfm}
 
 uses
-    StrUtils, ExUtils;
+    StrUtils,
+    ExUtils,
+    XMLUtils,
+    Session;
 
 
 function StartActiveX(ActiveX_GUID: widestring;
@@ -130,6 +134,7 @@ begin
     begin
         _callback.OnClose();
     end;
+    _callback := nil;
 
     _AXControl.Free();
     _AXControl := nil;
@@ -188,6 +193,16 @@ begin
     begin
         _callback.OnFloat();
     end;
+end;
+
+{---------------------------------------}
+function TfrmActiveXDockable.GetWindowStateKey() : WideString;
+begin
+    Result := inherited GetWindowStateKey() +
+              '-' +
+              MungeName(MainSession.Profile.Name) +
+              '-' +
+              MungeName(Self.Caption);
 end;
 
 
