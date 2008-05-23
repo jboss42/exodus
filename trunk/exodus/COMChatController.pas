@@ -794,11 +794,11 @@ procedure TExodusChat.BringToFront;
 begin
     if (_chat <> nil) then
     begin
-        TfrmChat(_chat).BringToFront();
+        TfrmChat(_chat).ShowDefault();
     end
     else if (_room <> nil) then
     begin
-        _room.BringToFront();
+        _room.ShowDefault();
     end;
 end;
 
