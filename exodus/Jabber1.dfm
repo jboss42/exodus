@@ -3,8 +3,8 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 598
-  ClientWidth = 404
+  ClientHeight = 736
+  ClientWidth = 497
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
@@ -19,15 +19,15 @@ inherited frmExodus: TfrmExodus
   OnDestroy = FormDestroy
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 412
-  ExplicitHeight = 652
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 505
+  ExplicitHeight = 801
+  PixelsPerInch = 120
+  TextHeight = 16
   object imgAd: TImage
     Left = 0
-    Top = 589
-    Width = 404
-    Height = 9
+    Top = 725
+    Width = 497
+    Height = 11
     Align = alBottom
     AutoSize = True
     Center = True
@@ -36,13 +36,12 @@ inherited frmExodus: TfrmExodus
     Transparent = True
     Visible = False
     OnClick = imgAdClick
-    ExplicitTop = 661
   end
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 404
-    Height = 31
+    Width = 497
+    Height = 38
     AutoSize = True
     BandBorderStyle = bsNone
     Bands = <>
@@ -50,20 +49,26 @@ inherited frmExodus: TfrmExodus
   end
   object tbsView: TPageControl
     Left = 0
-    Top = 66
-    Width = 404
-    Height = 523
+    Top = 74
+    Width = 497
+    Height = 651
     ActivePage = tabRoster
     Align = alClient
     Style = tsButtons
     TabOrder = 1
+    ExplicitTop = 81
+    ExplicitHeight = 644
     object tabLogin: TTabSheet
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
-        Width = 396
-        Height = 513
+        Width = 487
+        Height = 631
         Align = alClient
         BevelInner = bvSpace
         BevelOuter = bvNone
@@ -76,21 +81,23 @@ inherited frmExodus: TfrmExodus
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
+      ExplicitHeight = 634
       object pnlRoster: TPanel
         Left = 0
-        Top = 37
-        Width = 396
-        Height = 476
+        Top = 46
+        Width = 489
+        Height = 595
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitHeight = 588
       end
       object GridPanel1: TGridPanel
         Left = 0
         Top = 0
-        Width = 396
-        Height = 37
+        Width = 489
+        Height = 46
         Align = alTop
         BevelOuter = bvNone
         ColumnCollection = <
@@ -138,10 +145,10 @@ inherited frmExodus: TfrmExodus
           end>
         TabOrder = 1
         object imgSSL: TImage
-          Left = 380
+          Left = 473
           Top = 0
           Width = 16
-          Height = 37
+          Height = 46
           Hint = 'Secure Connection'
           Margins.Left = 0
           Margins.Top = 0
@@ -178,24 +185,26 @@ inherited frmExodus: TfrmExodus
             FF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80
             FFFF}
           Transparent = True
-          ExplicitLeft = 384
-          ExplicitWidth = 13
+          ExplicitLeft = 468
+          ExplicitWidth = 19
         end
         object lblDisplayName: TTntLabel
           AlignWithMargins = True
           Left = 24
           Top = 3
-          Width = 353
-          Height = 12
+          Width = 446
+          Height = 17
           Align = alClient
-          ExplicitWidth = 3
-          ExplicitHeight = 13
+          ExplicitLeft = 30
+          ExplicitTop = 4
+          ExplicitWidth = 4
+          ExplicitHeight = 16
         end
         object pnlStatus: TPanel
           Left = 21
-          Top = 18
-          Width = 359
-          Height = 19
+          Top = 23
+          Width = 452
+          Height = 23
           Cursor = crHandPoint
           Align = alClient
           BevelOuter = bvNone
@@ -207,21 +216,21 @@ inherited frmExodus: TfrmExodus
             Left = 3
             Top = 3
             Width = 3
-            Height = 13
+            Height = 17
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = False
             EllipsisPosition = epEndEllipsis
             OnClick = clickEditStatus
-            ExplicitLeft = 2
-            ExplicitTop = 2
-            ExplicitHeight = 14
+            ExplicitLeft = 4
+            ExplicitTop = 4
+            ExplicitHeight = 16
           end
           object imgDown: TImage
-            Left = 150
+            Left = 181
             Top = 0
             Width = 16
-            Height = 19
+            Height = 23
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
@@ -264,15 +273,15 @@ inherited frmExodus: TfrmExodus
               FF00}
             Transparent = True
             OnClick = clickChangeStatus
-            ExplicitLeft = 148
-            ExplicitHeight = 13
+            ExplicitLeft = 185
+            ExplicitHeight = 20
           end
           object txtStatus: TTntEdit
             AlignWithMargins = True
             Left = 12
             Top = 0
-            Width = 135
-            Height = 19
+            Width = 166
+            Height = 23
             Margins.Top = 0
             Margins.Bottom = 0
             Align = alLeft
@@ -282,28 +291,28 @@ inherited frmExodus: TfrmExodus
             Visible = False
             OnExit = txtStatusExit
             OnKeyPress = txtStatusKeyPress
-            ExplicitHeight = 21
+            ExplicitHeight = 24
           end
         end
         object imgPresence: TImage
           Left = 0
           Top = 0
           Width = 21
-          Height = 37
+          Height = 46
           Align = alClient
           AutoSize = True
           Center = True
           Transparent = True
-          ExplicitWidth = 17
+          ExplicitWidth = 26
         end
       end
     end
   end
   object pnlToolbar: TPanel
     Left = 0
-    Top = 31
-    Width = 404
-    Height = 35
+    Top = 38
+    Width = 497
+    Height = 36
     Align = alTop
     AutoSize = True
     BevelEdges = []
@@ -313,19 +322,19 @@ inherited frmExodus: TfrmExodus
     object ToolbarBevel: TColorBevel
       Left = 0
       Top = 30
-      Width = 404
-      Height = 5
+      Width = 497
+      Height = 6
       Align = alTop
       Shape = bsBottomLine
       HighLight = clBtnFace
       Shadow = clBtnShadow
       FrameColor = frUser
-      ExplicitTop = 24
+      ExplicitTop = 37
     end
     object ToolBar1: TToolBar
       Left = 0
       Top = 0
-      Width = 404
+      Width = 497
       Height = 30
       AutoSize = True
       ButtonHeight = 30
@@ -525,7 +534,6 @@ inherited frmExodus: TfrmExodus
           end
           object mnuRegisterService: TTntMenuItem
             Caption = '&Register with a Service'
-            OnClick = mnuRegisterServiceClick
           end
           object N9: TTntMenuItem
             Caption = '-'
@@ -877,6 +885,7 @@ inherited frmExodus: TfrmExodus
       object mnuFile_Registration: TTntMenuItem
         Caption = '&Registration'
         Enabled = False
+        OnClick = mnuFileRegistrationClick
         object mnuFile_Registration_EditReg: TTntMenuItem
           Caption = 'Edit &Account Details...'
           OnClick = mnuRegistrationClick

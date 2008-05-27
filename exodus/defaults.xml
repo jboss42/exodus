@@ -662,6 +662,9 @@
 
 	 <!-- brand value for most active plug in time interval in days -->
 	 <brand_most_active_time_interval value="30"/>
+	 <!-- brand value for user directory prefix -->
+	 <brand_user_directory value="users"/>
+
   </prefs>
 
   <!-- default custom presence stuff -->

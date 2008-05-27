@@ -80,7 +80,8 @@ const
 
     //"known" or expected Item properties
     IE_PROP_IMAGEPREFIX = 'ImagePrefix';
-
+    //Entity name for Jud user directory
+    USER_DIRECTORY_NAME = 'User Directory';
 
 var
     XP_MSGXDATA: TXPLite;
