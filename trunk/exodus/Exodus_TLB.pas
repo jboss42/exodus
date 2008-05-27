@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 5/23/2008 9:15:10 AM from Type Library described below.
+// File generated on 5/27/2008 10:28:57 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -482,6 +482,8 @@ type
                         IncludeAnyOption: WordBool): WideString; safecall;
     function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
                         IncludeAnyOption: WordBool): WideString; safecall;
+    procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
+                                 const eventXML: WideString; ImageIndex: Integer); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -617,6 +619,8 @@ type
                         IncludeAnyOption: WordBool): WideString; dispid 231;
     function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
                         IncludeAnyOption: WordBool): WideString; dispid 232;
+    procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
+                                 const eventXML: WideString; ImageIndex: Integer); dispid 233;
   end;
 
 // *********************************************************************//
