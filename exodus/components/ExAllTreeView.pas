@@ -56,7 +56,7 @@ type
 implementation
 
 uses ActionMenus, Graphics, ExActionCtrl, ExUtils, gnugettext, GrpManagement, Forms,
-        COMExodusItemList, Session, TntComCtrls, Windows, Jabber1, RosterImages;
+        Messages, COMExodusItemList, Session, TntComCtrls, Windows, Jabber1, RosterImages;
 
 const
     sConfirmDeleteCaption: Widestring = 'Delete Item(s)';
@@ -64,6 +64,8 @@ const
     sConfirmDeleteMultiTxt: Widestring = 'Are you sure you want to delete these %d items?';
     sWarnSingleNotDeletedTxt: Widestring = 'The group %s is not empty and could not be deleted.' + #13#10 + 'Make sure all items in the group are removed, then try again.';
     sWarnMultiNotDeletedTxt: Widestring = '%d groups are not empty and could not be deleted.' + #13#10 + 'Make sure all items in the groups areremoved, then try again.';
+
+    SCROLL_MARGIN: Integer = 20;
 
 {---------------------------------------}
 constructor TExAllTreeView.Create(AOwner: TComponent; Session: TObject);
@@ -246,6 +248,8 @@ procedure TExAllTreeView.DragOver(
         X: Integer; Y: Integer;
         state: TDragState;
         var accept: Boolean);
+var
+    scrollMsg:  TWMVScroll;
 begin
     case state of
         dsDragLeave: begin
@@ -257,12 +261,31 @@ begin
             _dropSupport.Free();
             _dropSupport := OpenDropTarget(Source, _DragUpdate, _DragExecute);
         end;
+        dsDragMove: begin
+        end;
     end;
 
     accept := (_dropSupport <> nil) and _dropSupport.Update(X, Y);
+
     if not accept then begin
         //TODO:  revert cursor??
         inherited DragOver(Source, X, Y, state, accept);
+    end;
+
+    if (state = dsDragMove) then begin
+        //See if we need to scroll...
+        if (Y < SCROLL_MARGIN) then begin
+            scrollMsg.Msg := WM_VSCROLL;
+            scrollMsg.ScrollCode := SB_LINEUP;
+            scrollMsg.Pos := 0;
+            Self.Dispatch(scrollMsg);
+        end
+        else if (Y > (ClientHeight - SCROLL_MARGIN)) then begin
+            scrollMsg.Msg := WM_VSCROLL;
+            scrollMsg.ScrollCode := SB_LINEDOWN;
+            scrollMsg.Pos := 0;
+            Self.Dispatch(scrollMsg);
+        end;
     end;
 end;
 procedure TExAllTreeView.DragDrop(Source: TObject; X: Integer; Y: Integer);
@@ -283,7 +306,7 @@ begin
         valid := Source.DragItems.Count = Source.DragItems.CountOfType('group');
     end
     else begin
-        valid := (target.Type_ = 'group');
+        valid := true;
     end;
 
     if valid then begin
@@ -308,8 +331,23 @@ var
     target: IExodusItem;
     rootgrp: Widestring;
     idx: Integer;
+
+    function FindGroupAt(X, Y: Integer): IExodusItem;
+    var
+        node: TTntTreeNode;
+        item: IExodusItem;
+    begin
+        Result := nil;
+        node := GetNodeAt(X, Y);
+        while (Result = nil) and (node <> nil) do begin
+            item := GetNodeItem(node);
+            node := node.Parent;
+            if (item <> nil) and (item.Type_ = 'group') then
+                Result := item;
+        end;
+    end;
 begin
-    target := GetNodeItem(GetNodeAt(X, Y));
+    target := FindGroupAt(X, Y);
     if (target <> nil) then begin
         //move/copy to given group
         rootgrp := target.UID;

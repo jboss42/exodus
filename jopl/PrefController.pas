@@ -456,10 +456,10 @@ end;
 
 function getBestFile(userFile : TPrefFile; pkey : WideString) : TPrefFile;
 begin
-    if (lockedDown(s_default_file, pkey)) then
-        Result := s_default_file
-    else if (lockedDown(s_brand_file, pkey)) then
+    if (lockedDown(s_brand_file, pkey)) then
         Result := s_brand_file
+    else if (lockedDown(s_default_file, pkey)) then
+        Result := s_default_file
     else if (userFile.hasPref(pkey)) then
         Result := userFile
     else if (s_brand_file.hasPref(pkey)) then

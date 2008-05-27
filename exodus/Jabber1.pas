@@ -292,6 +292,7 @@ type
     popShowOnline: TTntMenuItem;
     popShowAll: TTntMenuItem;
     mnuContacts_ViewHistory: TTntMenuItem;
+    pnlStatusLabel: TPanel;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -399,6 +400,8 @@ type
     procedure PeopleClick(Sender: TObject);
     procedure mnuRegisterUDClick(Sender: TObject);
     procedure mnuFileRegistrationClick(Sender: TObject);
+    procedure pnlStatusLabelMouseEnter(Sender: TObject);
+    procedure pnlStatusLabelMouseLeave(Sender: TObject);
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -450,7 +453,6 @@ type
 
     // Some callbacks
     _sessioncb: integer;
-    _rostercb: integer;
     _dns_cb: integer;
 
     // Reconnect variables
@@ -570,7 +572,6 @@ published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
-    procedure RosterCallback(event: string; item: IExodusItem);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
     // This is only used for testing..
@@ -997,7 +998,7 @@ begin
     SC_MINIMIZE: begin
         _hidden := true;
         _was_max := (Self.WindowState = wsMaximized);
-//        Self.Visible := false;
+        Self.Visible := false;
         ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
     end;
@@ -1008,7 +1009,7 @@ begin
     SC_CLOSE: begin
         if ((_close_min) and (not _shutdown)) then begin
             _hidden := true;
-//            Self.Visible := false;
+            Self.Visible := false;
             ShowWindow(Handle, SW_HIDE);
             msg.Result := 0;
         end
@@ -1260,7 +1261,6 @@ begin
 //
 //    // Setup our session callback
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
-    _rostercb := MainSession.RegisterCallback(RosterCallback, '/contact/item/end');
 //
     // setup some branding stuff
     with (MainSession.Prefs) do begin
@@ -2045,14 +2045,9 @@ begin
                    PWideChar(MainSession.Prefs.GetString('brand_caption')),
                    MB_OK or MB_ICONERROR);
         Application.Terminate();
-    end;
-
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.RosterCallback(event: string; item: IExodusItem);
-begin
-    _sendInitPresence();
+    end
+    else if (event = '/session/roster_ready') then
+        _sendInitPresence();
 end;
 
 {---------------------------------------}
@@ -3505,7 +3500,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
-    Notify.StopFlash(Self);
+//    Notify.StopFlash(Self);
     StopTrayAlert();
 end;
 
@@ -3545,7 +3540,7 @@ var
 begin
      _tray_notify := not _tray_notify;
      if (_tray_notify) then begin
-        iconNum := _tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
+        iconNum := 0;//_tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
         if (iconNum > RosterImages.RI_XAATTN_INDEX) then
             iconNum := RosterImages.RI_XAATTN_INDEX;
     end
@@ -3566,8 +3561,9 @@ end;
 {---------------------------------------}
 procedure StopTrayAlert();
 begin
-    if (frmExodus = nil) then exit;
-
+    //events might get this called pretty early
+    if (frmExodus = nil) or (frmExodus.timTrayAlert = nil) then exit;
+    
     if (frmExodus.timTrayAlert.Enabled) then begin
         frmExodus.timTrayAlert.Enabled := false;
         frmExodus._tray_notify := false;
@@ -4716,6 +4712,20 @@ begin
   typedActs := getActionController().actionsForType('{create}');
   SetupMenuItem(mnuPeople_Contacts_AddContact, '{000-exodus.googlecode.com}-000-add-contact');
   SetupMenuItem(mnuPeople_Group_AddNewRoster, '{000-exodus.googlecode.com}-090-add-group');
+end;
+
+procedure TfrmExodus.pnlStatusLabelMouseEnter(Sender: TObject);
+begin
+  inherited;
+
+  pnlStatusLabel.BevelKind := bkFlat;
+end;
+
+procedure TfrmExodus.pnlStatusLabelMouseLeave(Sender: TObject);
+begin
+  inherited;
+
+  pnlStatusLabel.BevelKind := bkNone;
 end;
 
 procedure TfrmExodus.popChangeView(Sender: TObject);

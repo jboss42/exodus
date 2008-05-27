@@ -103,8 +103,14 @@ end;
 
 procedure TExActionPopupMenu.HandleClick(Sender: TObject);
 begin
-    with TExActionMenuItem(sender) do begin
-        _actMap.GetActionsFor(ItemType).execute(ActionName);
+    if (_actMap = nil) then exit;
+
+    try
+        with TExActionMenuItem(sender) do begin
+            _actMap.GetActionsFor(ItemType).execute(ActionName);
+        end;
+    except
+        //blind catch because Delphi + COM == chaos
     end;
 end;
 

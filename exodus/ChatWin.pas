@@ -412,14 +412,16 @@ begin
                 do_scroll := true;
             end;
 
+            //get window ready for messages
+            if (show_window) then
+                ShowDefault(bring_to_front);
+
             PlayQueue();
 
             // scroll to the bottom..
             if (do_scroll) then
                 _scrollBottom();
 
-            if (show_window) then
-                ShowDefault(bring_to_front);
             Application.ProcessMessages();
 
             //finally, event new chat to plugins
