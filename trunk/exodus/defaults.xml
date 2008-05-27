@@ -27,7 +27,7 @@
     </recon_tries>
     <recon_time value="0" control="txtTime" state="rw">
         <control name="lblTime"/>
-    <control name="lblTime2"/>
+        <control name="lblTime2"/>
         <control name="lblSeconds"/>
     </recon_time>
     
@@ -46,7 +46,7 @@
     <default_nick control="txtDefaultNick" state="rw">
       <control name="lblDefaultNick"/>
     </default_nick>
-    <roster_default value="Friends" control="txtDefaultGrp" state="rw">
+    <roster_default value="Unfiled" control="txtDefaultGrp" state="rw">
       <control name="lblDefaultGrp"/>
     </roster_default>
     <inline_status value="0" control="chkInlineStatus" state="rw"/>

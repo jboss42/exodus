@@ -4,7 +4,9 @@ inherited frmInviteReceived: TfrmInviteReceived
   Caption = 'Conference Room Invitation'
   ClientHeight = 160
   ClientWidth = 436
-  Position = poDefault
+  DefaultMonitor = dmMainForm
+  Position = poMainFormCenter
+  OnClose = TntFormClose
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy
   OnShow = TntFormShow
@@ -26,8 +28,6 @@ inherited frmInviteReceived: TfrmInviteReceived
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
-    ExplicitLeft = 3
-    ExplicitWidth = 430
     object lblInvitor: TTntLabel
       AlignWithMargins = True
       Left = 6
@@ -130,7 +130,6 @@ inherited frmInviteReceived: TfrmInviteReceived
     ParentColor = True
     TabOrder = 2
     AutoHide = False
-    ExplicitWidth = 388
     object lblInviteMessage: TTntLabel
       Left = 0
       Top = 18
@@ -160,7 +159,6 @@ inherited frmInviteReceived: TfrmInviteReceived
     ParentColor = True
     TabOrder = 3
     AutoHide = False
-    ExplicitWidth = 388
     object txtReason: TTntEdit
       Left = 0
       Top = 18
@@ -172,7 +170,6 @@ inherited frmInviteReceived: TfrmInviteReceived
       AutoSize = False
       TabOrder = 1
       Text = 'Sorry, I'#39'm not interested in joining right now.'
-      ExplicitWidth = 388
     end
   end
 end

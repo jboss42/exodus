@@ -197,33 +197,34 @@ var
     i: Integer;
     Item: IExodusItem;
 begin
-        Item := nil;
-        _ItemsCB.Paused := true;
-        TJabberSession(_JS).FireEvent('/item/begin', Item);
-        TJabberSession(_JS).FireEvent('/contact/item/begin', Item);
-        ContactItemTags := Tag.QueryXPTags('/iq/query/item');
-        for i := 0 to ContactItemTags.Count - 1 do begin
-            ContactTag := ContactItemTags.Tags[i];
-            TmpJID := TJabberID.Create(ContactTag.GetAttribute('jid'));
-            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_CONTACT, _ItemsCB);
-            //Make sure item exists
-            if (Item <> nil) then
-            begin
-                _ParseContact(Item, ContactTag);
+    Item := nil;
+    _ItemsCB.Paused := true;
+    TJabberSession(_JS).FireEvent('/item/begin', Item);
+    TJabberSession(_JS).FireEvent('/contact/item/begin', Item);
+    ContactItemTags := Tag.QueryXPTags('/iq/query/item');
+    for i := 0 to ContactItemTags.Count - 1 do begin
+        ContactTag := ContactItemTags.Tags[i];
+        TmpJID := TJabberID.Create(ContactTag.GetAttribute('jid'));
+        Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_CONTACT, _ItemsCB);
+        //Make sure item exists
+        if (Item <> nil) then
+        begin
+            _ParseContact(Item, ContactTag);
 
-                if (Item.IsVisible) then
-                    TJabberSession(_JS).FireEvent('/item/add', Item);
-            end;
-            //DisplayName.getDisplayNameCache().UpdateDisplayName(TmpJID.jid);
-            TmpJID.Free();
+            if (Item.IsVisible) then
+                TJabberSession(_JS).FireEvent('/item/add', Item);
         end;
-        //TJabberSession(_js).ItemController.SaveGroups();
-        Item := nil;
-        _ItemsCB.Paused := false;
-        TJabberSession(_JS).FireEvent('/contact/item/end', Item);
-        TJabberSession(_JS).FireEvent('/item/end', Item);
-        TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
-
+        //DisplayName.getDisplayNameCache().UpdateDisplayName(TmpJID.jid);
+        TmpJID.Free();
+    end;
+    //TJabberSession(_js).ItemController.SaveGroups();
+    Item := nil;
+    _ItemsCB.Paused := false;
+    TJabberSession(_JS).FireEvent('/contact/item/end', Item);
+    TJabberSession(_JS).FireEvent('/item/end', Item);
+    TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
+    TJabberSession(_JS).FireEvent('/roster/end', nil, ''); //legacy event
+    TJabberSession(_JS).FireEvent('/session/roster_ready', TXMLTag(nil)); //new signal roster is loaded
 end;
 
 {---------------------------------------}

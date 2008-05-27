@@ -314,15 +314,30 @@ procedure TfAWItem._timNewItemTimerTimer(Sender: TObject);
 begin
     Inc(_flashcnt);
     if (_flashcnt >= 6) then begin
-        _setPnlColors(_newWindowStartColor, _newWindowEndColor);
+        if (priority) then begin
+            _setPnlColors(_priorityStartColor, _priorityEndColor);
+        end
+        else begin
+            _setPnlColors(_newWindowStartColor, _newWindowEndColor);
+        end;
         _stopTimer();
     end
     else begin
         if ((_flashcnt mod 2) = 0) then begin
-            _setPnlColors(_newWindowStartColor, _newWindowEndColor);
+            if (priority) then begin
+                _setPnlColors(_priorityStartColor, _priorityEndColor);
+            end
+            else begin
+                _setPnlColors(_newWindowStartColor, _newWindowEndColor);
+            end;
         end
         else begin
-            _setPnlColors(_startColor, _endColor);
+            if (Self._active) then begin
+                _setPnlColors(_activeStartColor, _activeEndColor);
+            end
+            else begin
+                _setPnlColors(_startColor, _endColor);
+            end;
         end;
     end;
 end;
@@ -332,16 +347,25 @@ procedure TfAWItem._timNewMsgTimerTimer(Sender: TObject);
 begin
     Inc(_msgflashcnt);
     if (_msgflashcnt >= 6) then begin
-        _setPnlColors(_newMessageStartColor, _newMessageEndColor);
+        if (priority) then begin
+            _setPnlColors(_priorityStartColor, _priorityEndColor);
+        end
+        else begin
+            _setPnlColors(_newMessageStartColor, _newMessageEndColor);
+        end;
         _stopMsgTimer();
     end
     else begin
         if ((_msgflashcnt mod 2) = 0) then begin
-            _setPnlColors(_newMessageStartColor, _newMessageEndColor);
+            if (priority) then begin
+                _setPnlColors(_priorityStartColor, _priorityEndColor);
+            end
+            else begin
+                _setPnlColors(_newMessageStartColor, _newMessageEndColor);
+            end;
         end
         else begin
-            if (Self._active) then
-            begin
+            if (Self._active) then begin
                 _setPnlColors(_activeStartColor, _activeEndColor);
             end
             else begin
