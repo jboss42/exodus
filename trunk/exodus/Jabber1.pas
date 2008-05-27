@@ -328,7 +328,6 @@ type
     procedure mnuVersionClick(Sender: TObject);
     procedure mnuPasswordClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure mnuRegisterServiceClick(Sender: TObject);
     procedure mnuMessageClick(Sender: TObject);
     procedure Test1Click(Sender: TObject);
     procedure mnuBrowserClick(Sender: TObject);
@@ -398,7 +397,8 @@ type
     procedure popCreatePopup(Sender: TObject);
     procedure clickCreatePopupItem(Sender: TObject);
     procedure PeopleClick(Sender: TObject);
-
+    procedure mnuRegisterUDClick(Sender: TObject);
+    procedure mnuFileRegistrationClick(Sender: TObject);
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -471,7 +471,7 @@ type
     _killshow: boolean;
     _glueRange: integer;
     _hiddenIEMsgList: TfIEMsgList;
-
+    _mnuRegisterUD: TTntMenuItem;
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
@@ -506,6 +506,7 @@ type
      *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
     **}
     procedure waitForCleanup();
+    procedure _chkUserDirectory();
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -1392,6 +1393,7 @@ begin
     else begin
         _hiddenIEMsgList := nil;
     end;
+    _mnuRegisterUD := nil;
 end;
 
 {---------------------------------------}
@@ -3136,6 +3138,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.FormDestroy(Sender: TObject);
+var
+   Value: PWideChar;
 begin
     //TODO:  save dimensions?
     if (not _cleanupComplete) then
@@ -3146,23 +3150,26 @@ begin
         _dockWindow.Free();
     except
     end;
+    if (_mnuRegisterUD <> nil) then
+    begin
+        if (_mnuRegisterUD.Tag <> 0) then
+        begin
+            Value :=  Pointer(_mnuRegisterUD.Tag);
+            StrDisposeW(Value);
+        end;
+    end;
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.mnuRegisterServiceClick(Sender: TObject);
+procedure TfrmExodus.mnuRegisterUDClick(Sender: TObject);
 var
-    tmps: WideString;
+    EntityJID: PWideChar;
 begin
-    // kick off a service registration..
-    tmps := '';
-    if (InputQueryW(_(sRegService), _(sEnterSvcJID), tmps) = false) then
-        exit;
-    StartServiceReg(tmps);
+    EntityJID := Pointer(_mnuRegisterUD.Tag);
+    StartServiceReg(EntityJID);
 end;
 
 
-
-{---------------------------------------}
 procedure TfrmExodus.mnuMessageClick(Sender: TObject);
 //var
 //    jid: WideString;
@@ -3879,6 +3886,62 @@ end;
 procedure TfrmExodus.mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
 begin
     GetLoginWindow().mnuRenameProfileClick(Sender);
+end;
+
+procedure TfrmExodus.mnuFileRegistrationClick(Sender: TObject);
+begin
+  inherited;
+  //Check if there is entity with UserDirectory services
+  _chkUserDirectory();
+end;
+
+
+{---------------------------------------}
+procedure TfrmExodus._chkUserDirectory();
+var
+    tmps: WideString;
+    Value: PWideChar;
+    Services: TWideStringList;
+    Idx, i: Integer;
+    Entity: TJabberEntity;
+begin
+    //Resiter User Directory menu item already exists, don't need to do anything.
+    if (_mnuRegisterUD <> nil) then exit;
+    //Check if enttity with given features exists.
+    Entity := nil;
+    //Need to get tmps from pref file.
+
+    //tmps := 'users.wrk171.corp.jabber.com';
+    tmps := MainSession.Prefs.getString('brand_user_directory') + WideChar('.') + MainSession.Server;
+    Services := TWideStringList.Create();
+    jEntityCache.getByFeature(XMLNS_REGISTER, Services);
+    Idx :=  Services.IndexOf(tmps);
+    if (Idx <> -1) then
+       //Found entity
+       Entity := jEntityCache.getByJid(Services[Idx])
+    else
+    begin
+        //Look for brandable string in the list
+        for i := 0 to Services.Count - 1 do
+        begin
+            Entity := jEntityCache.getByJid(Services[i]);
+            if (Entity = nil) then continue;
+            if (Entity.Name = USER_DIRECTORY_NAME) then
+                break
+            else
+                Entity := nil;
+        end;
+    end;
+    //If entity is not nill, craete a menu item.
+    if (Entity <> nil) then
+    begin
+        _mnuRegisterUD := TTntMenuItem.Create(Self);
+        _mnuRegisterUD.Caption := Entity.Name;
+        _mnuRegisterUD.OnClick := mnuRegisterUDClick;
+        Value := StrNewW(PWideChar(Entity.Jid.Jid));
+        _mnuRegisterUD.Tag := Integer(Value);
+        mnuFile_Registration.Add(_mnuRegisterUD);
+    end;
 end;
 
 procedure TfrmExodus.ResolverStatus(ASender: TObject;
