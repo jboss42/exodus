@@ -22,21 +22,11 @@ unit ActiveXDockable;
 interface
 
 uses
-    Dockable,
-    ActiveX,
-    ComObj,
-    BaseMsgList,
-    SysUtils,
-    Unicode,
-    COMDockToolbar,
-    ToolWin,
-    ComCtrls,
-    ExtCtrls,
-    Controls,
-    Classes,
-    PLUGINCONTROLLib_TLB,
-    Forms,
-    Exodus_TLB;
+    Dockable, ActiveX, ComObj,
+    BaseMsgList, SysUtils, Unicode,
+    COMDockToolbar, ToolWin, ComCtrls,
+    ExtCtrls, Controls, Classes,
+    PLUGINCONTROLLib_TLB, Forms;
 
 type
   TfrmActiveXDockable = class(TfrmDockable)
@@ -48,19 +38,13 @@ type
   private
     { Private declarations }
     _AXControl: TAXControl;
-    _callback: IExodusAXWindowCallback;
   protected
-    function GetWindowStateKey() : WideString; override;
 
   public
     { Public declarations }
     DockToolbar: TExodusDockToolbar;
 
-    procedure OnDocked(); override;
-    procedure OnFloat(); override;
-
     property AXControl: TAXControl read _AXControl write _AXControl;
-    property callback: IExodusAXWindowCallback read _callback write _callback;
 
   end;
 
@@ -77,10 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-    StrUtils,
-    ExUtils,
-    XMLUtils,
-    Session;
+    StrUtils, ExUtils;
 
 
 function StartActiveX(ActiveX_GUID: widestring;
@@ -129,13 +110,6 @@ procedure TfrmActiveXDockable.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     inherited;
-
-    if (_callback <> nil) then
-    begin
-        _callback.OnClose();
-    end;
-    _callback := nil;
-
     _AXControl.Free();
     _AXControl := nil;
 end;
@@ -159,7 +133,6 @@ begin
         DockToolbar.ObjAddRef();
 
         _windowType := 'activex_dockable';
-        _callback := nil;
     except
     end;
 end;
@@ -170,40 +143,9 @@ begin
     if (DockToolbar <> nil) then
         DockToolbar.Free();
 
-    _callback := nil;
-
     inherited;
 end;
 
-{---------------------------------------}
-procedure TfrmActiveXDockable.OnDocked();
-begin
-    inherited;
-    if (_callback <> nil) then
-    begin
-        _callback.OnDocked();
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmActiveXDockable.OnFloat();
-begin
-    inherited;
-    if (_callback <> nil) then
-    begin
-        _callback.OnFloat();
-    end;
-end;
-
-{---------------------------------------}
-function TfrmActiveXDockable.GetWindowStateKey() : WideString;
-begin
-    Result := inherited GetWindowStateKey() +
-              '-' +
-              MungeName(MainSession.Profile.Name) +
-              '-' +
-              MungeName(Self.Caption);
-end;
 
 
 end.

@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 5/27/2008 10:28:57 AM from Type Library described below.
+// File generated on 2008-05-09 13:49:25 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -143,7 +143,6 @@ const
   CLASS_ExodusActionController: TGUID = '{0C473B97-BF10-4FEF-B20B-8C6724E3A395}';
   IID_IExodusItemSelection: TGUID = '{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}';
   IID_IExodusItemCallback: TGUID = '{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}';
-  IID_IExodusAXWindowCallback: TGUID = '{87D6C026-3A1C-43CF-B153-BB6472A956AD}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -325,8 +324,6 @@ type
   IExodusItemSelectionDisp = dispinterface;
   IExodusItemCallback = interface;
   IExodusItemCallbackDisp = dispinterface;
-  IExodusAXWindowCallback = interface;
-  IExodusAXWindowCallbackDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -476,14 +473,6 @@ type
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
     function Get_ActionController: IExodusActionController; safecall;
-    function GetPrefAsXML(const key: WideString): WideString; safecall;
-    procedure SetPrefAsXML(const XML: WideString); safecall;
-    function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
-    function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
-    procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
-                                 const eventXML: WideString; ImageIndex: Integer); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -613,14 +602,6 @@ type
     property DataStore: IExodusDataStore readonly dispid 226;
     property HistorySearchManager: IExodusHistorySearchManager readonly dispid 227;
     property ActionController: IExodusActionController readonly dispid 228;
-    function GetPrefAsXML(const key: WideString): WideString; dispid 229;
-    procedure SetPrefAsXML(const XML: WideString); dispid 230;
-    function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; dispid 231;
-    function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
-                        IncludeAnyOption: WordBool): WideString; dispid 232;
-    procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
-                                 const eventXML: WideString; ImageIndex: Integer); dispid 233;
   end;
 
 // *********************************************************************//
@@ -632,10 +613,6 @@ type
     ['{51385483-0B0F-45A3-95C7-579A8DDF62DF}']
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
-    procedure Close; safecall;
-    procedure BringToFront; safecall;
-    procedure Dock; safecall;
-    procedure Float; safecall;
     property DockToolbar: IExodusDockToolbar read Get_DockToolbar;
     property MsgOutToolbar: IExodusMsgOutToolbar read Get_MsgOutToolbar;
   end;
@@ -649,10 +626,6 @@ type
     ['{51385483-0B0F-45A3-95C7-579A8DDF62DF}']
     property DockToolbar: IExodusDockToolbar readonly dispid 212;
     property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
-    procedure Close; dispid 224;
-    procedure BringToFront; dispid 225;
-    procedure Dock; dispid 226;
-    procedure Float; dispid 227;
   end;
 
 // *********************************************************************//
@@ -690,7 +663,6 @@ type
     procedure OnAfterRecvMessage(var Body: WideString); safecall;
     function OnKeyUp(key: Integer; shiftState: Integer): WordBool; safecall;
     function OnKeyDown(key: Integer; shiftState: Integer): WordBool; safecall;
-    procedure OnSentMessageXML(const XML: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -708,7 +680,6 @@ type
     procedure OnAfterRecvMessage(var Body: WideString); dispid 204;
     function OnKeyUp(key: Integer; shiftState: Integer): WordBool; dispid 301;
     function OnKeyDown(key: Integer; shiftState: Integer): WordBool; dispid 201;
-    procedure OnSentMessageXML(const XML: WideString); dispid 205;
   end;
 
 // *********************************************************************//
@@ -3031,10 +3002,6 @@ type
     property Caption: WideString dispid 211;
     property DockToolbar: IExodusDockToolbar readonly dispid 212;
     property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
-    procedure Close; dispid 224;
-    procedure BringToFront; dispid 225;
-    procedure Dock; dispid 226;
-    procedure Float; dispid 227;
   end;
 
 // *********************************************************************//
@@ -4489,7 +4456,7 @@ type
     function Get_UnreadMsgCount: Integer; safecall;
     procedure Set_UnreadMsgCount(value: Integer); safecall;
     procedure Dock; safecall;
-    procedure Float; safecall;
+    procedure UnDock; safecall;
     function Get_LastActivityTime: TDateTime; safecall;
     procedure Set_LastActivityTime(value: TDateTime); safecall;
     function Get_PriorityFlag: WordBool; safecall;
@@ -4498,8 +4465,6 @@ type
     procedure Set_WindowType(const value: WideString); safecall;
     function Get_ImageIndex: Integer; safecall;
     procedure Set_ImageIndex(value: Integer); safecall;
-    procedure RegisterCallback(const callback: IExodusAXWindowCallback); safecall;
-    procedure UnRegisterCallback; safecall;
     property OleObject: OleVariant read Get_OleObject;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
@@ -4520,13 +4485,11 @@ type
     procedure BringToFront; dispid 203;
     property UnreadMsgCount: Integer dispid 204;
     procedure Dock; dispid 205;
-    procedure Float; dispid 206;
+    procedure UnDock; dispid 206;
     property LastActivityTime: TDateTime dispid 207;
     property PriorityFlag: WordBool dispid 208;
     property WindowType: WideString dispid 209;
     property ImageIndex: Integer dispid 210;
-    procedure RegisterCallback(const callback: IExodusAXWindowCallback); dispid 211;
-    procedure UnRegisterCallback; dispid 212;
   end;
 
 // *********************************************************************//
@@ -5267,30 +5230,6 @@ type
     ['{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}']
     procedure ItemDeleted(const Item: IExodusItem); dispid 201;
     procedure ItemGroupsChanged(const Item: IExodusItem); dispid 202;
-  end;
-
-// *********************************************************************//
-// Interface: IExodusAXWindowCallback
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {87D6C026-3A1C-43CF-B153-BB6472A956AD}
-// *********************************************************************//
-  IExodusAXWindowCallback = interface(IDispatch)
-    ['{87D6C026-3A1C-43CF-B153-BB6472A956AD}']
-    procedure OnDocked; safecall;
-    procedure OnClose; safecall;
-    procedure OnFloat; safecall;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusAXWindowCallbackDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {87D6C026-3A1C-43CF-B153-BB6472A956AD}
-// *********************************************************************//
-  IExodusAXWindowCallbackDisp = dispinterface
-    ['{87D6C026-3A1C-43CF-B153-BB6472A956AD}']
-    procedure OnDocked; dispid 201;
-    procedure OnClose; dispid 203;
-    procedure OnFloat; dispid 206;
   end;
 
 // *********************************************************************//

@@ -46,7 +46,7 @@
     <default_nick control="txtDefaultNick" state="rw">
       <control name="lblDefaultNick"/>
     </default_nick>
-    <roster_default value="Friends" control="txtDefaultGrp" state="rw">
+    <roster_default value="Unfiled" control="txtDefaultGrp" state="rw">
       <control name="lblDefaultGrp"/>
     </roster_default>
     <inline_status value="0" control="chkInlineStatus" state="rw"/>

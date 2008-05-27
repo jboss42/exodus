@@ -212,7 +212,6 @@ inherited frmHistorySearch: TfrmHistorySearch
           Width = 160
           Height = 73
           Anchors = [akLeft, akTop, akRight]
-          ScrollBars = ssVertical
           TabOrder = 1
           WordWrap = False
         end
@@ -290,7 +289,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = btnRemoveRoomClick
         end
         object lstRooms: TTntListBox
-          Left = 3
+          Left = 4
           Top = 19
           Width = 160
           Height = 96

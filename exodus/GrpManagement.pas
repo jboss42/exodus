@@ -106,7 +106,7 @@ begin
         if (_op = tgoCopy) then
             lblTitle.Caption := optCopy.Caption
         else if (_op = tgoMove) then
-             lblTitle.Caption := optMove.Caption;
+            lblTitle.Caption := optMove.Caption;
     end
     else begin
         if optCopy.Checked then

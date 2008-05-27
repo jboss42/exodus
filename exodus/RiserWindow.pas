@@ -50,8 +50,6 @@ type
     _taskdir: integer;
     _clickForm: TForm;
     _clickHandle: HWND;
-    _event: widestring;
-    _eventXML: widestring;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
@@ -65,9 +63,8 @@ var
 
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer); overload;
 procedure ShowRiserWindow(clickHandle: HWND; msg: Widestring; imgIndex: integer); overload;
-procedure ShowRiserWindow(msg: Widestring; imgIndex: integer; clickEvent: widestring; clickEventXML: widestring); overload;
 
-procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer; event: widestring = ''; eventXML: widestring = ''); overload;
+procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer); overload;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -76,15 +73,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Types,
-    JabberUtils,
-    ExUtils,
-    GnuGetText,
-    Session,
-    Dockable,
-    Jabber1,
-    XMLTag,
-    XMLParser;
+    Types, JabberUtils, ExUtils,  GnuGetText, Session, Dockable, Jabber1;
 
 {---------------------------------------}
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
@@ -99,13 +88,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure ShowRiserWindow(msg: Widestring; imgIndex: integer; clickEvent: widestring; clickEventXML: widestring);
-begin
-    ShowRiserWindow(nil, 0, msg, imgIndex, clickEvent, clickEventXML);
-end;
-
-{---------------------------------------}
-procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer; event: widestring; eventXML: widestring);
+procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer);
 var
     animate: boolean;
 begin
@@ -139,8 +122,6 @@ begin
 
     singleToast._clickForm := clickForm;
     singleToast._clickHandle := clickHandle;
-    singleToast._event := event;
-    singleToast._eventXML := eventXML;
 
     if ((clickForm <> nil) and (clickHandle = 0)) then
         singleToast._clickHandle := clickForm.Handle;
@@ -183,7 +164,7 @@ begin
     inherited CreateParams(Params);
     with Params do begin
         ExStyle := ExStyle or WS_EX_NOPARENTNOTIFY;
-        //WndParent := 0;
+//        WndParent := GetDesktopWindow();
     end;
 end;
 
@@ -295,29 +276,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRiser.Panel2Click(Sender: TObject);
-var
-    ttag: TXMLTag;
-    parser: TXMLTagParser;
 begin
     Self.Close;
-
-    // If we have an event AND no window handle of any sort,
-    // fire the event, then exit.  This is useful for plugins.
-    if ((_event <> '') and
-        (_clickHandle = 0) and
-        (_clickForm = nil)) then
-    begin
-        parser := TXMLTagParser.Create();
-        parser.ParseString(_eventXML);
-        ttag := parser.popTag();
-        if (ttag <> nil) then
-        begin
-            MainSession.FireEvent(_event, ttag);
-        end;
-        ttag.Free();
-        parser.Free();
-        exit;
-    end;
 
     // make sure the window handle is still valid
     if ((_clickHandle <> 0) and (not IsWindow(_clickHandle))) then

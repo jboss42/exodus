@@ -48,6 +48,7 @@ procedure StopFlash(win: TForm);
 implementation
 uses
     Windows, MMSystem,
+    Sysutils, 
     Exodus_TLB, COMExodusItem,
     JabberConst, JabberID, Dockable, RosterImages,StateForm, DisplayName,
     ExUtils, GnuGetText, Jabber1, PrefController, RiserWindow, Debug, Session;
@@ -123,27 +124,41 @@ end;
 procedure StartFlash(win: TForm);
 var
     fi: TFlashWInfo;
+    tf: TCustomForm;
 begin
-    if (not win.Visible) then
-    begin
-        win.WindowState := wsMinimized;
-        win.Visible := true;
-        ShowWindow(win.Handle, SW_SHOWMINNOACTIVE);
-    end;
+    //get the topmost parent form of win
+    tf := Forms.GetParentForm(win, true);
+    if (tf = nil) then
+        tf := win;
 
-    fi.hwnd:= win.Handle;
-    //fi.dwFlags := FLASHW_TIMERNOFG + FLASHW_TRAY;
-    fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
-    fi.dwTimeout := 0;
-    fi.cbSize:=SizeOf(fi);
-    FlashWindowEx(fi);
+    if (not tf.Showing) then
+    begin
+        tf.WindowState := wsMinimized;
+        tf.Visible := true;
+        ShowWindow(tf.Handle, SW_SHOWMINNOACTIVE);
+    end;
+    //check flasher pref to see if tf should be flashed once or flashed until focused
+    if (not MainSession.Prefs.getBool('notify_flasher')) then
+        FlashWindow(tf.Handle, false)
+    else begin
+        fi.hwnd:= tf.Handle;
+        fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
+        fi.dwTimeout := 0;
+        fi.cbSize:=SizeOf(fi);
+        FlashWindowEx(fi);
+    end;
 end;
 
 procedure StopFlash(win: TForm);
 var
     fi: TFlashWInfo;
+    tf: TCustomForm;
 begin
-    fi.hwnd:= win.Handle;
+    tf := Forms.GetParentForm(win, true);
+    if (tf = nil) then
+        tf := win;
+
+    fi.hwnd:= tf.Handle;
     fi.dwFlags := FLASHW_STOP;
     fi.dwTimeout := 0;
     fi.cbSize:=SizeOf(fi);
@@ -163,16 +178,15 @@ begin
 
     if ((notify and notify_front) <> 0) then
     begin
-        if ((not win.Visible) or (win.WindowState = wsMinimized))then
+        //make sure window is visible
+        if (not win.Showing) then
         begin
-            win.WindowState := wsNormal;
             win.Visible := true;
+            ShowWindow(win.handle, SW_SHOW)
         end;
-        ShowWindow(win.Handle, SW_SHOWNORMAL);
         ForceForegroundWindow(win.Handle);
     end
-    //tray and flash alert only if not bringtofront
-    else begin
+    else begin //tray and flash alert only if not bringtofront
         if ((notify and notify_tray) <> 0) then
             StartTrayAlert();
 
@@ -221,24 +235,28 @@ begin
         //don't notify active window, we aren't active window -> notify
         //don't notify active window, we are active window -> bail (no notify)
         if (not MainSession.prefs.getBool('notify_active_win')) then begin
-            if (GetForegroundWindow() = win.handle) then begin
-                exit
-            end;
+            if (GetForegroundWindow() = win.handle) then
+                exit;
+
             if ((GetDockManager().isActive) and
                (GetDockManager().GetTopDocked() = win) and
-               (GetForegroundWindow() = GetDockManager().getHWND())) then begin
+               (GetForegroundWindow() = GetDockManager().getHWND())) then
                 exit;
-            end;
         end;
     end;
 
     //pass off bring to front and flash to better handlers if we can
     tn := notify - ((notify and notify_front) or (notify and notify_flash));
-
-    if (win is TfrmState) then
+    //but dockmanager should handle docked
+    if (win is TfrmDockable) or (win.Handle = GetDockManager().getHWND) then
+    begin
+        if (win is TfrmDockable) then
+            TfrmDockable(win).OnNotify(notify);
+        GetDockManager().OnNotify(win, notify);
+    end
+    //let stateform have a shot at notifying...
+    else if (win is TfrmState) then
         TfrmState(win).OnNotify(notify)
-    else if (win.Handle = GetDockManager().getHWND) then
-        GetDockManager().OnNotify(win, notify)
     else tn := notify;  //include front and flash if not handled elsewhere
 
     HandleNotifications(win, tn, msg, icon, sound_name);

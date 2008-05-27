@@ -61,10 +61,6 @@ type
     procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
-    procedure Close; safecall;
-    procedure BringToFront; safecall;
-    procedure Dock; safecall;
-    procedure Float; safecall;
 
     { Protected declarations }
 
@@ -84,7 +80,6 @@ type
     procedure fireMenuClick(Sender: TObject);
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
-    procedure fireSentMessageXML(tag: TXMLTag);
 
   private
     //JJF TODO msgqueue refactor _im: TfrmMsgRecv;
@@ -261,20 +256,6 @@ begin
     end;
 
     Result := buff;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.fireSentMessageXML(tag: TXMLTag);
-var
-    i: integer;
-begin
-    for i := 0 to _plugs.Count - 1 do begin
-        try
-            TChatPlugin(_plugs[i]).com.OnSentMessageXML(tag.xml());
-        except
-            DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
-        end;
-    end;
 end;
 
 {---------------------------------------}
@@ -775,71 +756,6 @@ begin
         Result := _room
         .MsgOutToolbar;
 end;
-
-{---------------------------------------}
-procedure TExodusChat.Close;
-begin
-    if (_chat <> nil) then
-    begin
-        TfrmChat(_chat).Close();
-    end
-    else if (_room <> nil) then
-    begin
-        _room.Close();
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.BringToFront;
-begin
-    if (_chat <> nil) then
-    begin
-        TfrmChat(_chat).ShowDefault();
-    end
-    else if (_room <> nil) then
-    begin
-        _room.ShowDefault();
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.Dock;
-begin
-    if (_chat <> nil) then
-    begin
-        if (not TfrmChat(_chat).Docked) then
-        begin
-            TfrmChat(_chat).DockForm();
-        end;
-    end
-    else if (_room <> nil) then
-    begin
-        if (not _room.Docked) then
-        begin
-            _room.DockForm();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.Float;
-begin
-    if (_chat <> nil) then
-    begin
-        if (TfrmChat(_chat).Docked) then
-        begin
-            TfrmChat(_chat).FloatForm();
-        end;
-    end
-    else if (_room <> nil) then
-    begin
-        if (_room.Docked) then
-        begin
-            _room.FloatForm();
-        end;
-    end;
-end;
-
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusChat, Class_ExodusChat,

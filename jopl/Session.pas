@@ -351,7 +351,6 @@ begin
     Prefs.setString('exe_FullPath', exe_FullPath);
     exe_FullPath := Windows.GetCommandLine();
     Prefs.setString('exe_CommandLine', exe_FullPath);
-    prefs.setString('appID', PrefController.GetAppInfo().ID);
 
     if (Prefs.getBool('always_lang')) then
         _lang := Prefs.getString('locale')
