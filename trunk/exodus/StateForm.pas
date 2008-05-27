@@ -706,12 +706,10 @@ begin
         begin
             // we are getting activated, bring to front
             StopWindowPosEvents();
-            {
             SetWindowPos(Self.Handle,
                          HWND_BOTTOM,
                          Self.Left, Self.Top, Self.Width, Self.Height,
                          HWND_TOP);
-            }
             StartWindowPosEvents();
 
             if (self.Visible) then
