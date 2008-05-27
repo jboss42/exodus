@@ -150,6 +150,8 @@ type
       IncludeAnyOption: WordBool): WideString; safecall;
     function SelectRoom(const Title: WideString; IncludeJoinedRoomList,
       IncludeAnyOption: WordBool): WideString; safecall;
+    procedure ShowToastWithEvent(const message, event, eventXML: WideString;
+      ImageIndex: Integer); safecall;
 
     { Protected declarations }
   private
@@ -2200,6 +2202,12 @@ begin
             Result := SelectUIDByType('room', Title);
         end;
     end;
+end;
+
+procedure TExodusController.ShowToastWithEvent(const message, event,
+  eventXML: WideString; ImageIndex: Integer);
+begin
+    ShowRiserWindow(message, imageIndex, event, eventXML);
 end;
 
 initialization

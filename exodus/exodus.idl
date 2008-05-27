@@ -2080,6 +2080,10 @@ library Exodus
     id(0x000000E8)
     ]
     HRESULT _stdcall SelectRoom([in] BSTR Title, [in] VARIANT_BOOL IncludeJoinedRoomList, [in] VARIANT_BOOL IncludeAnyOption, [out, retval] BSTR * value );
+    [
+    id(0x000000E9)
+    ]
+    HRESULT _stdcall ShowToastWithEvent([in] BSTR message, [in] BSTR event, [in] BSTR eventXML, [in] long ImageIndex );
   };
 
   [
