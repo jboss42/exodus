@@ -68,7 +68,7 @@ var
 
 implementation
 uses ExUtils, CommCtrl, COMExodusItemList, Session, RosterImages,
-        gnugettext, ExTreeView;
+        gnugettext, ExTreeView, Jabber1;
 
 {$R *.dfm}
 
@@ -327,13 +327,21 @@ procedure TRosterForm.ApplicationEventsShowHint(var HintStr: string;
   var CanShow: Boolean; var HintInfo: THintInfo);
 var
    HitTest: THitTests;
+   hnd: HWnd;
 begin
     if (HintInfo.HintControl is TExTreeView) then
     begin
-       CanShow := false;
-       TExTreeView(HintInfo.HintControl).ActivateHover();
+       hnd := GetForegroundWindow();
+       if ((frmExodus.Handle = hnd) or
+           (HoverWindow.Handle = hnd))
+       then
+       begin
+          CanShow := false;
+          TExTreeView(HintInfo.HintControl).ActivateHover();
+       end;
        exit;
     end;
+
     if (HintInfo.HintControl = _PageControl) then
     begin
         //We want to suppress hints for tabs when user hovers over tree area of the tab
