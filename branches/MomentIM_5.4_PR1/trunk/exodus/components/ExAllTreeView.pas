@@ -21,7 +21,7 @@ unit ExAllTreeView;
 
 interface
 
-uses SysUtils, Classes, Controls, DropTarget, ExTreeView, Exodus_TLB, Types, TntMenus;
+uses SysUtils, Classes, Controls, DropTarget, ExTreeView, Exodus_TLB, Types, TntMenus, ComCtrls;
 
 type
   TTreeDragSelectionType = (tdstNone, tdstGroup, tdstOther);
@@ -35,6 +35,9 @@ type
 
   protected
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
+    procedure Expand(node: TTreeNode); override;
+    procedure Collapse(node: TTreeNode); override;
+    
     procedure _DragUpdate(Source: TExDropTarget; X, Y: Integer; var Action: TExDropActionType);
     procedure _DragExecute(Source: TExDropTarget; X, Y: Integer);
 
@@ -51,12 +54,15 @@ type
             var accept: Boolean); override;
     procedure DragDrop(Source: TObject;
             X, Y: Integer); override;
+
+    procedure DblClick(); override;
   end;
 
 implementation
 
 uses ActionMenus, Graphics, ExActionCtrl, ExUtils, gnugettext, GrpManagement, Forms,
-        Messages, COMExodusItemList, Session, TntComCtrls, Windows, Jabber1, RosterImages;
+        Messages, COMExodusItem, COMExodusItemList, Session, TntComCtrls, Windows,
+        ChatWin, Room, Jabber1, RosterImages;
 
 const
     sConfirmDeleteCaption: Widestring = 'Delete Item(s)';
@@ -125,6 +131,86 @@ begin
         actPM.Popup(pt.X, pt.Y);
 
         Handled := true;
+    end;
+end;
+procedure TExAllTreeView.Expand(node: TTreeNode);
+var
+    item: IExodusItem;
+begin
+    inherited Expand(node);
+    item := GetNodeItem(node);
+    if (item = nil) or (item.Type_ <> 'group') then exit;
+
+    OutputDebugMsg('node "' + node.Text + '" expanded');
+    TJabberSession(Session).ItemController.GroupExpanded[item.UID] := true;
+end;
+procedure TExAllTreeView.Collapse(node: TTreeNode);
+var
+    itemCtrl: IExodusItemController;
+    item: IExodusItem;
+    subitems: IExodusItemList;
+    idx: Integer;
+begin
+    if (node = nil) then exit;
+    
+    inherited Collapse(node);
+    
+    item := GetNodeItem(node);
+    if (item = nil) or (item.Type_ <> 'group') then exit;
+
+    OutputDebugMsg('node "' + item.UID + '" collapsed');
+    itemCtrl := TJabberSession(Session).ItemController;
+    itemCtrl.GroupExpanded[item.UID] := false;
+
+    //Now collapse the subgroups
+    subitems := itemCtrl.GetGroupItems(item.UID);
+    for idx := 0 to subitems.Count - 1 do begin
+        item := subitems.Item[idx];
+        if (item.Type_ <> 'group') then continue;
+        Collapse(_GetNodeByUID(item.UID, TTntTreeNode(node)));
+    end;
+end;
+
+procedure TExAllTreeView.DblClick();
+var
+    Item: IExodusItem;
+    Nick, RegNick: WideString;
+    UseRegNick: Boolean;
+begin
+    OutputDebugMsg('tree double-click event!');
+    //inherited;
+
+    try
+        Item := GetNodeItem(CurrentNode);
+    except
+        Item := nil;
+        OutputDebugMsg('!!!!!! bad current node reference !!!!!!');
+    end;
+    if (Item = nil) then exit;
+
+    if (Item.Type_ <> EI_TYPE_GROUP) then begin
+        //Non-group node
+        if (Item.Type_ = EI_TYPE_CONTACT) then
+        begin
+            StartChat(Item.UID, '', true);
+        end
+        else if (Item.Type_ = EI_TYPE_ROOM) then
+        begin
+            try
+               Nick := Item.value['nick'];
+            except
+            end;
+            try
+               RegNick := Item.value['reg_nick'];
+            except
+            end;
+            if (RegNick = 'true') then
+                UseRegNick := true
+            else
+                UseRegNick := false;
+
+            StartRoom(Item.UID, Nick, '', true, false, UseRegNick);
+        end;
     end;
 end;
 
