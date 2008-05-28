@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 5/27/2008 10:28:57 AM from Type Library described below.
+// File generated on 5/28/2008 3:15:28 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -4500,12 +4500,15 @@ type
     procedure Set_ImageIndex(value: Integer); safecall;
     procedure RegisterCallback(const callback: IExodusAXWindowCallback); safecall;
     procedure UnRegisterCallback; safecall;
+    procedure FlashWindow; safecall;
+    function Get_DockToolbar: IExodusDockToolbar; safecall;
     property OleObject: OleVariant read Get_OleObject;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
     property PriorityFlag: WordBool read Get_PriorityFlag write Set_PriorityFlag;
     property WindowType: WideString read Get_WindowType write Set_WindowType;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
+    property DockToolbar: IExodusDockToolbar read Get_DockToolbar;
   end;
 
 // *********************************************************************//
@@ -4527,6 +4530,8 @@ type
     property ImageIndex: Integer dispid 210;
     procedure RegisterCallback(const callback: IExodusAXWindowCallback); dispid 211;
     procedure UnRegisterCallback; dispid 212;
+    procedure FlashWindow; dispid 213;
+    property DockToolbar: IExodusDockToolbar readonly dispid 214;
   end;
 
 // *********************************************************************//

@@ -54,13 +54,18 @@ type
     procedure Set_PriorityFlag(Value: WordBool); safecall;
     procedure RegisterCallback(const callback: IExodusAXWindowCallback); safecall;
     procedure UnRegisterCallback; safecall;
+    procedure FlashWindow; safecall;
+    function Get_DockToolbar: IExodusDockToolbar; safecall;
 
   end;
 
 implementation
 
 uses
-    RosterImages, ComServ;
+    RosterImages,
+    ComServ,
+    Notify,
+    PrefController;
 
 constructor TExodusAXWindow.Create(form: TfrmActiveXDockable);
 begin
@@ -198,6 +203,28 @@ begin
     if (_frm <> nil) then
     begin
         _frm.callback := nil;
+    end;
+end;
+
+procedure TExodusAXWindow.FlashWindow;
+begin
+    if (_frm <> nil)then
+    begin
+        DoNotify(_frm,
+                 notify_flash,
+                 '',
+                 0,
+                 '');
+
+    end;
+end;
+
+function TExodusAXWindow.Get_DockToolbar: IExodusDockToolbar;
+begin
+    Result := nil;
+    if (_frm <> nil) then
+    begin
+        Result := _frm.DockToolbar;
     end;
 end;
 
