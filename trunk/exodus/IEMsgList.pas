@@ -484,7 +484,7 @@ begin
         txt := HTML_EscapeChars(Msg.Body, false, false);
         txt := _processUnicode(txt); //StringReplace() cannot handle
         // Make sure the spaces are preserved
-        txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
+        // txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]); // Doesn't work well with some versions of IE
         // Change CRLF to HTML equiv
         txt := REGEX_CRLF.Replace(txt, '<br />', true);
         // Detect URLs in text
