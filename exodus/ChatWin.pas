@@ -416,17 +416,18 @@ begin
             if (show_window) then
                 ShowDefault(bring_to_front);
 
-            PlayQueue();
-
-            // scroll to the bottom..
-            if (do_scroll) then
-                _scrollBottom();
-
             Application.ProcessMessages();
 
             //finally, event new chat to plugins
             if (new_chat) then
                 ExCOMController.fireNewChat(sjid, com_controller);
+
+            PlayQueue();
+            
+            // scroll to the bottom..
+            if (do_scroll) then
+                _scrollBottom();
+
         end;
 
 
