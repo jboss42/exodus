@@ -359,12 +359,6 @@ begin
     end
     else
         Action := datNone;
-
-    case Action of
-        datNone: Self.DragCursor := crNone;
-        datMove: Self.DragCursor := crDragMove;
-        datCopy: Self.DragCursor := crDragCopy;
-    end;
 end;
 procedure TExAllTreeView._DragExecute(Source: TExDropTarget; X: Integer; Y: Integer);
 var

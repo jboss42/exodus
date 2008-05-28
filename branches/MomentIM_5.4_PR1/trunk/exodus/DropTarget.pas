@@ -70,10 +70,6 @@ function OpenDropTarget(Source: TObject;
         executeEvt: TExDropExecuteEvent = nil;
         endEvt: TExDropEndEvent = nil): TExDropTarget;
 
-const
-  crDragMove: TCursor = 1;
-  crDragCopy: TCursor = 2;
-
 implementation
 
 uses COMExodusItemList;

@@ -3110,17 +3110,6 @@ begin
         Action := datMove
     else
         Action := datNone;
-
-    case Action of
-        datNone: begin
-            Self.DragCursor := crNone;
-            MsgList.DragCursor := crNone;
-        end;
-        datMove: begin
-            Self.DragCursor := crDragMove;
-            MsgList.DragCursor := crDragMove;
-        end;
-    end;
 end;
 procedure TfrmRoom._DragEnd(Source: TExDropTarget);
 var
