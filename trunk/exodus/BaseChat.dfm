@@ -6,7 +6,7 @@ inherited frmBaseChat: TfrmBaseChat
   OnDestroy = FormDestroy
   OnResize = TntFormResize
   ExplicitWidth = 423
-  ExplicitHeight = 288
+  ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -62,6 +62,7 @@ inherited frmBaseChat: TfrmBaseChat
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
+    Constraints.MinHeight = 20
     ParentColor = True
     TabOrder = 0
   end
@@ -323,7 +324,7 @@ inherited frmBaseChat: TfrmBaseChat
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
-        ItemHeight = 0
+        ItemHeight = 13
         ParentFont = False
         ParentShowHint = False
         ShowHint = True

@@ -446,8 +446,15 @@ begin
         oldHeight := MsgDebug.Height + MemoSend.Height;
         real_a := MsgDebug.Height;
         real_b := MemoSend.Height;
-        msgratio := real_a / oldHeight;
-        memoratio := real_b / oldHeight;
+        if (oldHeight > 0) then
+        begin
+            msgratio := real_a / oldHeight;
+            memoratio := real_b / oldHeight;
+        end
+        else begin
+            msgratio := 1;
+            memoratio := 1;
+        end;
 
         // Now that we have ratios, make sure that nothing would be too small;
         MsgDebug.Height := Trunc(msgratio * (Panel2.Height - Splitter1.Height));

@@ -52,6 +52,7 @@ inherited frmDebug: TfrmDebug
     BevelOuter = bvNone
     BorderWidth = 4
     Caption = 'Panel2'
+    Constraints.MinHeight = 50
     ParentColor = True
     TabOrder = 0
     OnResize = Panel2Resize
