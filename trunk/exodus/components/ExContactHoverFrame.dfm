@@ -7,19 +7,23 @@ inherited ExContactHoverFrame: TExContactHoverFrame
   ExplicitHeight = 180
   object lblDisplayName: TTntLabel
     Left = 60
-    Top = 10
-    Width = 7
+    Top = 11
+    Width = 175
     Height = 16
+    AutoSize = False
     Caption = '2'
+    EllipsisPosition = epWordEllipsis
     OnMouseEnter = lblDisplayNameMouseEnter
     OnMouseLeave = lblDisplayNameMouseLeave
   end
   object lblUID: TTntLabel
     Left = 60
-    Top = 33
-    Width = 7
+    Top = 34
+    Width = 175
     Height = 16
+    AutoSize = False
     Caption = '1'
+    EllipsisPosition = epWordEllipsis
     ParentShowHint = False
     ShowHint = True
     OnMouseEnter = lblUIDMouseEnter
