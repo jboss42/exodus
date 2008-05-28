@@ -54,8 +54,6 @@ type
             var accept: Boolean); override;
     procedure DragDrop(Source: TObject;
             X, Y: Integer); override;
-
-    procedure DblClick(); override;
   end;
 
 implementation
@@ -168,49 +166,6 @@ begin
         item := subitems.Item[idx];
         if (item.Type_ <> 'group') then continue;
         Collapse(_GetNodeByUID(item.UID, TTntTreeNode(node)));
-    end;
-end;
-
-procedure TExAllTreeView.DblClick();
-var
-    Item: IExodusItem;
-    Nick, RegNick: WideString;
-    UseRegNick: Boolean;
-begin
-    OutputDebugMsg('tree double-click event!');
-    //inherited;
-
-    try
-        Item := GetNodeItem(CurrentNode);
-    except
-        Item := nil;
-        OutputDebugMsg('!!!!!! bad current node reference !!!!!!');
-    end;
-    if (Item = nil) then exit;
-
-    if (Item.Type_ <> EI_TYPE_GROUP) then begin
-        //Non-group node
-        if (Item.Type_ = EI_TYPE_CONTACT) then
-        begin
-            StartChat(Item.UID, '', true);
-        end
-        else if (Item.Type_ = EI_TYPE_ROOM) then
-        begin
-            try
-               Nick := Item.value['nick'];
-            except
-            end;
-            try
-               RegNick := Item.value['reg_nick'];
-            except
-            end;
-            if (RegNick = 'true') then
-                UseRegNick := true
-            else
-                UseRegNick := false;
-
-            StartRoom(Item.UID, Nick, '', true, false, UseRegNick);
-        end;
     end;
 end;
 
