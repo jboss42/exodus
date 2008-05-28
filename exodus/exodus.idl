@@ -8830,6 +8830,15 @@ library Exodus
     id(0x000000D4)
     ]
     HRESULT _stdcall UnRegisterCallback( void );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall FlashWindow( void );
+    [
+    propget, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall DockToolbar([out, retval] IExodusDockToolbar ** Value /*Warning: unable to validate structure name: */ );
   };
 
   [
