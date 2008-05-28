@@ -468,7 +468,8 @@ uses
     ExodusDockManager,
     DockWindow,
     HistorySearch,
-    BookmarkForm;
+    BookmarkForm,
+    DisplayName;
 
 {$R *.DFM}
 {---------------------------------------}
@@ -524,8 +525,8 @@ begin
 
             if (send_presence) then
                 f.sendStartPresence();
-
-            f.Caption := tmp_jid.userDisplay; //no display name here for room names
+            //JJF todo add a displayname listener for dn changes
+            f.Caption := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid); //use display name if possible tmp_jid.userDisplay; //no display name here for room names
             f.Hint := tmp_jid.jid;
 
             // setup prefs
