@@ -1087,7 +1087,7 @@ begin
 
     with MainSession.Prefs do begin
         grpSeparator := getString('group_separator');
-        nesting := getBool('nested_groups') and (grpSeparator <> '');
+        nesting := getBool('nested_groups') and getBool('branding_nested_subgroup')and (grpSeparator <> '');
     end;
     if nesting then begin
         //TODO:  use a different msg when nesting?

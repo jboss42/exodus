@@ -175,7 +175,7 @@ end;
 {---------------------------------------}
 procedure TRoomController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
-     if Event = '/session/authenticated'  then
+     if Event = '/session/roster_ready'  then
      begin
          _GetRooms();
      end
