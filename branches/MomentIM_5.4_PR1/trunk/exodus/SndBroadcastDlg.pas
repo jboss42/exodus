@@ -201,7 +201,8 @@ const
     ROOMMSG_NO_SUBJECT = 'No subject specified';
     ROOMMSG_SUBJECT_HEADER = 'Subject: ';
     ROOMMSG_BROADCAST_HEADER = 'Broadcast Message';
-
+    ROOMMSG_MESSAGE_HEADER = 'Message: ';
+    
     ERROR_NO_RECIPIENTS = 'You must have at least one valid recipient to send a Broadcast Message.' + #10#13#10#13 + 'Would you like to add a recipient now?';
     WARNING_NO_SUBJECT = 'Are you sure you want to send this message with no Subject?"';
     ERROR_NO_MESSAGE = 'You must enter a message to send a Broadcast.';
@@ -679,8 +680,12 @@ end;
 
 {------------------------------------------------------------------------------}
 procedure TdlgSndBroadcast.AddRecipientsByItems(items: IExodusItemList);
+var
+    idx: integer;
 begin
-
+    for idx := 0 to items.Count - 1 do
+        AddRecipientByItem(items.Item[idx]);
+    RefreshRecipientList();
 end;
 
 {------------------------------------------------------------------------------}
@@ -728,12 +733,22 @@ procedure TdlgSndBroadcast.btnAddClick(Sender: TObject);
 var
     newRecipient: Widestring;
     newType: widestring;
+    item: IExodusItem;
+    fullItemList: IExodusItemList;
 begin
     inherited;
     newRecipient := SelectUIDByTypes(_supportedTypes, newType, '', Self.Handle);
     if (newRecipient <> '') then
-        AddRecipientByUID(newRecipient);
-    RefreshRecipientList();
+    begin
+        if (newType <> EI_TYPE_GROUP) then
+            AddRecipientByUID(newRecipient)
+        else begin
+            item := MainSession.ItemController.GetItem(newRecipient);
+            fullItemList := TExodusItemList.Create(); //released when out of scope
+            ExpandAndAddItems(item, fullItemList);
+            AddRecipientsByItems(fullItemList);
+        end;
+    end;
 end;
 
 {------------------------------------------------------------------------------}
@@ -803,14 +818,14 @@ function FormatRoomBroadcastPlainText(Header: widestring;
 begin
     Result := header;
     if (Result <> '') then
-        Result := Result + ' ';
+        Result := Result + #13#10;
     Result := Result + _(ROOMMSG_SUBJECT_HEADER);
     if (Subject <> '') then
         Result := Result + Subject
     else
         Result := Result + _(ROOMMSG_NO_SUBJECT);
 
-    Result := Result +  #13#10 + Plaintext;
+    Result := Result +  #13#10 + _(ROOMMSG_MESSAGE_HEADER) + Plaintext;
 end;
 
 procedure FormatRoomBroadcastXHTML(Header: widestring;
@@ -848,15 +863,18 @@ begin
     if (sstr = '') then
         sstr := _(ROOMMSG_NO_SUBJECT);
     dtag.AddBasicTag('span', sstr);
-    
+
     dtag := topTag.AddTag('div');
+    ttag := dtag.AddBasicTag('span', _(ROOMMSG_MESSAGE_HEADER));
+    ttag.SetAttribute('style','font-weight:bold');
+    
     //now add children of the given xhtml or use the plaintext
     ttag := nil;
     if (xhtmlTag <> nil) then
         ttag := xhtmlTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]/body[@xmlns="' + XMLNS_XHTML + '"]');
 
     if (ttag = nil) then
-        dTag.AddCData(plaintext)
+        dTag.AddBasicTag('span',plaintext)
     else begin
         //add all current children of xhtml body tag
         children := tTag.ChildTags;
