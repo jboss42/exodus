@@ -88,7 +88,7 @@ type
       procedure _SendGroups();
       function  _GetItemRetainer(const UID: Widestring): TExodusItemRetainer;
       function  _AddGroup(const GroupUID: WideString): TExodusItemRetainer;
-      function  _CopyGroup(item: IExodusItem; GroupTo: Widestring): Boolean;
+      function  _ApplyGroup(item: IExodusItem; GroupTo: Widestring; moving: Boolean = false): Boolean;
   public
       constructor Create(JS: TObject);
       destructor Destroy; override;
@@ -362,7 +362,10 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusItemController._CopyGroup(item: IExodusItem; GroupTo: WideString): Boolean;
+function TExodusItemController._ApplyGroup(
+        item: IExodusItem;
+        GroupTo: WideString;
+        moving: Boolean): Boolean;
 var
     subgrp: Widestring;
     subitems: IExodusItemList;
@@ -390,11 +393,22 @@ begin
     if Result then begin
         //Copy the items
         subitems := GetGroupItems(Item.UID);
-        for idx := 0 to subitems.Count - 1 do
-            CopyItem(subitems.Item[idx].UID, subgrp);
+        if subitems.Count = 0 then
+            AddGroup(subgrp)
+        else begin
+            for idx := 0 to subitems.Count - 1 do begin
+                if moving then
+                    MoveItem(subitems.Item[idx].UID, item.UID, subgrp)
+                else
+                    CopyItem(subitems.Item[idx].UID, subgrp);
+            end;
+        end;
 
         //Update expanded-state??
         Set_GroupExpanded(subgrp, Get_GroupExpanded(Item.UID));
+
+        //If moving, remove
+        if moving then RemoveItem(item.UID);
     end;
 end;
 
@@ -434,7 +448,7 @@ begin
 
     Item := Wrapper.ExodusItem;
     if (Item.Type_ = EI_TYPE_GROUP) then begin
-        _CopyGroup(Item, GroupTo);
+        _ApplyGroup(Item, GroupTo);
     end
     else begin
         //Copy item from one group to another, or in other words,
@@ -455,8 +469,8 @@ begin
     if (Wrapper = nil) then exit;
 
     Item := Wrapper.ExodusItem;
-    if (Item.Type_ = EI_TYPE_GROUP) and _CopyGroup(Item, GroupTo) then begin
-        RemoveItem(UID);
+    if (Item.Type_ = EI_TYPE_GROUP) then begin
+        _ApplyGroup(Item, GroupTo, true);
     end
     else begin
         //Move item from one group to another, or in other words,
@@ -516,7 +530,7 @@ begin
     if (cb <> nil) then cb.ItemDeleted(ItemWrapper.ExodusItem);
 
     //then finally, we delete
-    ItemWrapper.Free;
+    ItemWrapper.Free();
 end;
 
 {---------------------------------------}
