@@ -88,6 +88,7 @@ type
       procedure _SendGroups();
       function  _GetItemRetainer(const UID: Widestring): TExodusItemRetainer;
       function  _AddGroup(const GroupUID: WideString): TExodusItemRetainer;
+      function  _CopyGroup(item: IExodusItem; GroupTo: Widestring): Boolean;
   public
       constructor Create(JS: TObject);
       destructor Destroy; override;
@@ -170,6 +171,9 @@ begin
        _GroupsLoaded := false;
        _GetGroups();
     end
+    else if Event = '/session/disconnecting' then begin
+        _SendGroups();
+    end
     else if Event = '/session/disconnected' then begin
         _GroupsLoaded := false;
         ClearItems();
@@ -201,6 +205,7 @@ procedure TExodusItemController._ParseGroups(Event: string; Tag: TXMLTag);
 var
     i: Integer;
     Groups:TXMLTag;
+    gTag: TXMLTag;
     Group: IExodusItem;
 begin
     Group := nil;
@@ -212,19 +217,19 @@ begin
     else
     begin
         if ((Event = 'xml') and (Tag.getAttribute('type') = 'error')) then
-//        begin
             _ServerStorage := false;
-//            Groups := MainSession.Prefs.LoadGroups();
-//            if (Groups = nil) then exit;
-//        end;
     end;
 
     if Groups <> nil then begin
         for i := 0 to Groups.ChildCount - 1 do
         begin
             //Add will checks for duplicates
-            Group := AddGroup(Groups.ChildTags[i].Data);
-            Group.AddProperty('Expanded', Groups.ChildTags[i].GetAttribute('expanded'));
+            gTag := Groups.ChildTags[i];
+            Group := AddGroup(gTag.Data);
+            if (gTag.GetAttribute('expanded') <> '') then
+                Group.Value['Expanded'] := gTag.GetAttribute('expanded')
+            else
+                Group.Value['Expanded'] := 'false';
         end;
     end;
 
@@ -357,6 +362,43 @@ begin
 end;
 
 {---------------------------------------}
+function TExodusItemController._CopyGroup(item: IExodusItem; GroupTo: WideString): Boolean;
+var
+    subgrp: Widestring;
+    subitems: IExodusItemList;
+    idx: Integer;
+begin
+    //Assume the copy will happen...
+    Result := (GroupTo <> Item.UID);
+
+    if Result then begin
+        //Determine the destination
+        if (_GroupParser.Separator <> '') then begin
+            subgrp := _GroupParser.GetGroupName(Item.UID);
+            Result := _GroupParser.GetGroupParent(Item.UID) <> GroupTo;
+            if Result and (GroupTo <> '') then begin
+                //Make this group a subgroup of Group...
+                subgrp := GroupTo + _GroupParser.Separator + subgrp;
+            end;
+        end
+        else begin
+            //Copy this group's items into Group...
+            subgrp := GroupTo;
+        end;
+    end;
+
+    if Result then begin
+        //Copy the items
+        subitems := GetGroupItems(Item.UID);
+        for idx := 0 to subitems.Count - 1 do
+            CopyItem(subitems.Item[idx].UID, subgrp);
+
+        //Update expanded-state??
+        Set_GroupExpanded(subgrp, Get_GroupExpanded(Item.UID));
+    end;
+end;
+
+{---------------------------------------}
 function TExodusItemController.AddItemByUid(const UID, ItemType: WideString;
   const cb: IExodusItemCallback): IExodusItem;
 var
@@ -385,9 +427,6 @@ procedure TExodusItemController.CopyItem(const UID, GroupTo: WideString);
 var
     Wrapper: TExodusItemRetainer;
     Item: IExodusItem;
-    Idx: Integer;
-    subgrp: Widestring;
-    subitems: IExodusItemList;
 begin
     //Check if item exists
     Wrapper := _GetItemRetainer(UID);
@@ -395,27 +434,7 @@ begin
 
     Item := Wrapper.ExodusItem;
     if (Item.Type_ = EI_TYPE_GROUP) then begin
-        if (_GroupParser.Separator <> '') then begin
-            if (GroupTo <> '') then begin
-                //Make this group a subgroup of Group...
-                subgrp := GroupTo + _GroupParser.Separator + _GroupParser.GetGroupName(UID)
-            end
-            else begin
-                //Make this group a top-level Group...
-                subgrp := _GroupParser.GetGroupName(UID);
-            end;
-        end
-        else begin
-            //Copy this group's items into Group...
-            subgrp := GroupTo;
-        end;
-
-        subitems := GetGroupItems(UID);
-        for idx := 0 to subitems.Count - 1 do
-            CopyItem(subitems.Item[idx].UID, subgrp);
-
-        //Update expanded-state??
-        Set_GroupExpanded(subgrp, Get_GroupExpanded(UID));
+        _CopyGroup(Item, GroupTo);
     end
     else begin
         //Copy item from one group to another, or in other words,
@@ -430,41 +449,13 @@ procedure TExodusItemController.MoveItem(const UID, GroupFrom,
 var
     Wrapper: TExodusItemRetainer;
     Item: IExodusItem;
-    Idx: Integer;
-    subgrp: Widestring;
-    subitems: IExodusItemList;
 begin
     //Check if item exists
     Wrapper := _GetItemRetainer(UID);
     if (Wrapper = nil) then exit;
 
     Item := Wrapper.ExodusItem;
-    if (Item.Type_ = EI_TYPE_GROUP) then begin
-        if (_GroupParser.Separator <> '') then begin
-            if (GroupTo <> '') then begin
-                //Make this group a subgroup of Group...
-                subgrp := GroupTo + _GroupParser.Separator + _GroupParser.GetGroupName(UID)
-            end
-            else begin
-                //Make this group a top-level Group...
-                subgrp := _GroupParser.GetGroupName(UID);
-            end;
-
-            //Now let's make sure the new group exists!
-            AddGroup(subgrp);
-        end
-        else begin
-            //Move this group's items into GroupTo...
-            subgrp := GroupTo;
-        end;
-
-        subitems := GetGroupItems(UID);
-        for idx := 0 to subitems.Count - 1 do
-            MoveItem(subitems.Item[idx].UID, UID, subgrp);
-
-        //Update expanded-state??
-        Set_GroupExpanded(subgrp, Get_GroupExpanded(UID));
-        
+    if (Item.Type_ = EI_TYPE_GROUP) and _CopyGroup(Item, GroupTo) then begin
         RemoveItem(UID);
     end
     else begin
@@ -643,7 +634,6 @@ end;
 procedure TExodusItemController.Set_GroupExpanded(const Group: WideString;
   Value: WordBool);
 var
-    session: TJabberSession;
     Wrapper: TExodusItemRetainer;
     state: Widestring;
     path: TWidestringList;
@@ -668,7 +658,6 @@ begin
     Wrapper := _GetItemRetainer(Group);
     if (Wrapper = nil) then exit;
 
-    session := TJabberSession(_JS);
     if not Value then
         state := 'false'
     else begin
@@ -719,13 +708,16 @@ end;
 
 procedure TExodusGroupCallback.ItemDeleted(const item: IExodusItem);
 begin
+    if not _ctrl._GroupsLoaded then exit;
+    
     _ctrl._SendGroups();
     item.IsVisible := false;
     TJabberSession(_ctrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusGroupCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
-    //TODO:  something??
+    if not _ctrl._GroupsLoaded then exit;
+
     _ctrl._SendGroups();
     TJabberSession(_ctrl._JS).FireEvent('/item/update', item);
 end;

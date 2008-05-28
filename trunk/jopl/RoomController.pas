@@ -28,6 +28,7 @@ type TRoomController = class
          _SessionCB: Integer;
          _ItemsCB: IExodusItemCallback;
          _dnListener: TDisplayNameEventListener;
+         _RoomsLoaded: Boolean;
 
          //Methods
          procedure _GetRooms();
@@ -178,7 +179,7 @@ begin
      if Event = '/session/roster_ready'  then
      begin
          _GetRooms();
-     end
+     end;
 end;
 
 {---------------------------------------}
@@ -189,6 +190,7 @@ var
     IQ: TJabberIQ;
     Session: TJabberSession;
 begin
+    _RoomsLoaded := false;
     Session := TJabberSession(_js);
     IQ := TJabberIQ.Create(Session, Session.generateID(), _ParseRooms, 180);
     with iq do begin
@@ -243,6 +245,7 @@ begin
             TmpJID.Free();
      end;
 
+     _RoomsLoaded := true;
      Item := nil;
      TJabberSession(_JS).FireEvent('/item/end', Item);
      TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
@@ -345,12 +348,16 @@ end;
 
 procedure TExodusRoomsCallback.ItemDeleted(const item: IExodusItem);
 begin
+    if not _roomCtrl._RoomsLoaded then exit;
+
     _roomCtrl.SaveRooms();
     item.IsVisible := false;
     TJabberSession(_roomCtrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusRoomsCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
+    if not _roomCtrl._RoomsLoaded then exit;
+
     _roomCtrl.SaveRooms();
     TJabberSession(_roomCtrl._JS).FireEvent('/item/update', item);
 end;

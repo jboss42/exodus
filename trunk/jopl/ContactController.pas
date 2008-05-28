@@ -43,6 +43,7 @@ type
        _DNListener: TDisplayNameEventListener;
        _DefaultGroup: WideString;
        _PendingItems: IExodusItemList;
+       _ContactsLoaded: Boolean;
        
        //Methods
        procedure _GetContacts();
@@ -178,6 +179,7 @@ procedure TContactController._GetContacts();
 var
     IQ: TJabberIQ;
 begin
+    _ContactsLoaded := false;
     IQ := TJabberIQ.Create(TJabberSession(_JS), TJabberSession(_JS).generateID(), _ParseContacts, 600);
     with iq do begin
         iqType := 'get';
@@ -220,6 +222,7 @@ begin
     //TJabberSession(_js).ItemController.SaveGroups();
     Item := nil;
     _ItemsCB.Paused := false;
+    _ContactsLoaded := true;
     TJabberSession(_JS).FireEvent('/contact/item/end', Item);
     TJabberSession(_JS).FireEvent('/item/end', Item);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
@@ -774,16 +777,18 @@ end;
 
 procedure TExodusContactsCallback.ItemDeleted(const item: IExodusItem);
 begin
+    if not _contactCtrl._ContactsLoaded then exit;
     if Paused then exit;
     if IsIgnored(item.UID) then exit;
-    
+
     _contactCtrl.RemoveItem(item);
 end;
 procedure TExodusContactsCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
+    if not _contactCtrl._ContactsLoaded then exit;
     if Paused then exit;
     if IsIgnored(item.UID) then exit;
-    
+
     TContactUpdateItemOp.Create(_contactCtrl, item);
 end;
 
