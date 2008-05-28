@@ -331,14 +331,11 @@ var
 begin
     if (HintInfo.HintControl is TExTreeView) then
     begin
+       CanShow := false;
        hnd := GetForegroundWindow();
        if ((frmExodus.Handle = hnd) or
-           (HoverWindow.Handle = hnd))
-       then
-       begin
-          CanShow := false;
+           (HoverWindow.Handle = hnd)) then
           TExTreeView(HintInfo.HintControl).ActivateHover();
-       end;
        exit;
     end;
 
