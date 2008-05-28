@@ -151,6 +151,10 @@ type
     procedure _setScrollUpColor();
     procedure _setScrollDownColor();
     function _getItemCount(): integer;
+    procedure _sortTrackingListRecentActivity();
+    procedure _sortTrackingListType();
+    procedure _sortTrackingListUnread();
+    procedure _sortTrackingListAlpha();
   protected
     { Protected declarations }
     procedure CreateParams(Var params: TCreateParams); override;
@@ -507,12 +511,7 @@ begin
         Result := TAWTrackerItem.Create();
         Result.awItem := TfAWItem.Create(nil);
         Result.frm := frm;
-        if (frm.Caption <> '') then begin
-            _trackingList.AddObject(frm.Caption, Result);
-        end
-        else begin
-            _trackingList.AddObject(frm.UID, Result);
-        end;
+        _trackingList.AddObject(frm.UID, Result);
         Result.awItem.OnClick := Self.onItemClick;
 
         // Setup item props
@@ -789,175 +788,41 @@ end;
 {---------------------------------------}
 procedure TfrmActivityWindow._sortTrackingList(sortType: TSortState);
 var
-    i,j: integer;
-    insertPoint: integer;
-    tempitem1, tempitem2: TAWTrackerItem;
-    tempList: TWidestringList;
-    itemadded: boolean;
-    permRoomList, adhocRoomList, chatList, otherList: TWidestringList;
     sortstring: widestring;
 begin
     if (sortType = ssUnsorted) then exit;
 
     try
         _curListSort := sortType;
-        tempList := TWidestringList.Create();
 
         sortstring := _(sSortBy);
 
         // Always do an Alpha sort first
-        _trackingList.Sort;
+        _sortTrackingListAlpha();
 
         if (sortType = ssAlpha) then begin
             sortstring := sortstring + _(sSortAlpha);
         end
         // Refine sort if something other then Alpha
         else if (sortType = ssRecent) then begin
-            // Sort by most Recent Activity, then by alpha for tied items
             sortstring := sortstring + _(sSortRecent);
-            for i := 0 to _trackingList.Count - 1 do begin
-                // iterate over list to reorder
-                itemadded := false;
-                tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
-                if (tempitem1 <> nil) then begin
-                    for j := 0 to tempList.Count - 1 do begin
-                        tempitem2 := TAWTrackerItem(tempList.Objects[j]);
-                        insertPoint := j;
-                        if (tempitem1.frm.LastActivity > tempitem2.frm.LastActivity) then begin
-                            // We have an new item to add to the temp list that should be higher
-                            // then the current item in the templist
-                            tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
-                            itemadded := true;
-                            break;
-                        end;
-                    end;
-                end;
-                if (not itemadded) then begin
-                    // We didn't insert the item into the temp list so add to end
-                    tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-                end;
-            end;
-            _trackingList.Clear;
-            for i := 0 to tempList.Count - 1 do begin
-                _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
-            end;
+            _sortTrackingListRecentActivity();
         end
         else if (sortType = ssType) then begin
             // Sort by the type of window (room, chat, etc.), then by alpha for tied items
             sortstring := sortstring + _(sSortType);
-            permRoomList := TWidestringList.Create();
-            adhocRoomList := TWidestringList.Create();
-            chatList := TWidestringList.Create();
-            otherList := TWidestringList.Create();
-
-            // Split them up by group to make sure it is rooms -> chats -> others
-            for i := 0 to _trackingList.Count - 1 do begin
-                tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
-                if (tempitem1 <> nil) then begin
-                    if (tempitem1.frm.WindowType ='perm_room') then begin
-                        permRoomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-                    end
-                    else if (tempitem1.frm.WindowType ='adhoc_room') then begin
-                        adhocRoomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-                    end
-                    else if (tempitem1.frm.WindowType = 'chat') then begin
-                        chatList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-                    end
-                    else begin
-                        otherList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-                    end;
-                end;
-            end;
-
-            // Sort others list
-            for i := 0 to otherList.Count - 1 do begin
-                // iterate over list to reorder
-                itemadded := false;
-                tempitem1 := TAWTrackerItem(otherList.Objects[i]);
-                if (tempitem1 <> nil) then begin
-                    for j := 0 to tempList.Count - 1 do begin
-                        tempitem2 := TAWTrackerItem(tempList.Objects[j]);
-                        insertPoint := j;
-                        if (tempitem2.frm.WindowType > tempitem1.frm.WindowType) then begin
-                            // We have an new item to add to the temp list that should be higher
-                            // then the current item in the templist
-                            tempList.InsertObject(insertPoint, otherList.Strings[i], otherList.Objects[i]);
-                            itemadded := true;
-                            break;
-                        end;
-                    end;
-                end;
-                if (not itemadded) then begin
-                    // We didn't insert the item into the temp list so add to end
-                    tempList.AddObject(otherList.Strings[i], otherList.Objects[i]);
-                end;
-            end;
-
-            // Reassemble list
-            _trackingList.Clear();
-
-            for i := 0 to permRoomList.Count - 1 do begin
-                _trackingList.AddObject(permRoomList.Strings[i], permRoomList.Objects[i]);
-            end;
-            for i := 0 to adhocRoomList.Count - 1 do begin
-                _trackingList.AddObject(adhocRoomList.Strings[i], adhocRoomList.Objects[i]);
-            end;
-            for i := 0 to chatList.Count - 1 do begin
-                _trackingList.AddObject(chatList.Strings[i], chatList.Objects[i]);
-            end;
-            for i := 0 to tempList.Count - 1 do begin //others
-                _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
-            end;
-
-            // Cleanup
-            permRoomList.Clear();
-            adhocRoomList.Clear();
-            chatList.Clear();
-            otherList.Clear();
-
-            permRoomList.Free();
-            adhocRoomList.Free();
-            chatList.Free();
-            otherList.Free();
+            _sortTrackingListType();
         end
         else if (sortType = ssUnread) then begin
             // Sort by Highest Unread msgs
             sortstring := sortstring + _(sSortUnread);
-            for i := 0 to _trackingList.Count - 1 do begin
-                // iterate over list to reorder
-                itemadded := false;
-                tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
-                if (tempitem1 <> nil) then begin
-                    for j := 0 to tempList.Count - 1 do begin
-                        tempitem2 := TAWTrackerItem(tempList.Objects[j]);
-                        insertPoint := j;
-                        if (tempitem2.awItem.count < tempitem1.awItem.count) then begin
-                            // We have an new item to add to the temp list that should be higher
-                            // then the current item in the templist
-                            tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
-                            itemadded := true;
-                            break;
-                        end;
-                    end;
-                end;
-                if (not itemadded) then begin
-                    // We didn't insert the item into the temp list so add to end
-                    tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-                end;
-            end;
-            _trackingList.Clear;
-            for i := 0 to tempList.Count - 1 do begin
-                _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
-            end;
+            _sortTrackingListUnread();
         end
         else begin
             // Sort was Alpha which we did above
         end;
 
         lblSort.Caption := sortstring;
-
-        tempList.Clear;
-        tempList.Free;
     except
     end;
 end;
@@ -1438,7 +1303,6 @@ begin
 
     idx := findItemIndex(awitem);
     if (idx >= 0) then begin
-        _trackingList.Strings[idx] := name;
         trackeritem := TAWTrackerItem(_trackingList.Objects[idx]);
         if (trackeritem <> nil) then begin
             trackeritem.awItem.name := name;
@@ -1452,9 +1316,241 @@ begin
     end;     
 end;
 
+{---------------------------------------}
+procedure TfrmActivityWindow._sortTrackingListRecentActivity();
+var
+    tempitem1: TAWTrackerItem;
+    i: Integer;
+    itemadded: Boolean;
+    j: Integer;
+    insertPoint: Integer;
+    tempitem2: TAWTrackerItem;
+    tempList: TWideStringList;
+begin
+    // Sort by most Recent Activity, then by alpha for tied items
+    templist := TWidestringList.Create();
 
+    for i := 0 to _trackingList.Count - 1 do
+    begin
+        // iterate over list to reorder
+        itemadded := false;
+        tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+        if (tempitem1 <> nil) then
+        begin
+            for j := 0 to tempList.Count - 1 do
+            begin
+                tempitem2 := TAWTrackerItem(tempList.Objects[j]);
+                insertPoint := j;
+                if (tempitem1.frm.LastActivity > tempitem2.frm.LastActivity) then
+                begin
+                    // We have an new item to add to the temp list that should be higher
+                    // then the current item in the templist
+                    tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
+                    itemadded := true;
+                    break;
+                end;
+            end;
+        end;
 
+        if (not itemadded) then
+        begin
+            // We didn't insert the item into the temp list so add to end
+            tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+        end;
+    end;
 
+    _trackingList.Clear;
+
+    for i := 0 to tempList.Count - 1 do
+    begin
+        _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
+    end;
+
+    templist.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow._sortTrackingListType();
+var
+    permRoomList, adhocRoomList, chatList, otherList: TWidestringList;
+    i,j: integer;
+    tempitem1, tempitem2: TAWTrackerItem;
+    itemadded: boolean;
+    templist: TWidestringList;
+    insertpoint: integer;
+begin
+    templist := TWidestringList.Create();
+    permRoomList := TWidestringList.Create();
+    adhocRoomList := TWidestringList.Create();
+    chatList := TWidestringList.Create();
+    otherList := TWidestringList.Create();
+
+    // Split them up by group to make sure it is rooms -> chats -> others
+    for i := 0 to _trackingList.Count - 1 do begin
+        tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+        if (tempitem1 <> nil) then begin
+            if (tempitem1.frm.WindowType ='perm_room') then begin
+                permRoomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+            end
+            else if (tempitem1.frm.WindowType ='adhoc_room') then begin
+                adhocRoomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+            end
+            else if (tempitem1.frm.WindowType = 'chat') then begin
+                chatList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+            end
+            else begin
+                otherList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+            end;
+        end;
+    end;
+
+    // Sort others list
+    for i := 0 to otherList.Count - 1 do begin
+        // iterate over list to reorder
+        itemadded := false;
+        tempitem1 := TAWTrackerItem(otherList.Objects[i]);
+        if (tempitem1 <> nil) then begin
+            for j := 0 to tempList.Count - 1 do begin
+                tempitem2 := TAWTrackerItem(tempList.Objects[j]);
+                insertPoint := j;
+                if (tempitem2.frm.WindowType > tempitem1.frm.WindowType) then begin
+                    // We have an new item to add to the temp list that should be higher
+                    // then the current item in the templist
+                    tempList.InsertObject(insertPoint, otherList.Strings[i], otherList.Objects[i]);
+                    itemadded := true;
+                    break;
+                end;
+            end;
+        end;
+        if (not itemadded) then begin
+            // We didn't insert the item into the temp list so add to end
+            tempList.AddObject(otherList.Strings[i], otherList.Objects[i]);
+        end;
+    end;
+
+    // Reassemble list
+    _trackingList.Clear();
+
+    for i := 0 to permRoomList.Count - 1 do begin
+        _trackingList.AddObject(permRoomList.Strings[i], permRoomList.Objects[i]);
+    end;
+    for i := 0 to adhocRoomList.Count - 1 do begin
+        _trackingList.AddObject(adhocRoomList.Strings[i], adhocRoomList.Objects[i]);
+    end;
+    for i := 0 to chatList.Count - 1 do begin
+        _trackingList.AddObject(chatList.Strings[i], chatList.Objects[i]);
+    end;
+    for i := 0 to tempList.Count - 1 do begin //others
+        _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
+    end;
+
+    // Cleanup
+    permRoomList.Clear();
+    adhocRoomList.Clear();
+    chatList.Clear();
+    otherList.Clear();
+    templist.Clear();
+
+    permRoomList.Free();
+    adhocRoomList.Free();
+    chatList.Free();
+    otherList.Free();
+    templist.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow._sortTrackingListUnread();
+var
+    j: Integer;
+    i: Integer;
+    tempitem1: TAWTrackerItem;
+    itemadded: Boolean;
+    tempitem2: TAWTrackerItem;
+    tempList: TWideStringList;
+begin
+    tempList := TWidestringList.Create();
+    for i := 0 to _trackingList.Count - 1 do
+    begin
+        // iterate over list to reorder
+        itemadded := false;
+        tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+        if (tempitem1 <> nil) then
+        begin
+            for j := 0 to tempList.Count - 1 do
+            begin
+                tempitem2 := TAWTrackerItem(tempList.Objects[j]);
+                if (tempitem2.awItem.count < tempitem1.awItem.count) then
+                begin
+                    // We have an new item to add to the temp list that should be higher
+                    // then the current item in the templist
+                    tempList.InsertObject(j, _trackingList.Strings[i], _trackingList.Objects[i]);
+                    itemadded := true;
+                    break;
+                end;
+            end;
+        end;
+        if (not itemadded) then
+        begin
+            // We didn't insert the item into the temp list so add to end
+            tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+        end;
+    end;
+
+    _trackingList.Clear;
+
+    for i := 0 to tempList.Count - 1 do
+    begin
+        _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
+    end;
+
+    templist.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow._sortTrackingListAlpha();
+var
+    i: integer;
+    templist: TWidestringList;
+    j: Integer;
+    itemadded: boolean;
+    item1, item2: TAWTrackerItem;
+begin
+    templist := TWidestringList.Create();
+
+    for i := 0 to _trackingList.Count - 1 do
+    begin
+        itemadded := false;
+        item1 := TAWTrackerItem(_trackingList.Objects[i]);
+        for j := 0 to tempList.Count - 1 do
+        begin
+            item2 := TAWTrackerItem(tempList.Objects[j]);
+            if ((item1 <> nil) and
+                (item2 <> nil)) then
+            begin
+                if (item1.awItem.name < item2.awItem.name) then
+                begin
+                    itemadded := true;
+                    tempList.InsertObject(j, _trackingList.Strings[i], _trackingList.Objects[i]);
+                    break;
+                end;
+            end;
+        end;
+
+        if (not itemadded) then
+        begin
+            templist.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+        end;
+    end;
+
+    _trackingList.Clear;
+
+    for i := 0 to tempList.Count - 1 do
+    begin
+        _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
+    end;
+
+    templist.Free();
+end;
 
 
 
