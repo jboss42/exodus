@@ -54,9 +54,11 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
   object RoomDisplayName: TTntLabel
     Left = 96
     Top = 10
-    Width = 69
+    Width = 139
     Height = 16
+    AutoSize = False
     Caption = 'Room name'
+    EllipsisPosition = epWordEllipsis
     OnMouseEnter = RoomDisplayNameMouseEnter
     OnMouseLeave = RoomDisplayNameMouseLeave
   end
@@ -99,9 +101,11 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
   object Subject: TTntLabel
     Left = 106
     Top = 32
-    Width = 43
+    Width = 129
     Height = 16
+    AutoSize = False
     Caption = 'Subject'
+    EllipsisPosition = epWordEllipsis
     OnMouseEnter = lblSubjectMouseEnter
     OnMouseLeave = lblSubjectMouseLeave
   end
@@ -135,7 +139,6 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     ParentColor = True
     TabOrder = 4
     AutoHide = False
-    ExplicitWidth = 303
   end
   object chkAutoJoin: TCheckBox
     Left = 52
