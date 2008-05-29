@@ -524,6 +524,9 @@ begin
     cb := ItemWrapper.Callback;
     if (cb <> nil) then cb.ItemDeleted(ItemWrapper.ExodusItem);
 
+    //fire event
+    TJabberSession(_js).FireEvent('/item/remove', ItemWrapper.ExodusItem);
+    
     //then finally, we delete
     ItemWrapper.Free;
 end;
