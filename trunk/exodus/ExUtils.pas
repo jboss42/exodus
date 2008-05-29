@@ -161,7 +161,7 @@ const
     sTurnOnBlocking = 'You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)';
 
     sNewGroup = 'New Group';
-    sNewGroupPrompt = 'Enter new group name below. ';
+    sNewGroupPrompt = 'Enter new group name: ';
     sNewGroupExists = 'This group already exists!';
 
 var
