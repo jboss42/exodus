@@ -110,6 +110,7 @@ type
     _priorityflag: boolean; // Is there a high priority msg unread
     _activating: boolean; // Is the window currently becoming active
     _lastActivity: TDateTime; // what was the last activity for this window
+    _closing: boolean; // Is the window closing (for updatedocked() call);
 
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
@@ -306,6 +307,7 @@ procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
     btnCloseDock.ImageIndex := RosterImages.RosterTreeImages.Find(RI_CLOSETAB_KEY);
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
+    _closing := false;
 
     inherited;
 end;
@@ -434,6 +436,7 @@ end;
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
+    _closing := true;
     GetDockManager().CloseDocked(Self);
     inherited;
 end;
@@ -738,6 +741,8 @@ end;
 
 procedure TfrmDockable.updateDocked();
 begin
+    if (_closing) then exit;
+    
     Inc(updateDockedCnt);
 
     if (updateDockedCnt <= 1) then begin
