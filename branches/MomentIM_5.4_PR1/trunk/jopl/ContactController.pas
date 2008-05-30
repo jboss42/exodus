@@ -43,8 +43,8 @@ type
        _DNListener: TDisplayNameEventListener;
        _DefaultGroup: WideString;
        _PendingItems: IExodusItemList;
+       _readyTag: TXMLTag; //tag to be chained along with /session/ready event handling/fireing
        _ContactsLoaded: Boolean;
-       
        //Methods
        procedure _GetContacts();
        procedure _ParseContacts(Event: string; Tag: TXMLTag);
@@ -141,6 +141,7 @@ uses IQ, JabberConst, JabberID, SysUtils,
 constructor TContactController.Create(JS: TObject);
 begin
     _JS := JS;
+    _readyTag := nil;
     _ItemsCB := TExodusContactsCallback.Create(Self);
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
     _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
@@ -227,7 +228,9 @@ begin
     TJabberSession(_JS).FireEvent('/item/end', Item);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
     TJabberSession(_JS).FireEvent('/roster/end', nil, ''); //legacy event
-    TJabberSession(_JS).FireEvent('/session/roster_ready', TXMLTag(nil)); //new signal roster is loaded
+    if (_readyTag <> nil) then //may have been disconnected/canceld
+        TJabberSession(_JS).FireEvent(DEPMOD_READY_EVENT + DEPMOD_ROSTER, _readyTag); //new signal roster is loaded
+    _readyTag := nil;
 end;
 
 {---------------------------------------}
@@ -296,55 +299,56 @@ var
     Pres: TJabberPres;
     visible: Boolean;
 begin
-     if Event = '/session/authenticated'  then
-     begin
-         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-         _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
-         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
-         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
-         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
-         _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
-         _GetContacts();
-     end
-     else if Event = '/session/prefs' then
-     begin
-         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-         _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
-         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
-         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
-         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
-         if (_DefaultGroup <> TJabberSession(_JS).Prefs.getString('roster_default')) then
-         begin
-             _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
-         end;
-         //shouldn't have anything to update unless authed
-         if (TJabberSession(_JS).Authenticated) then
+    if Event = DEPMOD_READY_SESSION_EVENT then
+    begin
+        _readyTag := Tag;
+        _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
+        _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
+        _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
+        _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
+        _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+        _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
+        _GetContacts();
+    end
+    else if Event = '/session/prefs' then
+    begin
+        _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
+        _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
+        _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
+        _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
+        _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+        if (_DefaultGroup <> TJabberSession(_JS).Prefs.getString('roster_default')) then
+        begin
+            _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
+        end;
+        //shouldn't have anything to update unless authed
+        if (TJabberSession(_JS).Authenticated) then
             _UpdateContacts();
-     end
-     else if (Event = '/session/block') or (Event = '/session/unblock') then
-     begin
-         uid := Tag.GetAttribute('jid');
-         item := TJabberSession(_js).ItemController.GetItem(uid);
+    end
+    else if (Event = '/session/block') or (Event = '/session/unblock') then
+    begin
+        uid := Tag.GetAttribute('jid');
+        item := TJabberSession(_js).ItemController.GetItem(uid);
 
-         if (item <> nil) then
-         begin
-             if (Event = '/session/block') then
+        if (item <> nil) then
+        begin
+            if (Event = '/session/block') then
                 item.value['blocked'] := 'true'
-             else
+            else
                 item.value['blocked'] := 'false';
-                
-             visible := item.IsVisible;
-             pres := TJabberSession(_JS).ppdb.FindPres(Item.uid, '');
-             //We need to obtain new image and see if blocked items are visible
-             _UpdateContact(Item, pres);
-             if not visible and Item.IsVisible then
-                 TJabberSession(_JS).FireEvent('/item/add',  Item)
-             else if visible and not Item.IsVisible then
-                 TJabberSession(_JS).FireEvent('/item/remove', Item)
-             else if visible and Item.IsVisible then
-                  TJabberSession(_JS).FireEvent('/item/update', Item);
-         end;
-     end;
+
+            visible := item.IsVisible;
+            pres := TJabberSession(_JS).ppdb.FindPres(Item.uid, '');
+            //We need to obtain new image and see if blocked items are visible
+            _UpdateContact(Item, pres);
+            if not visible and Item.IsVisible then
+                TJabberSession(_JS).FireEvent('/item/add',  Item)
+            else if visible and not Item.IsVisible then
+                TJabberSession(_JS).FireEvent('/item/remove', Item)
+            else if visible and Item.IsVisible then
+                TJabberSession(_JS).FireEvent('/item/update', Item);
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -401,7 +405,7 @@ begin
             else if visible and not item.IsVisible then
                 session.FireEvent('/item/remove', item)
             else if visible and item.IsVisible then
-                 session.FireEvent('/item/update', item);
+                session.FireEvent('/item/update', item);
         end;
     end;
 end;

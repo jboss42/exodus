@@ -176,7 +176,7 @@ end;
 {---------------------------------------}
 procedure TRoomController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
-     if Event = '/session/roster_ready'  then
+     if Event = '/session/ready/groups'  then
      begin
          _GetRooms();
      end;
@@ -225,32 +225,33 @@ begin
         RoomTags := StorageTag.ChildTags();
 
     for i := 0 to RoomTags.Count - 1 do begin
-            if (RoomTags[i].Name <> 'conference') then continue;
-            RoomTag := RoomTags.Tags[i];
-            jid := WideLowerCase(RoomTag.GetAttribute('jid'));
-            TmpJID := TJabberID.Create(RoomTag.GetAttribute('jid'));
-            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_ROOM, _ItemsCB);
-            //Make sure item exists
-            if (Item <> nil) then
-            begin
-                _ParseRoom(Item, RoomTag);
+        if (RoomTags[i].Name <> 'conference') then continue;
+        RoomTag := RoomTags.Tags[i];
+        jid := WideLowerCase(RoomTag.GetAttribute('jid'));
+        TmpJID := TJabberID.Create(RoomTag.GetAttribute('jid'));
+        Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_ROOM, _ItemsCB);
+        //Make sure item exists
+        if (Item <> nil) then
+        begin
+            _ParseRoom(Item, RoomTag);
 
-                if (Item.IsVisible) then
-                    TJabberSession(_JS).FireEvent('/item/add', Item);
+            if (Item.IsVisible) then
+                TJabberSession(_JS).FireEvent('/item/add', Item);
+        {
+            // Fire an event to join the room
+            if (item.value['autojoin'] = 'true') then
+                TJabberSession(_JS).FireEvent('/session/gui/conference', Item);
+        }
+        end;
+        TmpJID.Free();
+    end;
 
-                // Fire an event to join the room
-                if (item.value['autojoin'] = 'true') then
-                    TJabberSession(_JS).FireEvent('/session/gui/conference', Item);
-            end;
-            TmpJID.Free();
-     end;
-
-     _RoomsLoaded := true;
-     Item := nil;
-     TJabberSession(_JS).FireEvent('/item/end', Item);
-     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
-     RoomTags.Free();
-
+    _RoomsLoaded := true;
+    Item := nil;
+    TJabberSession(_JS).FireEvent('/item/end', Item);
+    TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
+    TJabberSession(_JS).FireEvent(DEPMOD_READY_EVENT + DEPMOD_BOOKMARKS, nil);
+    RoomTags.Free();
 end;
 
 {---------------------------------------}
