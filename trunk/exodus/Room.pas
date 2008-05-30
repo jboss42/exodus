@@ -468,7 +468,8 @@ uses
     ExodusDockManager,
     DockWindow,
     HistorySearch,
-    BookmarkForm;
+    BookmarkForm,
+    DisplayName;
 
 {$R *.DFM}
 {---------------------------------------}
@@ -524,8 +525,8 @@ begin
 
             if (send_presence) then
                 f.sendStartPresence();
-
-            f.Caption := tmp_jid.userDisplay; //no display name here for room names
+            //JJF todo add a displayname listener for dn changes
+            f.Caption := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid); //use display name if possible tmp_jid.userDisplay; //no display name here for room names
             f.Hint := tmp_jid.jid;
 
             // setup prefs
@@ -3114,17 +3115,6 @@ begin
         Action := datMove
     else
         Action := datNone;
-
-    case Action of
-        datNone: begin
-            Self.DragCursor := crNone;
-            MsgList.DragCursor := crNone;
-        end;
-        datMove: begin
-            Self.DragCursor := crDragMove;
-            MsgList.DragCursor := crDragMove;
-        end;
-    end;
 end;
 procedure TfrmRoom._DragEnd(Source: TExDropTarget);
 var
@@ -3404,7 +3394,7 @@ end;
 
 constructor TJoinRoomAction.Create;
 begin
-    inherited Create('{000-exodus.googlecode.com}-000-join-roon');
+    inherited Create('{000-exodus.googlecode.com}-000-join-room');
 
     Set_Caption(_('Join'));
     Set_Enabled(true);
