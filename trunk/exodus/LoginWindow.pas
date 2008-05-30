@@ -637,8 +637,9 @@ begin
     else if (event = '/session/connected') then begin
         ToggleGUI(lgsConnected);
     end
-    else if (event = '/session/authenticated') then begin
+    else if (event = DEPMOD_READY_SESSION_EVENT) then begin
         ToggleGUI(lgsAuthenticated);
+        MainSession.FireEvent(DEPMOD_READY_EVENT + DEPMOD_UI, tag);
     end;
 end;
 
