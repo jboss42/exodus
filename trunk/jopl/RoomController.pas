@@ -348,7 +348,6 @@ procedure TExodusRoomsCallback.ItemDeleted(const item: IExodusItem);
 begin
     _roomCtrl.SaveRooms();
     item.IsVisible := false;
-    TJabberSession(_roomCtrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusRoomsCallback.ItemGroupsChanged(const item: IExodusItem);
 begin

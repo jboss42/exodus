@@ -378,14 +378,14 @@ begin
         item := itemCtrl.GetItem(uid);
 
         if (subscr = 'remove') then begin
-            if (item = nil) then
-                item := _PopPending(uid);
-
             if (item <> nil) then begin
                 //removing...make sure it disappears
                 itemCtrl.RemoveItem(uid);
                 session.FireEvent('/item/remove', item);
                 SendUnSubscribe(uid, session);
+            end
+            else begin
+                _PopPending(uid);
             end;
         end
         else if (item <> nil) then begin

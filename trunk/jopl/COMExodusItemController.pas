@@ -728,8 +728,6 @@ begin
     if not _ctrl._GroupsLoaded then exit;
     
     _ctrl._SendGroups();
-    //item.IsVisible := false;
-    //TJabberSession(_ctrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusGroupCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
