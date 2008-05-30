@@ -569,6 +569,7 @@ type
     }
     procedure DoDisconnect();
 
+    procedure OnDependanciesResolved(SessionTag : TXMLTag);
 published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
@@ -655,7 +656,7 @@ published
         Removes a shortcut from an already existing menu so there are no duplicates
     }
     procedure RemoveMenuShortCut(value: integer);
-    function DisableHelp(Command: Word; Data: Longint;
+    function DisableHelp(Command: Word; Data: longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
     function IsShortCut(var Message: TWMKey): Boolean; override;
@@ -842,6 +843,9 @@ const
     sRosterDND = 'Do Not Disturb';
     sRosterOffline = 'Offline';
 
+//hack hack hack hack
+//helper class to listen for "/session/ready" events and fires /session/authenticated
+//when all known ready events have fired
 //Hidden Helpers!
 type TActionHelper = class
 private
@@ -1763,7 +1767,6 @@ begin
             MainSession.CreateAccount();
         end;
     end
-
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
 
@@ -1790,7 +1793,8 @@ begin
         // 7. check for new version
 { TODO : Roster refactor }        
         //Roster.Fetch;
-        jEntityCache.fetch(MainSession.Server, MainSession);
+
+//        jEntityCache.fetch(MainSession.Server, MainSession);
 
         ShowRoster();
 
@@ -1821,7 +1825,8 @@ begin
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
-
+        
+        _sendInitPresence();
     end
 
     else if (event = '/session/disconnected') then begin
@@ -2045,9 +2050,7 @@ begin
                    PWideChar(MainSession.Prefs.GetString('brand_caption')),
                    MB_OK or MB_ICONERROR);
         Application.Terminate();
-    end
-    else if (event = '/session/roster_ready') then
-        _sendInitPresence();
+    end;
 
 end;
 
@@ -2067,6 +2070,7 @@ begin
     else
         MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
     _is_broadcast := false;
+
     //re-load authed desktop
     TAutoOpenEventManager.onAutoOpenEvent('authed');
 end;
@@ -5010,6 +5014,10 @@ begin
     end;
 end;
 
+procedure TfrmExodus.OnDependanciesResolved(SessionTag : TXMLTag);
+begin
+    MainSession.fireEvent('/session/authenticated', SessionTag);
+end;
 
 
 

@@ -937,7 +937,7 @@ begin
     if (event = '/session/disconnected') then
         //clear cache on disconnect
         clearDNCache()
-    else if (event = '/session/authenticated') then begin
+    else if (event = DEPMOD_READY_SESSION_EVENT) then begin
         _useProfileDN := useProfileDN(); //initial profile state, used to check pref changes
         //add our jid to the cache
         dnItem := getOrAddDNItem(DNSession.Profile.getJabberID());
@@ -956,6 +956,9 @@ begin
             //if nick name is "locked down" or no default nick is supplied, pull our nick from vcard.
             TMyNickHandler.Create(dnItem).GetMyNickFromProfile();
         end;
+
+        //fire a displayname ready event
+        Mainsession.FireEvent(DEPMOD_READY_EVENT + DEPMOD_DISPLAYNAME, tag);
     end
     else if (event = '/session/prefs') then begin
         //if we've had a pref change for profile, update accordingly...
