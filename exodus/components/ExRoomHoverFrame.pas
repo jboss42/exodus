@@ -118,7 +118,7 @@ begin
     Item := _Items.Item[0];
     _ActMap := GetActionController().buildActions(_Items);
     _TypedActs := _ActMap.GetActionsFor('');
-    act := _TypedActs.GetActionNamed('{000-exodus.googlecode.com}-000-join-roon');
+    act := _TypedActs.GetActionNamed('{000-exodus.googlecode.com}-000-join-room');
     btnJoinTC.Tag := Integer(Pointer(act));
     btnJoinTC.Enabled := act <> nil;
     if (act <> nil) then btnJoinTC.Caption := act.Caption;

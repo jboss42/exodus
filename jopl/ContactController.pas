@@ -239,6 +239,7 @@ var
 begin
     Contact.Text := Tag.GetAttribute('name');
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
+    Contact.value['defaultaction'] := '{000-exodus.googlecode.com}-000-start-chat';
     Contact.value['Name'] := Tag.GetAttribute('name');
     Contact.value['Subscription'] := Tag.GetAttribute('subscription');
     Contact.value['Ask'] := Tag.GetAttribute('ask');

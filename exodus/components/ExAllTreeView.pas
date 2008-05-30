@@ -21,7 +21,7 @@ unit ExAllTreeView;
 
 interface
 
-uses SysUtils, Classes, Controls, DropTarget, ExTreeView, Exodus_TLB, Types, TntMenus;
+uses SysUtils, Classes, Controls, DropTarget, ExTreeView, Exodus_TLB, Types, TntMenus, ComCtrls;
 
 type
   TTreeDragSelectionType = (tdstNone, tdstGroup, tdstOther);
@@ -35,6 +35,9 @@ type
 
   protected
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
+    procedure Expand(node: TTreeNode); override;
+    procedure Collapse(node: TTreeNode); override;
+    
     procedure _DragUpdate(Source: TExDropTarget; X, Y: Integer; var Action: TExDropActionType);
     procedure _DragExecute(Source: TExDropTarget; X, Y: Integer);
 
@@ -56,7 +59,8 @@ type
 implementation
 
 uses ActionMenus, Graphics, ExActionCtrl, ExUtils, gnugettext, GrpManagement, Forms,
-        Messages, COMExodusItemList, Session, TntComCtrls, Windows, Jabber1, RosterImages;
+        Messages, COMExodusItem, COMExodusItemList, Session, TntComCtrls, Windows,
+        ChatWin, Room, Jabber1, RosterImages;
 
 const
     sConfirmDeleteCaption: Widestring = 'Delete Item(s)';
@@ -125,6 +129,43 @@ begin
         actPM.Popup(pt.X, pt.Y);
 
         Handled := true;
+    end;
+end;
+procedure TExAllTreeView.Expand(node: TTreeNode);
+var
+    item: IExodusItem;
+begin
+    inherited Expand(node);
+    item := GetNodeItem(node);
+    if (item = nil) or (item.Type_ <> 'group') then exit;
+
+    OutputDebugMsg('node "' + node.Text + '" expanded');
+    TJabberSession(Session).ItemController.GroupExpanded[item.UID] := true;
+end;
+procedure TExAllTreeView.Collapse(node: TTreeNode);
+var
+    itemCtrl: IExodusItemController;
+    item: IExodusItem;
+    subitems: IExodusItemList;
+    idx: Integer;
+begin
+    if (node = nil) then exit;
+    
+    inherited Collapse(node);
+    
+    item := GetNodeItem(node);
+    if (item = nil) or (item.Type_ <> 'group') then exit;
+
+    OutputDebugMsg('node "' + item.UID + '" collapsed');
+    itemCtrl := TJabberSession(Session).ItemController;
+    itemCtrl.GroupExpanded[item.UID] := false;
+
+    //Now collapse the subgroups
+    subitems := itemCtrl.GetGroupItems(item.UID);
+    for idx := 0 to subitems.Count - 1 do begin
+        item := subitems.Item[idx];
+        if (item.Type_ <> 'group') then continue;
+        Collapse(_GetNodeByUID(item.UID, TTntTreeNode(node)));
     end;
 end;
 
@@ -318,12 +359,6 @@ begin
     end
     else
         Action := datNone;
-
-    case Action of
-        datNone: Self.DragCursor := crNone;
-        datMove: Self.DragCursor := crDragMove;
-        datCopy: Self.DragCursor := crDragCopy;
-    end;
 end;
 procedure TExAllTreeView._DragExecute(Source: TExDropTarget; X: Integer; Y: Integer);
 var

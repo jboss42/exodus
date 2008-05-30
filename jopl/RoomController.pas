@@ -276,18 +276,20 @@ begin
         }
     Room.ImageIndex := RI_CONFERENCE_INDEX;
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
-    Room.AddProperty('name', Tag.GetAttribute('name'));
+    Room.value['name'] := Tag.GetAttribute('name');
+    Room.value['defaultaction'] := '{000-exodus.googlecode.com}-000-join-room';
     //Retrieve room name from display cache
     GetDisplayNameCache().UpdateDisplayName(Room);
     Room.Text := GetDisplayNameCache().GetDisplayName(Room.Uid);
-    Room.AddProperty('autojoin', Tag.GetAttribute('autojoin'));
-    Room.AddProperty('reg_nick', Tag.GetAttribute('reg_nick'));
+
+    Room.value['autojoin'] := Tag.GetAttribute('autojoin');
+    Room.value['reg_nick'] := Tag.GetAttribute('reg_nick');
     TmpTag := Tag.QueryXPTag('/conference/nick');
     if (TmpTag <> nil) then
-        Room.AddProperty('nick', TmpTag.Data);
+        Room.value['nick'] := TmpTag.Data;
     TmpTag := Tag.QueryXPTag('/conference/password');
     if (TmpTag <> nil) then
-        Room.AddProperty('password', TmpTag.Data);
+        Room.value['password'] := TmpTag.Data;
 
     Grps := Tag.QueryXPTags('/conference/group');
     //Build temporary list of groups for future comparison of the lists.
@@ -307,7 +309,6 @@ begin
             if (Grp <> '') then
             begin
                 Room.AddGroup(grp);
-                //TJabberSession(_js).ItemController.AddItemByUID(grp, EI_TYPE_GROUP);
             end;
 
         end;
@@ -318,7 +319,7 @@ begin
         Room.AddGroup(TJabberSession(_JS).Prefs.getString('roster_default'));
     end;
 
-   
+
     Grps.Free();
     TmpJid.Free();
 end;

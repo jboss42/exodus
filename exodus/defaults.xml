@@ -657,11 +657,16 @@
     <!-- Should the internal SQL logger log chat or room messages -->
     <brand_history_search value="1"/>
     <brand_log_chat_messages value="1"/>
-	<brand_log_groupchat_messages value="1"/>
-	<brand_log_normal_messages value="1"/>
+    <brand_log_groupchat_messages value="1"/>
+    <brand_log_normal_messages value="1"/>
 
-	 <!-- brand value for most active plug in time interval in days -->
-	 <brand_most_active_time_interval value="30"/>
+    <!-- brand value for most active plug in time interval in days -->
+    <brand_most_active_time_interval value="30"/>
+
+    <brand_enable_iq_browse_fallback value='0'/>
+    <brand_enable_iq_agent_fallback value='0'/>
+    <brand_default_iq_timeout value='15'/>
+    
 	 <!-- brand value for user directory prefix -->
 	 <brand_user_directory value="users"/>
 
