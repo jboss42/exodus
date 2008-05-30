@@ -52,7 +52,7 @@ uses
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
     JabberID, Session, JabberMsg, windows, DisplayName,
-    ChatController, Presence;
+    ChatController, Presence, Stateform, COMExodusItem;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
@@ -117,6 +117,7 @@ var
  //JJF msgqueue refactor
     c: TChatController;
 //    e: TJabberEvent;
+    itemList: IExodusItemList;
 begin
     // check for various events to start GUIS
 {** TODO : Roster refactor
@@ -267,6 +268,22 @@ begin
             sub.setup(tmp_jid, item, tag);
         end;
         tmp_jid.Free();
+    end
+    else if (event = '/session/authenticated') then
+    begin
+        //fire off autocreate
+
+        //re-load authed desktop
+        TAutoOpenEventManager.onAutoOpenEvent('authed');
+
+        //autojoin rooms
+        itemList := MainSession.ItemController.GetItemsByType(EI_TYPE_ROOM);
+        for i := 0 to itemList.Count - 1 do
+        begin
+            if (itemList.Item[i].value['autojoin'] = 'true') then
+                //yay for single threaded, this is essentially a long function call lol
+                mainSession.FireEvent('/session/gui/conference', itemList.Item[i]);
+        end;
     end;
 end;
 

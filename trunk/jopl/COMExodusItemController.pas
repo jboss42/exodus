@@ -81,8 +81,7 @@ type
       _GroupsLoaded: Boolean;
       _ServerStorage: Boolean;
       _GroupParser : TGroupParser;
-      _sessionReadyTag: TXMLtag; //tag that was delivered with /session/ready/session event
-      
+
       procedure _SessionCallback(Event: string; Tag: TXMLTag);
       procedure _GetGroups();
       procedure _ParseGroups(Event: string; Tag: TXMLTag);
@@ -149,7 +148,6 @@ begin
     _ServerStorage := true;
     _GroupParser := TGroupParser.Create(_JS);
     _GroupsCB := TExodusGroupCallback.Create(Self);
-    _sessionReadyTag := nil;
 end;
 
 {---------------------------------------}
@@ -157,7 +155,7 @@ destructor TExodusItemController.Destroy();
 begin
 
     ClearItems();
-    
+
     _Items.Free;
     _GroupParser.Free;
 
@@ -171,7 +169,6 @@ procedure TExodusItemController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
     if Event = '/session/ready/session' then begin
        _GroupsLoaded := false;
-       _sessionReadyTag := Tag; //all sources of /session/ready *must* pass along the same tag
        _GetGroups();
     end
     else if Event = '/session/disconnecting' then begin
@@ -239,8 +236,7 @@ begin
     _GroupsLoaded := true;
     TJabberSession(_JS).FireEvent('/item/end', Group);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
-    TJabberSession(_JS).FireEvent('/session/ready/groups', _sessionReadyTag);
-    _sessionReadyTag := nil;
+    TJabberSession(_JS).FireEvent('/session/ready/groups', nil);
 end;
 
 {---------------------------------------}

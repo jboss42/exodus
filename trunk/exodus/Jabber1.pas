@@ -1772,7 +1772,7 @@ begin
 
         //Set Display Name listener to only fire on "My JID" DN updates
         _dnListener.UID := MainSession.profile.getJabberID().jid;
-        
+
         UpdateDisplayName();
 
         setTrayInfo(Self.Caption);
@@ -1784,20 +1784,12 @@ begin
             (MainSession.Prefs.getBool('brand_ft'))) then
             DragAcceptFiles(Handle, True);
 
-        // 1. Fetch the roster
-        // 2. Discover our server stuff..
         // 3. Make the roster the active tab
         // 4. Activate the menus
         // 5. turn on the auto-away timer
         // 6. check for new brand.xml file
         // 7. check for new version
-{ TODO : Roster refactor }        
-        //Roster.Fetch;
-
-//        jEntityCache.fetch(MainSession.Server, MainSession);
-
         ShowRoster();
-
         restoreMenus(true);
         if (_valid_aa) then timAutoAway.Enabled := true;
         InitUpdateBranding();
@@ -1810,6 +1802,7 @@ begin
             end;
             _new_account := false;
         end;
+
         // Play any pending XMPP actions
         PlayXMPPActions();
 
@@ -1825,7 +1818,7 @@ begin
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
-        
+
         _sendInitPresence();
     end
 
@@ -2070,9 +2063,6 @@ begin
     else
         MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
     _is_broadcast := false;
-
-    //re-load authed desktop
-    TAutoOpenEventManager.onAutoOpenEvent('authed');
 end;
 
 {---------------------------------------}
