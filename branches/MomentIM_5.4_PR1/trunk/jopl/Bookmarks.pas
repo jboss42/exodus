@@ -34,7 +34,6 @@ type
         _xdb_bm: boolean;
         _js: TObject;
         _menu: TTntPopupMenu;
-        _readyTag: TXMLTag; //tag to be passed along when handling/eventing /session/ready events
     published
         procedure SessionCallback(event: string; tag: TXMLTag);
         procedure UpdateCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
