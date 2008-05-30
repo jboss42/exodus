@@ -237,11 +237,6 @@ begin
 
             if (Item.IsVisible) then
                 TJabberSession(_JS).FireEvent('/item/add', Item);
-        {
-            // Fire an event to join the room
-            if (item.value['autojoin'] = 'true') then
-                TJabberSession(_JS).FireEvent('/session/gui/conference', Item);
-        }
         end;
         TmpJID.Free();
     end;
