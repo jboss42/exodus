@@ -791,13 +791,11 @@ procedure TJabberEntity._processDiscoItems(tag: TXMLTag;
                                            out newItems: TWidestringList;
                                            itemLimit: integer);
 var
-    q: TXMLTag;
     iset: TXMLTagList;
     i, count: integer;
     id, nid: Widestring;
     cj: TJabberID;
     ce: TJabberEntity;
-    itemOut: TWidestringList;
 begin
     {
     <iq
@@ -909,7 +907,6 @@ var
     pt: TJabberEntityProcess;
     js: TJabberSession;
     newItems: TWidestringList;
-    i: integer;
     ttag: TXMLtag;
 begin
     assert(_iq <> nil);

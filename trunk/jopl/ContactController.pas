@@ -43,7 +43,6 @@ type
        _DNListener: TDisplayNameEventListener;
        _DefaultGroup: WideString;
        _PendingItems: IExodusItemList;
-       _readyTag: TXMLTag; //tag to be chained along with /session/ready event handling/fireing
        _ContactsLoaded: Boolean;
        //Methods
        procedure _GetContacts();
@@ -141,7 +140,6 @@ uses IQ, JabberConst, JabberID, SysUtils,
 constructor TContactController.Create(JS: TObject);
 begin
     _JS := JS;
-    _readyTag := nil;
     _ItemsCB := TExodusContactsCallback.Create(Self);
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
     _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
@@ -228,9 +226,7 @@ begin
     TJabberSession(_JS).FireEvent('/item/end', Item);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
     TJabberSession(_JS).FireEvent('/roster/end', nil, ''); //legacy event
-    if (_readyTag <> nil) then //may have been disconnected/canceld
-        TJabberSession(_JS).FireEvent(DEPMOD_READY_EVENT + DEPMOD_ROSTER, _readyTag); //new signal roster is loaded
-    _readyTag := nil;
+    TJabberSession(_JS).FireEvent(DEPMOD_READY_EVENT + DEPMOD_ROSTER, nil); //new signal roster is loaded
 end;
 
 {---------------------------------------}
@@ -301,7 +297,6 @@ var
 begin
     if Event = DEPMOD_READY_SESSION_EVENT then
     begin
-        _readyTag := Tag;
         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
         _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
