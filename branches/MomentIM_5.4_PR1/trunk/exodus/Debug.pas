@@ -89,7 +89,7 @@ procedure DebugMessage(txt: Widestring);
 function isDebugShowing(): boolean;
 
 const
-    DEBUG_LIMIT = 500;
+    DEBUG_LIMIT = 8192;
 
 
 {---------------------------------------}
