@@ -172,6 +172,9 @@ type
     _color_time: integer;
     _color_action: integer;
     _color_server: integer;
+    _color_composing: integer;
+    _color_presence: integer;
+    _color_alert: integer;
     _font_bold: boolean;
     _font_italic: boolean;
     _font_underline: boolean;
@@ -263,6 +266,9 @@ type
     property color_time: integer read _color_time write _color_time;
     property color_action: integer read _color_action write _color_action;
     property color_server: integer read _color_server write _color_server;
+    property color_composing: integer read _color_composing write _color_composing;
+    property color_presence: integer read _color_presence write _color_presence;
+    property color_alert: integer read _color_alert write _color_alert;
 {$IFDEF EXODUS}
     property stylesheet_name: widestring read _stylesheet_name write _stylesheet_name;
 {$ELSE}
@@ -888,21 +894,24 @@ begin
 {$ELSE}
     _stylesheet_raw := '';
 {$ENDIF}
-    _font_name := _getPrefString('font_name');
-    _font_size := _getPrefString('font_size');
-    _font_bold := _getPrefBool('font_bold');
-    _font_italic := _getPrefBool('font_italic');
-    _font_underline := _getPrefBool('font_underline');
-    _font_color := _getPrefInt('font_color');
-    _color_bg := _getPrefInt('color_bg');
-    _color_alt_bg := _getPrefInt('color_alt_bg');
-    _color_date_bg := _getPrefInt('color_date_bg');
-    _color_date := _getPrefInt('color_date');
-    _color_me := _getPrefInt('color_me');
-    _color_other := _getPrefInt('color_other');
-    _color_time := _getPrefInt('color_time');
-    _color_action := _getPrefInt('color_action');
-    _color_server := _getPrefInt('color_server');
+    _font_name := _getPrefString(P_FONT_NAME);
+    _font_size := _getPrefString(P_FONT_SIZE);
+    _font_bold := _getPrefBool(P_FONT_BOLD);
+    _font_italic := _getPrefBool(P_FONT_ITALIC);
+    _font_underline := _getPrefBool(P_FONT_ULINE);
+    _font_color := _getPrefInt(P_FONT_COLOR);
+    _color_bg := _getPrefInt(P_COLOR_BG);
+    _color_alt_bg := _getPrefInt(P_COLOR_ALT_BG);
+    _color_date_bg := _getPrefInt(P_COLOR_DATE_BG);
+    _color_date := _getPrefInt(P_COLOR_DATE);
+    _color_me := _getPrefInt(P_COLOR_ME);
+    _color_other := _getPrefInt(P_COLOR_OTHER);
+    _color_time := _getPrefInt(P_COLOR_TIME);
+    _color_action := _getPrefInt(P_COLOR_ACTION);
+    _color_server := _getPrefInt(P_COLOR_SERVER);
+    _color_composing := _getPrefInt(P_COLOR_COMPOSING);
+    _color_presence := _getPrefInt(P_COLOR_PRESENCE);
+    _color_alert := _getPrefInt(P_COLOR_ALERT);
 
     // Set IDocHostUIHandler interface to handle override of IE settings
     try
@@ -1213,21 +1222,24 @@ begin
 {$ELSE}
     _stylesheet_raw := '';
 {$ENDIF}
-    _color_me := _getPrefInt('color_me');
-    _color_other := _getPrefInt('color_other');
-    _color_action := _getPrefInt('color_action');
-    _color_server := _getPrefInt('color_server');
-    _color_time := _getPrefInt('color_time');
-    _color_bg := _getPrefInt('color_bg');
-    _color_alt_bg := _getPrefInt('color_alt_bg');
-    _color_date_bg := _getPrefInt('color_date_bg');
-    _color_date := _getPrefInt('color_date');
-    _font_name := _getPrefString('font_name');
-    _font_size := IntToStr(_getPrefInt('font_size'));
-    _font_bold := _getPrefBool('font_bold');
-    _font_italic := _getPrefBool('font_italic');
-    _font_underline := _getPrefBool('font_underline');
-    _font_color := _getPrefInt('font_color');
+    _color_me := _getPrefInt(P_COLOR_ME);
+    _color_other := _getPrefInt(P_COLOR_OTHER);
+    _color_action := _getPrefInt(P_COLOR_ACTION);
+    _color_server := _getPrefInt(P_COLOR_SERVER);
+    _color_time := _getPrefInt(P_COLOR_TIME);
+    _color_bg := _getPrefInt(P_COLOR_BG);
+    _color_alt_bg := _getPrefInt(P_COLOR_ALT_BG);
+    _color_date_bg := _getPrefInt(P_COLOR_DATE_BG);
+    _color_date := _getPrefInt(P_COLOR_DATE);
+    _font_name := _getPrefString(P_FONT_NAME);
+    _font_size := IntToStr(_getPrefInt(P_FONT_SIZE));
+    _font_bold := _getPrefBool(P_FONT_BOLD);
+    _font_italic := _getPrefBool(P_FONT_ITALIC);
+    _font_underline := _getPrefBool(P_FONT_ULINE);
+    _font_color := _getPrefInt(P_FONT_COLOR);
+    _color_composing := _getPrefInt(P_COLOR_COMPOSING);
+    _color_presence := _getPrefInt(P_COLOR_PRESENCE);
+    _color_alert := _getPrefInt(P_COLOR_ALERT);
 end;
 
 {---------------------------------------}
@@ -1422,6 +1434,9 @@ begin
             css := replaceString(css, '/*color_time*/', HTMLColor(_color_time));
             css := replaceString(css, '/*color_action*/', HTMLColor(_color_action));
             css := replaceString(css, '/*color_server*/', HTMLColor(_color_server));
+            css := replaceString(css, '/*color_composing*/', HTMLColor(_color_composing));
+            css := replaceString(css, '/*color_presence*/', HTMLColor(_color_presence));
+            css := replaceString(css, '/*color_alert*/', HTMLColor(_color_alert));
         end;
 
         // put CSS into page
