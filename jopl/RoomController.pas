@@ -28,6 +28,7 @@ type TRoomController = class
          _SessionCB: Integer;
          _ItemsCB: IExodusItemCallback;
          _dnListener: TDisplayNameEventListener;
+         _RoomsLoaded: Boolean;
 
          //Methods
          procedure _GetRooms();
@@ -175,10 +176,10 @@ end;
 {---------------------------------------}
 procedure TRoomController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
-     if Event = '/session/authenticated'  then
+     if Event = '/session/ready/groups'  then
      begin
          _GetRooms();
-     end
+     end;
 end;
 
 {---------------------------------------}
@@ -189,6 +190,7 @@ var
     IQ: TJabberIQ;
     Session: TJabberSession;
 begin
+    _RoomsLoaded := false;
     Session := TJabberSession(_js);
     IQ := TJabberIQ.Create(Session, Session.generateID(), _ParseRooms, 180);
     with iq do begin
@@ -223,31 +225,28 @@ begin
         RoomTags := StorageTag.ChildTags();
 
     for i := 0 to RoomTags.Count - 1 do begin
-            if (RoomTags[i].Name <> 'conference') then continue;
-            RoomTag := RoomTags.Tags[i];
-            jid := WideLowerCase(RoomTag.GetAttribute('jid'));
-            TmpJID := TJabberID.Create(RoomTag.GetAttribute('jid'));
-            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_ROOM, _ItemsCB);
-            //Make sure item exists
-            if (Item <> nil) then
-            begin
-                _ParseRoom(Item, RoomTag);
+        if (RoomTags[i].Name <> 'conference') then continue;
+        RoomTag := RoomTags.Tags[i];
+        jid := WideLowerCase(RoomTag.GetAttribute('jid'));
+        TmpJID := TJabberID.Create(RoomTag.GetAttribute('jid'));
+        Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_ROOM, _ItemsCB);
+        //Make sure item exists
+        if (Item <> nil) then
+        begin
+            _ParseRoom(Item, RoomTag);
 
-                if (Item.IsVisible) then
-                    TJabberSession(_JS).FireEvent('/item/add', Item);
+            if (Item.IsVisible) then
+                TJabberSession(_JS).FireEvent('/item/add', Item);
+        end;
+        TmpJID.Free();
+    end;
 
-                // Fire an event to join the room
-                if (item.value['autojoin'] = 'true') then
-                    TJabberSession(_JS).FireEvent('/session/gui/conference', Item);
-            end;
-            TmpJID.Free();
-     end;
-
-     Item := nil;
-     TJabberSession(_JS).FireEvent('/item/end', Item);
-     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
-     RoomTags.Free();
-
+    _RoomsLoaded := true;
+    Item := nil;
+    TJabberSession(_JS).FireEvent('/item/end', Item);
+    TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
+    TJabberSession(_JS).FireEvent(DEPMOD_READY_EVENT + DEPMOD_BOOKMARKS, nil);
+    RoomTags.Free();
 end;
 
 {---------------------------------------}
@@ -276,20 +275,18 @@ begin
         }
     Room.ImageIndex := RI_CONFERENCE_INDEX;
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
-    Room.value['name'] := Tag.GetAttribute('name');
-    Room.value['defaultaction'] := '{000-exodus.googlecode.com}-000-join-room';
+    Room.AddProperty('name', Tag.GetAttribute('name'));
     //Retrieve room name from display cache
     GetDisplayNameCache().UpdateDisplayName(Room);
     Room.Text := GetDisplayNameCache().GetDisplayName(Room.Uid);
-
-    Room.value['autojoin'] := Tag.GetAttribute('autojoin');
-    Room.value['reg_nick'] := Tag.GetAttribute('reg_nick');
+    Room.AddProperty('autojoin', Tag.GetAttribute('autojoin'));
+    Room.AddProperty('reg_nick', Tag.GetAttribute('reg_nick'));
     TmpTag := Tag.QueryXPTag('/conference/nick');
     if (TmpTag <> nil) then
-        Room.value['nick'] := TmpTag.Data;
+        Room.AddProperty('nick', TmpTag.Data);
     TmpTag := Tag.QueryXPTag('/conference/password');
     if (TmpTag <> nil) then
-        Room.value['password'] := TmpTag.Data;
+        Room.AddProperty('password', TmpTag.Data);
 
     Grps := Tag.QueryXPTags('/conference/group');
     //Build temporary list of groups for future comparison of the lists.
@@ -309,6 +306,7 @@ begin
             if (Grp <> '') then
             begin
                 Room.AddGroup(grp);
+                //TJabberSession(_js).ItemController.AddItemByUID(grp, EI_TYPE_GROUP);
             end;
 
         end;
@@ -319,7 +317,7 @@ begin
         Room.AddGroup(TJabberSession(_JS).Prefs.getString('roster_default'));
     end;
 
-
+   
     Grps.Free();
     TmpJid.Free();
 end;
@@ -346,11 +344,16 @@ end;
 
 procedure TExodusRoomsCallback.ItemDeleted(const item: IExodusItem);
 begin
+    if not _roomCtrl._RoomsLoaded then exit;
+
     _roomCtrl.SaveRooms();
     item.IsVisible := false;
+    TJabberSession(_roomCtrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusRoomsCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
+    if not _roomCtrl._RoomsLoaded then exit;
+
     _roomCtrl.SaveRooms();
     TJabberSession(_roomCtrl._JS).FireEvent('/item/update', item);
 end;

@@ -32,7 +32,6 @@ uses
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, 
     COMExodusItemController, ContactController, Exodus_TLB, RoomController;
-
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
 
@@ -123,6 +122,9 @@ type
         procedure TLSCallback(event: string; tag: TXMLTag);
         procedure CompressionCallback(event: string; tag: TXMLTag);
         procedure CompressionErrorCallback(event: string; tag: TXMLTag);
+
+        procedure OnAllDependanciesResolved(SessionTag : TXMLTag);
+        procedure OnDependancyResolved(module: widestring; Tag : TXMLTag);
     public
         ppdb: TJabberPPDB;
         ItemController: IExodusItemController;
@@ -253,6 +255,71 @@ type
         Destructor Destroy(); override;
     end;
 
+    {------------------------ TDependancyHandler ------------------------------}
+    { a helper class that tracks session/ready and fires an event when all
+      given dependancies signal ready. Assumes /session/ready/session is
+      one of the signals caught, so the original tag can be accessed. If not
+      in the dependacy list, session is auto added }
+    TModuleInfo = record
+        module: widestring;
+        ready: boolean;
+    end;
+
+    TDepModInfoArray = array of TModuleInfo;
+    //TDependancyHandler owns sessiontag and will destroy it after OnREsolved is fired
+    TAllResolvedEvent = procedure(SessionTag: TXMLTag) of object;
+    TResolvedEvent = procedure(module: widestring; SessionTag: TXMLTag) of object;
+    TDependancyHandler = class
+    private
+        _sessionCB: integer;
+        _session: TJabberSession;
+        _dependancies: TDepModInfoArray;
+        _sessionReadyTag: TXMLTag; //tag passed along with /session/ready/session event
+        _OnAllResolved: TAllResolvedEvent;
+        _onResolved: TResolvedEvent;
+
+        procedure ResetState();
+    protected
+        procedure SessionCallback(event: string; tag: TXMLTag);
+        procedure FireOnAllResolved();
+        procedure FireOnResolved(module: widestring; tag: TXMLTag);
+        function IndexOfModule(module: widestring): integer;
+        function AllReady(): boolean;
+    public
+        constructor create(session: TJabberSession; depmods: TDepModInfoArray);overload;
+        constructor create(session: TJabberSession; depmods: Array of TModuleInfo);overload;
+
+        destructor Destroy(); override;
+
+        property OnResolved: TResolvedEvent read _OnResolved write _OnResolved;
+        property OnAllResolved: TAllResolvedEvent read _OnAllResolved write _OnAllResolved;
+    end;
+
+const
+    DEPMOD_SESSION      = 'session';
+    DEPMOD_DISPLAYNAME  = 'displayname';
+    DEPMOD_ROSTER       = 'roster';
+    DEPMOD_BOOKMARKS    = 'bookmarks';
+    DEPMOD_GROUPS       = 'groups';
+    DEPMOD_UI           = 'ui';
+    DEPMOD_CAPS_CACHE   = 'caps-cache';
+    DEPMOD_ENTITY_CACHE = 'entity-cache';
+
+    DEPMOD_READY_EVENT = '/session/ready/';
+    DEPMOD_READY_SESSION_EVENT = DEPMOD_READY_EVENT + DEPMOD_SESSION;
+
+    ALL_DEPENDANT_MODULES: array[0..7] of TModuleInfo  = (
+                                                   (module:DEPMOD_SESSION; ready:false),
+                                                   (module:DEPMOD_DISPLAYNAME; ready:false),
+                                                   (module:DEPMOD_ROSTER; ready:false),
+                                                   (module:DEPMOD_BOOKMARKS; ready:false),
+                                                   (module:DEPMOD_GROUPS; ready:false),
+                                                   (module:DEPMOD_UI; ready:false),
+                                                   (module:DEPMOD_CAPS_CACHE; ready:false),
+                                                   (module:DEPMOD_ENTITY_CACHE; ready:false)
+                                                   );
+
+
 var
     MainSession: TJabberSession;
 
@@ -267,14 +334,18 @@ uses
     DisplayName, //display name cache
     PluginAuth,
     Profile,
+    StrUtils,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
-    JabberConst, CapPresence, XMLVCard, Windows, strutils, JabberUtils;
+    JabberConst, CapPresence, XMLVCard, Windows, JabberUtils;
+
+
 
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: widestring);
 var
     exe_FullPath: string;
     exe_FullPath_len: cardinal;
+    tdephand: TDependancyHandler;
 begin
     //
     inherited Create();
@@ -312,11 +383,17 @@ begin
     _dispatcher.AddSignal(_dataSignal);
     _dispatcher.AddSignal(_winSignal);
     _dispatcher.AddSignal(_chatSignal);
-    
+
 {** JJF msgqueue refactor
     _pauseQueue := TQueue.Create();
-**}    
+**}
 
+    //create a handler that will callback when a set of dependancies has been resolved
+    //in this case all known dependancies
+    tdephand := TDependancyHandler.create(Self, ALL_DEPENDANT_MODULES);
+    tdephand.OnAllResolved := OnAllDependanciesResolved;
+    tdephand.OnResolved := OnDependancyResolved;
+    
     _avails := TWidestringlist.Create();
     _features := nil;
     _xmpp := false;
@@ -331,7 +408,7 @@ begin
 
     //display name cache
     DisplayName.getDisplayNameCache().setSession(Self);
-    
+
     // Create the Presence Proxy Database (PPDB)
     ppdb := TJabberPPDB.Create;
     ppdb.SetSession(Self);
@@ -351,7 +428,6 @@ begin
     Prefs.setString('exe_FullPath', exe_FullPath);
     exe_FullPath := Windows.GetCommandLine();
     Prefs.setString('exe_CommandLine', exe_FullPath);
-    prefs.setString('appID', PrefController.GetAppInfo().ID);
 
     if (Prefs.getBool('always_lang')) then
         _lang := Prefs.getString('locale')
@@ -364,7 +440,7 @@ begin
     Presence_XML := TWideStringlist.Create();
 
     _extensions := TWideStringList.Create();
-    
+
     ItemController := TExodusItemController.create(Self);
     roster := TContactController.create(Self);
     rooms := TRoomController.create(Self);
@@ -813,18 +889,25 @@ begin
         _dispatcher.DispatchSignal('/session/error/auth', tag);
         exit;
     end
-    else
-        StartSession(tag);
+    else _dispatcher.DispatchSignal(DEPMOD_READY_SESSION_EVENT, tag);
 end;
 
 {---------------------------------------}
+{
+    Just about everything that initializes at auth catches this event. Many
+    listeners have dependacies on entity cache, roster, bookmarks and private
+    storeage fetch. To address these dependancies new "ready" events will
+    be fired instead of authenticated. Once rosrter, enitify cahche etc. have
+    signaled ready,  /session/authneticated will be fired. This logic is
+    controlled in jabber1.pas
+}
 procedure TJabberSession.StartSession(tag: TXMLTag);
 begin
     // We have an active session
     _first_pres := true;
+     Prefs.FetchServerPrefs(); //server prefs will just fire a /session/prefs on success
+    _authd := true;
     _dispatcher.DispatchSignal('/session/authenticated', tag);
-    Prefs.FetchServerPrefs();
-//    SetDefaultNickname();
 end;
 
 {---------------------------------------}
@@ -1351,14 +1434,15 @@ begin
     //remove temp password from prefs
     Prefs.setString('temp-pw', '');
     if (ok) then begin
-        _authd := true;
+
         _profile.NewAccount := false;
         _register := false;
 
         if (reset_stream) then
             ResetStream()
         else
-            StartSession(tag);
+            //fire session/ready/session, see TDepMod
+            _dispatcher.DispatchSignal(DEPMOD_READY_SESSION_EVENT, tag);
     end
     else begin
         _dispatcher.DispatchSignal('/session/error/auth', tag);
@@ -1467,6 +1551,20 @@ begin
     Result := DisplayName.getDisplayNameCache().getDisplayName(Profile.getJabberID);
 end;
 
+procedure TJabberSession.OnAllDependanciesResolved(SessionTag : TXMLTag);
+begin
+    StartSession(SessionTag);
+end;
+
+procedure TJabberSession.OnDependancyResolved(module: widestring; Tag : TXMLTag);
+begin
+    if (module = DEPMOD_SESSION) then
+    begin
+        //kick off some other depandcies
+        jEntityCache.fetch(Self.Server, Self);
+    end;
+end;
+
 {*******************************************************************************
 **************************** TSessionListener **********************************
 *******************************************************************************}
@@ -1498,7 +1596,7 @@ begin
     else if (event = '/session/commerror') then
     begin
         _ReceivedError := 'Comm Error';
-    end;
+    end
 end;
 
 Constructor TSessionListener.Create(OnAuthenticated: TAuthenticatedEvent; OnDisconnect: TDisconnectEvent; JabberSession: TJabberSession = nil);
@@ -1523,6 +1621,128 @@ begin
         _SessionCB := -1;
     end;
 end;
+
+{------------------------ TDependancyHandler ------------------------------}
+function ArrayToTArray(ina: array of TModuleInfo): TDepModInfoArray;
+var
+    i: integer;
+begin
+    SetLength(Result, Length(ina));
+    for i := 0 to Length(ina) - 1 do
+        Result[i] := ina[i];
+end;
+
+function TDependancyHandler.indexOfModule(module: widestring): integer;
+begin
+    for Result := 0 to Length(_dependancies) - 1 do
+        if (_dependancies[Result].module = module) then exit;
+    Result := -1;
+end;
+
+function TDependancyHandler.AllReady(): boolean;
+var
+    i: integer;
+begin
+    Result := false;
+    for i := 0 to Length(_dependancies) - 1 do
+        if (not _dependancies[i].ready) then exit;
+
+    Result := true;
+end;
+
+procedure TDependancyHandler.SessionCallback(event: string; tag: TXMLTag);
+
+var
+    idx: integer;
+    depmod: string;
+begin
+    if (StartsText(DEPMOD_READY_EVENT, event)) then
+    begin
+        depmod := RightStr(event, Length(event) - Length(DEPMOD_READY_EVENT));
+        idx := indexOfModule(depmod);
+        if (idx <> -1) then
+        begin
+            _dependancies[idx].ready := true;
+            if (depmod = DEPMOD_SESSION) then
+                _sessionReadyTag := TXMLTag.create(Tag); //copy
+            fireOnResolved(depmod, Tag);
+        end;
+
+        if (AllReady()) then
+            FireOnAllResolved();
+    end
+    else if (event = '/session/disconnected') then
+        ResetState()
+    else if (event = '/session/entity/items') then
+    begin
+        depmod := tag.GetAttribute('from');
+        if (depmod = _session.Server) then
+            _session.FireEvent(DEPMOD_READY_EVENT + DEPMOD_ENTITY_CACHE, nil);
+    end;
+
+end;
+
+procedure TDependancyHandler.ResetState();
+var
+    i: integer;
+begin
+    for i := 0 to Length(_dependancies) - 1 do
+        _dependancies[i].ready := false;
+
+    if (_sessionReadyTag <> nil) then
+        _sessionReadyTag.Free();
+    _sessionReadyTag := nil;
+end;
+
+procedure TDependancyHandler.FireOnAllResolved();
+begin
+    if (Assigned(_OnAllResolved)) then
+        _OnAllResolved(_sessionReadyTag);
+
+    ResetState();
+end;
+
+procedure TDependancyHandler.FireOnResolved(module: widestring; tag: TXMLTag);
+begin
+    if (Assigned(_onResolved)) then
+        _OnResolved(module, tag);
+end;
+
+constructor TDependancyHandler.create(session: TJabberSession; depmods: Array of TModuleInfo);
+begin
+    Create(session, ArrayToTArray(depmods));
+end;
+
+
+constructor TDependancyHandler.create(session: TJabberSession; depmods: TDepModInfoArray);
+var
+    i: integer;
+    sessionDependancy: TModuleInfo;
+begin
+    _Session := session;
+    
+    SetLength(_dependancies, Length(depmods));
+    for i := 0 to Length(depmods) - 1 do
+        _dependancies[i] := depmods[i];
+    if (indexOfModule(DEPMOD_SESSION) = -1) then
+    begin
+        sessionDependancy.module := DEPMOD_SESSION;
+        sessionDependancy.ready := false;
+
+        SetLength(_dependancies, Length(_dependancies) + 1);
+        _dependancies[Length(_dependancies)] := sessionDependancy;
+    end;
+    _sessionCB := _session.RegisterCallback(SessionCallback, '/session');
+    _sessionReadyTag := nil;
+end;
+
+destructor TDependancyHandler.Destroy();
+begin
+    _session.UnRegisterCallback(_sessionCB);
+    ResetState();
+    inherited;
+end;
+
 
 end.
 

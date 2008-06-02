@@ -134,8 +134,11 @@ var
     q: TXMLTag;
 begin
     // Save when we get disconnected, and load when we get auth'd
-    if (event = '/session/authenticated') then
-        Load()
+    if (event = DEPMOD_READY_SESSION_EVENT) then
+    begin
+        Load();
+        TJabberSession(_js).FireEvent(DEPMOD_READY_EVENT + DEPMOD_CAPS_CACHE, tag);
+    end
     else if (event = '/session/disconnected') then
         Save()
     else if ((event = '/session/entity/info') and (tag <> nil)) then begin
@@ -354,33 +357,38 @@ begin
     cid := capid;
 
     from := TJabberID.Create(tag.getAttribute('from'));
-    e := jEntityCache.getByJid(from.full);
-    if (e = nil) then begin
-        e := TJabberEntity.Create(TJabberID.Create(from));
-        jEntityCache.Add(from.full, e);
-    end;
-
-    e.ClearReferences(); //refs will be rebuilt here
-
-    cache := getCache(capid, from);
-    e.AddReference(cache);
-    has_info := checkInfo(cache, cid, from);
-
-    exts := c.GetAttribute('ext');
-    if (exts <> '') then begin
-        ids := TWidestringlist.Create();
-        split(exts, ids, ' ');
-        for i := 0 to ids.count - 1 do begin
-            capid := node + '#' + ids[i];
-            cache := getCache(capid, from);
-            has_info := (has_info and checkInfo(cache, capid, from));
-            e.AddReference(cache);
+    //make sure we aren't trying to query a conf server...
+    e := jEntityCache.getByJid(from.domain);
+    if (e = nil) or (not e.hasFeature(FEAT_GROUPCHAT)) then 
+    begin
+        e := jEntityCache.getByJid(from.full);
+        if (e = nil) then begin
+            e := TJabberEntity.Create(TJabberID.Create(from));
+            jEntityCache.Add(from.full, e);
         end;
-        ids.Free();
-    end;
 
-    if (has_info) then
-        fireCaps(from.full, cid);
+        e.ClearReferences(); //refs will be rebuilt here
+
+        cache := getCache(capid, from);
+        e.AddReference(cache);
+        has_info := checkInfo(cache, cid, from);
+
+        exts := c.GetAttribute('ext');
+        if (exts <> '') then begin
+            ids := TWidestringlist.Create();
+            split(exts, ids, ' ');
+            for i := 0 to ids.count - 1 do begin
+                capid := node + '#' + ids[i];
+                cache := getCache(capid, from);
+                has_info := (has_info and checkInfo(cache, capid, from));
+                e.AddReference(cache);
+            end;
+            ids.Free();
+        end;
+
+        if (has_info) then
+            fireCaps(from.full, cid);
+    end;
 
     from.Free();
 end;

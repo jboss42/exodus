@@ -1769,7 +1769,7 @@ begin
 
         //Set Display Name listener to only fire on "My JID" DN updates
         _dnListener.UID := MainSession.profile.getJabberID().jid;
-        
+
         UpdateDisplayName();
 
         setTrayInfo(Self.Caption);
@@ -1781,17 +1781,11 @@ begin
             (MainSession.Prefs.getBool('brand_ft'))) then
             DragAcceptFiles(Handle, True);
 
-        // 1. Fetch the roster
-        // 2. Discover our server stuff..
         // 3. Make the roster the active tab
         // 4. Activate the menus
         // 5. turn on the auto-away timer
         // 6. check for new brand.xml file
         // 7. check for new version
-{ TODO : Roster refactor }        
-        //Roster.Fetch;
-        jEntityCache.fetch(MainSession.Server, MainSession);
-
         ShowRoster();
 
         restoreMenus(true);
@@ -1821,7 +1815,7 @@ begin
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
-
+        _sendInitPresence();
     end
 
     else if (event = '/session/disconnected') then begin
@@ -2045,9 +2039,7 @@ begin
                    PWideChar(MainSession.Prefs.GetString('brand_caption')),
                    MB_OK or MB_ICONERROR);
         Application.Terminate();
-    end
-    else if (event = '/session/roster_ready') then
-        _sendInitPresence();
+    end;
 end;
 
 {---------------------------------------}
