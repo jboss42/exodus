@@ -871,8 +871,7 @@ begin
         end;
     end;
     if MainSession.Prefs.getBool('notify_flasher') then begin
-        //timFlasher.Enabled := true;
-        StartFlash(Self);
+        timFlasher.Enabled := true;
     end
     else begin
         timFlasher.Enabled := false;
