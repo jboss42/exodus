@@ -241,6 +241,7 @@ var
 begin
     Contact.Text := Tag.GetAttribute('name');
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
+    Contact.value['defaultaction'] := '{000-exodus.googlecode.com}-000-start-chat';
     Contact.value['Name'] := Tag.GetAttribute('name');
     Contact.value['Subscription'] := Tag.GetAttribute('subscription');
     Contact.value['Ask'] := Tag.GetAttribute('ask');
@@ -379,14 +380,15 @@ begin
         item := itemCtrl.GetItem(uid);
 
         if (subscr = 'remove') then begin
-            if (item = nil) then
-                item := _PopPending(uid);
 
             if (item <> nil) then begin
                 //removing...make sure it disappears
                 itemCtrl.RemoveItem(uid);
-                session.FireEvent('/item/remove', item);
+                //session.FireEvent('/item/remove', item);
                 SendUnSubscribe(uid, session);
+            end
+            else begin
+                _PopPending(uid);
             end;
         end
         else if (item <> nil) then begin
@@ -689,6 +691,7 @@ begin
         //Actual item creation!
         Result := itemCtlr.AddItemByUid(sjid, EI_TYPE_CONTACT, _ItemsCB);
         Result.value['Name'] := name;
+        Result.value['defaultaction'] := '{000-exodus.googlecode.com}-000-start-chat';
         Result.value['Subscription'] := 'none';
         if (group <> '') then begin
             Result.AddGroup(group);
