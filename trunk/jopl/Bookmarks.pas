@@ -34,7 +34,6 @@ type
         _xdb_bm: boolean;
         _js: TObject;
         _menu: TTntPopupMenu;
-
     published
         procedure SessionCallback(event: string; tag: TXMLTag);
         procedure UpdateCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
@@ -74,7 +73,8 @@ begin
     //
     inherited Create();
     _xdb_bm := true;
-
+    _readyTag := nil;
+    
     _menu := TTntPopupMenu.Create(nil);
     _menu.Name := 'mnuBookmarksContext';
     _menu.AutoHotkeys := maManual;
@@ -157,11 +157,14 @@ end;
 {---------------------------------------}
 procedure TBookmarkManager.SessionCallback(event: string; tag: TXMLTag);
 begin
-    if (event = '/session/authenticated') then
-        Fetch()
+    if (event = DEPENDANCY_READY_SESSION_EVENT) then begin
+        _readyTag := tag;
+        Fetch();
+    end
     else if (event = '/session/disconnected') then begin
         // note that the tags will be cleaned up by the roster items.
         Clear();
+        _readyTag := nil;
     end;
 end;
 
@@ -290,6 +293,9 @@ begin
 
         bms.Free();
     end;
+    if (_readyTag <> nil) then
+        Mainsession.fireEvent(DEPENDANCY_READY_EVENT + DEPENDANCY_BOOKMARKS, _readyTag);
+    _readyTag := nil;
 end;
 
 {---------------------------------------}
