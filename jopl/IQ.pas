@@ -32,6 +32,8 @@ uses
     {$endif}
     Classes, SysUtils;
 
+const
+    PREF_IQ_MIN_TIMEOUT = 'iq_minimum_timeout';
 type
     TJabberIQ = class(TXMLTag)
     private
@@ -89,7 +91,10 @@ begin
     _timer.Enabled := false;
     _timer.OnTimer := Timeout;
     _ticks := 0;
-    _timeout := seconds;
+
+    _timeout := session.Prefs.getInt(PREF_IQ_MIN_TIMEOUT);
+    if (seconds = -1) or (seconds > _timeout) then
+        _timeout := seconds;
 
     // manip the xml tag
     Self.Name := 'iq';
@@ -111,8 +116,9 @@ begin
     _timer.Enabled := false;
     _timer.OnTimer := Timeout;
     _ticks := 0;
-    _timeout := seconds;
-
+    _timeout := session.Prefs.getInt(PREF_IQ_MIN_TIMEOUT);
+    if (seconds = -1) or (seconds > _timeout) then
+        _timeout := seconds;
     // manip the xml tag
     Self.Name := 'iq';
     qTag := Self.AddTag('query');
@@ -135,8 +141,9 @@ begin
     _timer.Enabled := false;
     _timer.OnTimer := Timeout;
     _ticks := 0;
-    _timeout := seconds;
-
+    _timeout := session.Prefs.getInt(PREF_IQ_MIN_TIMEOUT);
+    if (seconds = -1) or (seconds > _timeout) then
+        _timeout := seconds;
     // manip the xml tag
     Self.Name := 'iq';
     payloadtag := TXMLTag.Create(payload);
@@ -189,7 +196,7 @@ begin
     _timer.Enabled := false;
     inc(_ticks);
 
-    if (_ticks >= _timeout) then begin
+    if (_timeout <> -1) and (_ticks >= _timeout) then begin
         _js.UnRegisterCallback(_cbIndex);
         _cbIndex := -1;
         _js.UnRegisterCallback(_cbSession);

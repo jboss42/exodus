@@ -208,7 +208,8 @@ begin
 
     // actually parse for nested groups
     if ((MainSession <> nil) and
-        (MainSession.prefs.getBool('nested_groups'))) then begin
+        MainSession.prefs.getBool('nested_groups') and
+        MainSession.prefs.getBool('branding_nested_subgroup')) then begin
         l := Length(name);
         s := 1;
         sep := MainSession.prefs.getString('group_seperator');
