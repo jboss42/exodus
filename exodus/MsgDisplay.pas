@@ -42,8 +42,20 @@ uses
     JabberConst,
     XMLParser,
     RT_XIMConversion,
-    Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
-    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords, TypInfo, DateUtils;
+    Clipbrd,
+    Jabber1,
+    JabberUtils,
+    ExUtils,
+    Emote,
+    ExtCtrls,
+    Dialogs,
+    XMLTag,
+    XMLUtils,
+    Session,
+    Keywords,
+    TypInfo,
+    DateUtils,
+    PrefController;
 
 const
     MAX_MSG_LENGTH = 512;
@@ -77,13 +89,13 @@ begin
     DisplayRTFMsg(RichEdit,
                   Msg,
                   AutoScroll,
-                  MainSession.Prefs.getInt('color_time'),
-                  MainSession.Prefs.getInt('color_priority'),
-                  MainSession.Prefs.getInt('color_server'),
-                  MainSession.Prefs.getInt('color_action'),
-                  MainSession.Prefs.getInt('color_me'),
-                  MainSession.Prefs.getInt('color_other'),
-                  MainSession.Prefs.getInt('font_color'));
+                  MainSession.Prefs.getInt(P_COLOR_TIME),
+                  MainSession.Prefs.getInt(P_COLOR_PRIORITY),
+                  MainSession.Prefs.getInt(P_COLOR_SERVER),
+                  MainSession.Prefs.getInt(P_COLOR_ACTION),
+                  MainSession.Prefs.getInt(P_COLOR_ME),
+                  MainSession.Prefs.getInt(P_COLOR_OTHER),
+                  MainSession.Prefs.getInt(P_FONT_COLOR));
 end;
 
 function getXIMTag(msg: TJabberMessage): TXMLTag;

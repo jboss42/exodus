@@ -123,6 +123,9 @@
     <color_server value="$808080"/>
     <color_date_bg value="$dcdcdc"/>
     <color_date value="$000000"/>
+    <color_composing value="$800080"/>
+    <color_presence value="$808080"/>
+    <color_alert value="$ff0000"/>
 
     <!-- other display preferences -->
     <richtext_enabled value="1" control="chkRTEnabled" state="rw"/>

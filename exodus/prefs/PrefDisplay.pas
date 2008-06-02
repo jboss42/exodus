@@ -244,39 +244,39 @@ begin
     gbContactList.Enabled := (s <> psReadOnly);
     gbContactList.CanEnabled := (s <> psReadOnly);
 
-    s := GetPrefState('font_name');
+    s := GetPrefState(P_FONT_NAME);
     gbActivityWindow.Visible:= (s <> psInvisible);
     gbActivityWindow.CanShow := (s <> psInvisible);
     gbActivityWindow.Enabled := (s <> psReadOnly);
     gbActivityWindow.CanEnabled := (s <> psReadOnly);
     
     with MainSession.Prefs do begin
-        _color_me := getInt('color_me');
-        _color_other := getInt('color_other');
-        _color_action := getInt('color_action');
-        _color_server := getInt('color_server');
-        _font_color := getInt('font_color');
-        _color_time := getInt('color_time');
-        _color_priority := getInt('color_priority');
-        _color_bg := getInt('color_bg');
-        _color_alt_bg := getInt('color_alt_bg');
-        _color_date_bg := getInt('color_date_bg');
-        _color_date := getInt('color_date');
+        _color_me := getInt(P_COLOR_ME);
+        _color_other := getInt(P_COLOR_OTHER);
+        _color_action := getInt(P_COLOR_ACTION);
+        _color_server := getInt(P_COLOR_SERVER);
+        _font_color := getInt(P_FONT_COLOR);
+        _color_time := getInt(P_COLOR_TIME);
+        _color_priority := getInt(P_COLOR_PRIORITY);
+        _color_bg := getInt(P_COLOR_BG);
+        _color_alt_bg := getInt(P_COLOR_ALT_BG);
+        _color_date_bg := getInt(P_COLOR_DATE_BG);
+        _color_date := getInt(P_COLOR_DATE);
 
-        _roster_bg := getInt('roster_bg');
-        _roster_font_color := getInt('roster_font_color');
+        _roster_bg := getInt(P_ROSTER_BG);
+        _roster_font_color := getInt(P_ROSTER_FONT_COLOR);
 
         with colorChat do begin
-            Font.Name := getString('font_name');
-            Font.Size := getInt('font_size');
+            Font.Name := getString(P_FONT_NAME);
+            Font.Size := getInt(P_FONT_SIZE);
             Font.Color := TColor(_font_color);
-            Font.Charset := getInt('font_charset');
+            Font.Charset := getInt(P_FONT_CHARSET);
             if (Font.Charset = 0) then Font.Charset := 1;
 
             Font.Style := [];
-            if (getBool('font_bold')) then Font.Style := Font.Style + [fsBold];
-            if (getBool('font_italic')) then Font.Style := Font.Style + [fsItalic];
-            if (getBool('font_underline')) then Font.Style := Font.Style + [fsUnderline];
+            if (getBool(P_FONT_BOLD)) then Font.Style := Font.Style + [fsBold];
+            if (getBool(P_FONT_ITALIC)) then Font.Style := Font.Style + [fsItalic];
+            if (getBool(P_FONT_ULINE)) then Font.Style := Font.Style + [fsUnderline];
             Color := TColor(_color_bg);
             Self.redrawChat();
         end;
@@ -285,14 +285,14 @@ begin
             Items[0].Expand(true);
             Color := TColor(_roster_bg);
             Font.Color := TColor(_roster_font_color);
-            Font.Name := getString('roster_font_name');
-            Font.Size := getInt('roster_font_size');
-            Font.Charset := getInt('roster_font_charset');
+            Font.Name := getString(P_ROSTER_FONT_NAME);
+            Font.Size := getInt(P_ROSTER_FONT_SIZE);
+            Font.Charset := getInt(P_ROSTER_FONT_CHARSET);
             if (Font.Charset = 0) then Font.Charset := 1;
             Font.Style := [];
-            if (getBool('roster_font_bold')) then Font.Style := Font.Style + [fsBold];
-            if (getBool('roster_font_italic')) then Font.Style := Font.Style + [fsItalic];
-            if (getBool('roster_font_underline')) then Font.Style := Font.Style + [fsUnderline];
+            if (getBool(P_ROSTER_FONT_BOLD)) then Font.Style := Font.Style + [fsBold];
+            if (getBool(P_ROSTER_FONT_ITALIC)) then Font.Style := Font.Style + [fsItalic];
+            if (getBool(P_ROSTER_FONT_UNDERLINE)) then Font.Style := Font.Style + [fsUnderline];
         end;
 
         btnChatFont.Enabled := true;
@@ -347,20 +347,20 @@ begin
 
     inherited;
     with MainSession.prefs do begin
-        setInt('color_me', _color_me);
-        setInt('color_other', _color_other);
-        setInt('color_action', _color_action);
-        setInt('color_server', _color_server);
-        setInt('font_color', _font_color);
-        setInt('color_time', _color_time);
-        setInt('color_priority', _color_priority);
-        setInt('color_bg', _color_bg);
-        setInt('color_alt_bg', _color_alt_bg);
-        setInt('color_date_bg', _color_date_bg);
-        setInt('color_date', _color_date);
+        setInt(P_COLOR_ME, _color_me);
+        setInt(P_COLOR_OTHER, _color_other);
+        setInt(P_COLOR_ACTION, _color_action);
+        setInt(P_COLOR_SERVER, _color_server);
+        setInt(P_FONT_COLOR, _font_color);
+        setInt(P_COLOR_TIME, _color_time);
+        setInt(P_COLOR_PRIORITY, _color_priority);
+        setInt(P_COLOR_BG, _color_bg);
+        setInt(P_COLOR_ALT_BG, _color_alt_bg);
+        setInt(P_COLOR_DATE_BG, _color_date_bg);
+        setInt(P_COLOR_DATE, _color_date);
 
-        setInt('roster_bg', _roster_bg);
-        setInt('roster_font_color', _roster_font_color);
+        setInt(P_ROSTER_BG, _roster_bg);
+        setInt(P_ROSTER_FONT_COLOR, _roster_font_color);
         tstr := ' ';
         if (not _lastAllowFont) then
             tstr := tstr + 'font-family;';
@@ -371,19 +371,19 @@ begin
         setString('richtext_ignored_font_styles', tstr);
 
 
-        setString('roster_font_name', colorRoster.Font.Name);
-        setInt('roster_font_charset', colorRoster.Font.Charset);
-        setInt('roster_font_size', colorRoster.Font.Size);
-        setBool('roster_font_bold', (fsBold in colorRoster.Font.Style));
-        setBool('roster_font_italic', (fsItalic in colorRoster.Font.Style));
-        setBool('roster_font_underline', (fsUnderline in colorRoster.Font.Style));
+        setString(P_ROSTER_FONT_NAME, colorRoster.Font.Name);
+        setInt(P_ROSTER_FONT_CHARSET, colorRoster.Font.Charset);
+        setInt(P_ROSTER_FONT_SIZE, colorRoster.Font.Size);
+        setBool(P_ROSTER_FONT_BOLD, (fsBold in colorRoster.Font.Style));
+        setBool(P_ROSTER_FONT_ITALIC, (fsItalic in colorRoster.Font.Style));
+        setBool(P_ROSTER_FONT_UNDERLINE, (fsUnderline in colorRoster.Font.Style));
         
-        setString('font_name', colorChat.Font.Name);
-        setInt('font_charset', colorChat.Font.Charset);
-        setInt('font_size', colorChat.Font.Size);
-        setBool('font_bold', (fsBold in colorChat.Font.Style));
-        setBool('font_italic', (fsItalic in colorChat.Font.Style));
-        setBool('font_underline', (fsUnderline in colorChat.Font.Style));
+        setString(P_FONT_NAME, colorChat.Font.Name);
+        setInt(P_FONT_CHARSET, colorChat.Font.Charset);
+        setInt(P_FONT_SIZE, colorChat.Font.Size);
+        setBool(P_FONT_BOLD, (fsBold in colorChat.Font.Style));
+        setBool(P_FONT_ITALIC, (fsItalic in colorChat.Font.Style));
+        setBool(P_FONT_ULINE, (fsUnderline in colorChat.Font.Style));
     end;
 
 end;

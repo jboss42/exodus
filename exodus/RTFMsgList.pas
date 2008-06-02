@@ -76,8 +76,15 @@ implementation
 
 uses
     Emote,
-    XMLTag, 
-    JabberUtils, ExUtils,  Session, MsgDisplay, ShellAPI, BaseChat, Jabber1;
+    XMLTag,
+    JabberUtils,
+    ExUtils,
+    Session,
+    MsgDisplay,
+    ShellAPI,
+    BaseChat,
+    Jabber1,
+    PrefController;
 
 {$R *.dfm}
 
@@ -254,7 +261,7 @@ var
     c : TColor;
 begin
     at_bottom := MsgList.atBottom;
-    c := TColor(MainSession.Prefs.getInt('color_time'));
+    c := TColor(MainSession.Prefs.getInt(P_COLOR_TIME));
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
     with MsgList do begin
@@ -310,7 +317,7 @@ end;
 procedure TfRTFMsgList.setupPrefs();
 begin
     AssignDefaultFont(MsgList.Font);
-    MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+    MsgList.Color := TColor(MainSession.Prefs.getInt(P_COLOR_BG));
 end;
 
 {---------------------------------------}
@@ -353,7 +360,7 @@ begin
     _composing := MsgList.WideLines.Count;
     MsgList.SelStart := Length(MsgList.WideLines.Text);
     MsgList.SelLength := 0;
-    MsgList.SelAttributes.Color := TColor(MainSession.Prefs.getInt('color_action'));
+    MsgList.SelAttributes.Color := TColor(MainSession.Prefs.getInt(P_COLOR_COMPOSING));
     MsgList.Paragraph.Alignment := taCenter;
     MsgList.WideSelText := msg + #13#10;
 end;
