@@ -23,7 +23,7 @@ interface
 uses
     // Exodus'y stuff
     COMEntityCache, COMToolbar, COMBookmarkManager,
-    COMRosterImages, COMController, COMRoster, COMPPDB, JabberID,
+    COMRosterImages, COMMainToolBarImages, COMController, COMRoster, COMPPDB, JabberID,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify, Regexpr,
     S10n, COMExodusDataStore, SQLLogger, COMExodusHistorySearchManager,
     SQLSearchHandler,
@@ -92,6 +92,9 @@ var
     COMPPDB: IExodusPPDB;
     ExCOMRosterImages: TExodusRosterImages;
     COMRosterImages: IExodusRosterImages;
+    ExCOMToolBarImages: TExodusMainToolBarImages;
+    COMToolBarImages: IExodusRosterImages;
+
     ExCOMEntityCache: TExodusEntityCache;
     COMEntityCache: IExodusEntityCache;
     ExCOMToolbar: TExodusToolbar;
@@ -130,7 +133,8 @@ uses
     InviteReceived,
     ExForm,
     HistorySearch,
-    MiscMessages;
+    MiscMessages,
+    ToolbarImages;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -629,6 +633,11 @@ begin
     COMPPDB := ExCOMPPDB;
     ExCOMRosterImages := TExodusRosterImages.Create();
     COMRosterImages := ExCOMRosterImages;
+
+    ExCOMToolBarImages := TExodusMainToolBarImages.Create();
+    COMToolBarImages := ExCOMToolBarImages;
+
+
     ExCOMEntityCache := TExodusEntityCache.Create();
     COMEntityCache := ExCOMEntityCache;
     ExCOMToolbar := TExodusToolbar.Create();

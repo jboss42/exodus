@@ -152,6 +152,7 @@ type
       IncludeAnyOption: WordBool): WideString; safecall;
     procedure ShowToastWithEvent(const message, event, eventXML: WideString;
       ImageIndex: Integer); safecall;
+    function Get_MainToolBarImages: IExodusRosterImages; safecall;
 
     { Protected declarations }
   private
@@ -2209,6 +2210,12 @@ procedure TExodusController.ShowToastWithEvent(const message, event,
 begin
     ShowRiserWindow(message, imageIndex, event, eventXML);
 end;
+
+function TExodusController.Get_MainToolBarImages: IExodusRosterImages;
+begin
+    Result := COMToolBarImages;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,
