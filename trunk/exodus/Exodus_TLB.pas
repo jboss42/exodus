@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 5/28/2008 3:15:28 PM from Type Library described below.
+// File generated on 6/2/2008 11:00:25 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -144,6 +144,7 @@ const
   IID_IExodusItemSelection: TGUID = '{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}';
   IID_IExodusItemCallback: TGUID = '{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}';
   IID_IExodusAXWindowCallback: TGUID = '{87D6C026-3A1C-43CF-B153-BB6472A956AD}';
+  CLASS_MainToolBarImages: TGUID = '{EED39569-B9B7-4888-A591-2640F31B3BC0}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -363,12 +364,14 @@ type
   ExodusHistorySearchManager = IExodusHistorySearchManager;
   ExodusHistorySQLSearchHandler = IExodusHistorySearchHandler;
   ExodusActionController = IExodusActionController;
+  MainToolBarImages = IExodusRosterImages;
 
 
 // *********************************************************************//
 // Declaration of structures, unions and aliases.                         
 // *********************************************************************//
   PWideString1 = ^WideString; {*}
+  PPUserType1 = ^IExodusRosterImages; {*}
 
 
 // *********************************************************************//
@@ -484,6 +487,7 @@ type
                         IncludeAnyOption: WordBool): WideString; safecall;
     procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
                                  const eventXML: WideString; ImageIndex: Integer); safecall;
+    function Get_MainToolBarImages: IExodusRosterImages; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -508,6 +512,7 @@ type
     property DataStore: IExodusDataStore read Get_DataStore;
     property HistorySearchManager: IExodusHistorySearchManager read Get_HistorySearchManager;
     property ActionController: IExodusActionController read Get_ActionController;
+    property MainToolBarImages: IExodusRosterImages read Get_MainToolBarImages;
   end;
 
 // *********************************************************************//
@@ -621,6 +626,7 @@ type
                         IncludeAnyOption: WordBool): WideString; dispid 232;
     procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
                                  const eventXML: WideString; ImageIndex: Integer); dispid 233;
+    property MainToolBarImages: IExodusRosterImages readonly dispid 234;
   end;
 
 // *********************************************************************//
@@ -5670,6 +5676,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusActionController;
   end;
 
+// *********************************************************************//
+// The Class CoMainToolBarImages provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRosterImages exposed by              
+// the CoClass MainToolBarImages. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoMainToolBarImages = class
+    class function Create: IExodusRosterImages;
+    class function CreateRemote(const MachineName: string): IExodusRosterImages;
+  end;
+
 implementation
 
 uses ComObj;
@@ -5982,6 +6000,16 @@ end;
 class function CoExodusActionController.CreateRemote(const MachineName: string): IExodusActionController;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusActionController) as IExodusActionController;
+end;
+
+class function CoMainToolBarImages.Create: IExodusRosterImages;
+begin
+  Result := CreateComObject(CLASS_MainToolBarImages) as IExodusRosterImages;
+end;
+
+class function CoMainToolBarImages.CreateRemote(const MachineName: string): IExodusRosterImages;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_MainToolBarImages) as IExodusRosterImages;
 end;
 
 end.

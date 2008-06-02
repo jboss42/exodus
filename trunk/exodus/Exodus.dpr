@@ -297,7 +297,8 @@ uses
   ExRoomHoverFrame in 'components\ExRoomHoverFrame.pas' {ExRoomHoverFrame: TTntFrame},
   SndBroadcastDlg in 'SndBroadcastDlg.pas' {dlgSndBroadcast},
   BookmarkForm in 'BookmarkForm.pas',
-  FontConsts in '..\jopl\FontConsts.pas';
+  FontConsts in '..\jopl\FontConsts.pas',
+  COMMainToolBarImages in 'COMMainToolBarImages.pas';
 
 {$R *.TLB}
 

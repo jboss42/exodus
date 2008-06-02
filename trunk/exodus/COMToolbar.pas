@@ -44,7 +44,7 @@ type
 implementation
 
 uses
-    RosterImages, Jabber1, COMToolbarControl, ComServ;
+    RosterImages, Jabber1, COMToolbarControl, ComServ, ToolbarImages;
 
 {---------------------------------------}
 function TExodusToolbar.addButton(
@@ -69,7 +69,7 @@ begin
         Toolbar1.AutoSize := true;
     end;
 
-    idx := RosterTreeImages.Find(ImageID);
+    idx := ContactToolbarImages.Find(ImageID);
     if (idx >= 0) then
         btn.ImageIndex := idx;
 
