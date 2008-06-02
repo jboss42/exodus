@@ -55,7 +55,8 @@ uses
     Keywords,
     TypInfo,
     DateUtils,
-    PrefController;
+    PrefController,
+    FontConsts;
 
 const
     MAX_MSG_LENGTH = 512;

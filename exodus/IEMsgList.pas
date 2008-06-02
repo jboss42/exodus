@@ -91,7 +91,7 @@ type
 
     function _getPrefBool(prefName: Widestring): boolean;
     function _getPrefString(prefName: Widestring): widestring;
-    function _getPrefInt(prefName: Widestring): integer;
+//    function _getPrefInt(prefName: Widestring): integer;
   protected
   public
 {$IFDEF EXODUS}
@@ -305,6 +305,7 @@ uses
     PrefController,
     ExUtils,
 {$ENDIF}
+    FontConsts,
     RT_XIMConversion,
     JabberUtils,
     ShellAPI,
@@ -807,17 +808,17 @@ begin
 end;
 
 {---------------------------------------}
-function TIEMsgListProcessor._getPrefInt(prefName: Widestring): integer;
-begin
+//function TIEMsgListProcessor._getPrefInt(prefName: Widestring): integer;
+//begin
 {$IFDEF EXODUS}
-    Result := MainSession.Prefs.getInt(prefName);
+//    Result := MainSession.Prefs.getInt(prefName);
 {$ELSE}
-    Result := 0;
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsInt(prefName);
+//    Result := 0;
+//    if (_controller = nil) then exit;
+//
+//    Result := _controller.GetPrefAsInt(prefName);
 {$ENDIF}
-end;
+//end;
 
 
 {---------------------------------------}

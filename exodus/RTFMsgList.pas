@@ -84,7 +84,8 @@ uses
     ShellAPI,
     BaseChat,
     Jabber1,
-    PrefController;
+    PrefController,
+    FontConsts;
 
 {$R *.dfm}
 
