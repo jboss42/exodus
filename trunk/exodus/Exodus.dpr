@@ -296,7 +296,8 @@ uses
   ExItemHoverForm in 'components\ExItemHoverForm.pas' {ExItemHoverForm: TTntForm},
   ExRoomHoverFrame in 'components\ExRoomHoverFrame.pas' {ExRoomHoverFrame: TTntFrame},
   SndBroadcastDlg in 'SndBroadcastDlg.pas' {dlgSndBroadcast},
-  BookmarkForm in 'BookmarkForm.pas';
+  BookmarkForm in 'BookmarkForm.pas',
+  FontConsts in '..\jopl\FontConsts.pas';
 
 {$R *.TLB}
 

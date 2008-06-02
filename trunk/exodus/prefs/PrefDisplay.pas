@@ -183,8 +183,16 @@ uses
     PrefController,
     Unicode,
     PrefEmoteDlg,
-    JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils, TypInfo,
-    ManageTabsDlg;
+    JabberUtils,
+    ExUtils,
+    GnuGetText,
+    JabberMsg,
+    MsgDisplay,
+    Session,
+    Dateutils,
+    TypInfo,
+    ManageTabsDlg,
+    FontConsts;
 
 const
     RTF_MSGLIST = 0;

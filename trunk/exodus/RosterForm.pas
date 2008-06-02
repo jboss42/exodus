@@ -77,7 +77,8 @@ uses
     gnugettext,
     ExTreeView,
     Jabber1,
-    PrefController;
+    PrefController,
+    FontConsts;
 
 {$R *.dfm}
 
