@@ -44,6 +44,14 @@ const
     WALK_LIMIT          = 20;   // max # of items to do disco#info on
     WALK_MAX_TIMEOUT    = 30;   // max # of seconds for iq timeouts.
 
+    UITHREAD_MAX_ITEMS  = 50;   //handle iq results with 50 or less items on the
+                                //UI thread, spin off to another for more.
+                                //don't dog the ui thread!
+
+    PREF_IQ_ENABLE_BROWSE = 'iq_enable_browse_fallback';
+    PREF_IQ_ENABLE_AGENT = 'iq_enable_agent_fallback';
+
+
 type
 
     TJabberEntityType = (ent_unknown, ent_disco, ent_browse, ent_agents, ent_cached_disco);
@@ -73,6 +81,7 @@ type
         _use_limit: boolean;
         _timeout: integer;
         _fallback: boolean;
+        _stopWalk: boolean; //flag to stop walk after getting second level items
 
         function _getFeature(i: integer): Widestring;
         function _getFeatureCount: integer;
@@ -87,19 +96,36 @@ type
         procedure _discoItems(js: TJabberSession; callback: TSignalEvent);
 
         procedure _processDiscoInfo(tag: TXMLTag);
-        procedure _processDiscoItems(tag: TXMLTag);
+        procedure _processDiscoItems(tag: TXMLTag; parent: TJabberEntity; out newItems: TWidestringList; itemLimit: integer = -1);
         procedure _processLegacyFeatures();
 
-        procedure _finishWalk(jso: TObject);
-        procedure _finishDiscoItems(jso: TObject; tag: TXMLTag);
+        procedure _finishWalk(jso: TObject; newItems: TWidestringList);
+        procedure _finishDiscoItems(jso: TObject; tag: TXMLTag; newItems: TWidestringList);
 
-        {$IFDEF DEPRECATED}
+        procedure _startIQBrowse(jso: TObject);
         procedure _processBrowse(tag: TXMLTag);
         procedure _processBrowseItem(item: TXMLTag);
-        procedure _processAgent(item: TXMLTag);
         procedure _finishBrowse(jso: TObject);
-        {$ENDIF}
 
+        procedure _startIQAgent(jso: TObject);
+        procedure _processAgent(item: TXMLTag);
+
+        procedure _fireOnEntityInfo(jso: TObject; tag: TXMLTag);overload;
+        procedure _fireOnEntityInfo(jso: TObject; jid: widestring);overload;
+        procedure _fireOnEntityItems(jso: TObject; tag: TXMLTag);overload;
+        procedure _fireOnEntityItems(jso: TObject; jid: widestring);overload;
+
+        //callbacks from children when disco are completed during a walk
+        procedure _childDiscoWalkFinished(jso: TObject; child: TJabberEntity);
+    protected
+        procedure ItemsCallback(event: string; tag: TXMLTag);
+        procedure InfoCallback(event: string; tag: TXMLTag);
+
+        procedure BrowseCallback(event: string; tag: TXMLTag);
+        procedure AgentsCallback(event: string; tag: TXMLTag);
+
+        procedure WalkInfoCallback(event: string; tag: TXMLTag);
+        procedure WalkItemsCallback(event: string; tag: TXMLTag);
     public
         Tag: integer;
         Data: TObject;
@@ -109,7 +135,7 @@ type
 
         procedure getInfo(js: TJabberSession);
         procedure getItems(js: TJabberSession);
-        procedure walk(js: TJabberSession; items_limit: boolean = true;
+        procedure discoWalk(js: TJabberSession; items_limit: boolean = true;
             timeout: integer = 10);
         procedure refresh(js: TJabberSession);
         procedure refreshInfo(js: TJabberSession);
@@ -125,17 +151,6 @@ type
 
         function ItemByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
         function getItemByFeature(f: Widestring): TJabberEntity;
-
-        procedure ItemsCallback(event: string; tag: TXMLTag);
-        procedure InfoCallback(event: string; tag: TXMLTag);
-
-        {$IFDEF DEPRECATED}
-        procedure BrowseCallback(event: string; tag: TXMLTag);
-        procedure AgentsCallback(event: string; tag: TXMLTag);
-        {$ENDIF}
-
-        procedure WalkCallback(event: string; tag: TXMLTag);
-        procedure WalkItemsCallback(event: string; tag: TXMLTag);
 
         property Parent: TJabberEntity read _parent;
         property Jid: TJabberID read _jid;
@@ -171,13 +186,11 @@ type
         tag: TXMLTag;
         e: TJabberEntity;
         ptype: integer;
+        newItems: TWidestringList;
     private
-        procedure FinishDisco();
+        procedure FinishDiscoItems();
         procedure FinishWalk();
-
-        {$IFDEF DEPRECATED}
         procedure FinishBrowse();
-        {$ENDIF}
     protected
         procedure Execute(); override;
     end;
@@ -188,7 +201,7 @@ uses
     {$ifdef Win32}
     Windows,
     {$endif}
-    EntityCache, JabberConst, XMLUtils;
+    EntityCache, JabberConst, XMLUtils, Debug;
 
 const
     ProcDisco = 0;
@@ -201,42 +214,38 @@ const
 procedure TJabberEntityProcess.Execute();
 begin
     if (ptype = ProcDisco) then begin
-        e._processDiscoItems(tag);
-        Synchronize(FinishDisco);
+        e._processDiscoItems(tag, e, newItems);
+        Synchronize(FinishDiscoItems);
     end
-    {$IFDEF DEPRECATED}
     else if (ptype = ProcBrowse) then begin
         e._processBrowse(tag);
         Synchronize(FinishBrowse);
     end
-    {$ENDIF}
     else if (ptype = ProcWalk) then begin
         if (tag <> nil) then
-            e._processDiscoitems(tag);
+            e._processDiscoitems(tag, e, newItems);
         Synchronize(FinishWalk);
     end;
     tag.Release();
 end;
 
 {---------------------------------------}
-procedure TJabberEntityProcess.FinishDisco();
+procedure TJabberEntityProcess.FinishDiscoItems();
 begin
-    e._finishDiscoItems(jso, tag);
+    e._finishDiscoItems(jso, tag, newItems);
 end;
 
 {---------------------------------------}
 procedure TJabberEntityProcess.FinishWalk();
 begin
-    e._finishWalk(jso);
+    e._finishWalk(jso, newItems);
 end;
 
 {---------------------------------------}
-{$IFDEF DEPRECATED}
 procedure TJabberEntityProcess.FinishBrowse();
 begin
     e._finishBrowse(jso);
 end;
-{$ENDIF}
 
 {---------------------------------------}
 {---------------------------------------}
@@ -272,7 +281,8 @@ end;
 destructor TJabberEntity.Destroy;
 begin
     if (_iq <> nil) then _iq.Free();
-    
+    _iq := nil;
+
     jEntityCache.Remove(Self);
     ClearStringListObjects(_items);
     _items.Clear();
@@ -422,40 +432,44 @@ end;
 {---------------------------------------}
 procedure TJabberEntity._discoInfo(js: TJabberSession; callback: TSignalEvent);
 begin
+    if (_iq <> nil) then exit;
+
     // Dispatch a disco#info query
+    _has_info := false; //no info till iq is back
+    _disco_info_error := false;
+    _type := ent_unknown;
+
+    _feats.Clear();
+    ClearStringListObjects(_idents);
+    _idents.Clear();
+
     _iq := TJabberIQ.Create(js, js.generateID(), callback, _timeout);
     _iq.toJid := _jid.full;
     _iq.Namespace := XMLNS_DISCOINFO;
     _iq.iqType := 'get';
-    
+
     if (_node <> '') then
         _iq.qTag.setAttribute('node', _node);
-        
+
     _iq.Send();
 end;
 
 {---------------------------------------}
 procedure TJabberEntity.getInfo(js: TJabberSession);
-var
-    t: TXMLTag;
 begin
     if (_iq <> nil) then exit;
 
-    if ((_has_info) or (_type = ent_browse) or (_type = ent_agents)) then begin
-        t := TXMLTag.Create('entity');
-        t.setAttribute('from', _jid.full);
-        js.FireEvent('/session/entity/info', t);
-        t.Free();
-        exit;
-    end;
-
-    _discoInfo(js, InfoCallback);
+    if ((_has_info) or (_type = ent_browse) or (_type = ent_agents)) then
+        _fireOnEntityInfo(js, _jid.full)
+    else
+        _discoInfo(js, InfoCallback);
 end;
 
 {---------------------------------------}
 procedure TJabberEntity._discoItems(js: TJabberSession; callback: TSignalEvent);
 begin
     // Dispatch a disco#items query
+    _has_items := false;
     _iq := TJabberIQ.Create(js, js.generateID(), callback, _timeout);
     _iq.toJid := _jid.full;
     _iq.Namespace := XMLNS_DISCOITEMS;
@@ -469,21 +483,13 @@ end;
 
 {---------------------------------------}
 procedure TJabberEntity.getItems(js: TJabberSession);
-var
-    t: TXMLTag;
 begin
     if (_iq <> nil) then exit;
-    
-    if ((_has_items) or (_type = ent_browse) or (_type = ent_agents)) then begin
-        // send info for ea. child
-        t := TXMLTag.Create('entity');
-        t.setAttribute('from', _jid.full);
-        js.FireEvent('/session/entity/items', t);
-        t.Free();
-        exit;
-    end;
 
-    _discoItems(js, ItemsCallback);
+    if ((_has_items) or (_type = ent_browse) or (_type = ent_agents)) then
+        _fireOnEntityItems(js, _jid.full)
+    else
+        _discoItems(js, ItemsCallback);
 end;
 
 {---------------------------------------}
@@ -491,6 +497,8 @@ procedure TJabberEntity.ItemsCallback(event: string; tag: TXMLTag);
 var
     pt: TJabberEntityProcess;
     js: TJabberSession;
+    ttag: TXMLTag;
+    newItems: TWidestringlist;
 begin
     assert(_iq <> nil);
     js := _iq.JabberSession;
@@ -500,41 +508,60 @@ begin
     // if we're not connected anymore, just bail.
     if (js.Active = false) then exit;
 
-    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        {$IFDEF DEPRECATED}
-        // Dispatch an iq:browse query
-        if (not _fallback) then exit;
-
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
-        _iq.toJid := _jid.full;
-        _iq.Namespace := XMLNS_BROWSE;
-        _iq.iqType := 'get';
-        _iq.Send();
-        {$ELSE}
-        // FAIL!
-        // TODO:  fail
-        {$ENDIF}
-        exit;
+    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then
+    begin
+        if (_fallback and js.Prefs.getBool(PREF_IQ_ENABLE_BROWSE)) then
+            _startIQBrowse(js)
+        else if (_fallback and js.Prefs.getBool(PREF_IQ_ENABLE_AGENT)) then
+            _startIQAgent(js)
+        else begin
+            _has_items := true;
+            _fireOnEntityItems(js, tag); //fire error tag
+        end;
+    end
+    else begin
+        //check our child count, spin item processing onto another thread if needed
+        ttag := tag.QueryXPTag('/iq/query[@xmlns="' + XMLNS_DISCOITEMS + '"]');
+        if ((ttag <> nil) and (ttag.ChildCount > UITHREAD_MAX_ITEMS)) then
+        begin
+            tag.AddRef();
+            pt := TJabberEntityProcess.Create(true);
+            pt.jso := js;
+            pt.tag := tag;
+            pt.ptype := ProcDisco;
+            pt.e := Self;
+            pt.FreeOnTerminate := true;
+            pt.Resume();
+        end
+        else begin
+            _has_items := true;
+            if (ttag = nil) or (ttag.ChildCount = 0) then
+                newItems := TWidestringlist.create() //clear item list
+            else
+                _processDiscoItems(tag, Self, newItems);
+            _finishDiscoItems(js, tag, newitems);
+        end;
     end;
-
-    tag.AddRef();
-    pt := TJabberEntityProcess.Create(true);
-    pt.jso := js;
-    pt.tag := tag;
-    pt.ptype := ProcDisco;
-    pt.e := Self;
-    pt.FreeOnTerminate := true;
-    pt.Resume();
 end;
 
 {---------------------------------------}
-procedure TJabberEntity._finishDiscoItems(jso: TObject; tag: TXMLTag);
+procedure TJabberEntity._finishDiscoItems(jso: TObject; tag: TXMLTag; newItems: TWidestringlist);
+var
+    i: integer;
 begin
-    TJabberSession(jso).FireEvent('/session/entity/items', tag);
+    //don't free objects as they are refreneced i the cache
+    ClearStringListObjects(_items); //frees entities from cache
+    _items.free();
+
+    _items := newItems;
+    //add items to cache, on the UI thread but jEntityCache is not thread safe so there ya go
+    for i := 0 to newItems.Count - 1 do
+        jEntityCache.Add(TJabberEntity(newItems.Objects[i])._jid, TJabberEntity(newItems.Objects[i]));
+
+    _fireOnEntityItems(jso, _jid.full);
 end;
 
 {---------------------------------------}
-{$IFDEF DEPRECATED}
 procedure TJabberEntity._finishBrowse(jso: TObject);
 var
     i: integer;
@@ -552,11 +579,10 @@ begin
     for i := 0 to _items.Count - 1 do begin
         ce := TJabberEntity(_items.Objects[i]);
         t.setAttribute('from', ce.jid.full);
-        js.FireEvent('/session/entity/info', t);
+        _fireOnEntityInfo(jso, t);
     end;
     t.Free();
 end;
-{$ENDIF}
 
 {---------------------------------------}
 procedure TJabberEntity.InfoCallback(event: string; tag: TXMLTag);
@@ -572,46 +598,34 @@ begin
     // if we're not connected anymore, just bail.
     if (js.Active = false) then exit;
 
-    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        {$IFDEF DEPRECATED}
-        // Dispatch a browse query
-        if (not _fallback) then begin
+    _disco_info_error := (tag.GetAttribute('type') = 'error');
+    if ((event <> 'xml') or _disco_info_error) then
+    begin
+        if (_fallback and js.Prefs.getBool(PREF_IQ_ENABLE_BROWSE)) then
+            _startIQBrowse(js)
+        else if (_fallback and js.Prefs.getBool(PREF_IQ_ENABLE_AGENT)) then
+            _startIQAgent(js)
+        else begin
             _has_info := true;
-            if (tag.GetAttribute('type') = 'error') then
-                _disco_info_error := true;
-            js.FireEvent('/session/entity/info', tag);
-            exit;
+            _fireOnEntityInfo(js, tag); //fire error tag
         end;
-
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
-        _iq.toJid := _jid.full;
-        _iq.Namespace := XMLNS_BROWSE;
-        _iq.iqType := 'get';
-        _iq.Send();
-        {$ELSE}
-        // FAIL!
-        _has_info := true;
-        if (tag.GetAttribute('type') = 'error') then
-            _disco_info_error := true;
-        js.FireEvent('/session/entity/info', tag);
-        exit;
-        {$ENDIF}
+    end
+    else begin
+        _processDiscoInfo(tag);
+        _fireOnEntityInfo(js, _jid.full);
     end;
-
-    _processDiscoInfo(tag);
-    js.FireEvent('/session/entity/info', tag);
 end;
 
 {---------------------------------------}
-procedure TJabberEntity.walk(js: TJabberSession; items_limit: boolean;
+procedure TJabberEntity.discoWalk(js: TJabberSession; items_limit: boolean;
     timeout: integer);
 begin
     // Get Items, then get info for each one.
-    if (_iq <> nil) then exit;
-    
+    if (_iq <> nil) then exit;//JJF this is probably not correct
+
     _use_limit := items_limit;
     _timeout := timeout;
-    _discoInfo(js, WalkCallback);
+    _discoInfo(js, WalkInfoCallback);
 end;
 
 {---------------------------------------}
@@ -619,32 +633,22 @@ procedure TJabberEntity.refresh(js: TJabberSession);
 begin
     if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
 
-    _has_info := false;
-    _disco_info_error := false;
     _has_items := false;
-    _type := ent_unknown;
 
     ClearStringListObjects(_items);
     _items.Clear();
-    _feats.Clear();
 
-    _discoInfo(js, WalkCallback);
+    _discoInfo(js, WalkInfoCallback);
 end;
 
 procedure TJabberEntity.refreshInfo(js: TJabberSession);
 begin
     if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
-
-    _has_info := false;
-    _disco_info_error := false;
     _has_items := true;
-    _type := ent_unknown;
 
     //ClearStringListObjects(_items);
     //_items.Clear();
-    _feats.Clear();
-
-    _discoInfo(js, WalkCallback);
+    _discoInfo(js, WalkInfoCallback);
 end;
 
 {---------------------------------------}
@@ -711,9 +715,12 @@ begin
           </query>
         </iq>
     }
+    if (_type <> ent_cached_disco) then
+        _type := ent_disco;
 
     _has_info := true;
     _disco_info_error := false;
+
     _feats.Clear();
     _idents.Clear();
 
@@ -728,20 +735,24 @@ begin
 
     // XXX: Is this what to do w/ the other <identity> elements?
     fset := q.QueryTags('identity');
-    for i := 0 to fset.count - 1 do begin
+    for i := 0 to fset.count - 1 do
+    begin
         id := fset[i];
         _idents.AddObject(id.GetAttribute('category') + '/' + id.GetAttribute('type'),
                           TDiscoIdentity.Create(id.GetAttribute('category'),
                                                 id.GetAttribute('type'),
                                                 id.GetAttribute('name')));
-        if i = 0 then begin
-            _cat := id.getAttribute('category');
-            _cat_type := id.getAttribute('type');
-            if (_name = '') then
-                _name := id.getAttribute('name');
-        end;
     end;
     fset.Free();
+
+    //initialize entities catagory, cat type and possibly name from first identity
+    if (_idents.Count > 0) then
+    begin
+        _cat := TDiscoIdentity(_idents.Objects[0]).Category;
+        _cat_type := TDiscoIdentity(_idents.Objects[0]).DiscoType;
+        if (_name = '') then
+            _name := TDiscoIdentity(_idents.Objects[0]).Name;
+    end;
 
     _processLegacyFeatures();
 end;
@@ -749,37 +760,40 @@ end;
 {---------------------------------------}
 procedure TJabberEntity._processLegacyFeatures();
 begin
-    // check for some legacy stuff..
-    if ((_feats.IndexOf(XMLNS_SEARCH) >= 0) and (_feats.indexOf(FEAT_SEARCH) = -1)) then _feats.Add(FEAT_SEARCH);
-    if ((_feats.IndexOf(XMLNS_REGISTER) >= 0)  and (_feats.indexOf(FEAT_REGISTER) = -1))then _feats.Add(FEAT_REGISTER);
-    if ((_feats.IndexOf(XMLNS_MUC) >= 0)  and (_feats.indexOf(FEAT_GROUPCHAT) = -1))then _feats.Add(FEAT_GROUPCHAT);
-    if ((_feats.IndexOf('gc-1.0') >= 0)  and (_feats.indexOf(FEAT_GROUPCHAT) = -1))then _feats.Add(FEAT_GROUPCHAT);
-    if ((_cat = 'conference') and (_feats.indexOf(FEAT_GROUPCHAT) = -1)) then
-        _feats.Add(FEAT_GROUPCHAT);
-
-    // this is for transports.
-    if ((_feats.indexOf(_cat_type) = -1) and
-        ((_cat_type = FEAT_AIM) or (_cat_type = FEAT_MSN) or
-         (_cat_type = FEAT_ICQ) or (_cat_type = FEAT_YAHOO) or
-         (_feats.IndexOf('jabber:iq:gateway') >= 0))) then _feats.Add(_cat_type);
-
-    if (Pos('http://jm.jabber.com/caps#3', Self._node) <> 0) then begin
+    if (Pos('http://jm.jabber.com/caps#3', Self._node) <> 0) then
+    begin
         //JM fixup test only *remove*
-{        if (_feats.IndexOf(XMLNS_XHTMLIM) = -1) then
+        if (_feats.IndexOf(XMLNS_XHTMLIM) = -1) then
             _feats.Add(XMLNS_XHTMLIM);
-}            
+
         if (_feats.IndexOf(XMLNS_MUC) = -1) then
             _feats.Add(XMLNS_MUC);
     end;
+    
+    // check for some legacy stuff..
+    if (_feats.IndexOf(XMLNS_SEARCH) <> -1) then
+        _feats.Add(FEAT_SEARCH);
+    if (_feats.IndexOf(XMLNS_REGISTER) <> -1) then
+        _feats.Add(FEAT_REGISTER);
+    if ((_feats.IndexOf(XMLNS_MUC) <> -1) or (_feats.IndexOf('gc-1.0') <> -1) or (_cat = 'conference')) then
+        _feats.Add(FEAT_GROUPCHAT);
+
+    // this is for transports.
+    if  ((_cat_type = FEAT_AIM) or (_cat_type = FEAT_MSN) or
+         (_cat_type = FEAT_ICQ) or (_cat_type = FEAT_YAHOO) or
+         (_feats.IndexOf('jabber:iq:gateway') <> -1)) then
+        _feats.Add(_cat_type);
 end;
 
 {---------------------------------------}
-procedure TJabberEntity._processDiscoItems(tag: TXMLTag);
+procedure TJabberEntity._processDiscoItems(tag: TXMLTag;
+                                           parent: TJabberEntity;
+                                           out newItems: TWidestringList;
+                                           itemLimit: integer);
 var
-    q: TXMLTag;
     iset: TXMLTagList;
-    idx, i: integer;
-    id, nid, tmps: Widestring;
+    i, count: integer;
+    id, nid: Widestring;
     cj: TJabberID;
     ce: TJabberEntity;
 begin
@@ -812,35 +826,30 @@ begin
     {$endif}
 
     _has_items := true;
-    q := tag.GetFirstTag('query');
-    if (q = nil) then exit;
+    newItems := TWidestringList.create();
+    iset := tag.QueryXPTags('/iq/query[@xmlns="' + XMLNS_DISCOITEMS + '"]/item');
+    count := iset.Count;
+    if (itemLimit <> -1) and (count > itemLimit)  then
+        count := itemLimit;
+    
+    for i := 0 to count - 1 do
+    begin
+        nid := iset[i].getAttribute('node');
 
-    iset := q.QueryTags('item');
-    if (iset.Count > 0) then begin
-        // clear out the old items
-        ClearStringListObjects(_items);
-        _items.Clear();
+        cj := TJabberID.Create(iset[i].getAttribute('jid'));
+        id := cj.full;
+        if (nid <> '') then
+            id := nid + ':' + id;
 
-        for i := 0 to iset.Count - 1 do begin
-            tmps := iset[i].getAttribute('jid');
-            nid := iset[i].getAttribute('node');
-            cj := TJabberID.Create(tmps);
-            if (nid = '') then
-                id := cj.full
-            else
-                id := nid + ':' + cj.full;
-            idx := _items.IndexOf(id);
-            if (idx < 0) then begin
-                ce := TJabberEntity.Create(cj);
-                ce._parent := Self;
-                _items.AddObject(tmps, ce);
-                ce._name := iset[i].getAttribute('name');
-                ce._node := nid;
-                jEntityCache.Add(id, ce);
-            end
-            else
-                cj.Free();
-        end;
+        if (newitems.indexOf(id) = -1) then
+        begin
+            ce := TJabberEntity.Create(TJabberID.create(cj)); //entity owns jid
+            ce._parent := parent;
+            ce._name := iset[i].getAttribute('name');
+            ce._node := nid;
+            newItems.AddObject(cj.full, ce);
+        end;  //ignore dups
+        cj.Free();
     end;
     iset.Free();
 
@@ -851,10 +860,9 @@ end;
 
 
 {---------------------------------------}
-procedure TJabberEntity.WalkCallback(event: string; tag: TXMLTag);
+procedure TJabberEntity.WalkInfoCallback(event: string; tag: TXMLTag);
 var
     js: TJabberSession;
-
 begin
     // if disco didn't so much workout, try browse next
     assert(_iq <> nil);
@@ -865,45 +873,32 @@ begin
     // if we're not connected anymore, just bail.
     if (js.Active = false) then exit;
 
-    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        {$IFDEF DEPRECATED}
-        // Dispatch an iq:browse query
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
-        _iq.toJid := _jid.full;
-        _iq.Namespace := XMLNS_BROWSE;
-        _iq.iqType := 'get';
-        _iq.Send();
-        {$ELSE}
-        // FAIL!
-        // if our event is a timeout, let's retry the whole mess, with a longer
-        // timeout.
-        if ((event = 'timeout') and (_timeout < WALK_MAX_TIMEOUT)) then begin
-            _timeout := _timeout * 3;
-            _discoInfo(js, WalkCallback);
+    _has_info:= true;
+    _disco_info_error := (tag.GetAttribute('type') = 'error');
+    if ((event <> 'xml') or _disco_info_error) then
+    begin
+        //no browse or agents during walk, disco only!
+        //handle error by pretending we finished normally
+        _has_items := true;
+        //done recursing
+        _fireOnEntityInfo(js, _jid.full);
+        _fireOnEntityItems(js, _jid.full);
+        if (_parent <> nil) then
+            _parent._childDiscoWalkFinished(js, Self);
+    end
+    else begin
+        // we got disco#info back! sweet.
+        _processDiscoInfo(tag);
+        if (_stopWalk) then
+        begin
+            _fireOnEntityInfo(js, _jid.full);
+            if (_parent <> nil) then
+                _parent._childDiscoWalkFinished(js, Self);
         end
-        else if (tag.getAttribute('type') = 'error') then begin
-            _has_info := true;
-            _disco_info_error := true;
-            _has_items := true;
-        end
-        else begin
-            _has_info := true;
-            _disco_info_error := false;
-            _has_items := true;
-        end;
-        exit;
-        {$ENDIF}
-        exit;
+        else
+            // We got info back... so lets get our items..
+            _discoItems(js, WalkItemsCallback);
     end;
-
-    // we got disco#info back! sweet.
-    _type := ent_disco;
-    _processDiscoInfo(tag);
-    getInfo(js);
-
-    // We got info back... so lets get our items..
-    if (not _has_items) then
-      _discoItems(js, WalkItemsCallback);
 end;
 
 {---------------------------------------}
@@ -911,6 +906,8 @@ procedure TJabberEntity.WalkItemsCallback(event: string; tag: TXMLTag);
 var
     pt: TJabberEntityProcess;
     js: TJabberSession;
+    newItems: TWidestringList;
+    ttag: TXMLtag;
 begin
     assert(_iq <> nil);
     js := _iq.JabberSession;
@@ -919,43 +916,69 @@ begin
 
     // if we're not connected anymore, just bail.
     if (js.Active = false) then exit;
+    newItems := nil;
 
-    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
+    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then
+    begin
         // Hrmpf.. we got info back, but no items?
-        _has_items := true;
-        getItems(js);
-        exit;
+        newItems := TWidestringList.create();
+    end
+    else begin
+        ttag := tag.QueryXPTag('/iq/query[@xmlns="' + XMLNS_DISCOITEMS + '"]');
+        //limit items to UITHREAD_MAX_ITEMS during disco walk
+        if (_use_limit) or (ttag = nil) or (ttag.ChildCount <= UITHREAD_MAX_ITEMS) then
+            _processDiscoItems(tag, Self, newItems, UITHREAD_MAX_ITEMS);
     end;
 
-    // We got items back... process them
-    tag.AddRef();
-    pt := TJabberEntityProcess.Create(true);
-    pt.jso := js;
-    pt.tag := tag;
-    pt.ptype := ProcWalk;
-    pt.e := Self;
-    pt.FreeOnTerminate := true;
-    pt.Resume();
+    if (newItems <> nil) then
+        _finishWalk(js, newItems)
+    else begin
+        tag.AddRef();
+        pt := TJabberEntityProcess.Create(true);
+        pt.jso := js;
+        pt.tag := tag;
+        pt.ptype := ProcWalk;
+        pt.e := Self;
+        pt.FreeOnTerminate := true;
+        pt.Resume();
+    end;    
 end;
 
 {---------------------------------------}
-procedure TJabberEntity._finishWalk(jso: TObject);
+procedure TJabberEntity._finishWalk(jso: TObject; newItems: TWidestringList);
 var
     i: integer;
     js: TJabberSession;
 begin
     js := TJabberSession(jso);
-    getItems(js);
+    ClearStringListObjects(_items); //frees entities from cache
+    _items.free();
 
-    // Don't fetch info on all items if we have tons
-    if ((_use_limit) and (_items.Count >= WALK_LIMIT)) then exit;
+    _items := newItems;
 
+    //set _has_items, based on whether or not there are children to walk
+    //an entity does not have items until all of its children are done
+    //with their walk.
+    _has_items := (_items.Count = 0); //will be reset when children fire _childItemsWalkFinished
+
+    //add items to cache, on the UI thread but jEntityCache is not thread safe so there ya go
     for i := 0 to _items.Count - 1 do
-        TJabberEntity(_items.Objects[i]).getInfo(js);
+    begin
+        TJabberEntity(_items.Objects[i])._stopWalk := true;
+        jEntityCache.Add(TJabberEntity(_items.Objects[i])._jid, TJabberEntity(_items.Objects[i]));
+        TJabberEntity(_items.Objects[i])._discoInfo(js, TJabberEntity(_items.Objects[i]).WalkInfoCallback);
+    end;
+
+    if (_has_items) then //entity done with walk
+    begin
+        _fireOnEntityInfo(js, _jid.full);
+        _fireOnEntityItems(js, _jid.full);
+        if (_parent <> nil) then
+            _parent._childDiscoWalkFinished(js, Self);
+    end;
 end;
 
 {---------------------------------------}
-{$IFDEF DEPRECATED}
 procedure TJabberEntity._processBrowseItem(item: TXMLTag);
 var
     nss: TXMLTagList;
@@ -983,10 +1006,8 @@ begin
     // but not it's children
     _has_items := false;
 end;
-{$ENDIF}
 
 {---------------------------------------}
-{$IFDEF DEPRECATED}
 procedure TJabberEntity.BrowseCallback(event: string; tag: TXMLTag);
 var
     pt: TJabberEntityProcess;
@@ -1000,18 +1021,19 @@ begin
 
     // if we're not connected anymore, just bail.
     if (js.Active = false) then exit;
-
-    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        // Dispatch a disco#items query
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.AgentsCallback, _timeout);
-        _iq.toJid := _jid.full;
-        _iq.Namespace := XMLNS_AGENTS;
-        _iq.iqType := 'get';
-        _iq.Send();
+    _disco_info_error := (tag.GetAttribute('type') = 'error');
+    if ((event <> 'xml') or _disco_info_error) then begin
+        if (_fallBack and js.prefs.getBool(PREF_IQ_ENABLE_AGENT)) then
+            _startIQAgent(js)
+        else begin
+            _has_info := true;
+            _fireOnEntityInfo(js, tag);
+        end;
         exit;
     end;
 
-    //_processBrowse(tag);
+//    _processBrowse(tag);
+    //check
     tag.AddRef();
     pt := TJabberEntityProcess.Create(true);
     pt.jso := js;
@@ -1020,19 +1042,15 @@ begin
     pt.e := Self;
     pt.FreeOnTerminate := true;
     pt.Resume();
-
 end;
-{$ENDIF}
 
 {---------------------------------------}
-{$IFDEF DEPRECATED}
 procedure TJabberEntity._processBrowse(tag: TXMLTag);
 var
-    idx, i: integer;
+    i: integer;
     q: TXMLTag;
     clist: TXMLTagList;
     tmps: Widestring;
-    cj: TJabberID;
     ce: TJabberEntity;
 begin
     // we got browse back
@@ -1043,7 +1061,8 @@ begin
 
     // process results
     clist := tag.ChildTags();
-    if (clist.Count > 0) then begin
+    if (clist.Count > 0) then
+    begin
         q := clist[0];
         clist.Free();
 
@@ -1060,23 +1079,23 @@ begin
 
 
         // Get our children
-        for i := 0 to clist.Count - 1 do begin
-            if (clist[i].Name <> 'ns') then begin
+        for i := 0 to clist.Count - 1 do
+        begin
+            if (clist[i].Name <> 'ns') then
+            begin
                 // this is a child
                 tmps := clist[i].GetAttribute('jid');
-                idx := _items.IndexOf(tmps);
-                if (idx = -1) then begin
-                    cj := TJabberID.Create(tmps);
-                    ce := TJabberEntity.Create(cj);
+                if (_items.IndexOf(tmps) = -1) then
+                begin
+                    ce := TJabberEntity.Create(TJabberID.Create(tmps)); //entity owns jid
                     ce._parent := Self;
                     ce._processBrowseItem(clist[i]);
                     jEntityCache.Add(tmps, ce);
                     _items.AddObject(tmps, ce);
-                end;
+                end; //ignore dups
             end;
         end;
         clist.Free();
-
     end;
 
     {
@@ -1095,10 +1114,8 @@ begin
     }
 
 end;
-{$ENDIF}
 
 {---------------------------------------}
-{$IFDEF DEPRECATED}
 procedure TJabberEntity._processAgent(item: TXMLTag);
 var
     tmps: Widestring;
@@ -1137,16 +1154,13 @@ begin
         _feats.Add(nss[n].Data);
 
 end;
-{$ENDIF}
 
 {---------------------------------------}
-{$IFDEF DEPRECATED}
 procedure TJabberEntity.AgentsCallback(event: string; tag: TXMLTag);
 var
     js: TJabberSession;
     tmps: Widestring;
     t: TXMLTag;
-    cj: TJabberID;
     ce: TJabberEntity;
     i: integer;
     agents: TXMLTagList;
@@ -1159,13 +1173,15 @@ begin
     // if we're not connected anymore, just bail.
     if (js.Active = false) then exit;
 
-    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
+    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then
+    begin
         // BAH! agents didn't work either.. this thing sucks,
         // if our event is a timeout, let's retry the whole mess, with a longer
         // timeout.
-        if ((event = 'timeout') and (_timeout < WALK_MAX_TIMEOUT)) then begin
+        if ((event = 'timeout') and (_timeout < WALK_MAX_TIMEOUT)) then
+        begin
             _timeout := _timeout * 3;
-            _discoInfo(js, WalkCallback);
+            _discoInfo(js, WalkInfoCallback);
         end
         else begin
             _has_info := true;
@@ -1184,13 +1200,13 @@ begin
     _items.Clear();
 
     agents := tag.QueryXPTags('/iq/query[@xmlns="jabber:iq:agents"/agent');
-    for i := 0 to agents.Count -1 do begin
+    for i := 0 to agents.Count -1 do
+    begin
         tmps := agents[i].getAttribute('jid');
-        cj := TJabberID.Create(tmps);
-        ce := TJabberEntity.Create(cj);
+        ce := TJabberEntity.Create(TJabberID.Create(tmps)); //entity owns jid
         ce._parent := Self;
         ce._processAgent(agents[i]);
-        jEntityCache.Add(tmps, ce);
+        jEntityCache.Add(tmps, ce); //replace dups
         _items.AddObject(tmps, ce);
     end;
     agents.Free();
@@ -1201,15 +1217,89 @@ begin
 
     // Send info for each child
     t := TXMLTag.Create('entity');
-    for i := 0 to _items.Count - 1 do begin
+    for i := 0 to _items.Count - 1 do
+    begin
         ce := TJabberEntity(_items.Objects[i]);
         t.setAttribute('from', ce.jid.full);
-        js.FireEvent('/session/entity/info', t);
+        _fireOnEntityInfo(js, t)
     end;
     t.Free();
-
 end;
-{$ENDIF}
+
+procedure TJabberEntity._fireOnEntityInfo(jso: TObject; jid: widestring);
+var
+    ttag: TXMLTag;
+begin
+    ttag := TXMLTag.create('entity');
+    ttag.setAttribute('from', jid);
+    _fireOnEntityInfo(jso, ttag);
+    ttag.free();
+end;
+
+procedure TJabberEntity._fireOnEntityInfo(jso: TObject; tag: TXMLTag);
+begin
+    DebugMessage('Entity firing /session/entity/info, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
+    TJabberSession(jso).FireEvent('/session/entity/info', tag);
+end;
+
+procedure TJabberEntity._fireOnEntityItems(jso: TObject; jid: widestring);
+var
+    ttag: TXMLTag;
+begin
+    ttag := TXMLTag.create('entity');
+    ttag.setAttribute('from', jid);
+    _fireOnEntityItems(jso, ttag);
+    ttag.free();
+end;
+
+procedure TJabberEntity._fireOnEntityItems(jso: TObject; tag: TXMLTag);
+begin
+    DebugMessage('Entity firing /session/entity/items, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
+    TJabberSession(jso).FireEvent('/session/entity/items', tag);
+end;
+
+procedure TJabberEntity._startIQAgent(jso: TObject);
+begin
+    // Dispatch an iq:agents query
+    _iq := TJabberIQ.Create(TJabberSession(jso),
+                            TJabberSession(jso).generateID(),
+                            Self.AgentsCallback,
+                            _timeout);
+    _iq.toJid := _jid.full;
+    _iq.Namespace := XMLNS_AGENTS;
+    _iq.iqType := 'get';
+    _iq.Send();
+end;
+
+procedure TJabberEntity._startIQBrowse(jso: TObject);
+begin
+    _iq := TJabberIQ.Create(TJabberSession(jso),
+                            TJabberSession(jso).generateID(),
+                            Self.BrowseCallback,
+                            _timeout);
+    _iq.toJid := _jid.full;
+    _iq.Namespace := XMLNS_BROWSE;
+    _iq.iqType := 'get';
+    _iq.Send();
+end;
+
+procedure TJabberEntity._childDiscoWalkFinished(jso: TObject; child: TJabberEntity);
+var
+    i : integer;
+begin
+    //see if all children have info
+    for i := 0 to _items.Count - 1 do
+        if (not TJabberEntity(_items.Objects[i]).hasInfo) then
+            break;
+    if (i = _items.Count) then
+    begin
+        _fireOnEntityInfo(jso, _jid.full); //can only get here if _has_info
+        _fireOnEntityItems(jso, _jid.full);
+
+        if (_parent <> nil) then
+            _parent._childDiscoWalkFinished(jso, Self);
+    end;
+end;
 
 function TJabberEntity.toString(): WideString;
 var

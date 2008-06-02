@@ -288,7 +288,6 @@ uses
   GroupParser in '..\jopl\GroupParser.pas',
   GroupActions in 'GroupActions.pas',
   MiscMessages in 'MiscMessages.pas' {frmSimpleDisplay: TTntForm},
-  SelectItemRoom in 'SelectItemRoom.pas' {frmSelectItemRoom: TTntForm},
   SelectItemAnyRoom in 'SelectItemAnyRoom.pas' {frmSelectItemAnyRoom: TTntForm},
   ExAllTreeView in 'components\ExAllTreeView.pas',
   CommonActions in 'CommonActions.pas',
@@ -296,8 +295,7 @@ uses
   ExItemHoverForm in 'components\ExItemHoverForm.pas' {ExItemHoverForm: TTntForm},
   ExRoomHoverFrame in 'components\ExRoomHoverFrame.pas' {ExRoomHoverFrame: TTntFrame},
   SndBroadcastDlg in 'SndBroadcastDlg.pas' {dlgSndBroadcast},
-  BookmarkForm in 'BookmarkForm.pas',
-  FontConsts in '..\jopl\FontConsts.pas';
+  BookmarkForm in 'BookmarkForm.pas';
 
 {$R *.TLB}
 

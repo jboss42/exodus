@@ -36,7 +36,10 @@ begin
    _Session := Session;
    //Spaces are no longer word boundaries, but group separators are.
    sep := TJabberSession(_Session).Prefs.getString('group_separator');
-   if (TJabberSession(_Session).Prefs.getBool('nested_groups')) and (sep <> '') then begin
+   if (TJabberSession(_Session).Prefs.getBool('nested_groups') and
+       TJabberSession(_Session).prefs.getBool('branding_nested_subgroup') and
+       (sep <> '')) then
+   begin
        _GroupSeparator := sep;
        _NestedGroups := TRegExpr.Create();
        _NestedGroups.SpaceChars :=  PWideChar(sep)^;

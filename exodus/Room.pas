@@ -832,11 +832,6 @@ begin
         mtag.AddInsertedXML(xml);
 
     MainSession.SendTag(mtag);
-    if (comcontroller <> nil) then
-    begin
-        TExodusChat(ComController).fireSentMessageXML(mtag);
-    end;
-
     msg.Free();
 end;
 
@@ -3394,7 +3389,7 @@ end;
 
 constructor TJoinRoomAction.Create;
 begin
-    inherited Create('{000-exodus.googlecode.com}-000-join-room');
+    inherited Create('{000-exodus.googlecode.com}-000-join-roon');
 
     Set_Caption(_('Join'));
     Set_Enabled(true);

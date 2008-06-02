@@ -248,10 +248,6 @@ begin
     _disconcb := MainSession.RegisterCallback(DisconCallback, '/session/disconnected');
     txtServerFilter.Items.Add(_('- ALL SERVERS -'));
 
-    if (MainSession.Prefs.getBoolInProfile(MainSession.Profile.Name, 'tc_browse')) then
-        optBrowse.Checked := true
-    else
-        optSpecify.Checked := true;
     chkDefaultConfig.Checked := MainSession.Prefs.getBoolInProfile(MainSession.Profile.Name, 'tc_default_config');
     chkUseRegisteredNickname.Checked := MainSession.Prefs.getBoolInProfile(MainSession.Profile.Name, 'tc_use_reg_nick');
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
@@ -336,7 +332,6 @@ begin
         setStringInProfile(MainSession.Profile.Name, 'tc_lastroom', txtRoom.Text);
         setStringInProfile(MainSession.Profile.Name, 'tc_lastserver', txtServer.Text);
         setStringInProfile(MainSession.Profile.Name, 'tc_lastnick', txtNick.Text);
-        setBoolInProfile(MainSession.Profile.Name, 'tc_browse', optBrowse.Checked);
         setBoolInProfile(MainSession.Profile.Name, 'tc_default_config', dconfig);
         setBoolInProfile(MainSession.Profile.Name, 'tc_use_reg_nick', registered_nick);
     end;

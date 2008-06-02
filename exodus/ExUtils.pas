@@ -161,7 +161,7 @@ const
     sTurnOnBlocking = 'You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)';
 
     sNewGroup = 'New Group';
-    sNewGroupPrompt = 'Enter new group name below. ';
+    sNewGroupPrompt = 'Enter new group name: ';
     sNewGroupExists = 'This group already exists!';
 
 var
@@ -1087,7 +1087,7 @@ begin
 
     with MainSession.Prefs do begin
         grpSeparator := getString('group_separator');
-        nesting := getBool('nested_groups') and (grpSeparator <> '');
+        nesting := getBool('nested_groups') and getBool('branding_nested_subgroup')and (grpSeparator <> '');
     end;
     if nesting then begin
         //TODO:  use a different msg when nesting?

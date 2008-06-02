@@ -30,46 +30,17 @@ interface
 
 
 uses
-{$IFNDEF EXODUS}
-    Exodus_TLB,
-{$ENDIF}
-{$IFDEF EXODUS}
-    Session,
-{$ENDIF}
-    TntMenus,
-    JabberMsg,
-    Windows,
-    Messages,
-    SysUtils,
-    Variants,
-    Classes,
-    Graphics,
-    Controls,
-    Forms,
-    Dialogs,
-    Regexpr,
-    iniFiles,
-    BaseMsgList,
-    gnugettext,
-    unicode,
-    XMLTag,
-    XMLNode,
-    XMLConstants,
-    XMLCdata,
-    LibXmlParser,
-    XMLUtils,
-    OleCtrls,
-    SHDocVw,
-    MSHTML,
-    mshtmlevents,
-    ActiveX,
+    TntMenus, JabberMsg,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, Regexpr, iniFiles,
+    BaseMsgList, Session, gnugettext, unicode,
+    XMLTag, XMLNode, XMLConstants, XMLCdata, LibXmlParser, XMLUtils,
+    OleCtrls, SHDocVw, MSHTML, mshtmlevents, ActiveX,
     IEMsgListUIHandler;
 
   function HTMLColor(color_pref: integer) : widestring;
 
 type
-  TIEMsgListNavigateHandler = procedure(url: widestring; var handled: boolean) of object;
-
   TIEMsgListProcessor = class
   private
     _lastLineClass: WideString;
@@ -78,9 +49,6 @@ type
     _idCount: integer;
     _displayDateSeparator: boolean;
     _lastTimeStamp: TDateTime;
-{$IFNDEF EXODUS}
-    _controller: IExodusController;
-{$ENDIF}
 
     function _processUnicode(txt: widestring): WideString;
     function _genElementID(): WideString;
@@ -88,17 +56,9 @@ type
     function _getLineClass(nick: widestring): WideString; overload;
     function _checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean; overload;
     function _checkLastNickForMsgGrouping(nick: widestring): boolean; overload;
-
-    function _getPrefBool(prefName: Widestring): boolean;
-    function _getPrefString(prefName: Widestring): widestring;
-//    function _getPrefInt(prefName: Widestring): integer;
   protected
   public
-{$IFDEF EXODUS}
     constructor Create();
-{$ELSE}
-    constructor Create(controller: IExodusController);
-{$ENDIF}
 
     function dateSeperator(const msg: TJabberMessage): widestring;
     function ProcessDisplayMsg(const Msg: TJabberMessage): widestring; overload;
@@ -172,17 +132,10 @@ type
     _color_time: integer;
     _color_action: integer;
     _color_server: integer;
-    _color_composing: integer;
-    _color_presence: integer;
-    _color_alert: integer;
     _font_bold: boolean;
     _font_italic: boolean;
     _font_underline: boolean;
-{$IFDEF EXODUS}
     _stylesheet_name: widestring;
-{$ELSE}
-    _stylesheet_raw: widestring;
-{$ENDIF}
     _webBrowserUI: TWebBrowserUIObject;
 
     _ForceIgnoreScrollToBottom: boolean;
@@ -207,14 +160,7 @@ type
 
   public
     { Public declarations }
-    NavigateHandler: TIEMsgListNavigateHandler;
-
-
-{$IFDEF EXODUS}
     constructor Create(Owner: TComponent); override;
-{$ELSE}
-    constructor Create(Owner: TComponent; controller: IExodusController);
-{$ENDIF}
     destructor Destroy; override;
 
     procedure Invalidate(); override;
@@ -244,15 +190,10 @@ type
     function  isComposing(): boolean; override;
     procedure DisplayRawText(txt: Widestring); override;
 
-{$IFDEF EXODUS}
     procedure ChangeStylesheet( resname: WideString);
-{$ELSE}
-    procedure SetStylesheet(stylesheet: WideString);
-{$ENDIF}
     procedure ResetStylesheet();
     procedure print(ShowDialog: boolean);
     procedure writeHTML(html: WideString);
-    procedure DefaultNavHandler(url: widestring; var handled: boolean);
 
     property font_name: widestring read _font_name write _font_name;
     property font_size: widestring read _font_size write _font_size;
@@ -266,21 +207,14 @@ type
     property color_time: integer read _color_time write _color_time;
     property color_action: integer read _color_action write _color_action;
     property color_server: integer read _color_server write _color_server;
-    property color_composing: integer read _color_composing write _color_composing;
-    property color_presence: integer read _color_presence write _color_presence;
-    property color_alert: integer read _color_alert write _color_alert;
-{$IFDEF EXODUS}
     property stylesheet_name: widestring read _stylesheet_name write _stylesheet_name;
-{$ELSE}
-    property stylesheet_raw: widestring read _stylesheet_raw write _stylesheet_raw;
-{$ENDIF}
     property font_bold: boolean read _font_bold write _font_bold;
     property font_italic: boolean read _font_italic write _font_italic;
     property font_underline: boolean read _font_underline write _font_underline;
     property ForceIgnoreScrollToBottom: boolean read _ForceIgnoreScrollToBottom write _ForceIgnoreScrollToBottom;
     property IgnoreMsgLimiting: boolean read _IgnoreMsgLimiting write _IgnoreMsgLimiting;
+
     property InMessageDumpMode: boolean read _InMessageDumpMode write _SetInMessageDumpMode;
-    property msgProcessor: TIEMsgListProcessor read _msgProcessor;
 
   end;
 
@@ -299,19 +233,16 @@ implementation
 
 uses
     JabberConst,
-{$IFDEF EXODUS}
     Jabber1,
     BaseChat,
-    PrefController,
-    ExUtils,
-{$ENDIF}
-    FontConsts,
-    RT_XIMConversion,
     JabberUtils,
+    ExUtils,
     ShellAPI,
     Emote,
     StrUtils,
+    RT_XIMConversion,
     Registry,
+    PrefController,
     TntSysUtils;
 
 {$R *.dfm}
@@ -434,17 +365,12 @@ end;
 
 {---------------------------------------}
 {---------------------------------------}
-{$IFDEF EXODUS}
 constructor TIEMsgListProcessor.Create();
-{$ELSE}
-constructor TIEMsgListProcessor.Create(controller: IExodusController);
-{$ENDIF}
 begin
-{$IFNDEF EXODUS}
-    _controller := controller;
-{$ENDIF}
-    _displayDateSeparator := _getPrefBool('display_date_separator');
-    _exeName := _getPrefString('exe_FullPath');
+    with MainSession.Prefs do begin
+        _displayDateSeparator := getBool('display_date_separator');
+        _exeName := getString('exe_FullPath');
+    end;
 end;
 
 {---------------------------------------}
@@ -533,17 +459,13 @@ begin
     if (Msg = nil) then exit;
 
     if ((not Msg.Action) and
-        (_getPrefBool('richtext_enabled'))) then begin
+        (MainSession.Prefs.getBool('richtext_enabled'))) then begin
         // ignore HTML for actions.  it's harder than you think.
         body := Msg.Tag.QueryXPTag(xp_xhtml);
 
         if (body <> nil) then begin
             // Strip out font tags we wish to ignore
-{$IFDEF EXODUS}
             cleanXIM := cleanXIMTag(body);
-{$ELSE}
-            cleanXIM := cleanXIMTag(_controller, body);
-{$ENDIF}
             if (cleanXIM <> nil) then begin
                 // if first node is a p tag, make it a span...
                 if ((cleanXIM.Nodes.Count > 0) and
@@ -599,15 +521,15 @@ begin
     dv := dv + '<div class="msgts">';
 
     // Timestamp
-    if (_getPrefBool('timestamp')) then begin
+    if (MainSession.Prefs.getBool('timestamp')) then begin
         try
             dv := dv + '<span class="ts">' +
-                HTML_EscapeChars(FormatDateTime(_getPrefString('timestamp_format'), Msg.Time), false, true) +
+                HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time), false, true) +
                 '</span>';
         except
             on EConvertError do begin
                 dv := dv + '<span class="ts">' +
-                    HTML_EscapeChars(FormatDateTime(_getPrefString('timestamp_format'), Now()), false, true) +
+                    HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now()), false, true) +
                     '</span>';
             end;
         end;
@@ -781,53 +703,11 @@ begin
     Result := HTML_EscapeChars(txt, false, false);
 end;
 
-{---------------------------------------}
-function TIEMsgListProcessor._getPrefBool(prefName: Widestring): boolean;
-begin
-{$IFDEF EXODUS}
-    Result := MainSession.Prefs.getBool(prefName);
-{$ELSE}
-    Result := false;
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsBool(prefName);
-{$ENDIF}
-end;
-
-{---------------------------------------}
-function TIEMsgListProcessor._getPrefString(prefName: Widestring): widestring;
-begin
-{$IFDEF EXODUS}
-    Result := MainSession.Prefs.getString(prefName);
-{$ELSE}
-    Result := '';
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsString(prefName);
-{$ENDIF}
-end;
-
-{---------------------------------------}
-//function TIEMsgListProcessor._getPrefInt(prefName: Widestring): integer;
-//begin
-{$IFDEF EXODUS}
-//    Result := MainSession.Prefs.getInt(prefName);
-{$ELSE}
-//    Result := 0;
-//    if (_controller = nil) then exit;
-//
-//    Result := _controller.GetPrefAsInt(prefName);
-{$ENDIF}
-//end;
 
 
 {---------------------------------------}
 {---------------------------------------}
-{$IFDEF EXODUS}
 constructor TfIEMsgList.Create(Owner: TComponent);
-{$ELSE}
-constructor TfIEMsgList.Create(Owner: TComponent; controller: IExodusController);
-{$ENDIF}
 var
     OleObj: IOleObject;
     reg: TRegistry;
@@ -835,12 +715,7 @@ var
     tstring: widestring;
 begin
     inherited;
-    NavigateHandler := Self.DefaultNavHandler;
-{$IFDEF EXODUS}
     _msgProcessor := TIEMsgListProcessor.Create();
-{$ELSE}
-    _msgProcessor := TIEMsgListProcessor.Create(_controller);
-{$ENDIF}
     _queue := TWideStringList.Create();
     _ready := true;
     _composing := -1;
@@ -854,9 +729,7 @@ begin
     try
         reg := TRegistry.Create();
         if (reg <> nil) then begin
-            IEOverrideReg := '\Software\Jabber\' +
-                             _getPrefString('appID') +
-                             '\IEMsgList';
+            IEOverrideReg := '\Software\Jabber\' + PrefController.GetAppInfo().ID + '\IEMsgList';
 
             tstring := IEOverrideReg + '\Settings';
             reg.RootKey := HKEY_CURRENT_USER;
@@ -877,53 +750,44 @@ begin
     except
     end;
 
-    _maxMsgCountHigh := _getPrefInt('maximum_displayed_messages');
-    _maxMsgCountLow := _getPrefInt('maximum_displayed_messages_drop_down_to');
-    if ((_maxMsgCountHigh <> 0) and
-        (_maxMsgCountHigh >= _maxMsgCountLow)) then begin
-        _doMessageLimiting := true;
-        if (_maxMsgCountLow <= 0) then begin
-            // High water mark set, but low water mark not set.
-            // So, we will make the low water mark equal to the  high water mark.
-            // This will only drop 1 message at a time.
-            _maxMsgCountLow := _maxMsgCountHigh;
+    with MainSession.Prefs do begin
+        _maxMsgCountHigh := getInt('maximum_displayed_messages');
+        _maxMsgCountLow := getInt('maximum_displayed_messages_drop_down_to');
+        if ((_maxMsgCountHigh <> 0) and
+            (_maxMsgCountHigh >= _maxMsgCountLow)) then begin
+            _doMessageLimiting := true;
+            if (_maxMsgCountLow <= 0) then begin
+                // High water mark set, but low water mark not set.
+                // So, we will make the low water mark equal to the  high water mark.
+                // This will only drop 1 message at a time.
+                _maxMsgCountLow := _maxMsgCountHigh;
+            end;
         end;
-    end;
 
-{$IFDEF EXODUS}
-    _stylesheet_name := _getPrefString('ie_css');
-{$ELSE}
-    _stylesheet_raw := '';
-{$ENDIF}
-    _font_name := _getPrefString(P_FONT_NAME);
-    _font_size := _getPrefString(P_FONT_SIZE);
-    _font_bold := _getPrefBool(P_FONT_BOLD);
-    _font_italic := _getPrefBool(P_FONT_ITALIC);
-    _font_underline := _getPrefBool(P_FONT_ULINE);
-    _font_color := _getPrefInt(P_FONT_COLOR);
-    _color_bg := _getPrefInt(P_COLOR_BG);
-    _color_alt_bg := _getPrefInt(P_COLOR_ALT_BG);
-    _color_date_bg := _getPrefInt(P_COLOR_DATE_BG);
-    _color_date := _getPrefInt(P_COLOR_DATE);
-    _color_me := _getPrefInt(P_COLOR_ME);
-    _color_other := _getPrefInt(P_COLOR_OTHER);
-    _color_time := _getPrefInt(P_COLOR_TIME);
-    _color_action := _getPrefInt(P_COLOR_ACTION);
-    _color_server := _getPrefInt(P_COLOR_SERVER);
-    _color_composing := _getPrefInt(P_COLOR_COMPOSING);
-    _color_presence := _getPrefInt(P_COLOR_PRESENCE);
-    _color_alert := _getPrefInt(P_COLOR_ALERT);
+        _stylesheet_name := getString('ie_css');
+        _font_name := getString('font_name');
+        _font_size := getString('font_size');
+        _font_bold := getBool('font_bold');
+        _font_italic := getBool('font_italic');
+        _font_underline := getBool('font_underline');
+        _font_color := getInt('font_color');
+        _color_bg := getInt('color_bg');
+        _color_alt_bg := getInt('color_alt_bg');
+        _color_date_bg := getInt('color_date_bg');
+        _color_date := getInt('color_date');
+        _color_me := getInt('color_me');
+        _color_other := getInt('color_other');
+        _color_time := getInt('color_time');
+        _color_action := getInt('color_action');
+        _color_server := getInt('color_server');
+    end;
 
     // Set IDocHostUIHandler interface to handle override of IE settings
     try
         if (browser <> nil) then begin
             if (Supports(browser.DefaultInterface, IOleObject, OleObj)) then begin
                 _webBrowserUI.Free();
-{$IFDEF EXODUS}
                 _webBrowserUI := TWebBrowserUIObject.Create();
-{$ELSE}
-                _webBrowserUI := TWebBrowserUIObject.Create(_controller);
-{$ENDIF}
                 OleObj.SetClientSite(_webBrowserUI as IOleClientSite);
             end
             else begin
@@ -1125,17 +989,17 @@ var
     tmsg : TJabberMessage;
     ds: widestring;
 begin
-    pt := _getPrefInt('pres_tracking');
+    pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
 
     if ((pt = 1) and (_content <> nil)) then begin
         // if previous is a presence, replace with this one.
         // Pres looks like:
         // <DIV class=line1>
-        //     <SPAN class=other>user</SPAN>
-        //     <DIV class=msgts>
-        //         <SPAN class=ts>9:32 am</SPAN>
-        //         <SPAN class=pres>user is now available.</SPAN>
+	    //     <SPAN class=other>user</SPAN>
+	    //     <DIV class=msgts>
+		//         <SPAN class=ts>9:32 am</SPAN>
+		//         <SPAN class=pres>user is now available.</SPAN>
         //     </DIV>
         // </DIV>
         tags := _content.children as IHTMLElementCollection;
@@ -1218,29 +1082,24 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.setupPrefs();
 begin
-{$IFDEF EXODUS}
-    _stylesheet_name := _getPrefString('ie_css');
-{$ELSE}
-    _stylesheet_raw := '';
-{$ENDIF}
-    _color_me := _getPrefInt(P_COLOR_ME);
-    _color_other := _getPrefInt(P_COLOR_OTHER);
-    _color_action := _getPrefInt(P_COLOR_ACTION);
-    _color_server := _getPrefInt(P_COLOR_SERVER);
-    _color_time := _getPrefInt(P_COLOR_TIME);
-    _color_bg := _getPrefInt(P_COLOR_BG);
-    _color_alt_bg := _getPrefInt(P_COLOR_ALT_BG);
-    _color_date_bg := _getPrefInt(P_COLOR_DATE_BG);
-    _color_date := _getPrefInt(P_COLOR_DATE);
-    _font_name := _getPrefString(P_FONT_NAME);
-    _font_size := IntToStr(_getPrefInt(P_FONT_SIZE));
-    _font_bold := _getPrefBool(P_FONT_BOLD);
-    _font_italic := _getPrefBool(P_FONT_ITALIC);
-    _font_underline := _getPrefBool(P_FONT_ULINE);
-    _font_color := _getPrefInt(P_FONT_COLOR);
-    _color_composing := _getPrefInt(P_COLOR_COMPOSING);
-    _color_presence := _getPrefInt(P_COLOR_PRESENCE);
-    _color_alert := _getPrefInt(P_COLOR_ALERT);
+    with MainSession.Prefs do begin
+        _stylesheet_name := getString('ie_css');
+        _color_me := getInt('color_me');
+        _color_other := getInt('color_other');
+        _color_action := getInt('color_action');
+        _color_server := getInt('color_server');
+        _color_time := getInt('color_time');
+        _color_bg := getInt('color_bg');
+        _color_alt_bg := getInt('color_alt_bg');
+        _color_date_bg := getInt('color_date_bg');
+        _color_date := getInt('color_date');
+        _font_name := getString('font_name');
+        _font_size := IntToStr(getInt('font_size'));
+        _font_bold := getBool('font_bold');
+        _font_italic := getBool('font_italic');
+        _font_underline := getBool('font_underline');
+        _font_color := getInt('font_color');
+    end;
 end;
 
 {---------------------------------------}
@@ -1346,19 +1205,11 @@ begin
 end;
 
 {---------------------------------------}
-{$IFDEF EXODUS}
 procedure TfIEMsgList.ChangeStylesheet(resname: WideString);
 begin
     _stylesheet_name := resname;
     ResetStylesheet();
 end;
-{$ELSE}
-procedure TfIEMsgList.SetStylesheet(stylesheet: WideString);
-begin
-    _stylesheet_raw := stylesheet;
-    ResetStylesheet();
-end;
-{$ENDIF}
 
 {---------------------------------------}
 procedure TfIEMsgList.ResetStylesheet();
@@ -1387,7 +1238,6 @@ var
     i: integer;
 begin
     try
-{$IFDEF EXODUS}
         // Get CSS template from resouce
         stream := TResourceStream.Create(HInstance, _stylesheet_name, 'CSS');
 
@@ -1396,12 +1246,10 @@ begin
         css := '';
         for i := 0 to tmp.Count - 1 do
             css := css + tmp.Strings[i];
+
         tmp.Clear;
         tmp.Free;
-        stream.Free();
-{$ELSE}
-        css := _stylesheet_raw;
-{$ENDIF}
+        stream.Free(); 
 
         // Place colors in CSS
         if (css <> '') then begin
@@ -1435,9 +1283,6 @@ begin
             css := replaceString(css, '/*color_time*/', HTMLColor(_color_time));
             css := replaceString(css, '/*color_action*/', HTMLColor(_color_action));
             css := replaceString(css, '/*color_server*/', HTMLColor(_color_server));
-            css := replaceString(css, '/*color_composing*/', HTMLColor(_color_composing));
-            css := replaceString(css, '/*color_presence*/', HTMLColor(_color_presence));
-            css := replaceString(css, '/*color_alert*/', HTMLColor(_color_alert));
         end;
 
         // put CSS into page
@@ -1479,7 +1324,6 @@ begin
 end;
 
 {---------------------------------------}
-{$IFDEF EXODUS}
 function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
 var
     bc: TfrmBaseChat;
@@ -1505,7 +1349,7 @@ begin
             end;
         end;
     end
-    else if ((_getPrefBool('esc_close')) and (key = 27)) then begin
+    else if ((MainSession.Prefs.getBool('esc_close')) and (key = 27)) then begin
         if (Self.Parent <> nil) then begin
             if (Self.Parent.Parent <> nil) then begin
                 SendMessage(Self.Parent.Parent.Handle, WM_CLOSE, 0, 0);
@@ -1537,12 +1381,6 @@ begin
     PostMessage(bc.Handle, WM_SETFOCUS, 0, 0);
     Result := false;
 end;
-{$ELSE}
-function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
-begin
-    Result := false;
-end;
-{$ENDIF}
 
 {---------------------------------------}
 function TfIEMsgList.onDrop(Sender: TObject): WordBool;
@@ -1639,25 +1477,10 @@ procedure TfIEMsgList.browserBeforeNavigate2(Sender: TObject;
   Headers: OleVariant; var Cancel: WordBool);
 var
     u: string;
-    handled: boolean;
 begin
     u := URL;
-    // If this navigate is NOT for the internal blank page,
-    // try to handle it.
     if (u <> _home + '/iemsglist') then begin
-        handled := false;
-
-        try
-            NavigateHandler(u, handled);
-        except
-            handled := true;
-        end;
-
-        if (not handled) then
-        begin
-            ShellExecute(Application.Handle, 'open', pAnsiChar(u), '', '', SW_SHOW);
-        end;
-
+        ShellExecute(Application.Handle, 'open', pAnsiChar(u), '', '', SW_SHOW);
         cancel := true;
     end;
     inherited;
@@ -1807,11 +1630,6 @@ begin
     end;
 end;
 
-{---------------------------------------}
-procedure TfIEMsgList.DefaultNavHandler(url: widestring; var handled: boolean);
-begin
-    handled := false;
-end;
 
 initialization
     TP_GlobalIgnoreClassProperty(TWebBrowser, 'StatusText');

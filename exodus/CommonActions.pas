@@ -102,6 +102,10 @@ begin
 
         //delete group
         itemCtrl.RemoveItem(item.UID);
+
+        //let everyone know about the path should be expanded!
+        item := itemCtrl.GetItem(path);
+        MainSession.FireEvent('/data/item/group/restore', nil, '');
     end
     else begin
         //This updates the displayname cache

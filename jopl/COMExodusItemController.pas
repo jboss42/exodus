@@ -81,7 +81,7 @@ type
       _GroupsLoaded: Boolean;
       _ServerStorage: Boolean;
       _GroupParser : TGroupParser;
-      
+
       procedure _SessionCallback(Event: string; Tag: TXMLTag);
       procedure _GetGroups();
       procedure _ParseGroups(Event: string; Tag: TXMLTag);
@@ -155,7 +155,7 @@ destructor TExodusItemController.Destroy();
 begin
 
     ClearItems();
-    
+
     _Items.Free;
     _GroupParser.Free;
 
@@ -167,7 +167,7 @@ end;
 {---------------------------------------}
 procedure TExodusItemController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
-    if Event = '/session/authenticated' then begin
+    if Event = '/session/ready/session' then begin
        _GroupsLoaded := false;
        _GetGroups();
     end
@@ -236,6 +236,7 @@ begin
     _GroupsLoaded := true;
     TJabberSession(_JS).FireEvent('/item/end', Group);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
+    TJabberSession(_JS).FireEvent('/session/ready/groups', nil);
 end;
 
 {---------------------------------------}
@@ -528,9 +529,6 @@ begin
     //notify callback
     cb := ItemWrapper.Callback;
     if (cb <> nil) then cb.ItemDeleted(ItemWrapper.ExodusItem);
-    
-    //fire event
-    TJabberSession(_JS).FireEvent('/item/remove', ItemWrapper.ExodusItem);
 
     //then finally, we delete
     ItemWrapper.Free();
@@ -728,6 +726,8 @@ begin
     if not _ctrl._GroupsLoaded then exit;
     
     _ctrl._SendGroups();
+    item.IsVisible := false;
+    TJabberSession(_ctrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusGroupCallback.ItemGroupsChanged(const item: IExodusItem);
 begin

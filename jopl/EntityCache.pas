@@ -38,7 +38,8 @@ type
         destructor Destroy(); override;
 
         procedure Clear();
-        procedure Add(jid: Widestring; e: TJabberEntity);
+        procedure Add(jid: Widestring; e: TJabberEntity);overload;
+        procedure Add(jid: TJabberID; e: TJabberEntity);overload;
         procedure Remove(e: TJabberEntity);
         procedure RemoveJid(jid: Widestring; node: Widestring = '');
         procedure Delete(i: integer);
@@ -231,6 +232,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberEntityCache.Add(jid: TJabberID; e: TJabberEntity);
+begin
+    _cache.AddObject(jid.full, e);
+end;
+
+{---------------------------------------}
 procedure TJabberEntityCache.Remove(e: TJabberEntity);
 begin
     Delete(indexOf(e));
@@ -311,58 +318,34 @@ end;
 {---------------------------------------}
 function TJabberEntityCache.fetch(jid: Widestring; js: TJabberSession;
     items_limit: boolean; node: Widestring): TJabberEntity;
-var
-    i: integer;
-    e: TJabberEntity;
 begin
-    e := getByJid(jid, node);
-    if (e <> nil) then begin
-        Result := e;
+    Result := getByJid(jid, node);
+    if (Result <> nil) then
+        Result.Free();
 
-        if (e.hasItems and e.hasInfo) then begin
-            // This fires all the events..
-            e.getInfo(js);
-            e.getItems(js);
-            for i := 0 to e.ItemCount - 1 do begin
-                if (e.Items[i].hasInfo) then
-                    e.Items[i].getInfo(js);
-            end;
-        end
-        else
-            // Re-walk since we don't have all the info.
-            e.walk(js, items_limit);
+    Result := TJabberEntity.Create(TJabberID.Create(jid), node);
+    _cache.AddObject(Result.Jid.full, Result);
 
-        exit;
-    end;
-
-    e := TJabberEntity.Create(TJabberID.Create(jid), node);
-    _cache.AddObject(TJabberID.applyJEP106(jid), e);
-
-    e.walk(js, items_limit);
-    Result := e;
+    Result.discoWalk(js, items_limit);
 end;
 
 {---------------------------------------}
 function TJabberEntityCache.discoItems(jid: Widestring; js: TJabberSession;
     node: Widestring = ''; timeout: integer = -1): TJabberEntity;
-var
-    e: TJabberEntity;
 begin
-    e := getByJid(jid, node);
-    if (e <> nil) then begin
-        Result := e;
-        e.fallbackProtocols := false;
-        e.getItems(js);
+    Result := getByJid(jid, node);
+    if (Result <> nil) then begin
+        Result.fallbackProtocols := false;
+        Result.getItems(js);
         exit;
     end;
 
-    e := TJabberEntity.Create(TJabberID.Create(jid), node);
-    e.fallbackProtocols := false;
-    _cache.AddObject(TJabberID.applyJEP106(jid), e);
+    Result := TJabberEntity.Create(TJabberID.Create(jid), node);
+    Result.fallbackProtocols := false;
+    _cache.AddObject(Result.Jid.full, Result);
     if (timeout <> -1) then
-        e.timeout := timeout;
-    e.getItems(js);
-    Result := e;
+        Result.timeout := timeout;
+    Result.getItems(js);
 end;
 
 {---------------------------------------}
