@@ -1527,7 +1527,7 @@ begin
             if ((item1 <> nil) and
                 (item2 <> nil)) then
             begin
-                if (item1.awItem.name < item2.awItem.name) then
+                if (LowerCase(item1.awItem.name) < LowerCase(item2.awItem.name)) then
                 begin
                     itemadded := true;
                     tempList.InsertObject(j, _trackingList.Strings[i], _trackingList.Objects[i]);
