@@ -36,7 +36,7 @@ uses
     All code changed prefereced with "JJF TODO msgqueue refactor"
 }
 type
-  TExodusChat = class(TAutoObject, IExodusChat, IExodusChat2)
+  TExodusChat = class(TAutoObject, IExodusChat, IExodusChat2, IExodusChat3)
   protected
     function Get_jid: WideString; safecall;
     function AddContextMenu(const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
@@ -59,8 +59,12 @@ type
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const Value: WideString); safecall;
     procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
+
+    // IExodusChat2
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
+
+    // IExodusChat3
     procedure Close; safecall;
     procedure BringToFront; safecall;
     procedure Dock; safecall;
@@ -267,12 +271,22 @@ end;
 procedure TExodusChat.fireSentMessageXML(tag: TXMLTag);
 var
     i: integer;
+    chatplugin2: IExodusChatPlugin2;
 begin
     for i := 0 to _plugs.Count - 1 do begin
         try
-            TChatPlugin(_plugs[i]).com.OnSentMessageXML(tag.xml());
+            chatplugin2 := TChatPlugin(_plugs[i]).com as IExodusChatPlugin2;
+            try
+                if (chatplugin2 <> nil) then
+                begin
+                    chatplugin2.OnSentMessageXML(tag.xml());
+                end;
+            except
+                // Problem sending XML msg to chat plugin
+                DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
+            end;
         except
-            DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
+            // Not a IExodusChat2 plugin - eat error
         end;
     end;
 end;

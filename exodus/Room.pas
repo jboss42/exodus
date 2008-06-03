@@ -809,6 +809,7 @@ var
     add_xml: Widestring;
     msg: TJabberMessage;
     mtag: TXMLTag;
+    temptag: TXMLTag;
 begin
     //
     msg := TJabberMessage.Create(jid, 'groupchat', body, Subject, priority);
@@ -831,11 +832,13 @@ begin
     if (xml <> '') then
         mtag.AddInsertedXML(xml);
 
-    MainSession.SendTag(mtag);
+    temptag := TXMLTag.Create(mtag);
+    MainSession.SendTag(mtag); // Tag gets "cleared"
     if (comcontroller <> nil) then
     begin
-        TExodusChat(ComController).fireSentMessageXML(mtag);
+        TExodusChat(ComController).fireSentMessageXML(temptag);
     end;
+    temptag.Free();
 
     msg.Free();
 end;
