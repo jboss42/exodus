@@ -742,7 +742,8 @@ end;
 procedure TfrmDockable.updateDocked();
 begin
     if (_closing) then exit;
-    
+
+    // Prevent UpdateDocked being called from updateDocked
     Inc(updateDockedCnt);
 
     if (updateDockedCnt <= 1) then begin
