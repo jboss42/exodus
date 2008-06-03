@@ -745,6 +745,7 @@ begin
     
     Inc(updateDockedCnt);
 
+    // Prevent UpdateDocked being called from updateDocked
     if (updateDockedCnt <= 1) then begin
         try
             getDockManager().UpdateDocked(Self);
