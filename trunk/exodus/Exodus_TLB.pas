@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/2/2008 11:00:25 AM from Type Library described below.
+// File generated on 6/3/2008 11:26:47 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -145,6 +145,8 @@ const
   IID_IExodusItemCallback: TGUID = '{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}';
   IID_IExodusAXWindowCallback: TGUID = '{87D6C026-3A1C-43CF-B153-BB6472A956AD}';
   CLASS_MainToolBarImages: TGUID = '{EED39569-B9B7-4888-A591-2640F31B3BC0}';
+  IID_IExodusChatPlugin2: TGUID = '{B92A81A9-79B8-47F0-8A79-1CAC711089E5}';
+  IID_IExodusChat3: TGUID = '{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -328,6 +330,10 @@ type
   IExodusItemCallbackDisp = dispinterface;
   IExodusAXWindowCallback = interface;
   IExodusAXWindowCallbackDisp = dispinterface;
+  IExodusChatPlugin2 = interface;
+  IExodusChatPlugin2Disp = dispinterface;
+  IExodusChat3 = interface;
+  IExodusChat3Disp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -371,7 +377,6 @@ type
 // Declaration of structures, unions and aliases.                         
 // *********************************************************************//
   PWideString1 = ^WideString; {*}
-  PPUserType1 = ^IExodusRosterImages; {*}
 
 
 // *********************************************************************//
@@ -638,10 +643,6 @@ type
     ['{51385483-0B0F-45A3-95C7-579A8DDF62DF}']
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
-    procedure Close; safecall;
-    procedure BringToFront; safecall;
-    procedure Dock; safecall;
-    procedure Float; safecall;
     property DockToolbar: IExodusDockToolbar read Get_DockToolbar;
     property MsgOutToolbar: IExodusMsgOutToolbar read Get_MsgOutToolbar;
   end;
@@ -655,10 +656,6 @@ type
     ['{51385483-0B0F-45A3-95C7-579A8DDF62DF}']
     property DockToolbar: IExodusDockToolbar readonly dispid 212;
     property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
-    procedure Close; dispid 224;
-    procedure BringToFront; dispid 225;
-    procedure Dock; dispid 226;
-    procedure Float; dispid 227;
   end;
 
 // *********************************************************************//
@@ -696,7 +693,6 @@ type
     procedure OnAfterRecvMessage(var Body: WideString); safecall;
     function OnKeyUp(key: Integer; shiftState: Integer): WordBool; safecall;
     function OnKeyDown(key: Integer; shiftState: Integer): WordBool; safecall;
-    procedure OnSentMessageXML(const XML: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -714,7 +710,6 @@ type
     procedure OnAfterRecvMessage(var Body: WideString); dispid 204;
     function OnKeyUp(key: Integer; shiftState: Integer): WordBool; dispid 301;
     function OnKeyDown(key: Integer; shiftState: Integer): WordBool; dispid 201;
-    procedure OnSentMessageXML(const XML: WideString); dispid 205;
   end;
 
 // *********************************************************************//
@@ -3037,10 +3032,6 @@ type
     property Caption: WideString dispid 211;
     property DockToolbar: IExodusDockToolbar readonly dispid 212;
     property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
-    procedure Close; dispid 224;
-    procedure BringToFront; dispid 225;
-    procedure Dock; dispid 226;
-    procedure Float; dispid 227;
   end;
 
 // *********************************************************************//
@@ -5302,6 +5293,81 @@ type
     procedure OnDocked; dispid 201;
     procedure OnClose; dispid 203;
     procedure OnFloat; dispid 206;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusChatPlugin2
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {B92A81A9-79B8-47F0-8A79-1CAC711089E5}
+// *********************************************************************//
+  IExodusChatPlugin2 = interface(IExodusChatPlugin)
+    ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
+    procedure OnSentMessageXML(const XML: WideString); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusChatPlugin2Disp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {B92A81A9-79B8-47F0-8A79-1CAC711089E5}
+// *********************************************************************//
+  IExodusChatPlugin2Disp = dispinterface
+    ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
+    procedure OnSentMessageXML(const XML: WideString); dispid 302;
+    function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
+    function OnAfterMessage(var Body: WideString): WideString; dispid 2;
+    procedure OnClose; dispid 6;
+    procedure OnNewWindow(hwnd: Integer); dispid 202;
+    function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; dispid 203;
+    procedure OnAfterRecvMessage(var Body: WideString); dispid 204;
+    function OnKeyUp(key: Integer; shiftState: Integer): WordBool; dispid 301;
+    function OnKeyDown(key: Integer; shiftState: Integer): WordBool; dispid 201;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusChat3
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}
+// *********************************************************************//
+  IExodusChat3 = interface(IExodusChat)
+    ['{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}']
+    procedure Close; safecall;
+    procedure BringToFront; safecall;
+    procedure Dock; safecall;
+    procedure Float; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusChat3Disp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}
+// *********************************************************************//
+  IExodusChat3Disp = dispinterface
+    ['{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}']
+    procedure Close; dispid 224;
+    procedure BringToFront; dispid 225;
+    procedure Dock; dispid 226;
+    procedure Float; dispid 227;
+    property JID: WideString readonly dispid 1;
+    function AddContextMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 2;
+    property MsgOutText: WideString readonly dispid 4;
+    function RegisterPlugin(const plugin: IExodusChatPlugin): Integer; dispid 3;
+    function UnRegisterPlugin(ID: Integer): WordBool; dispid 5;
+    function GetMagicInt(part: ChatParts): Integer; dispid 6;
+    procedure RemoveContextMenu(const menuID: WideString); dispid 7;
+    procedure AddMsgOut(const value: WideString); dispid 201;
+    function AddMsgOutMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 202;
+    procedure RemoveMsgOutMenu(const menuID: WideString); dispid 203;
+    procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); dispid 204;
+    property CurrentThreadID: WideString readonly dispid 205;
+    procedure DisplayMessage(const Body: WideString; const Subject: WideString; 
+                             const from: WideString); dispid 206;
+    procedure AddRoomUser(const JID: WideString; const Nickname: WideString); dispid 207;
+    procedure RemoveRoomUser(const JID: WideString); dispid 208;
+    property CurrentNick: WideString readonly dispid 209;
+    function GetControl(const Name: WideString): IExodusControl; dispid 210;
+    property Caption: WideString dispid 211;
+    property DockToolbar: IExodusDockToolbar readonly dispid 212;
+    property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
   end;
 
 // *********************************************************************//

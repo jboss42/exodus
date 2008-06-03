@@ -1643,6 +1643,56 @@ library Exodus
     HRESULT _stdcall OnFloat( void );
   };
 
+  [
+    uuid(EED39569-B9B7-4888-A591-2640F31B3BC0), 
+    version(1.0), 
+    helpstring("MainToolBarImages")
+  ]
+  coclass MainToolBarImages
+  {
+    [default] interface IExodusRosterImages;
+  };
+
+  [
+    uuid(B92A81A9-79B8-47F0-8A79-1CAC711089E5), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusChatPlugin2: IExodusChatPlugin
+  {
+    [
+    id(0x0000012E)
+    ]
+    HRESULT _stdcall OnSentMessageXML([in] BSTR XML );
+  };
+
+  [
+    uuid(FD3F0F9F-0BD9-4087-B892-C8FE5E332E40), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusChat3: IExodusChat
+  {
+    [
+    id(0x000000E0)
+    ]
+    HRESULT _stdcall Close( void );
+    [
+    id(0x000000E1)
+    ]
+    HRESULT _stdcall BringToFront( void );
+    [
+    id(0x000000E2)
+    ]
+    HRESULT _stdcall Dock( void );
+    [
+    id(0x000000E3)
+    ]
+    HRESULT _stdcall Float( void );
+  };
+
   
   typedef BSTR * PWideString1;
 
@@ -2084,6 +2134,11 @@ library Exodus
     id(0x000000E9)
     ]
     HRESULT _stdcall ShowToastWithEvent([in] BSTR message, [in] BSTR event, [in] BSTR eventXML, [in] long ImageIndex );
+    [
+    propget, 
+    id(0x000000EA)
+    ]
+    HRESULT _stdcall MainToolBarImages([out, retval] IExodusRosterImages ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -2105,22 +2160,6 @@ library Exodus
     id(0x000000DF)
     ]
     HRESULT _stdcall MsgOutToolbar([out, retval] IExodusMsgOutToolbar ** value /*Warning: unable to validate structure name: */ );
-    [
-    id(0x000000E0)
-    ]
-    HRESULT _stdcall Close( void );
-    [
-    id(0x000000E1)
-    ]
-    HRESULT _stdcall BringToFront( void );
-    [
-    id(0x000000E2)
-    ]
-    HRESULT _stdcall Dock( void );
-    [
-    id(0x000000E3)
-    ]
-    HRESULT _stdcall Float( void );
   };
 
   [
@@ -2164,10 +2203,6 @@ library Exodus
     id(0x000000C9)
     ]
     HRESULT _stdcall OnKeyDown([in] long key, [in] long shiftState, [out, retval] VARIANT_BOOL * handled );
-    [
-    id(0x000000CD)
-    ]
-    HRESULT _stdcall OnSentMessageXML([in] BSTR XML );
   };
 
   [
@@ -8838,7 +8873,7 @@ library Exodus
     propget, 
     id(0x000000D6)
     ]
-    HRESULT _stdcall DockToolbar([out, retval] IExodusDockToolbar ** Value /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall DockToolbar([out, retval] IExodusDockToolbar ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
