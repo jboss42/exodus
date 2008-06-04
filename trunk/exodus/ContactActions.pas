@@ -38,11 +38,18 @@ type
         procedure execute(const items: IExodusItemList); override;
         
     end;
+    TPropertiesContactAction = class(TExBaseAction)
+    private
+        constructor Create;
+
+    public
+        procedure execute(const items: IExodusItemList); override;
+    end;
 
 implementation
 
 uses Classes, ExActionCtrl, ExUtils, gnugettext, JabberID, SelectItem,
-    Session, RosterAdd;
+    Session, RosterAdd, Profile;
 
 procedure ToggleBlockState(item: IExodusItem; block: Boolean);
 var
@@ -146,6 +153,27 @@ end;
 
 {
 }
+constructor TPropertiesContactAction.Create;
+begin
+    inherited Create('{000-exodus.googlecode.com}-100-properties');
+
+    Set_Caption(_('Properties...'));
+    Set_Enabled(true);
+end;
+
+procedure TPropertiesContactAction.execute(const items: IExodusItemList);
+var
+    i: integer;
+begin
+    // 'selection=single' property should limit this to 1 contact in the list
+    for i := 0 to items.Count - 1 do
+    begin
+        ShowProfile(items.Item[i].UID);
+    end;
+end;
+
+{
+}
 procedure RegisterActions();
 var
     actCtrl: IExodusActionController;
@@ -172,6 +200,13 @@ begin
     actCtrl.registerAction('contact', act);
 
     actCtrl.registerAction('group', act);
+
+    //Setup contact properties
+    act := TPropertiesContactAction.Create() as IExodusAction;
+    actCtrl.registerAction('contact', act);
+    actctrl.addEnableFilter('contact',
+                            '{000-exodus.googlecode.com}-100-properties',
+                            'selection=single');
 end;
 
 
