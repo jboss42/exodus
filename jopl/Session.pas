@@ -88,6 +88,7 @@ type
         _avails: TWidestringlist;
         _auth_agent: TJabberAuth;
         _no_auth: boolean;
+        _FilesDragAndDropEnabled: Boolean;
         //_intfItemController: IExodusItemController;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
@@ -229,6 +230,7 @@ type
         property NoAuth: boolean read _no_auth write _no_auth;
         property AuthAgent: TJabberAuth read _auth_agent;
         property Authenticated: boolean read _authd;
+        property FilesDragAndDrop: Boolean read _FilesDragAndDropEnabled write _FilesDragAndDropEnabled;
     end;
 
     {------------------------ TSessionListener --------------------------------}
@@ -444,7 +446,7 @@ begin
     ItemController := TExodusItemController.create(Self);
     roster := TContactController.create(Self);
     rooms := TRoomController.create(Self);
-
+    _FilesDragAndDropEnabled := false;
 end;
 
 {---------------------------------------}
