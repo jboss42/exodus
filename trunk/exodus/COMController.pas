@@ -153,6 +153,8 @@ type
     procedure ShowToastWithEvent(const message, event, eventXML: WideString;
       ImageIndex: Integer); safecall;
     function Get_MainToolBarImages: IExodusRosterImages; safecall;
+    function Get_EnableFilesDragAndDrop: WordBool; safecall;
+    procedure Set_EnableFilesDragAndDrop(Value: WordBool); safecall;
 
     { Protected declarations }
   private
@@ -2216,6 +2218,16 @@ begin
     Result := COMToolBarImages;
 end;
 
+
+function TExodusController.Get_EnableFilesDragAndDrop: WordBool;
+begin
+    Result := MainSession.FilesDragAndDrop;
+end;
+
+procedure TExodusController.Set_EnableFilesDragAndDrop(Value: WordBool);
+begin
+    MainSession.FilesDragAndDrop := Value;
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,

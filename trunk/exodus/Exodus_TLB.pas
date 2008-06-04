@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/3/2008 11:26:47 AM from Type Library described below.
+// File generated on 6/4/2008 2:46:15 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -493,6 +493,8 @@ type
     procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
                                  const eventXML: WideString; ImageIndex: Integer); safecall;
     function Get_MainToolBarImages: IExodusRosterImages; safecall;
+    function Get_EnableFilesDragAndDrop: WordBool; safecall;
+    procedure Set_EnableFilesDragAndDrop(Value: WordBool); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -518,6 +520,7 @@ type
     property HistorySearchManager: IExodusHistorySearchManager read Get_HistorySearchManager;
     property ActionController: IExodusActionController read Get_ActionController;
     property MainToolBarImages: IExodusRosterImages read Get_MainToolBarImages;
+    property EnableFilesDragAndDrop: WordBool read Get_EnableFilesDragAndDrop write Set_EnableFilesDragAndDrop;
   end;
 
 // *********************************************************************//
@@ -632,6 +635,7 @@ type
     procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
                                  const eventXML: WideString; ImageIndex: Integer); dispid 233;
     property MainToolBarImages: IExodusRosterImages readonly dispid 234;
+    property EnableFilesDragAndDrop: WordBool dispid 235;
   end;
 
 // *********************************************************************//
@@ -5303,6 +5307,7 @@ type
   IExodusChatPlugin2 = interface(IExodusChatPlugin)
     ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
     procedure OnSentMessageXML(const XML: WideString); safecall;
+    procedure OnFilesDragAndDrop(const XML: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -5313,6 +5318,7 @@ type
   IExodusChatPlugin2Disp = dispinterface
     ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
     procedure OnSentMessageXML(const XML: WideString); dispid 302;
+    procedure OnFilesDragAndDrop(const XML: WideString); dispid 303;
     function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
     function OnAfterMessage(var Body: WideString): WideString; dispid 2;
     procedure OnClose; dispid 6;
@@ -5334,6 +5340,8 @@ type
     procedure BringToFront; safecall;
     procedure Dock; safecall;
     procedure Float; safecall;
+    function AddRosterMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
+    procedure RemoveRosterMenu(const MenuID: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -5347,6 +5355,8 @@ type
     procedure BringToFront; dispid 225;
     procedure Dock; dispid 226;
     procedure Float; dispid 227;
+    function AddRosterMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 401;
+    procedure RemoveRosterMenu(const MenuID: WideString); dispid 402;
     property JID: WideString readonly dispid 1;
     function AddContextMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 2;
     property MsgOutText: WideString readonly dispid 4;
