@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/4/2008 2:46:15 PM from Type Library described below.
+// File generated on 6/5/2008 2:54:24 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -494,7 +494,7 @@ type
                                  const eventXML: WideString; ImageIndex: Integer); safecall;
     function Get_MainToolBarImages: IExodusRosterImages; safecall;
     function Get_EnableFilesDragAndDrop: WordBool; safecall;
-    procedure Set_EnableFilesDragAndDrop(Value: WordBool); safecall;
+    procedure Set_EnableFilesDragAndDrop(value: WordBool); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -5307,7 +5307,7 @@ type
   IExodusChatPlugin2 = interface(IExodusChatPlugin)
     ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
     procedure OnSentMessageXML(const XML: WideString); safecall;
-    procedure OnFilesDragAndDrop(const XML: WideString); safecall;
+    function OnChatEvent(const event: WideString; value: OleVariant): WordBool; safecall;
   end;
 
 // *********************************************************************//
@@ -5318,7 +5318,7 @@ type
   IExodusChatPlugin2Disp = dispinterface
     ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
     procedure OnSentMessageXML(const XML: WideString); dispid 302;
-    procedure OnFilesDragAndDrop(const XML: WideString); dispid 303;
+    function OnChatEvent(const event: WideString; value: OleVariant): WordBool; dispid 303;
     function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
     function OnAfterMessage(var Body: WideString): WideString; dispid 2;
     procedure OnClose; dispid 6;
@@ -5334,14 +5334,14 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}
 // *********************************************************************//
-  IExodusChat3 = interface(IExodusChat)
+  IExodusChat3 = interface(IDispatch)
     ['{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}']
     procedure Close; safecall;
     procedure BringToFront; safecall;
     procedure Dock; safecall;
     procedure Float; safecall;
     function AddRosterMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
-    procedure RemoveRosterMenu(const MenuID: WideString); safecall;
+    procedure RemoveRosterMenu(const menuID: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -5356,28 +5356,7 @@ type
     procedure Dock; dispid 226;
     procedure Float; dispid 227;
     function AddRosterMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 401;
-    procedure RemoveRosterMenu(const MenuID: WideString); dispid 402;
-    property JID: WideString readonly dispid 1;
-    function AddContextMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 2;
-    property MsgOutText: WideString readonly dispid 4;
-    function RegisterPlugin(const plugin: IExodusChatPlugin): Integer; dispid 3;
-    function UnRegisterPlugin(ID: Integer): WordBool; dispid 5;
-    function GetMagicInt(part: ChatParts): Integer; dispid 6;
-    procedure RemoveContextMenu(const menuID: WideString); dispid 7;
-    procedure AddMsgOut(const value: WideString); dispid 201;
-    function AddMsgOutMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 202;
-    procedure RemoveMsgOutMenu(const menuID: WideString); dispid 203;
-    procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); dispid 204;
-    property CurrentThreadID: WideString readonly dispid 205;
-    procedure DisplayMessage(const Body: WideString; const Subject: WideString; 
-                             const from: WideString); dispid 206;
-    procedure AddRoomUser(const JID: WideString; const Nickname: WideString); dispid 207;
-    procedure RemoveRoomUser(const JID: WideString); dispid 208;
-    property CurrentNick: WideString readonly dispid 209;
-    function GetControl(const Name: WideString): IExodusControl; dispid 210;
-    property Caption: WideString dispid 211;
-    property DockToolbar: IExodusDockToolbar readonly dispid 212;
-    property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
+    procedure RemoveRosterMenu(const menuID: WideString); dispid 402;
   end;
 
 // *********************************************************************//
