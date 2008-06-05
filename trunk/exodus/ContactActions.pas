@@ -204,9 +204,7 @@ begin
     //Setup contact properties
     act := TPropertiesContactAction.Create() as IExodusAction;
     actCtrl.registerAction('contact', act);
-    actctrl.addEnableFilter('contact',
-                            '{000-exodus.googlecode.com}-100-properties',
-                            'selection=single');
+    actctrl.addEnableFilter('contact', act.Name, 'selection=single');
 end;
 
 

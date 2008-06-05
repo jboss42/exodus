@@ -336,6 +336,7 @@ uses
     DisplayName, //display name cache
     PluginAuth,
     Profile,
+    RoomProperties,
     StrUtils,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
     JabberConst, CapPresence, XMLVCard, Windows, JabberUtils;
@@ -420,6 +421,7 @@ begin
     ChatList.SetSession(Self);
 
     OnSessionStartProfile(Self);
+    OnSessionStartRoomProperties(Self);
     // Create the preferences controller
     Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
@@ -478,6 +480,7 @@ begin
     // Free the dispatcher... this should free the signals
     _dispatcher.Free;
     OnSessionEndProfile();
+    OnSessionEndRoomProperties();
     
     inherited Destroy;
 end;
