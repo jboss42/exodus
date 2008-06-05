@@ -547,6 +547,7 @@ inherited frmExodus: TfrmExodus
           end
           object mnuRegisterService: TTntMenuItem
             Caption = '&Register with a Service'
+            OnClick = mnuRegisterServiceClick
           end
           object N9: TTntMenuItem
             Caption = '-'
@@ -898,7 +899,6 @@ inherited frmExodus: TfrmExodus
       object mnuFile_Registration: TTntMenuItem
         Caption = '&Registration'
         Enabled = False
-        OnClick = mnuFileRegistrationClick
         object mnuFile_Registration_EditReg: TTntMenuItem
           Caption = 'Edit &Account Details...'
           OnClick = mnuRegistrationClick

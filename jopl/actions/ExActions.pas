@@ -71,9 +71,7 @@ uses ComServ, SysUtils;
 }
 constructor TExBaseAction.Create(name: Widestring);
 begin
-{$ifdef EXODUS}
     inherited Create(ComServer.TypeLib, IID_IExodusAction);
-{$endif}
 
     _name := name;
     _imgIdx:= -1;

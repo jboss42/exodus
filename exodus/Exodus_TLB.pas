@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/4/2008 2:46:15 PM from Type Library described below.
+// File generated on 2008-05-09 13:49:25 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -143,10 +143,6 @@ const
   CLASS_ExodusActionController: TGUID = '{0C473B97-BF10-4FEF-B20B-8C6724E3A395}';
   IID_IExodusItemSelection: TGUID = '{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}';
   IID_IExodusItemCallback: TGUID = '{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}';
-  IID_IExodusAXWindowCallback: TGUID = '{87D6C026-3A1C-43CF-B153-BB6472A956AD}';
-  CLASS_MainToolBarImages: TGUID = '{EED39569-B9B7-4888-A591-2640F31B3BC0}';
-  IID_IExodusChatPlugin2: TGUID = '{B92A81A9-79B8-47F0-8A79-1CAC711089E5}';
-  IID_IExodusChat3: TGUID = '{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -328,12 +324,6 @@ type
   IExodusItemSelectionDisp = dispinterface;
   IExodusItemCallback = interface;
   IExodusItemCallbackDisp = dispinterface;
-  IExodusAXWindowCallback = interface;
-  IExodusAXWindowCallbackDisp = dispinterface;
-  IExodusChatPlugin2 = interface;
-  IExodusChatPlugin2Disp = dispinterface;
-  IExodusChat3 = interface;
-  IExodusChat3Disp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -370,7 +360,6 @@ type
   ExodusHistorySearchManager = IExodusHistorySearchManager;
   ExodusHistorySQLSearchHandler = IExodusHistorySearchHandler;
   ExodusActionController = IExodusActionController;
-  MainToolBarImages = IExodusRosterImages;
 
 
 // *********************************************************************//
@@ -484,17 +473,6 @@ type
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
     function Get_ActionController: IExodusActionController; safecall;
-    function GetPrefAsXML(const key: WideString): WideString; safecall;
-    procedure SetPrefAsXML(const XML: WideString); safecall;
-    function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
-    function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
-    procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
-                                 const eventXML: WideString; ImageIndex: Integer); safecall;
-    function Get_MainToolBarImages: IExodusRosterImages; safecall;
-    function Get_EnableFilesDragAndDrop: WordBool; safecall;
-    procedure Set_EnableFilesDragAndDrop(Value: WordBool); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -519,8 +497,6 @@ type
     property DataStore: IExodusDataStore read Get_DataStore;
     property HistorySearchManager: IExodusHistorySearchManager read Get_HistorySearchManager;
     property ActionController: IExodusActionController read Get_ActionController;
-    property MainToolBarImages: IExodusRosterImages read Get_MainToolBarImages;
-    property EnableFilesDragAndDrop: WordBool read Get_EnableFilesDragAndDrop write Set_EnableFilesDragAndDrop;
   end;
 
 // *********************************************************************//
@@ -626,16 +602,6 @@ type
     property DataStore: IExodusDataStore readonly dispid 226;
     property HistorySearchManager: IExodusHistorySearchManager readonly dispid 227;
     property ActionController: IExodusActionController readonly dispid 228;
-    function GetPrefAsXML(const key: WideString): WideString; dispid 229;
-    procedure SetPrefAsXML(const XML: WideString); dispid 230;
-    function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; dispid 231;
-    function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
-                        IncludeAnyOption: WordBool): WideString; dispid 232;
-    procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
-                                 const eventXML: WideString; ImageIndex: Integer); dispid 233;
-    property MainToolBarImages: IExodusRosterImages readonly dispid 234;
-    property EnableFilesDragAndDrop: WordBool dispid 235;
   end;
 
 // *********************************************************************//
@@ -4490,7 +4456,7 @@ type
     function Get_UnreadMsgCount: Integer; safecall;
     procedure Set_UnreadMsgCount(value: Integer); safecall;
     procedure Dock; safecall;
-    procedure Float; safecall;
+    procedure UnDock; safecall;
     function Get_LastActivityTime: TDateTime; safecall;
     procedure Set_LastActivityTime(value: TDateTime); safecall;
     function Get_PriorityFlag: WordBool; safecall;
@@ -4499,17 +4465,12 @@ type
     procedure Set_WindowType(const value: WideString); safecall;
     function Get_ImageIndex: Integer; safecall;
     procedure Set_ImageIndex(value: Integer); safecall;
-    procedure RegisterCallback(const callback: IExodusAXWindowCallback); safecall;
-    procedure UnRegisterCallback; safecall;
-    procedure FlashWindow; safecall;
-    function Get_DockToolbar: IExodusDockToolbar; safecall;
     property OleObject: OleVariant read Get_OleObject;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
     property PriorityFlag: WordBool read Get_PriorityFlag write Set_PriorityFlag;
     property WindowType: WideString read Get_WindowType write Set_WindowType;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
-    property DockToolbar: IExodusDockToolbar read Get_DockToolbar;
   end;
 
 // *********************************************************************//
@@ -4524,15 +4485,11 @@ type
     procedure BringToFront; dispid 203;
     property UnreadMsgCount: Integer dispid 204;
     procedure Dock; dispid 205;
-    procedure Float; dispid 206;
+    procedure UnDock; dispid 206;
     property LastActivityTime: TDateTime dispid 207;
     property PriorityFlag: WordBool dispid 208;
     property WindowType: WideString dispid 209;
     property ImageIndex: Integer dispid 210;
-    procedure RegisterCallback(const callback: IExodusAXWindowCallback); dispid 211;
-    procedure UnRegisterCallback; dispid 212;
-    procedure FlashWindow; dispid 213;
-    property DockToolbar: IExodusDockToolbar readonly dispid 214;
   end;
 
 // *********************************************************************//
@@ -5276,111 +5233,6 @@ type
   end;
 
 // *********************************************************************//
-// Interface: IExodusAXWindowCallback
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {87D6C026-3A1C-43CF-B153-BB6472A956AD}
-// *********************************************************************//
-  IExodusAXWindowCallback = interface(IDispatch)
-    ['{87D6C026-3A1C-43CF-B153-BB6472A956AD}']
-    procedure OnDocked; safecall;
-    procedure OnClose; safecall;
-    procedure OnFloat; safecall;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusAXWindowCallbackDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {87D6C026-3A1C-43CF-B153-BB6472A956AD}
-// *********************************************************************//
-  IExodusAXWindowCallbackDisp = dispinterface
-    ['{87D6C026-3A1C-43CF-B153-BB6472A956AD}']
-    procedure OnDocked; dispid 201;
-    procedure OnClose; dispid 203;
-    procedure OnFloat; dispid 206;
-  end;
-
-// *********************************************************************//
-// Interface: IExodusChatPlugin2
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {B92A81A9-79B8-47F0-8A79-1CAC711089E5}
-// *********************************************************************//
-  IExodusChatPlugin2 = interface(IExodusChatPlugin)
-    ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
-    procedure OnSentMessageXML(const XML: WideString); safecall;
-    procedure OnFilesDragAndDrop(const XML: WideString); safecall;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusChatPlugin2Disp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {B92A81A9-79B8-47F0-8A79-1CAC711089E5}
-// *********************************************************************//
-  IExodusChatPlugin2Disp = dispinterface
-    ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
-    procedure OnSentMessageXML(const XML: WideString); dispid 302;
-    procedure OnFilesDragAndDrop(const XML: WideString); dispid 303;
-    function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
-    function OnAfterMessage(var Body: WideString): WideString; dispid 2;
-    procedure OnClose; dispid 6;
-    procedure OnNewWindow(hwnd: Integer); dispid 202;
-    function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; dispid 203;
-    procedure OnAfterRecvMessage(var Body: WideString); dispid 204;
-    function OnKeyUp(key: Integer; shiftState: Integer): WordBool; dispid 301;
-    function OnKeyDown(key: Integer; shiftState: Integer): WordBool; dispid 201;
-  end;
-
-// *********************************************************************//
-// Interface: IExodusChat3
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}
-// *********************************************************************//
-  IExodusChat3 = interface(IExodusChat)
-    ['{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}']
-    procedure Close; safecall;
-    procedure BringToFront; safecall;
-    procedure Dock; safecall;
-    procedure Float; safecall;
-    function AddRosterMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
-    procedure RemoveRosterMenu(const MenuID: WideString); safecall;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusChat3Disp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}
-// *********************************************************************//
-  IExodusChat3Disp = dispinterface
-    ['{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}']
-    procedure Close; dispid 224;
-    procedure BringToFront; dispid 225;
-    procedure Dock; dispid 226;
-    procedure Float; dispid 227;
-    function AddRosterMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 401;
-    procedure RemoveRosterMenu(const MenuID: WideString); dispid 402;
-    property JID: WideString readonly dispid 1;
-    function AddContextMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 2;
-    property MsgOutText: WideString readonly dispid 4;
-    function RegisterPlugin(const plugin: IExodusChatPlugin): Integer; dispid 3;
-    function UnRegisterPlugin(ID: Integer): WordBool; dispid 5;
-    function GetMagicInt(part: ChatParts): Integer; dispid 6;
-    procedure RemoveContextMenu(const menuID: WideString); dispid 7;
-    procedure AddMsgOut(const value: WideString); dispid 201;
-    function AddMsgOutMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 202;
-    procedure RemoveMsgOutMenu(const menuID: WideString); dispid 203;
-    procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); dispid 204;
-    property CurrentThreadID: WideString readonly dispid 205;
-    procedure DisplayMessage(const Body: WideString; const Subject: WideString; 
-                             const from: WideString); dispid 206;
-    procedure AddRoomUser(const JID: WideString; const Nickname: WideString); dispid 207;
-    procedure RemoveRoomUser(const JID: WideString); dispid 208;
-    property CurrentNick: WideString readonly dispid 209;
-    function GetControl(const Name: WideString): IExodusControl; dispid 210;
-    property Caption: WideString dispid 211;
-    property DockToolbar: IExodusDockToolbar readonly dispid 212;
-    property MsgOutToolbar: IExodusMsgOutToolbar readonly dispid 223;
-  end;
-
-// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -5752,18 +5604,6 @@ type
     class function CreateRemote(const MachineName: string): IExodusActionController;
   end;
 
-// *********************************************************************//
-// The Class CoMainToolBarImages provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusRosterImages exposed by              
-// the CoClass MainToolBarImages. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoMainToolBarImages = class
-    class function Create: IExodusRosterImages;
-    class function CreateRemote(const MachineName: string): IExodusRosterImages;
-  end;
-
 implementation
 
 uses ComObj;
@@ -6076,16 +5916,6 @@ end;
 class function CoExodusActionController.CreateRemote(const MachineName: string): IExodusActionController;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusActionController) as IExodusActionController;
-end;
-
-class function CoMainToolBarImages.Create: IExodusRosterImages;
-begin
-  Result := CreateComObject(CLASS_MainToolBarImages) as IExodusRosterImages;
-end;
-
-class function CoMainToolBarImages.CreateRemote(const MachineName: string): IExodusRosterImages;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_MainToolBarImages) as IExodusRosterImages;
 end;
 
 end.

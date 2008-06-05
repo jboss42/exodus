@@ -809,7 +809,6 @@ var
     add_xml: Widestring;
     msg: TJabberMessage;
     mtag: TXMLTag;
-    temptag: TXMLTag;
 begin
     //
     msg := TJabberMessage.Create(jid, 'groupchat', body, Subject, priority);
@@ -832,14 +831,7 @@ begin
     if (xml <> '') then
         mtag.AddInsertedXML(xml);
 
-    temptag := TXMLTag.Create(mtag);
-    MainSession.SendTag(mtag); // Tag gets "cleared"
-    if (comcontroller <> nil) then
-    begin
-        TExodusChat(ComController).fireSentMessageXML(temptag);
-    end;
-    temptag.Free();
-
+    MainSession.SendTag(mtag);
     msg.Free();
 end;
 
@@ -3397,7 +3389,7 @@ end;
 
 constructor TJoinRoomAction.Create;
 begin
-    inherited Create('{000-exodus.googlecode.com}-000-join-room');
+    inherited Create('{000-exodus.googlecode.com}-000-join-roon');
 
     Set_Caption(_('Join'));
     Set_Enabled(true);

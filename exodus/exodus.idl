@@ -952,12 +952,12 @@ library Exodus
     propget, 
     id(0x000000D6)
     ]
-    HRESULT _stdcall Priority([out, retval] long * value );
+    HRESULT _stdcall Priority([out, retval] long * Value );
     [
     propput, 
     id(0x000000D6)
     ]
-    HRESULT _stdcall Priority([in] long value );
+    HRESULT _stdcall Priority([in] long Value );
   };
 
   [
@@ -1124,6 +1124,87 @@ library Exodus
   coclass ExodusRoster
   {
     [default] interface IExodusRoster;
+  };
+
+  [
+    uuid(8F2F3430-1E7E-4FA7-B65D-A25B48EFE880), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusAXWindow: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall OleObject([out, retval] VARIANT * value );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Close( void );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall BringToFront( void );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall UnreadMsgCount([out, retval] long * value );
+    [
+    propput, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall UnreadMsgCount([in] long value );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Dock( void );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall UnDock( void );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall LastActivityTime([out, retval] DATE * value );
+    [
+    propput, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall LastActivityTime([in] DATE value );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall PriorityFlag([out, retval] VARIANT_BOOL * value );
+    [
+    propput, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall PriorityFlag([in] VARIANT_BOOL value );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall WindowType([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall WindowType([in] BSTR value );
+    [
+    propget, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall ImageIndex([out, retval] long * value );
+    [
+    propput, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall ImageIndex([in] long value );
   };
 
   [
@@ -1621,78 +1702,6 @@ library Exodus
     [default] interface IExodusActionController;
   };
 
-  [
-    uuid(87D6C026-3A1C-43CF-B153-BB6472A956AD), 
-    version(1.0), 
-    dual, 
-    oleautomation
-  ]
-   interface IExodusAXWindowCallback: IDispatch
-  {
-    [
-    id(0x000000C9)
-    ]
-    HRESULT _stdcall OnDocked( void );
-    [
-    id(0x000000CB)
-    ]
-    HRESULT _stdcall OnClose( void );
-    [
-    id(0x000000CE)
-    ]
-    HRESULT _stdcall OnFloat( void );
-  };
-
-  [
-    uuid(EED39569-B9B7-4888-A591-2640F31B3BC0), 
-    version(1.0), 
-    helpstring("MainToolBarImages")
-  ]
-  coclass MainToolBarImages
-  {
-    [default] interface IExodusRosterImages;
-  };
-
-  [
-    uuid(B92A81A9-79B8-47F0-8A79-1CAC711089E5), 
-    version(1.0), 
-    dual, 
-    oleautomation
-  ]
-   interface IExodusChatPlugin2: IExodusChatPlugin
-  {
-    [
-    id(0x0000012E)
-    ]
-    HRESULT _stdcall OnSentMessageXML([in] BSTR XML );
-  };
-
-  [
-    uuid(FD3F0F9F-0BD9-4087-B892-C8FE5E332E40), 
-    version(1.0), 
-    dual, 
-    oleautomation
-  ]
-   interface IExodusChat3: IExodusChat
-  {
-    [
-    id(0x000000E0)
-    ]
-    HRESULT _stdcall Close( void );
-    [
-    id(0x000000E1)
-    ]
-    HRESULT _stdcall BringToFront( void );
-    [
-    id(0x000000E2)
-    ]
-    HRESULT _stdcall Dock( void );
-    [
-    id(0x000000E3)
-    ]
-    HRESULT _stdcall Float( void );
-  };
-
   
   typedef BSTR * PWideString1;
 
@@ -2109,36 +2118,6 @@ library Exodus
     id(0x000000E3)
     ]
     HRESULT _stdcall HistorySearchManager([out, retval] IExodusHistorySearchManager ** value /*Warning: unable to validate structure name: */ );
-    [
-    propget, 
-    id(0x000000E4)
-    ]
-    HRESULT _stdcall ActionController([out, retval] IExodusActionController ** value /*Warning: unable to validate structure name: */ );
-    [
-    id(0x000000E5)
-    ]
-    HRESULT _stdcall GetPrefAsXML([in] BSTR key, [out, retval] BSTR * value );
-    [
-    id(0x000000E6)
-    ]
-    HRESULT _stdcall SetPrefAsXML([in] BSTR XML );
-    [
-    id(0x000000E7)
-    ]
-    HRESULT _stdcall SelectItem([in] BSTR ItemType, [in] BSTR Title, [in] VARIANT_BOOL IncludeAnyOption, [out, retval] BSTR * value );
-    [
-    id(0x000000E8)
-    ]
-    HRESULT _stdcall SelectRoom([in] BSTR Title, [in] VARIANT_BOOL IncludeJoinedRoomList, [in] VARIANT_BOOL IncludeAnyOption, [out, retval] BSTR * value );
-    [
-    id(0x000000E9)
-    ]
-    HRESULT _stdcall ShowToastWithEvent([in] BSTR message, [in] BSTR event, [in] BSTR eventXML, [in] long ImageIndex );
-    [
-    propget, 
-    id(0x000000EA)
-    ]
-    HRESULT _stdcall MainToolBarImages([out, retval] IExodusRosterImages ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -8779,104 +8758,6 @@ library Exodus
   };
 
   [
-    uuid(8F2F3430-1E7E-4FA7-B65D-A25B48EFE880), 
-    version(1.0), 
-    dual, 
-    oleautomation
-  ]
-   interface IExodusAXWindow: IDispatch
-  {
-    [
-    propget, 
-    id(0x000000C9)
-    ]
-    HRESULT _stdcall OleObject([out, retval] VARIANT * value );
-    [
-    id(0x000000CA)
-    ]
-    HRESULT _stdcall Close( void );
-    [
-    id(0x000000CB)
-    ]
-    HRESULT _stdcall BringToFront( void );
-    [
-    propget, 
-    id(0x000000CC)
-    ]
-    HRESULT _stdcall UnreadMsgCount([out, retval] long * value );
-    [
-    propput, 
-    id(0x000000CC)
-    ]
-    HRESULT _stdcall UnreadMsgCount([in] long value );
-    [
-    id(0x000000CD)
-    ]
-    HRESULT _stdcall Dock( void );
-    [
-    id(0x000000CE)
-    ]
-    HRESULT _stdcall Float( void );
-    [
-    propget, 
-    id(0x000000CF)
-    ]
-    HRESULT _stdcall LastActivityTime([out, retval] DATE * value );
-    [
-    propput, 
-    id(0x000000CF)
-    ]
-    HRESULT _stdcall LastActivityTime([in] DATE value );
-    [
-    propget, 
-    id(0x000000D0)
-    ]
-    HRESULT _stdcall PriorityFlag([out, retval] VARIANT_BOOL * value );
-    [
-    propput, 
-    id(0x000000D0)
-    ]
-    HRESULT _stdcall PriorityFlag([in] VARIANT_BOOL value );
-    [
-    propget, 
-    id(0x000000D1)
-    ]
-    HRESULT _stdcall WindowType([out, retval] BSTR * value );
-    [
-    propput, 
-    id(0x000000D1)
-    ]
-    HRESULT _stdcall WindowType([in] BSTR value );
-    [
-    propget, 
-    id(0x000000D2)
-    ]
-    HRESULT _stdcall ImageIndex([out, retval] long * value );
-    [
-    propput, 
-    id(0x000000D2)
-    ]
-    HRESULT _stdcall ImageIndex([in] long value );
-    [
-    id(0x000000D3)
-    ]
-    HRESULT _stdcall RegisterCallback([in] IExodusAXWindowCallback * callback /*Warning: unable to validate structure name: */ );
-    [
-    id(0x000000D4)
-    ]
-    HRESULT _stdcall UnRegisterCallback( void );
-    [
-    id(0x000000D5)
-    ]
-    HRESULT _stdcall FlashWindow( void );
-    [
-    propget, 
-    id(0x000000D6)
-    ]
-    HRESULT _stdcall DockToolbar([out, retval] IExodusDockToolbar ** value /*Warning: unable to validate structure name: */ );
-  };
-
-  [
     uuid(7E8D248E-F7E3-4541-A72A-37E1E87C4C93), 
     version(1.0), 
     dual, 
@@ -9203,14 +9084,6 @@ library Exodus
     id(0x000000CF)
     ]
     HRESULT _stdcall Clear( void );
-    [
-    id(0x000000D0)
-    ]
-    HRESULT _stdcall IndexOfUid([in] BSTR UID, [out, retval] long * Result );
-    [
-    id(0x000000D1)
-    ]
-    HRESULT _stdcall CountOfType([in] BSTR ItemType, [out, retval] long * Result );
   };
 
   [

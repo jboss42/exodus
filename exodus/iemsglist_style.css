@@ -26,7 +26,7 @@ body {
 .composing {
     width: 100%;
     text-align: center;
-	color: /*color_composing*/;
+    color: purple;
 }
 
 .ts {
@@ -77,21 +77,10 @@ body {
     left: 5;
 }
 
-.svr {
-	color:/*color_server*/;
-}
-
-.alert {
-	color:/*color_alert*/;
-}
-
-.action {
-	color:/*color_action*/;
-}
-
-.pres {
-	color:/*color_presence*/;
-}
+.svr {color:/*color_server*/}
+.alert {color:blue}
+.action {color:/*color_action*/}
+.pres {color:gray}
 
 #content {
   height: 100%;

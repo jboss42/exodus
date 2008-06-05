@@ -958,16 +958,12 @@ begin
     //If not a delayed message (previously sent), send and then display
 
     if (com_controller <> nil) then //Do plugin before message logic
-    begin
       send_allowed := com_controller.fireBeforeMsg(body);
-    end;
 
     if (send_allowed) then begin
       xml := '';
       if (com_controller <> nil) then //Do plugin after message logic
-      begin
         xml := com_controller.fireAfterMsg(body);
-      end;
 
       if (xml <> '') then
         tag.addInsertedXml(xml);
@@ -985,10 +981,6 @@ begin
         newTag.RemoveTag(ttag);
       end;
       MainSession.SendTag(TXMLTag.create(newTag));
-      if (com_controller <> nil) then
-      begin
-          com_controller.fireSentMessageXML(newTag);
-      end;
       newTag.Free();
     end;
   end

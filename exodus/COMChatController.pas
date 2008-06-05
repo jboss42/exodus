@@ -36,7 +36,7 @@ uses
     All code changed prefereced with "JJF TODO msgqueue refactor"
 }
 type
-  TExodusChat = class(TAutoObject, IExodusChat, IExodusChat2, IExodusChat3)
+  TExodusChat = class(TAutoObject, IExodusChat, IExodusChat2)
   protected
     function Get_jid: WideString; safecall;
     function AddContextMenu(const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
@@ -59,18 +59,8 @@ type
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const Value: WideString); safecall;
     procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
-
-    // IExodusChat2
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
-
-    // IExodusChat3
-    procedure Close; safecall;
-    procedure BringToFront; safecall;
-    procedure Dock; safecall;
-    procedure Float; safecall;
-    function  AddRosterMenu (const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
-    procedure RemoveRosterMenu(const MenuID: WideString); safecall;
 
     { Protected declarations }
 
@@ -90,7 +80,6 @@ type
     procedure fireMenuClick(Sender: TObject);
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
-    procedure fireSentMessageXML(tag: TXMLTag);
 
   private
     //JJF TODO msgqueue refactor _im: TfrmMsgRecv;
@@ -267,30 +256,6 @@ begin
     end;
 
     Result := buff;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.fireSentMessageXML(tag: TXMLTag);
-var
-    i: integer;
-    chatplugin2: IExodusChatPlugin2;
-begin
-    for i := 0 to _plugs.Count - 1 do begin
-        try
-            chatplugin2 := TChatPlugin(_plugs[i]).com as IExodusChatPlugin2;
-            try
-                if (chatplugin2 <> nil) then
-                begin
-                    chatplugin2.OnSentMessageXML(tag.xml());
-                end;
-            except
-                // Problem sending XML msg to chat plugin
-                DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
-            end;
-        except
-            // Not a IExodusChat2 plugin - eat error
-        end;
-    end;
 end;
 
 {---------------------------------------}
@@ -790,106 +755,6 @@ begin
     else if (_room <> nil) then
         Result := _room
         .MsgOutToolbar;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.Close;
-begin
-    if (_chat <> nil) then
-    begin
-        TfrmChat(_chat).Close();
-    end
-    else if (_room <> nil) then
-    begin
-        _room.Close();
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.BringToFront;
-begin
-    if (_chat <> nil) then
-    begin
-        TfrmChat(_chat).ShowDefault();
-    end
-    else if (_room <> nil) then
-    begin
-        _room.ShowDefault();
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.Dock;
-begin
-    if (_chat <> nil) then
-    begin
-        if (not TfrmChat(_chat).Docked) then
-        begin
-            TfrmChat(_chat).DockForm();
-        end;
-    end
-    else if (_room <> nil) then
-    begin
-        if (not _room.Docked) then
-        begin
-            _room.DockForm();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.Float;
-begin
-    if (_chat <> nil) then
-    begin
-        if (TfrmChat(_chat).Docked) then
-        begin
-            TfrmChat(_chat).FloatForm();
-        end;
-    end
-    else if (_room <> nil) then
-    begin
-        if (_room.Docked) then
-        begin
-            _room.FloatForm();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-function  TExodusChat.AddRosterMenu (const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
-var
-    id: Widestring;
-    mi: TMenuItem;
-begin
-    // add a new TMenuItem to the Plugins menu
-    id := 'plugin_' + IntToStr(_menu_items.Count);
-    if (_room <> nil) then begin
-        mi := TMenuItem.Create(_room);
-        mi.Name := id;
-        mi.OnClick := _room.pluginMenuClick;
-        mi.Caption := caption;
-        mi.Tag := Integer(menuListener);
-        _room.popRoomRoster.Items.Add(mi);
-    end;
-    _menu_items.AddObject(id, mi);
-    Result := id;
-end;
-
-
-{---------------------------------------}
-procedure TExodusChat.RemoveRosterMenu(const MenuID: WideString);
-var
-    idx: integer;
-    mi: TMenuItem;
-begin
-    // remove this menu item.
-    idx := _menu_items.indexOf(MenuID);
-    if (idx < 0) then exit;
-    mi := TMenuItem(_menu_items.Objects[idx]);
-    _menu_items.Delete(idx);
-    mi.Tag := 0;
-    mi.Free();
 end;
 
 initialization

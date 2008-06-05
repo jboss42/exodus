@@ -529,9 +529,6 @@ begin
     //notify callback
     cb := ItemWrapper.Callback;
     if (cb <> nil) then cb.ItemDeleted(ItemWrapper.ExodusItem);
-    
-    //fire event
-    TJabberSession(_JS).FireEvent('/item/remove', ItemWrapper.ExodusItem);
 
     //then finally, we delete
     ItemWrapper.Free();
@@ -729,6 +726,8 @@ begin
     if not _ctrl._GroupsLoaded then exit;
     
     _ctrl._SendGroups();
+    item.IsVisible := false;
+    TJabberSession(_ctrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusGroupCallback.ItemGroupsChanged(const item: IExodusItem);
 begin

@@ -67,18 +67,8 @@ var
   FrmRoster: TRosterForm;
 
 implementation
-
-uses
-    ExUtils,
-    CommCtrl,
-    COMExodusItemList,
-    Session,
-    RosterImages,
-    gnugettext,
-    ExTreeView,
-    Jabber1,
-    PrefController,
-    FontConsts;
+uses ExUtils, CommCtrl, COMExodusItemList, Session, RosterImages,
+        gnugettext, ExTreeView, Jabber1;
 
 {$R *.dfm}
 
@@ -198,7 +188,7 @@ begin
         end;
     end
     else if Event = '/session/prefs' then
-        _ActiveTabColor := TColor(MainSession.prefs.getInt(P_ROSTER_BG));
+        _ActiveTabColor := TColor(MainSession.prefs.getInt('roster_bg'));
 
 end;
 
@@ -233,7 +223,7 @@ begin
     _PageControlSaveWinProc := _PageControl.WindowProc;
     _PageControl.WindowProc := _PageControlNewWndProc;
     _TabController := TExodusTabController.Create();
-    _ActiveTabColor := TColor(MainSession.prefs.getInt(P_ROSTER_BG));
+    _ActiveTabColor := TColor(MainSession.prefs.getInt('roster_bg'));
     _TreeMain := TExAllTreeView.Create(Self, MainSession);
     _TreeMain.Align := alClient;
     _TreeMain.Canvas.Pen.Width := 1;

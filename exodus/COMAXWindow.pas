@@ -43,7 +43,7 @@ type
     function Get_UnreadMsgCount: Integer; safecall;
     procedure Dock; safecall;
     procedure Set_UnreadMsgCount(Value: Integer); safecall;
-    procedure Float; safecall;
+    procedure UnDock; safecall;
     function Get_LastActivityTime: TDateTime; safecall;
     procedure Set_LastActivityTime(Value: TDateTime); safecall;
     function Get_WindowType: WideString; safecall;
@@ -52,20 +52,13 @@ type
     procedure Set_ImageIndex(value: Integer); safecall;
     function Get_PriorityFlag: WordBool; safecall;
     procedure Set_PriorityFlag(Value: WordBool); safecall;
-    procedure RegisterCallback(const callback: IExodusAXWindowCallback); safecall;
-    procedure UnRegisterCallback; safecall;
-    procedure FlashWindow; safecall;
-    function Get_DockToolbar: IExodusDockToolbar; safecall;
 
   end;
 
 implementation
 
 uses
-    RosterImages,
-    ComServ,
-    Notify,
-    PrefController;
+    RosterImages, ComServ;
 
 constructor TExodusAXWindow.Create(form: TfrmActiveXDockable);
 begin
@@ -121,7 +114,7 @@ begin
     end;
 end;
 
-procedure TExodusAXWindow.Float;
+procedure TExodusAXWindow.UnDock;
 begin
     if (_frm <> nil) then begin
         _frm.FloatForm;
@@ -186,45 +179,6 @@ procedure TExodusAXWindow.Set_PriorityFlag(Value: WordBool);
 begin
     if (_frm <> nil) then begin
         _frm.PriorityFlag := value;
-    end;
-end;
-
-procedure TExodusAXWindow.RegisterCallback(
-  const callback: IExodusAXWindowCallback);
-begin
-    if (_frm <> nil) then
-    begin
-        _frm.callback := callback;
-    end;
-end;
-
-procedure TExodusAXWindow.UnRegisterCallback;
-begin
-    if (_frm <> nil) then
-    begin
-        _frm.callback := nil;
-    end;
-end;
-
-procedure TExodusAXWindow.FlashWindow;
-begin
-    if (_frm <> nil)then
-    begin
-        DoNotify(_frm,
-                 notify_flash,
-                 '',
-                 0,
-                 '');
-
-    end;
-end;
-
-function TExodusAXWindow.Get_DockToolbar: IExodusDockToolbar;
-begin
-    Result := nil;
-    if (_frm <> nil) then
-    begin
-        Result := _frm.DockToolbar;
     end;
 end;
 

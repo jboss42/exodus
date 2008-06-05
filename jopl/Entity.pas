@@ -201,7 +201,7 @@ uses
     {$ifdef Win32}
     Windows,
     {$endif}
-    EntityCache, JabberConst, XMLUtils, Debug;
+    EntityCache, JabberConst, XMLUtils{, Debug};
 
 const
     ProcDisco = 0;
@@ -1238,7 +1238,7 @@ end;
 
 procedure TJabberEntity._fireOnEntityInfo(jso: TObject; tag: TXMLTag);
 begin
-    DebugMessage('Entity firing /session/entity/info, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
+//    DebugMessage('Entity firing /session/entity/info, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
     TJabberSession(jso).FireEvent('/session/entity/info', tag);
 end;
 
@@ -1254,7 +1254,7 @@ end;
 
 procedure TJabberEntity._fireOnEntityItems(jso: TObject; tag: TXMLTag);
 begin
-    DebugMessage('Entity firing /session/entity/items, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
+//    DebugMessage('Entity firing /session/entity/items, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
     TJabberSession(jso).FireEvent('/session/entity/items', tag);
 end;
 

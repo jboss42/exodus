@@ -329,6 +329,7 @@ type
     procedure mnuVersionClick(Sender: TObject);
     procedure mnuPasswordClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure mnuRegisterServiceClick(Sender: TObject);
     procedure mnuMessageClick(Sender: TObject);
     procedure Test1Click(Sender: TObject);
     procedure mnuBrowserClick(Sender: TObject);
@@ -398,10 +399,10 @@ type
     procedure popCreatePopup(Sender: TObject);
     procedure clickCreatePopupItem(Sender: TObject);
     procedure PeopleClick(Sender: TObject);
-    procedure mnuRegisterUDClick(Sender: TObject);
-    procedure mnuFileRegistrationClick(Sender: TObject);
+    procedure AppEventsRestore(Sender: TObject);
     procedure pnlStatusLabelMouseEnter(Sender: TObject);
     procedure pnlStatusLabelMouseLeave(Sender: TObject);
+  
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -453,6 +454,7 @@ type
 
     // Some callbacks
     _sessioncb: integer;
+    //_rostercb: integer;
     _dns_cb: integer;
 
     // Reconnect variables
@@ -473,7 +475,7 @@ type
     _killshow: boolean;
     _glueRange: integer;
     _hiddenIEMsgList: TfIEMsgList;
-    _mnuRegisterUD: TTntMenuItem;
+
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
@@ -508,7 +510,6 @@ type
      *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
     **}
     procedure waitForCleanup();
-    procedure _chkUserDirectory();
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -568,6 +569,7 @@ type
     }
     procedure DoDisconnect();
 
+    procedure OnDependanciesResolved(SessionTag : TXMLTag);
 published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
@@ -654,10 +656,10 @@ published
         Removes a shortcut from an already existing menu so there are no duplicates
     }
     procedure RemoveMenuShortCut(value: integer);
-    function DisableHelp(Command: Word; Data: Longint;
+    function DisableHelp(Command: Word; Data: longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
-    function IsShortcut(var Message: TWMKey): Boolean; override;
+    function IsShortCut(var Message: TWMKey): Boolean; override;
     function AppKeyDownHook(var Msg: TMessage): Boolean;
 
     property dockManager:IExodusDockManager read _dockManager;
@@ -841,6 +843,9 @@ const
     sRosterDND = 'Do Not Disturb';
     sRosterOffline = 'Offline';
 
+//hack hack hack hack
+//helper class to listen for "/session/ready" events and fires /session/authenticated
+//when all known ready events have fired
 //Hidden Helpers!
 type TActionHelper = class
 private
@@ -1393,7 +1398,6 @@ begin
     else begin
         _hiddenIEMsgList := nil;
     end;
-    _mnuRegisterUD := nil;
 end;
 
 {---------------------------------------}
@@ -1763,7 +1767,6 @@ begin
             MainSession.CreateAccount();
         end;
     end
-
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
 
@@ -1787,7 +1790,6 @@ begin
         // 6. check for new brand.xml file
         // 7. check for new version
         ShowRoster();
-
         restoreMenus(true);
         if (_valid_aa) then timAutoAway.Enabled := true;
         InitUpdateBranding();
@@ -1800,6 +1802,7 @@ begin
             end;
             _new_account := false;
         end;
+
         // Play any pending XMPP actions
         PlayXMPPActions();
 
@@ -1815,6 +1818,7 @@ begin
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
+
         _sendInitPresence();
     end
 
@@ -2040,6 +2044,7 @@ begin
                    MB_OK or MB_ICONERROR);
         Application.Terminate();
     end;
+
 end;
 
 {---------------------------------------}
@@ -2058,8 +2063,6 @@ begin
     else
         MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
     _is_broadcast := false;
-    //re-load authed desktop
-    TAutoOpenEventManager.onAutoOpenEvent('authed');
 end;
 
 {---------------------------------------}
@@ -2457,7 +2460,7 @@ begin
         while (lstEvents.Items.Count > 0) do
             frmMsgQueue.RemoveItem(0);
     end;
-}    
+}
 end;
 
 {---------------------------------------}
@@ -2947,8 +2950,6 @@ begin
     StopTrayAlert();
 end;
 
-
-
 {---------------------------------------}
 procedure TfrmExodus.WinJabWebsite1Click(Sender: TObject);
 begin
@@ -3125,8 +3126,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.FormDestroy(Sender: TObject);
-var
-   Value: PWideChar;
 begin
     //TODO:  save dimensions?
     if (not _cleanupComplete) then
@@ -3137,26 +3136,23 @@ begin
         _dockWindow.Free();
     except
     end;
-    if (_mnuRegisterUD <> nil) then
-    begin
-        if (_mnuRegisterUD.Tag <> 0) then
-        begin
-            Value :=  Pointer(_mnuRegisterUD.Tag);
-            StrDisposeW(Value);
-        end;
-    end;
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.mnuRegisterUDClick(Sender: TObject);
+procedure TfrmExodus.mnuRegisterServiceClick(Sender: TObject);
 var
-    EntityJID: PWideChar;
+    tmps: WideString;
 begin
-    EntityJID := Pointer(_mnuRegisterUD.Tag);
-    StartServiceReg(EntityJID);
+    // kick off a service registration..
+    tmps := '';
+    if (InputQueryW(_(sRegService), _(sEnterSvcJID), tmps) = false) then
+        exit;
+    StartServiceReg(tmps);
 end;
 
 
+
+{---------------------------------------}
 procedure TfrmExodus.mnuMessageClick(Sender: TObject);
 //var
 //    jid: WideString;
@@ -3525,6 +3521,10 @@ begin
     end;
 end;
 
+procedure TfrmExodus.AppEventsRestore(Sender: TObject);
+begin
+end;
+
 {---------------------------------------}
 procedure TfrmExodus.timTrayAlertTimer(Sender: TObject);
 var
@@ -3555,7 +3555,7 @@ procedure StopTrayAlert();
 begin
     //events might get this called pretty early
     if (frmExodus = nil) or (frmExodus.timTrayAlert = nil) then exit;
-    
+
     if (frmExodus.timTrayAlert.Enabled) then begin
         frmExodus.timTrayAlert.Enabled := false;
         frmExodus._tray_notify := false;
@@ -3874,62 +3874,6 @@ end;
 procedure TfrmExodus.mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
 begin
     GetLoginWindow().mnuRenameProfileClick(Sender);
-end;
-
-procedure TfrmExodus.mnuFileRegistrationClick(Sender: TObject);
-begin
-  inherited;
-  //Check if there is entity with UserDirectory services
-  _chkUserDirectory();
-end;
-
-
-{---------------------------------------}
-procedure TfrmExodus._chkUserDirectory();
-var
-    tmps: WideString;
-    Value: PWideChar;
-    Services: TWideStringList;
-    Idx, i: Integer;
-    Entity: TJabberEntity;
-begin
-    //Resiter User Directory menu item already exists, don't need to do anything.
-    if (_mnuRegisterUD <> nil) then exit;
-    //Check if enttity with given features exists.
-    Entity := nil;
-    //Need to get tmps from pref file.
-
-    //tmps := 'users.wrk171.corp.jabber.com';
-    tmps := MainSession.Prefs.getString('brand_user_directory') + WideChar('.') + MainSession.Server;
-    Services := TWideStringList.Create();
-    jEntityCache.getByFeature(XMLNS_REGISTER, Services);
-    Idx :=  Services.IndexOf(tmps);
-    if (Idx <> -1) then
-       //Found entity
-       Entity := jEntityCache.getByJid(Services[Idx])
-    else
-    begin
-        //Look for brandable string in the list
-        for i := 0 to Services.Count - 1 do
-        begin
-            Entity := jEntityCache.getByJid(Services[i]);
-            if (Entity = nil) then continue;
-            if (Entity.Name = USER_DIRECTORY_NAME) then
-                break
-            else
-                Entity := nil;
-        end;
-    end;
-    //If entity is not nill, craete a menu item.
-    if (Entity <> nil) then
-    begin
-        _mnuRegisterUD := TTntMenuItem.Create(Self);
-        _mnuRegisterUD.Caption := Entity.Name;
-        _mnuRegisterUD.OnClick := mnuRegisterUDClick;
-        Value := StrNewW(PWideChar(Entity.Jid.Jid));
-        _mnuRegisterUD.Tag := Integer(Value);
-        mnuFile_Registration.Add(_mnuRegisterUD);
-    end;
 end;
 
 procedure TfrmExodus.ResolverStatus(ASender: TObject;
@@ -5060,6 +5004,10 @@ begin
     end;
 end;
 
+procedure TfrmExodus.OnDependanciesResolved(SessionTag : TXMLTag);
+begin
+    MainSession.fireEvent('/session/authenticated', SessionTag);
+end;
 
 
 

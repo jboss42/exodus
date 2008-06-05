@@ -62,13 +62,11 @@ type
         _composing: boolean;
         _addresses: TJabberAddressList; // use optional (for JEP-33 support)
         _priority: PriorityType;
-        _timestampFromDelay: boolean;
         
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
         procedure SetThread(const Value: WideString);
         procedure SetMsgType(const Value: WideString);
-        procedure SetTime(const Value: TDateTime);
 
         function GetTagProp: TXMLTag;
 
@@ -100,15 +98,13 @@ type
         property Action: boolean read _action;
         property Nick: WideString read _nick write _nick;
         property isMe: boolean read _isme write _isme;
-        property Time: TDateTime read _time write SetTime;
+        property Time: TDateTime read _time write _time;
         property isXdata: boolean read _isxdata;
         property highlight: boolean read _highlight write _highlight;
         property XML: Widestring read _xml write _xml;
         property Composing: boolean read _composing write _composing;
         property Priority: PriorityType read _priority write _priority;
         property Addresses: TJabberAddressList read _addresses;
-
-        property TimeIsFromDelayTag: boolean read _timestampFromDelay;
   end;
 
 
@@ -167,7 +163,6 @@ begin
     _tag := nil;
     _addresses := TJabberAddressList.Create();
     _priority := None;
-    _timestampFromDelay := false;
 end;
 
 {---------------------------------------}
@@ -211,7 +206,6 @@ begin
             _time := Now()
         else begin
             // we have a delay tag
-            _timestampFromDelay := true;
             tmps := t.getAttribute('stamp');
             if (tmps <> '') then
                 _time := JabberToDateTime(t.getAttribute('stamp'))
@@ -407,13 +401,6 @@ procedure TJabberMessage.SetThread(const Value: WideString);
 begin
     if _thread <> Value then
         _thread := Value;
-end;
-
-{---------------------------------------}
-procedure TJabberMessage.SetTime(const Value: TDateTime);
-begin
-    _timestampFromDelay := false;
-    _Time := Value;
 end;
 
 end.
