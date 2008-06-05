@@ -102,6 +102,7 @@ type
     pnlSubj: TPanel;
     lblSubject: TTntLabel;
     SpeedButton1: TSpeedButton;
+    popRoomProperties: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -144,6 +145,7 @@ type
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnViewHistoryClick(Sender: TObject);
+    procedure popRoomPropertiesClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -284,6 +286,7 @@ type
 
     property MyAffiliation: WideString read _my_affiliation;   
     property MyRole: WideString read _my_membership_role;
+    property Subject: Widestring read _subject;
   end;
 
   TJoinRoomAction = class(TExBaseAction)
@@ -303,6 +306,14 @@ type
   public
     procedure execute(const items: IExodusItemList); override;
     property Value: Widestring read _value;
+  end;
+
+  TRoomPropertiesAction = class(TExBaseAction)
+  private
+    constructor Create;
+
+  public
+    procedure execute(const items: IExodusItemList); override;
   end;
 
 var
@@ -469,7 +480,8 @@ uses
     DockWindow,
     HistorySearch,
     BookmarkForm,
-    DisplayName;
+    DisplayName,
+    RoomProperties;
 
 {$R *.DFM}
 {---------------------------------------}
@@ -2297,6 +2309,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRoom.popRoomPropertiesClick(Sender: TObject);
+begin
+    inherited;
+    ShowRoomProperties(jid);
+end;
+
 procedure TfrmRoom.popRoomRosterPopup(Sender: TObject);
 var
     e: boolean;
@@ -3460,6 +3478,26 @@ begin
     MainSession.rooms.SaveRooms();
 end;
 
+constructor TRoomPropertiesAction.Create;
+begin
+    inherited Create('{000-exodus.googlecode.com}-100-properties');
+
+    Set_Caption(_('Properties...'));
+    Set_Enabled(true);
+end;
+
+procedure TRoomPropertiesAction.execute(const items: IExodusItemList);
+var
+    i: integer;
+begin
+    // 'selection=single' property should limit this to 1 contact in the list
+    for i := 0 to items.Count - 1 do
+    begin
+        ShowRoomProperties(items.Item[i].UID);
+    end;
+end;
+
+
 procedure RegisterActions();
 var
     actCtrl: IExodusActionController;
@@ -3479,6 +3517,11 @@ begin
     act := TAutojoinAction.Create(false) as IExodusAction;
     actCtrl.registerAction('room', act);
     actCtrl.addEnableFilter('room', act.Name, 'autojoin=true');
+
+    //setup room properties action
+    act := TRoomPropertiesAction.Create() as IExodusAction;
+    actCtrl.registerAction('room', act);
+    actCtrl.addEnableFilter('room', act.Name, 'selection=single');
 end;
 
 initialization

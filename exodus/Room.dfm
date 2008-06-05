@@ -267,6 +267,10 @@ inherited frmRoom: TfrmRoom
     object N6: TTntMenuItem
       Caption = '-'
     end
+    object popRoomProperties: TTntMenuItem
+      Caption = 'Properties...'
+      OnClick = popRoomPropertiesClick
+    end
   end
   object popRoomRoster: TTntPopupMenu
     AutoHotkeys = maManual

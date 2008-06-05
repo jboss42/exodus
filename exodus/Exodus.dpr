@@ -96,6 +96,7 @@ uses
   PrefSystem in 'prefs\PrefSystem.pas' {frmPrefSystem},
   Presence in '..\jopl\Presence.pas',
   Profile in 'Profile.pas' {frmProfile},
+  RoomProperties in 'RoomProperties.pas' {frmRoomProperties},
   RegExpr in '..\jopl\RegExpr.pas',
   Register in 'Register.pas',
   RemoveContact in 'RemoveContact.pas' {frmRemove},
