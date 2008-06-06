@@ -91,6 +91,7 @@ type
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
     procedure fireSentMessageXML(tag: TXMLTag);
+    function fireChatEvent(Event: Widestring; oleVar: OleVariant ): boolean;
 
   private
     //JJF TODO msgqueue refactor _im: TfrmMsgRecv;
@@ -286,6 +287,31 @@ begin
             except
                 // Problem sending XML msg to chat plugin
                 DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
+            end;
+        except
+            // Not a IExodusChat2 plugin - eat error
+        end;
+    end;
+end;
+
+
+{---------------------------------------}
+function TExodusChat.fireChatEvent(Event: Widestring; oleVar: OleVariant ): boolean;
+var
+    i: integer;
+    chatplugin2: IExodusChatPlugin2;
+begin
+    for i := 0 to _plugs.Count - 1 do begin
+        try
+            chatplugin2 := TChatPlugin(_plugs[i]).com as IExodusChatPlugin2;
+            try
+                if (chatplugin2 <> nil) then
+                begin
+                    chatplugin2.OnChatEvent(Event, oleVar);
+                end;
+            except
+                // Problem sending XML msg to chat plugin
+                DebugMessage('COM Exception in TExodusChat.fireDragAndDrop');
             end;
         except
             // Not a IExodusChat2 plugin - eat error

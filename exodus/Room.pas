@@ -227,6 +227,7 @@ type
         chat windows might save based on munged profile&jid).
     }
     function GetWindowStateKey() : WideString;override;
+    function GetChatController(): TObject; override;
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -436,7 +437,6 @@ uses
     Browser,
     CapPresence,
     ChatWin,
-    COMChatController,
     CustomNotify,
     ExSession,
     ExActionCtrl,
@@ -481,6 +481,7 @@ uses
     HistorySearch,
     BookmarkForm,
     DisplayName,
+    COMChatController,
     RoomProperties;
 
 {$R *.DFM}
@@ -619,6 +620,10 @@ begin
     Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self.jid);
 end;
 
+function TfrmRoom.GetChatController(): TObject;
+begin
+    Result := ComController;
+end;
 {---------------------------------------}
 procedure TfrmRoom.AffilChangeCallback(event: string; tag: TXMLTag);
 begin
