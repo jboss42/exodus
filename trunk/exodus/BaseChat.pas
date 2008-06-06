@@ -141,6 +141,8 @@ type
     procedure updateFromPrefs();
     procedure populatePriority();
     procedure SetPriorityNormal();
+    procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
+    function GetChatController(): TObject; virtual; abstract;
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -194,7 +196,10 @@ uses
     TypInfo,
     PrefFile,
     PrefController,
-    RosterImages;
+    RosterImages,
+    ActivityWindow,
+    Exodus_TLB,
+    COMChatController;
 
 const
     PREF_RT_ENABLED = 'richtext_enabled';
@@ -529,6 +534,7 @@ begin
         DockToolbar.ObjAddRef();
 
         updateFromPrefs();
+        DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
     except
     end;
 end;
@@ -805,6 +811,7 @@ procedure TfrmBaseChat.OnDocked();
 begin
     inherited;
     MsgList.refresh();
+    DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
 end;
 
 {
@@ -817,6 +824,7 @@ procedure TfrmBaseChat.OnFloat();
 begin
     inherited;
     MsgList.refresh();
+    DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
 end;
 
 procedure TfrmBaseChat.OnHotkeysClick(Sender: TObject);
@@ -906,6 +914,31 @@ end;
 procedure TfrmBaseChat.OnColorSelect(selColor: TColor);
 begin
     MsgOut.SelAttributes.Color := selColor;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.AcceptFiles( var msg : TWMDropFiles );
+const
+    cnMaxFileNameLen = 255;
+var
+    i,
+    nCount     : integer;
+    acFileName : array [0..cnMaxFileNameLen] of char;
+    FileDropTag: TXMLTag;
+    OleVariant: Variant;
+begin
+    nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
+    FileDropTag := TXMLTag.Create('file_drag_and_drop');
+    // query Windows one at a time for the file name
+    for i := 0 to nCount-1 do begin
+        DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
+        FileDropTag.AddBasicTag('filename', acFileName);
+    end;
+    OleVariant :=  FileDropTag.XML;
+    TExodusChat(GetChatController()).fireChatEvent('/file/dragdop', OleVariant);
+    FileDropTag.Free;
+    // let Windows know that you're done
+    DragFinish( msg.Drop );
 end;
 
 end.

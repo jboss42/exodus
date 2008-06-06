@@ -140,6 +140,7 @@ type
     _scrollUpState: TScrollState;
     _scrollDownState: TScrollState;
     _currentActivePage: TTntTabSheet;
+    _FilesDragAndDropEnabled: Boolean;
 
     procedure _clearTrackingList();
     function _findItem(awitem: TfAWItem): TAWTrackerItem;
@@ -155,6 +156,7 @@ type
     procedure _sortTrackingListType();
     procedure _sortTrackingListUnread();
     procedure _sortTrackingListAlpha();
+    procedure _setFilesDragAndDrop(Value: Boolean);
   protected
     { Protected declarations }
     procedure CreateParams(Var params: TCreateParams); override;
@@ -182,6 +184,8 @@ type
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
     property currentActivePage: TTntTabSheet read _currentActivePage;
     property itemCount: integer read _getItemCount;
+    property FilesDragAndDrop: Boolean read _FilesDragAndDropEnabled write _SetFilesDragAndDrop;
+
   end;
 
   // Global Functions
@@ -197,7 +201,7 @@ implementation
 uses
     Room, ChatWin, Session,
     Jabber1, RosterImages, gnugettext,
-    XMLTag, ExUtils;
+    XMLTag, ExUtils, ShellAPI;
 
 {$R *.dfm}
 
@@ -365,6 +369,7 @@ begin
         ScrollDownBevel.Shadow := _scrolldown_bevel_shadow_color;
         ScrollDownBevel.HighLight := _scrolldown_bevel_highlight_color;
     end;
+    _FilesDragAndDropEnabled := false;
 
 end;
 
@@ -1552,7 +1557,12 @@ begin
     templist.Free();
 end;
 
-
+{---------------------------------------}
+procedure TfrmActivityWindow._setFilesDragAndDrop(Value :Boolean);
+begin
+    _FilesDragAndDropEnabled := Value;
+    DragAcceptFiles(Handle, _FilesDragAndDropEnabled)
+end;
 
 initialization
     frmActivityWindow := nil;

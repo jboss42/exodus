@@ -164,6 +164,7 @@ type
     procedure updatePresenceImage();
 
     procedure OnPersistedMessage(msg: TXMLTag);override;
+    function GetChatController(): TObject; override;
   public
     { Public declarations }
     chat_object: TChatController;
@@ -180,7 +181,7 @@ type
 
     procedure SendMsg; override;
     procedure  SetJID(cjid: widestring);
-    procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
+    //procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     
     procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);override;
@@ -246,7 +247,7 @@ uses
     EntityCache,
     IEMsgList,
     TypInfo, Dockable, ActiveX,
-    HistorySearch;
+    HistorySearch, ActivityWindow;
 
 const
     sReplying = ' is replying.';
@@ -507,7 +508,7 @@ begin
         if ((getBool('brand_ft')) and
             (MainSession.Profile.ConnectionType = conn_normal)) then begin
             mnuSendFile.Enabled := true;
-            DragAcceptFiles( Handle, True );
+            //DragAcceptFiles( Handle, True );
         end
         else
             mnuSendFile.Visible := false;
@@ -761,7 +762,7 @@ begin
     if (Item <> nil) then begin
         mnuSendFile.Enabled := (not _isRoom);
         //if (not item.IsNative) then
-        DragAcceptFiles(Handle, false);
+        //DragAcceptFiles(Handle, false);
     end;
 
     updateDisplayName();
@@ -1467,11 +1468,11 @@ begin
     //if (inRoster) and (p <> nil) and (ritem.IsNative) then begin
     if (inRoster) and (p <> nil) then begin
         mnuSendFile.Enabled := true;
-        DragAcceptFiles(Handle, true);
+        //DragAcceptFiles(Handle, true);
     end
     else begin
         mnuSendFile.Enabled := false;
-        DragAcceptFiles(Handle, false);
+        //DragAcceptFiles(Handle, false);
     end;
 
     popContact.popup(cp.x, cp.y);
@@ -1553,36 +1554,36 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.AcceptFiles( var msg : TWMDropFiles );
-const
-    cnMaxFileNameLen = 255;
-var
-    i,
-    nCount     : integer;
-    acFileName : array [0..cnMaxFileNameLen] of char;
-    Item: IExodusItem;
-begin
-//    Item := MainSession.roster.Find(jid);
-    Item := MainSession.ItemController.GetItem(jid);
-
-    if ((Item <> nil) and (Item.Value['Native'] = 'true')) then
-    begin
-        // find out how many files we're accepting
-        if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
-
-        nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
-
-        // query Windows one at a time for the file name
-        for i := 0 to nCount-1 do begin
-            DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
-            // do your thing with the acFileName
-            FileSend(_jid.full, acFileName);
-        end;
-
-        // let Windows know that you're done
-        DragFinish( msg.Drop );
-    end;
-end;
+//procedure TfrmChat.AcceptFiles( var msg : TWMDropFiles );
+//const
+//    cnMaxFileNameLen = 255;
+//var
+//    i,
+//    nCount     : integer;
+//    acFileName : array [0..cnMaxFileNameLen] of char;
+//    Item: IExodusItem;
+//begin
+////    Item := MainSession.roster.Find(jid);
+//    Item := MainSession.ItemController.GetItem(jid);
+//
+//    if ((Item <> nil) and (Item.Value['Native'] = 'true')) then
+//    begin
+//        // find out how many files we're accepting
+//        if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
+//
+//        nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
+//
+//        // query Windows one at a time for the file name
+//        for i := 0 to nCount-1 do begin
+//            DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
+//            // do your thing with the acFileName
+//            FileSend(_jid.full, acFileName);
+//        end;
+//
+//        // let Windows know that you're done
+//        DragFinish( msg.Drop );
+//    end;
+//end;
 
 {---------------------------------------}
 procedure TfrmChat.freeChatObject();
@@ -1627,7 +1628,7 @@ begin
         _res_menus.Free();
     end;
 
-    DragAcceptFiles(Handle, false);
+    //DragAcceptFiles(Handle, false);
     inherited;
 end;
 
@@ -1872,7 +1873,7 @@ procedure TfrmChat.OnDocked();
 begin
     inherited;
     mnuOnTop.Enabled := false;
-    DragAcceptFiles( Handle, False );
+    //DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
     // scroll the MsgView to the bottom.
     _scrollBottom();
     Self.Refresh();
@@ -1891,7 +1892,7 @@ procedure TfrmChat.OnFloat();
 begin
     inherited;
     mnuOnTop.Enabled := true;
-    DragAcceptFiles(Handle, True);
+    //DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
     _scrollBottom();
     Self.Refresh();
 
@@ -1919,6 +1920,11 @@ begin
     //Render
     DisplayMsg(m, MsgList);
     m.free();
+end;
+
+function TfrmChat.GetChatController(): TObject;
+begin
+    Result := com_controller;
 end;
 
 {

@@ -275,7 +275,7 @@ uses
     Jabber1, Session, RemoveContact, ContactController, RosterAdd, RosterForm, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ,
     ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXWindow,
-    ExActionCtrl, SelectItem, SelectItemRoom, SelectItemAny, SelectItemAnyRoom;
+    ExActionCtrl, SelectItem, SelectItemRoom, SelectItemAny, SelectItemAnyRoom, ActivityWindow;
 
 const
     sPluginErrCreate = 'Plug-in could not be created. (%s)';
@@ -2221,12 +2221,12 @@ end;
 
 function TExodusController.Get_EnableFilesDragAndDrop: WordBool;
 begin
-    Result := MainSession.FilesDragAndDrop;
+    Result := GetActivityWindow().FilesDragAndDrop;
 end;
 
 procedure TExodusController.Set_EnableFilesDragAndDrop(Value: WordBool);
 begin
-    MainSession.FilesDragAndDrop := Value;
+    GetActivityWindow().FilesDragAndDrop := Value;
 end;
 
 initialization
