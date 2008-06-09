@@ -62,11 +62,10 @@ type
     procedure fireChange; safecall;
 
   private
-   // _grp: TJabberGroup;
+   _grp: IExodusItem;
 
   public
-  { TODO : Roster refactor }
-    //constructor Create(grp: TJabberGroup);
+    constructor Create(grp: IExodusItem);
 
   end;
 
@@ -76,235 +75,273 @@ type
 implementation
 
 uses
-    XMLTag, Variants, Classes, Session, JabberID, ComServ, COMExodusItem;
+    XMLTag, Variants, Classes, Session, JabberID, ComServ, COMExodusItem, GroupParser, Unicode;
 
 {---------------------------------------}
-//constructor TExodusRosterGroup.Create(grp: TJabberGroup);
-//begin
+constructor TExodusRosterGroup.Create(grp: IExodusItem);
+begin
     // this is just a wrapper for the roster item
-//    _grp := grp;
-//end;
-
-{---------------------------------------}
-function TExodusRosterGroup.Get_Action: WideString;
-begin
-    //Result := _grp.Action;
-end;
-
-{---------------------------------------}
-function TExodusRosterGroup.Get_AutoExpand: WordBool;
-begin
-   // Result := _grp.AutoExpand;
-end;
-
-{---------------------------------------}
-function TExodusRosterGroup.Get_DragSource: WordBool;
-begin
-   // Result := _grp.DragSource;
-end;
-
-{---------------------------------------}
-function TExodusRosterGroup.Get_DragTarget: WordBool;
-begin
-  //  Result := _grp.DragTarget;
-end;
-
-{---------------------------------------}
-function TExodusRosterGroup.Get_KeepEmpty: WordBool;
-begin
-  //  Result := _grp.KeepEmpty;
-end;
-
-{---------------------------------------}
-function TExodusRosterGroup.Get_ShowPresence: WordBool;
-begin
-  //  Result := _grp.ShowPresence;
-end;
-
-{---------------------------------------}
-function TExodusRosterGroup.Get_SortPriority: Integer;
-begin
-  //  Result := _grp.SortPriority;
+    _grp := grp;
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.getText: WideString;
 begin
-  //  Result := _grp.getText();
+  Result := _grp.Text;
 end;
 
+{---------------------------------------}
+function TExodusRosterGroup.Get_Action: WideString;
+begin
+    Result := '';
+end;
 {---------------------------------------}
 procedure TExodusRosterGroup.Set_Action(const Value: WideString);
 begin
-  //  _grp.Action := Value;
+    //not supported
 end;
 
+{---------------------------------------}
+function TExodusRosterGroup.Get_AutoExpand: WordBool;
+begin
+   Result := false;
+end;
 {---------------------------------------}
 procedure TExodusRosterGroup.Set_AutoExpand(Value: WordBool);
 begin
-   // _grp.AutoExpand := Value;
+   //not supported
 end;
 
+
+{---------------------------------------}
+function TExodusRosterGroup.Get_DragSource: WordBool;
+begin
+   Result := true;
+end;
 {---------------------------------------}
 procedure TExodusRosterGroup.Set_DragSource(Value: WordBool);
 begin
-  //  _grp.DragSource := Value;
+  //not supported
 end;
 
+{---------------------------------------}
+function TExodusRosterGroup.Get_DragTarget: WordBool;
+begin
+  Result := true;
+end;
 {---------------------------------------}
 procedure TExodusRosterGroup.Set_DragTarget(Value: WordBool);
 begin
-  //  _grp.DragTarget := Value;
+  //not supported
 end;
 
+{---------------------------------------}
+function TExodusRosterGroup.Get_KeepEmpty: WordBool;
+begin
+  Result := false;
+end;
 {---------------------------------------}
 procedure TExodusRosterGroup.Set_KeepEmpty(Value: WordBool);
 begin
-   // _grp.KeepEmpty := Value;
+   //not supported
 end;
 
+{---------------------------------------}
+function TExodusRosterGroup.Get_ShowPresence: WordBool;
+begin
+  Result := false;
+end;
 {---------------------------------------}
 procedure TExodusRosterGroup.Set_ShowPresence(Value: WordBool);
 begin
-   // _grp.ShowPresence := Value;
+   //not supported
 end;
 
 {---------------------------------------}
+function TExodusRosterGroup.Get_SortPriority: Integer;
+begin
+  Result := 0;
+end;
+{---------------------------------------}
 procedure TExodusRosterGroup.Set_SortPriority(Value: Integer);
 begin
-   // _grp.SortPriority := Value;
+   //not supported
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.inGroup(const jid: WideString): WordBool;
+var
+    item: IExodusItem;
 begin
-   // Result := _grp.inGroup(jid);
+    item := MainSession.ItemController.GetItem(jid);
+    Result := (item <> nil) and item.BelongsToGroup(_grp.UID);
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.isEmpty: WordBool;
 begin
-   // Result := _grp.isEmpty();
+   Result := MainSession.ItemController.GetGroupItems(_grp.UID).Count = 0;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterGroup.addJid(const jid: WideString);
+var
+    item: IExodusItem;
 begin
-   // _grp.AddJid(jid);
+    item := MainSession.ItemController.GetItem(jid);
+    if (item <> nil) then begin
+        item.AddGroup(_grp.UID);
+    end;
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.getGroup(
   const group_name: WideString): IExodusRosterGroup;
-//var
+var
+    item: IExodusItem;
 //    go: TJabberGroup;
 begin
-          { TODO : Roster refactor }
-//    go := MainSession.Roster.getGroup(group_name);
-//    if (go <> nil) then
-//        Result := TExodusRosterGroup.Create(go)
-//    else
-//        Result := nil;
+    item := MainSession.ItemController.GetItem(group_name);
+    if (item <> nil) and (item.Type_ = 'group') then
+        Result := TExodusRosterGroup.Create(item)
+    else
+        Result := nil;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterGroup.removeJid(const jid: WideString);
+var
+    item: IExodusItem;
 begin
-       { TODO : Roster refactor }
-//    _grp.removeJid(jid);
+    item := MainSession.ItemController.GetItem(jid);
+    if (item <> nil) then begin
+        item.RemoveGroup(_grp.UID);
+    end;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterGroup.addGroup(const child: IExodusRosterGroup);
-//var
-//    go: TJabberGroup;
+var
+    ctrl: IExodusItemController;
+    item: IExodusItem;
+    subgrp: Widestring;
 begin
-//    go := MainSession.Roster.getGroup(child.FullName);
-//    if (go <> nil) then
-//        _grp.addGroup(go);
+    ctrl := MainSession.ItemController;
+    item := ctrl.GetItem(child.FullName);
+    if (item <> nil) and (item.Type_ = 'group') then begin
+        ctrl.CopyItem(item.UID, _grp.UID);
+    end;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterGroup.removeGroup(const child: IExodusRosterGroup);
-//var
-//    go: TJabberGroup;
+var
+    ctrl: IExodusItemController;
+    item: IExodusItem;
 begin
-      { TODO : Roster refactor }
-//    go := _grp.getGroup(child.FullName);
-//    if (go <> nil) then
-//        _grp.removeGroup(go);
+    ctrl := MainSession.ItemController;
+    item := ctrl.GetItem(child.FullName);
+    if (item <> nil) and (item.Type_ = 'group') then begin
+        ctrl.RemoveItem(item.UID);
+    end;
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.getRosterItems(Online: WordBool): OleVariant;
-//var
-//    i: integer;
-//    list: TList;
-//    va: Variant;
-//    ritem: TJabberRosterItem;
+var
+    idx, pos: Integer;
+    items: IExodusItemList;
+    item: IExodusItem;
+    va: Variant;
 begin
-  { TODO : Roster refactor }
-//    list := TList.Create();
-//    _grp.getRosterItems(list, online);
-//
-//    va := VarArrayCreate([0, list.count], varOleStr);
-//    for i := 0 to list.count - 1 do begin
-//        ritem := TJabberRosteritem(list[i]);
-//        VarArrayPut(va, ritem.jid.full, i);
-//    end;
-//    list.Free();
-//
-//    Result := va;
+    items := MainSession.ItemController.GetGroupItems(_grp.UID);
+    va := VarArrayCreate([0, items.Count], varOleStr);
+    pos := 0;
+    for idx := 0 to items.Count - 1 do begin
+        item := items.Item[idx];
+        if (item.Type_ <> 'contact') then continue;
+        if Online and not item.Active then continue;
+        
+        VarArrayPut(va, item.UID, pos);
+        Inc(pos);
+    end;
+
+    Result := va;
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.Get_FullName: WideString;
 begin
-//    Result := _grp.FullName;
+    Result := _grp.UID;
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.Get_NestLevel: Integer;
+var
+    parser: TGroupParser;
 begin
-//    Result := _grp.NestLevel;
+    parser := TGroupParser.Create(MainSession);
+    Result := parser.GetNestedGroups(_grp.UID).Count;
+    parser.Free();
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.Get_Online: Integer;
+var
+    ctrl: IExodusItemController;
+    subitems: IExodusItemList;
+    idx: Integer;
 begin
-//    Result := _grp.Online;
+    Result := 0;
+    subitems := ctrl.GetGroupItems(_grp.UID);
+    for idx := 0 to subitems.Count - 1 do begin
+        if subitems.Item[idx].Active then Inc(Result);
+    end;
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.Get_Parent: IExodusRosterGroup;
+var
+    parser: TGroupParser;
+    parent: Widestring;
+    item: IExodusItem;
 begin
-//    if (_grp.Parent <> nil) then
-//        Result := TExodusRosterGroup.Create(_grp.Parent)
-//    else
-//        Result := nil;
+    parser := TGroupParser.Create(MainSession);
+    parent := parser.GetGroupParent(parent);
+    parser.Free();
+
+    if (parent <> '') then
+        item := MainSession.ItemController.GetItem(parent)
+    else
+        item := nil;
+
+    Result := Self.getGroup(parent);
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.Get_Total: Integer;
 begin
-//    Result := _grp.Total;
+    Result := MainSession.ItemController.GetGroupItems(_grp.UID).Count;
 end;
 
 {---------------------------------------}
 function TExodusRosterGroup.Parts(Index: Integer): WideString;
+var
+    parser: TGroupParser;
+    divs: TWidestringList;
 begin
-//    Result := _grp.Parts[Index];
+    parser := TGroupParser.Create(MainSession);
+    divs := parser.GetNestedGroups(_grp.UID);
+    if (index >= 0) and (index < divs.Count) then
+        Result := divs[index]
+    else
+        Result := '';
 end;
 
 {---------------------------------------}
 procedure TExodusRosterGroup.fireChange;
-//var
-//    x: TXMLTag;
 begin
-//    x := TXMLTag.Create('group');
-//    x.setAttribute('name', _grp.FullName);
-//    MainSession.FireEvent('/roster/group', x, TExodusItem(nil));
-//    x.Free();
+    MainSession.FireEvent('/item/update', _grp);
 end;
 
 end.

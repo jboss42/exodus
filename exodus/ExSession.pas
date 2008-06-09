@@ -99,8 +99,8 @@ var
     COMEntityCache: IExodusEntityCache;
     ExCOMToolbar: TExodusToolbar;
     COMToolbar: IExodusToolbar;
-    //ExCOMBookmarkManager: TExodusBookmarkManager;
-    //COMBookmarkManager: IExodusBookmarkManager;
+    ExCOMBookmarkManager: TExodusBookmarkManager;
+    COMBookmarkManager: IExodusBookmarkManager;
 
     ExRegController: TRegController;
     ExStartup: TExStartParams;
@@ -642,8 +642,8 @@ begin
     COMEntityCache := ExCOMEntityCache;
     ExCOMToolbar := TExodusToolbar.Create();
     COMToolbar := ExCOMToolbar;
-    //ExCOMBookmarkManager := TExodusBookmarkManager.Create(MainSession.bookmarks);
-    //COMBookmarkManager := ExCOMBookmarkManager;
+    ExCOMBookmarkManager := TExodusBookmarkManager.Create();
+    COMBookmarkManager := ExCOMBookmarkManager;
 
     // Setup the ExStartup object props
     ExStartup.priority := cli_priority;
