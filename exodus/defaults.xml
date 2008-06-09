@@ -431,6 +431,7 @@
     <fade_limit value="100"/>
     <profile_active value="0"/>
     <wrap_input value="1"/>
+    <vcard_iq_timeout value="90"/>
 
     <!-- temp password used by auth plugins -->
     <temp-pw encoded="yes"/>
