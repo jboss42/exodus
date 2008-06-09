@@ -10,7 +10,7 @@ inherited frmProfile: TfrmProfile
   OnClose = FormClose
   OnCreate = FormCreate
   ExplicitWidth = 521
-  ExplicitHeight = 453
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
@@ -103,8 +103,6 @@ inherited frmProfile: TfrmProfile
     TabOrder = 2
     object TabSheet1: TTntTabSheet
       Caption = 'General'
-      ExplicitLeft = 3
-      ExplicitTop = 25
       object lblSubState: TTntLabel
         AlignWithMargins = True
         Left = 6
@@ -115,17 +113,7 @@ inherited frmProfile: TfrmProfile
         Margins.Top = 0
         Align = alTop
         Caption = 'lblSubState'
-        ExplicitTop = 186
         ExplicitWidth = 54
-      end
-      object aniProfile: TAnimate
-        Left = 279
-        Top = 87
-        Width = 16
-        Height = 16
-        CommonAVI = aviFindFile
-        StopFrame = 8
-        Visible = False
       end
       object TntPanel1: TTntPanel
         AlignWithMargins = True
@@ -139,8 +127,7 @@ inherited frmProfile: TfrmProfile
         Align = alTop
         BevelOuter = bvNone
         ParentColor = True
-        TabOrder = 1
-        ExplicitTop = 34
+        TabOrder = 0
         object TntLabel4: TTntLabel
           AlignWithMargins = True
           Left = 0
@@ -156,12 +143,25 @@ inherited frmProfile: TfrmProfile
           AlignWithMargins = True
           Left = 57
           Top = 3
-          Width = 298
+          Width = 282
           Height = 15
           Align = alClient
           Caption = 'pgmillard@jabber.org'
           ExplicitWidth = 103
           ExplicitHeight = 13
+        end
+        object aniProfile: TAnimate
+          Left = 342
+          Top = 0
+          Width = 16
+          Height = 21
+          Align = alRight
+          CommonAVI = aviFindFile
+          StopFrame = 8
+          Visible = False
+          ExplicitLeft = 279
+          ExplicitTop = 5
+          ExplicitHeight = 16
         end
       end
       object TntPanel2: TTntPanel
@@ -176,7 +176,7 @@ inherited frmProfile: TfrmProfile
         AutoSize = True
         BevelOuter = bvNone
         ParentColor = True
-        TabOrder = 2
+        TabOrder = 1
         object pnlAllResources: TTntPanel
           AlignWithMargins = True
           Left = 0
@@ -189,7 +189,6 @@ inherited frmProfile: TfrmProfile
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitTop = 28
           object gridResources: TTntStringGrid
             Left = 0
             Top = 0
@@ -203,9 +202,6 @@ inherited frmProfile: TfrmProfile
             FixedCols = 0
             Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing]
             TabOrder = 0
-            ExplicitTop = 103
-            ExplicitWidth = 358
-            ExplicitHeight = 3
             ColWidths = (
               142
               203)
@@ -225,9 +221,8 @@ inherited frmProfile: TfrmProfile
         BevelOuter = bvNone
         Caption = 'Basic contact information:'
         ParentColor = True
-        TabOrder = 3
+        TabOrder = 2
         AutoHide = False
-        ExplicitTop = 251
         object Label7: TTntLabel
           Left = 1
           Top = 21
@@ -325,8 +320,7 @@ inherited frmProfile: TfrmProfile
         AutoSize = True
         BevelOuter = bvNone
         ParentColor = True
-        TabOrder = 4
-        ExplicitTop = 205
+        TabOrder = 3
         object Label2: TTntLabel
           Left = 1
           Top = 0
@@ -361,7 +355,7 @@ inherited frmProfile: TfrmProfile
         BevelOuter = bvNone
         Caption = '<<USER>> properties:'
         ParentColor = True
-        TabOrder = 5
+        TabOrder = 4
         AutoHide = False
       end
     end
