@@ -182,7 +182,7 @@ begin
     _vcard := TXMLVCard.Create();
 
     tmps := MainSession.generateID();
-    iq := TJabberIQ.Create(MainSession, tmps, Callback);
+    iq := TJabberIQ.Create(MainSession, tmps, Callback, MainSession.Prefs.getInt('vcard_iq_timeout'));
     iq.qTag.Name := 'VCARD';
     iq.Namespace := 'vcard-temp';
     iq.iqType := 'get';
