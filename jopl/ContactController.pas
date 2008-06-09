@@ -242,6 +242,8 @@ begin
     Contact.Text := Tag.GetAttribute('name');
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
     Contact.value['defaultaction'] := '{000-exodus.googlecode.com}-000-start-chat';
+    Contact.value['Network'] := 'xmpp';
+    Contact.value['msgoffline'] := 'true';
     Contact.value['Name'] := Tag.GetAttribute('name');
     Contact.value['Subscription'] := Tag.GetAttribute('subscription');
     Contact.value['Ask'] := Tag.GetAttribute('ask');
@@ -692,6 +694,8 @@ begin
         Result := itemCtlr.AddItemByUid(sjid, EI_TYPE_CONTACT, _ItemsCB);
         Result.value['Name'] := name;
         Result.value['defaultaction'] := '{000-exodus.googlecode.com}-000-start-chat';
+        Result.value['Network'] := 'xmpp';
+        Result.value['msgoffline'] := 'true';
         Result.value['Subscription'] := 'none';
         if (group <> '') then begin
             Result.AddGroup(group);
