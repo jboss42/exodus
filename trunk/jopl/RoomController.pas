@@ -110,10 +110,9 @@ begin
         Room.value['reg_nick'] := 'false';
 
     if (Groups = nil) then
-    begin
        Groups := TWideStringList.Create();
+    if (Groups.Count = 0) then
        Groups.Add(TJabberSession(_js).Prefs.getString('roster_default'));
-    end;
 
     for i := 0 to Groups.Count - 1 do
     begin
@@ -267,8 +266,10 @@ begin
                 <storage xmlns="storage:bookmarks">
                     <conference name='Council of Oberon'
                                   autojoin='true'
+                                  reg_nick='false'
                                   jid='council@conference.underhill.org'>
                         <nick>Puck</nick>
+                        <password>******</password>
                         <group ns="http://jabber.com/protocols">abc</group>
                     </conference>
                 </storage>

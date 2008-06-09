@@ -2098,10 +2098,7 @@ end;
 
 function TExodusController.Get_BookmarkManager: IExodusBookmarkManager;
 begin
-    //ExCOMBookmarkManager.ObjAddRef();
-    //Result := COMBookmarkManager;
-  { TODO : Roster refactor }
-    Result := nil;
+    Result := COMBookmarkManager;
 end;
 
 function TExodusController.Get_TabController: IExodusTabController;
