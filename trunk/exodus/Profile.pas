@@ -435,7 +435,7 @@ begin
             pnlAllResources.Height := gridResources.Height;
 
         tstr := MainSession.generateID();
-        iq := TJabberIQ.Create(MainSession, tstr, vcard);
+        iq := TJabberIQ.Create(MainSession, tstr, vcard, MainSession.Prefs.getInt('vcard_iq_timeout'));
         iq.Namespace := 'vcard-temp';
         iq.qTag.Name := 'vCard';
         iq.iqType := 'get';
