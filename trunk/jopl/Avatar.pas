@@ -433,7 +433,7 @@ begin
     tmpjid := TJabberID.Create(jid);
     assert(_iq = nil);
     assert(jid <> '');
-    _iq := TJabberIQ.Create(session, session.generateID(), fetchCallback);
+    _iq := TJabberIQ.Create(session, session.generateID(), fetchCallback, MainSession.Prefs.getInt('vcard_iq_timeout'));
     _iq.iqType := 'get';
     Pending := true;
 

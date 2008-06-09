@@ -768,7 +768,7 @@ begin
 
         if (not _fetchFailed) and (_profileIQ = nil) and (not UseCacheOnly) then
         begin
-            tiq := TJabberIQ.Create(DNSession, DNSession.generateID(), VCardIQCallback);
+            tiq := TJabberIQ.Create(DNSession, DNSession.generateID(), VCardIQCallback, MainSession.Prefs.getInt('vcard_iq_timeout'));
             tiq.Namespace := 'vcard-temp';
             tiq.qTag.Name := 'vCard';
             tiq.iqType := 'get';
