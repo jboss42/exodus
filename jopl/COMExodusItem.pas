@@ -213,11 +213,20 @@ end;
 procedure TExodusItem.AddProperty(const PropertyName,
   PropertyValue: WideString);
 var
+   idx: integer;
    value: PWideChar;
 begin
-   //Allocate memory for the value string.
-   Value := StrNewW(PWideChar(PropertyValue));
-   _Properties.AddObject(PropertyName, TObject(Value));
+   Idx := _Properties.IndexOf(PropertyName);
+
+   if (Idx = -1) then
+   begin
+      //Allocate memory for the value string.
+      Value := StrNewW(PWideChar(PropertyValue));
+      _Properties.AddObject(PropertyName, TObject(Value));
+   end
+   else begin
+      Set_Property_(Idx, PropertyValue);
+   end;
 end;
 
 {---------------------------------------}
