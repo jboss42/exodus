@@ -296,13 +296,13 @@ end;
 {---------------------------------------}
 procedure TExodusRoster.removeGroup(const grp: IExodusRosterGroup);
 var
-    item: IExodusItem;
+    ctrl: IExodusItemController;
+    found: IExodusItem;
 begin
-    with MainSession.ItemController do begin
-        item := GetItem(grp);
-        if (item <> nil) and (item.Type_ = 'group') then
-            RemoveItem(grp);
-    end;
+    ctrl := MainSession.ItemController;
+    found := ctrl.GetItem(grp.FullName);
+    if (found <> nil) and (found.Type_ = 'group') then
+        ctrl.RemoveItem(found.UID);
 end;
 
 {---------------------------------------}
