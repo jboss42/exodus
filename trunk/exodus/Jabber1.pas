@@ -1394,6 +1394,8 @@ begin
         _hiddenIEMsgList := nil;
     end;
     _mnuRegisterUD := nil;
+
+    ExCOMRoster.AddPredefinedMenu('Status', popPresence);
 end;
 
 {---------------------------------------}
