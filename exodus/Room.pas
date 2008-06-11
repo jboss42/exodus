@@ -672,7 +672,7 @@ begin
 
     // Check to see if we need to increment the
     // unread msg count
-    msgDelayTag := Msg.Tag.QueryXPTag(XP_MSGDELAY);
+    msgDelayTag := GetDelayTag(Msg.Tag);
     if ((msgDelayTag = nil) and
         (not Msg.IsMe) and
         (Msg.FromJID <> self.jid)) then begin

@@ -821,11 +821,12 @@ begin
 
     dTag := TXMLTag.create(tag);
     //set a DT stamp if it doesn't exist
-    if (dTag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') = nil) then
+    if (GetDelayTag(dtag) = nil) then
     begin
+        // Add XEP-0091 style delay tag
         with dTag.AddTag('x') do begin
             setAttribute('xmlns', 'jabber:x:delay');
-            setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
+            setAttribute('stamp', DateTimeToJabber(UTCNow()));
         end;
     end;
 

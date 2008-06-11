@@ -158,7 +158,7 @@ begin
 
     // if room, don't log "old" messages
     if (msg.MsgType = 'groupchat') then begin
-        msgDelayTag := Msg.Tag.QueryXPTag(XP_MSGDELAY);
+        msgDelayTag := GetDelayTag(Msg.Tag);
         if (msgDelayTag <> nil) then begin
             // This is an old message, so we shouldn't log
             exit;
@@ -259,8 +259,8 @@ begin
         // removed.
         tag := TXMLTag.Create('history_delete');
         tag.AddBasicTag('jid', jid);
-        tag.AddBasicTag('startdatetime', DateTimeToJabber(datestart));
-        tag.AddBasicTag('enddatetime', DateTimeToJabber(dateend));
+        tag.AddBasicTag('startdatetime', DateTimeToXEP82DateTime(datestart, true));
+        tag.AddBasicTag('enddatetime', DateTimeToXEP82DateTime(dateend, true));
         MainSession.FireEvent('/session/history/delete', tag);
         tag.Free();
     except

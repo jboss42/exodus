@@ -45,7 +45,13 @@ function SafeBool(str: Widestring): boolean;
 function SafeBoolStr(value: boolean) : Widestring;
 
 function JabberToDateTime(datestr: Widestring): TDateTime;
+function XEP82DateTimeToDateTime(datestr: Widestring): TDateTime;
 function DateTimeToJabber(dt: TDateTime): Widestring;
+function DateTimeToXEP82Date(dt: TDateTime): Widestring;
+function DateTimeToXEP82DateTime(dt: TDateTime; dtIsUTC: boolean = false): Widestring;
+function DateTimeToXEP82Time(dt: TDateTime; dtIsUTC: boolean = false): Widestring;
+function GetTimeZoneOffset(): Widestring;
+function UTCNow(): TDateTime;
 //returns a reference to a delay tag found in tag, or nil if none exists
 function GetDelayTag(tag: TXMLTag): TXMLTag;
 
@@ -89,7 +95,9 @@ uses
     {$endif}
     SecHash,
     JabberConst,
-    XMLParser;
+    XMLParser,
+    StrUtils,
+    DateUtils;
 
 function XPLiteEscape(value: widestring): widestring;
 var
@@ -489,6 +497,7 @@ var
     ys, ms, ds, ts: Widestring;
     yw, mw, dw: Word;
 begin
+    // Converts assumed UTC time to local.
     // translate date from 20000110T19:54:00 to proper format..
     ys := Copy(Datestr, 1, 4);
     ms := Copy(Datestr, 5, 2);
@@ -502,7 +511,7 @@ begin
 
         if (TryEncodeDate(yw, mw, dw, rdate)) then begin
             rdate := rdate + StrToTime(ts);
-            Result := rdate - TimeZoneBias();
+            Result := rdate - TimeZoneBias(); // Convert to local time
         end
         else
             Result := Now();
@@ -512,12 +521,162 @@ begin
 end;
 
 {---------------------------------------}
+function XEP82DateTimeToDateTime(datestr: Widestring): TDateTime;
+var
+    rdate: TDateTime;
+    ys, ms, ds, ts: Widestring;
+    yw, mw, dw: Word;
+    tzd: Widestring;
+    tzd_hs: Widestring;
+    tzd_ms: Widestring;
+    tzd_hw: word;
+    tzd_mw: word;
+begin
+    // Converts UTC or TZD time to Local Time
+    // translate date from 2008-06-11T10:10:23.102Z (2008-06-11T10:10:23.102-06:00) or to properformat
+    Result := Now();
+
+    datestr := Trim(datestr);
+    if (Length(datestr) = 0) then exit;
+
+    ys := Copy(datestr, 1, 4);
+    ms := Copy(datestr, 6, 2);
+    ds := Copy(datestr, 9, 2);
+    ts := Copy(datestr, 12, 8);
+
+    if (RightStr(datestr, 1) = 'Z') then
+    begin
+        // Is UTC
+        try
+            yw := StrToInt(ys);
+            mw := StrToInt(ms);
+            dw := StrToInt(ds);
+
+            if (TryEncodeDate(yw, mw, dw, rdate)) then begin
+                rdate := rdate + StrToTime(ts);
+                Result := rdate - TimeZoneBias(); // Convert to local time
+            end
+            else
+                Result := Now();
+        except
+            Result := Now;
+        end;
+    end
+    else begin
+        // Is not UTC so convert to UTC
+        tzd := Copy(datestr, Length(datestr) - 5, 6);
+        tzd_hs := Copy(tzd, 2, 2);
+        tzd_ms := Copy(tzd, 5, 2);
+
+        try
+            yw := StrToInt(ys);
+            mw := StrToInt(ms);
+            dw := StrToInt(ds);
+            tzd_hw := StrToInt(tzd_hs);
+            tzd_mw := StrToInt(tzd_ms);
+
+            if (TryEncodeDate(yw, mw, dw, rdate)) then
+            begin
+                rdate := rdate + StrToTime(ts);
+                // modify time for TZD offset.
+                if (LeftStr(tzd, 1) = '+') then
+                begin
+                    // Time is greater then UTC so subtract time
+                    rdate := IncHour(rdate, (-1 * tzd_hw));
+                    rdate := IncMinute(rdate, (-1 * tzd_mw));
+                end
+                else begin
+                    // Time is less then UTC so add time
+                    rdate := IncHour(rdate, tzd_hw);
+                    rdate := IncMinute(rdate, tzd_mw);
+                end;
+
+                // Now that we have UTC, change ot local
+                Result := rdate - TimeZoneBias();
+            end
+            else begin
+                Result := Now();
+            end;
+        except
+            Result := Now();
+        end;
+    end;
+
+end;
+
+{---------------------------------------}
 function DateTimeToJabber(dt: TDateTime): Widestring;
 begin
     // Format the current date/time into "Jabber" format
     Result := FormatDateTime('yyyymmdd', dt);
     Result := Result + 'T';
     Result := Result + FormatDateTime('hh:nn:ss', dt);
+end;
+
+{---------------------------------------}
+function DateTimeToXEP82Date(dt: TDateTime): Widestring;
+begin
+    Result := FormatDateTime('yyyy-mm-dd', dt);
+end;
+
+{---------------------------------------}
+function DateTimeToXEP82DateTime(dt: TDateTime; dtIsUTC: boolean): Widestring;
+begin
+    Result := DateTimeToXEP82Date(dt);
+    Result := Result + 'T';
+    Result := Result + DateTimeToXEP82Time(dt, dtIsUTC);
+end;
+
+{---------------------------------------}
+function DateTimeToXEP82Time(dt: TDateTime; dtIsUTC: boolean): Widestring;
+begin
+    // Convert Time
+    Result := FormatDateTime('hh:mm:ss.zzz', dt);
+
+    // Add on Offset info
+    if (dtIsUTC) then
+    begin
+        Result := Result + 'Z';
+    end
+    else begin
+        Result := Result + GetTimeZoneOffset();
+    end;
+end;
+
+{---------------------------------------}
+function GetTimeZoneOffset(): Widestring;
+var
+    UTCoffset: integer;
+    UTCoffsetHours, UTCoffsetMinutes: integer;
+    TZI: TTimeZoneInformation;
+begin
+    Result := '';
+
+    // Compute Timezone offset from GMT
+    case GetTimeZoneInformation(TZI) of
+        TIME_ZONE_ID_STANDARD: UTCOffset := (TZI.Bias + TZI.StandardBias);
+        TIME_ZONE_ID_DAYLIGHT: UTCOffset := (TZI.Bias + TZI.DaylightBias);
+        TIME_ZONE_ID_UNKNOWN: UTCOffset := TZI.Bias;
+    else
+        UTCOffset := 0;
+    end;
+    UTCoffsetHours := UTCoffset div 60; //TZI.Bias in minutes
+    UTCoffsetMinutes := UTCoffset mod 60; //TZI.Bias in minutes
+
+    if (UTCoffsetHours <= 0) then
+    begin
+        Result := Result + '+'
+    end
+    else begin
+        Result := Result + '-';
+    end;
+    Result := Result + Format('%.2d:%.2d',[abs(UTCoffsetHours), abs(UTCOffsetMinutes)]);
+end;
+
+{---------------------------------------}
+function UTCNow(): TDateTime;
+begin
+    Result := Now + TimeZoneBias();
 end;
 
 {---------------------------------------}

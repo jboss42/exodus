@@ -60,6 +60,13 @@ type
         constructor Create(Session: TJabberSession); overload;
     end;
 
+    TTimeResponderXep202 = class(TJabberResponder)
+    published
+        procedure iqCallback(event: string; tag: TXMLTag); override;
+    public
+        constructor Create(Session: TJabberSession); overload;
+    end;
+
     TLastResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag: TXMLTag); override;
@@ -162,6 +169,7 @@ const
 var
     _version: TVersionResponder;
     _time: TTimeResponder;
+    _timeXep202: TTimeResponderXep202;
     _last: TLastResponder;
     _xdata: TFactoryResponder;
     _iqoob: TFactoryResponder;
@@ -193,6 +201,7 @@ begin
 
     _version := TVersionResponder.Create(MainSession);
     _time := TTimeResponder.Create(MainSession);
+    _timeXep202 := TTimeResponderXep202.Create(MainSession);
     _last := TLastResponder.Create(MainSession);
     _xdata := TFactoryResponder.Create(MainSession,
         '/pre/message/x[@xmlns="' + XMLNS_XDATA +'"]',
@@ -332,6 +341,7 @@ begin
     FreeAndNil(_xdata);
     FreeAndNil(_last);
     FreeAndNil(_time);
+    FreeAndNil(_timeXep202);
     FreeAndNil(_version);
     FreeAndNil(_sistart);
 end;
@@ -401,7 +411,6 @@ var
     r: TXMLTag;
     tzi: TTimeZoneInformation;
     utc: TDateTime;
-    res: integer;
     f: TForm;
 begin
     // Respond to time queries
@@ -425,22 +434,73 @@ begin
              RosterTreeImages.Find('info'));
 
     r := TXMLTag.Create('iq');
-    res := GetTimeZoneInformation(tzi);
-    if res = TIME_ZONE_ID_DAYLIGHT then
-        utc := Now + ((tzi.Bias - 60) / 1440.0)
-    else
-        utc := Now + (tzi.Bias / 1440.0);
+
+    utc := UTCNow();
 
     with r do begin
         setAttribute('to', tag.getAttribute('from'));
         setAttribute('id', tag.getAttribute('id'));
         setAttribute('type', 'result');
 
-        with AddTag('query') do begin
+        with AddTag('query') do
+        begin
+            GetTimeZoneInformation(tzi);
             setAttribute('xmlns', XMLNS_TIME);
             AddBasicTag('utc', DateTimeToJabber(utc));
             AddBasicTag('tz', tzi.StandardName);
             AddBasicTag('display', DateTimeToStr(Now));
+        end;
+    end;
+
+    _session.sendTag(r);
+end;
+
+{---------------------------------------}
+constructor TTimeResponderXep202.Create(Session: TJabberSession);
+begin
+    inherited Create(Session, XMLNS_TIME_202, 'time');
+end;
+
+{---------------------------------------}
+procedure TTimeResponderXep202.iqCallback(event: string; tag: TXMLTag);
+var
+    r: TXMLTag;
+    utc: TDateTime;
+    f: TForm;
+begin
+    // Respond to time queries
+    {
+    <iq from='smorris@jabber.com/Work' id='wj_4'
+        to='pgmillard@jabber.org/workage'
+        type='result'>
+    <time xmlns='urn:xmpp:time'>
+        <utc>20011026T01:36:58Z</utc>
+        <tzo>-6:00</tzo>
+    </query></iq>
+    }
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
+    f := nil;
+
+    DoNotify(f, 'notify_autoresponse',
+             WideFormat(_(sNotifyAutoResponse), [_(sTime),
+                                          getNick(tag.getAttribute('from'))]),
+             RosterTreeImages.Find('info'));
+
+    r := TXMLTag.Create('iq');
+
+    utc := UTCNow();
+
+    with r do begin
+        setAttribute('to', tag.getAttribute('from'));
+        setAttribute('id', tag.getAttribute('id'));
+        setAttribute('type', 'result');
+
+        with AddTag('time') do
+        begin
+            setAttribute('xmlns', XMLNS_TIME_202);
+            AddBasicTag('utc', DateTimeToXEP82DateTime(utc, true));
+            AddBasicTag('tzo', GetTimeZoneOffset());
         end;
     end;
 
@@ -702,6 +762,7 @@ begin
 
         addFeature(q, XMLNS_IQOOB);
         addFeature(q, XMLNS_TIME);
+        addFeature(q, XMLNS_TIME_202);
         addFeature(q, XMLNS_VERSION);
         addFeature(q, XMLNS_LAST);
         addFeature(q, XMLNS_DISCOITEMS);
@@ -933,6 +994,7 @@ initialization
 
     _version := nil;
     _time := nil;
+    _timeXep202 := nil;
     _last := nil;
     _xdata := nil;
     _iqoob := nil;
