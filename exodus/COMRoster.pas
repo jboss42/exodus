@@ -134,7 +134,7 @@ procedure TExodusRoster.AddPredefinedMenu(name: Widestring; menu: TTntPopupMenu)
 var
     idx: integer;
 begin
-    // used to add the GUI defined menus from RosterWindow.pas
+    // used to add the GUI defined menus from other parts of Exodus
     if (menu = nil) or
        (name = '') then exit;
 
@@ -250,12 +250,11 @@ end;
 
 {---------------------------------------}
 function TExodusRoster.addGroup(const grp: WideString): IExodusRosterGroup;
-//var
-//    go: TJabberGroup;
+var
+    item: IExodusItem;
 begin
-    { TODO : Roster refactor }
-//    go := MainSession.Roster.addGroup(grp);
-//    Result := TExodusRosterGroup.Create(go);
+    item := MainSession.ItemController.AddGroup(grp);
+    Result := TExodusRosterGroup.Create(item);
 end;
 
 {---------------------------------------}
@@ -266,25 +265,26 @@ end;
 
 {---------------------------------------}
 function TExodusRoster.getGroup(const grp: WideString): IExodusRosterGroup;
-//var
-//    go: TJabberGroup;
+var
+    item: IExodusItem;
 begin
-   { TODO : Roster refactor }
-//    go := MainSession.Roster.getGroup(grp);
-//    if (go <> nil) then
-//        Result := TExodusRosterGroup.Create(go)
-//    else
-//        Result := nil;
+    item := MainSession.ItemController.GetItem(grp);
+    if (item <> nil) and (item.Type_ = 'group') then
+        Result := TExodusRosterGroup(item)
+    else
+        Result := nil;
 end;
 
 {---------------------------------------}
 function TExodusRoster.Groups(Index: Integer): IExodusRosterGroup;
-//var
-//    go: TJabberGroup;
+var
+    items: IExodusItemList;
 begin
-     { TODO : Roster refactor }
-//    go := MainSession.Roster.Groups[Index];
-//    Result := TExodusRosterGroup.Create(go);
+    items := MainSession.ItemController.GetItemsByType('group');
+    if (Index >= 0) and (Index < items.Count) then
+        Result := TExodusRosterGroup.Create(items.Item[index])
+    else
+        Result := nil;
 end;
 
 {---------------------------------------}
@@ -295,20 +295,19 @@ end;
 
 {---------------------------------------}
 procedure TExodusRoster.removeGroup(const grp: IExodusRosterGroup);
-//var
-//    go: TJabberGroup;
+var
+    item: IExodusItem;
 begin
-   { TODO : Roster refactor }
-//    go := MainSession.Roster.getGroup(grp.FullName);
-//    if (go <> nil) then
-//        MainSession.roster.removeGroup(go);
+    with MainSession.ItemController do begin
+        item := GetItem(grp);
+        if (item <> nil) and (item.Type_ = 'group') then
+            RemoveItem(grp);
+    end;
 end;
 
 {---------------------------------------}
 procedure TExodusRoster.removeItem(const Item: IExodusRosterItem);
 begin
-       { TODO : Roster refactor }
-    //MainSession.Roster.RemoveItem(Item.JabberID);
     MainSession.ItemController.RemoveItem(Item.JabberID);
 end;
 
