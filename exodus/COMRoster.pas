@@ -116,7 +116,9 @@ begin
     _predefined_menus.Clear();
     _predefined_menus.Free();
     
-    ClearStringListObjects(_menus);
+//JJF causing a GPF when clearing menu objects,
+//commenting out for now
+//    ClearStringListObjects(_menus);
     _menus.Clear();
     _menus.Free();
 
