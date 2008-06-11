@@ -90,7 +90,7 @@ function GetLoginWindow() : TfrmLoginWindow;
 implementation
 
 uses Jabber1, JabberUtils, ConnDetails, GnuGetText, InputPassword,
-    PrefController, Profile, Session, NewUser;
+    PrefController, Profile, Session, NewUser, ExSession;
 
 const
     sRenameProfile = 'Rename profile';
@@ -444,6 +444,9 @@ begin
         end;
 
     end;
+
+    //Setup the predefined menu
+    ExCOMRoster.AddPredefinedMenu('Profiles', popProfiles);
 
     ToggleGUI(lgsDisconnected);
 end;
