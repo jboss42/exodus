@@ -642,7 +642,7 @@ begin
     end
     else
         Self.handleDisconnect();
-
+    _authd := false;
     _register := false;
 end;
 
@@ -906,7 +906,6 @@ begin
     // We have an active session
     _first_pres := true;
      Prefs.FetchServerPrefs(); //server prefs will just fire a /session/prefs on success
-    _authd := true;
     _dispatcher.DispatchSignal('/session/authenticated', tag);
 end;
 
@@ -1433,6 +1432,7 @@ begin
     // our auth-agent is all set\
     //remove temp password from prefs
     Prefs.setString('temp-pw', '');
+    _authd := ok;
     if (ok) then begin
 
         _profile.NewAccount := false;
