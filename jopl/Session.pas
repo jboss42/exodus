@@ -645,6 +645,7 @@ begin
     else
         Self.handleDisconnect();
 
+    _authd := false;
     _register := false;
 end;
 
@@ -1434,6 +1435,7 @@ procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag; reset_strea
 begin
     // our auth-agent is all set\
     //remove temp password from prefs
+    _authd := ok;
     Prefs.setString('temp-pw', '');
     if (ok) then begin
 
