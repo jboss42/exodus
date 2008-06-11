@@ -648,12 +648,12 @@ begin
 end;
 
 //create an appropriate delay tag from datetime, optional from, description
-function CreateDelayTag(dt: TDateTime; from: widestring=''; desc: widestring=''): TXMLTag;
+function CreateDelayTag(dt: TDateTime; UTC: boolean = false; from: widestring=''; desc: widestring=''): TXMLTag;
 begin
-    //for now, x tag
-    Result := TXMLTag.create('x');
-    Result.setAttribute('xmlns', XMLNS_DELAY);
-    Result.setAttribute('stamp', DateTimeToJabber(dt));
+    // This delay tag is in XEP-0203 format (complient with XEP-0082)
+    Result := TXMLTag.create('delay');
+    Result.setAttribute('xmlns', XMLNS_DELAY_203);
+    Result.setAttribute('stamp', DateTimeToXEP82DateTime(dt, UTC));
     if (from <> '') then
         Result.setAttribute('from', from);
     if (desc <> '') then
@@ -683,7 +683,7 @@ begin
                 if (dttag = nil) then
                 begin
                     ttag := TXMLTag.create(msgTag);
-                    ttag.AddTag(CreateDelayTag(now()+ TimeZoneBias()));
+                    ttag.AddTag(CreateDelayTag(UTCNow(), true));
                 end;
 
                 //filter tag, removing anything we don't want to persist (events for instance)

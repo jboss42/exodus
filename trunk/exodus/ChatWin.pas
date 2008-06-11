@@ -955,7 +955,7 @@ begin
   send_allowed := true;
   body := tag.GetBasicText('body');
 
-  if (tag.QueryXPTag(XP_MSGDELAY) = nil) then begin
+  if (GetDelayTag(tag) = nil) then begin
     //If not a delayed message (previously sent), send and then display
 
     if (com_controller <> nil) then //Do plugin before message logic

@@ -206,17 +206,36 @@ begin
         t := GetFirstTag('thread');
         if t <> nil then _thread := t.Data;
 
-        t := QueryXPTag(XP_MSGDELAY);
+        t := GetDelayTag(_tag); // Could be XEP-0091 or XEP-0203 delay tag
         if (t = nil) then
             _time := Now()
         else begin
             // we have a delay tag
             _timestampFromDelay := true;
             tmps := t.getAttribute('stamp');
-            if (tmps <> '') then
-                _time := JabberToDateTime(t.getAttribute('stamp'))
-            else
+            if (Trim(tmps) <> '') then
+            begin
+                if (t.Name = 'x') then
+                begin
+                    // XEP-0091
+                    _time := JabberToDateTime(t.getAttribute('stamp'));
+                end
+                else if (t.Name = 'delay') then
+                begin
+                    // XEP-0203
+                    _time := XEP82DateTimeToDateTime(t.getAttribute('stamp'));
+                end
+                else begin
+                    // Shouldn't get here, but if somehow we did, fail gracefully
+                    _time := Now();
+                    _timestampFromDelay := false;
+                end;
+            end
+            else begin
+                // Stamp attribute is empty, so fail gracefully
                 _time := Now();
+                _timestampFromDelay := false;
+            end;
         end;
 
         //Check for composing event

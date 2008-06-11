@@ -262,7 +262,6 @@ end;
 {---------------------------------------}
 function ShowRoomProperties(jid: Widestring): TfrmRoomProperties;
 var
-    tstr: Widestring;
     item: IExodusItem;
     f: TfrmRoomProperties;
     p: TJabberPres;
@@ -351,7 +350,6 @@ end;
 procedure TfrmRoomProperties.FormCreate(Sender: TObject);
 var
     i: integer;
-    n: TTntTreeNode;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
