@@ -821,9 +821,9 @@ end;
 {---------------------------------------}
 procedure TExodusChat.Close;
 begin
-    if (_chat <> nil) then
+    if ((_chat <> nil) and (_chat.window <> nil))then
     begin
-        TfrmChat(_chat).Close();
+        TfrmChat(_chat.window).Close();
     end
     else if (_room <> nil) then
     begin
@@ -834,9 +834,9 @@ end;
 {---------------------------------------}
 procedure TExodusChat.BringToFront;
 begin
-    if (_chat <> nil) then
+    if ((_chat <> nil) and (_chat.window <> nil)) then
     begin
-        TfrmChat(_chat).ShowDefault();
+        TfrmChat(_chat.window).ShowDefault();
     end
     else if (_room <> nil) then
     begin
@@ -847,11 +847,11 @@ end;
 {---------------------------------------}
 procedure TExodusChat.Dock;
 begin
-    if (_chat <> nil) then
+    if ((_chat <> nil) and (_chat.window <> nil)) then
     begin
-        if (not TfrmChat(_chat).Docked) then
+        if (not TfrmChat(_chat.window).Docked) then
         begin
-            TfrmChat(_chat).DockForm();
+            TfrmChat(_chat.window).DockForm();
         end;
     end
     else if (_room <> nil) then
@@ -866,11 +866,11 @@ end;
 {---------------------------------------}
 procedure TExodusChat.Float;
 begin
-    if (_chat <> nil) then
+    if ((_chat <> nil) and (_chat.window <> nil)) then
     begin
-        if (TfrmChat(_chat).Docked) then
+        if (TfrmChat(_chat.window).Docked) then
         begin
-            TfrmChat(_chat).FloatForm();
+            TfrmChat(_chat.window).FloatForm();
         end;
     end
     else if (_room <> nil) then
