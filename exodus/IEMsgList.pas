@@ -140,7 +140,7 @@ type
     _content: IHTMLElement;
     _content2: IHTMLElement2;
     _lastelement: IHTMLElement;
-    _composingelement: IHTMLElement;
+    _elementID: widestring;
 
     _we: TMSHTMLHTMLElementEvents;
     _we2: TMSHTMLHTMLElementEvents2;
@@ -1279,6 +1279,7 @@ begin
         tstr := tstr + '<lastnick>' + _msgProcessor.lastMsgNick + '</lastnick>';
         tstr := tstr + '<msgcount>' + IntToStr(_msgCount) + '</msgcount>';
         tstr := tstr + '<lastlineclass>' + _msgProcessor.lastLineClass + '</lastlineclass>';
+        tstr := tstr + '<idcount>' + IntToStr(_msgProcessor.idCount) + '</idcount>';
         tstr := tstr + '</state>';
         Result := '<!--' + tstr + '-->' + Result;
     end;
@@ -1324,6 +1325,7 @@ begin
             end;
         end;
         _msgProcessor.lastLineClass := stag.GetBasicText('lastlineclass');
+        _msgProcessor.idCount := StrToInt(stag.GetBasicText('idcount'));
     end;
 
     writeHTML(txt);
@@ -1721,21 +1723,27 @@ begin
 
     outstring := _msgProcessor.ProcessComposing(msg, id);
     writeHTML(outstring);
-    _composingelement := _doc.all.item(id, 0) as IHTMLElement;
+    _elementID := id;
 
     ScrollToBottom();
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.HideComposing();
+var
+    composingelement: IHTMLElement;
 begin
     if (_composing = -1) then exit;
 
-    if (_composingelement <> nil) then begin
-        _composingelement.outerHTML := '';
-        _composingelement := nil;
+    try
+        composingelement := _doc.all.item(_elementID, 0) as IHTMLElement;
+        if (composingelement <> nil) then begin
+            composingelement.outerHTML := '';
+        end;
+    except
     end;
 
+    _elementID := '';
     _composing := -1;
 end;
 
