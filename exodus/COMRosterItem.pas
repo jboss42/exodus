@@ -216,8 +216,6 @@ end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.Set_ContextMenuID(const Value: WideString);
-var
-    menu: TTntPopupMenu;
 begin
     //not supported
 end;
@@ -330,8 +328,6 @@ begin
 end;
 {---------------------------------------}
 procedure TExodusRosterItem.Set_CanOffline(Value: WordBool);
-var
-    offline: Widestring;
 begin
     if Value then
         _item.value['msgoffline'] := ''
@@ -341,8 +337,6 @@ end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_IsNative: WordBool;
-var
-    network: Widestring;
 begin
     //Result := _ritem.IsNative;
     Result := (_item.value['Network'] = 'xmpp');

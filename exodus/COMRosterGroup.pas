@@ -224,7 +224,6 @@ procedure TExodusRosterGroup.addGroup(const child: IExodusRosterGroup);
 var
     ctrl: IExodusItemController;
     item: IExodusItem;
-    subgrp: Widestring;
 begin
     ctrl := MainSession.ItemController;
     item := ctrl.GetItem(child.FullName);

@@ -229,7 +229,6 @@ var
     contacts: IExodusItemList;
     item: IExodusItem;
 begin
-    { TODO : Roster refactor }
     contacts := MainSession.ItemController.GetItemsByType('contact');
 
     if (Index >= 0) and (Index < contacts.Count) then
@@ -246,7 +245,6 @@ end;
 {---------------------------------------}
 function TExodusRoster.Count: Integer;
 begin
-   { TODO : Roster refactor }
    Result := MainSession.ItemController.GetItemsByType('contact').Count;
 end;
 
@@ -315,19 +313,12 @@ end;
 
 {---------------------------------------}
 function TExodusRoster.addContextMenu(const id: WideString): WordBool;
-var
-    idx: integer;
-    menu: TTntPopupMenu;
 begin
     //Custom context menus not supported
     Result := false;
 end;
 {---------------------------------------}
 procedure TExodusRoster.removeContextMenu(const id: WideString);
-var
-    i, midx, idx, pidx: integer;
-    menu: TTntPopupMenu;
-    item: TTntMenuItem;
 begin
     //custom context menus not supported
 end;
@@ -386,7 +377,7 @@ end;
 procedure TExodusRoster.removeContextMenuItem(const menu_id,
   item_id: WideString);
 var
-    i, midx, idx: integer;
+    idx: integer;
     menu: TTntPopupMenu;
     mi: TTntMenuitem;
     itemtype: Widestring;
@@ -435,8 +426,7 @@ end;
 {---------------------------------------}
 procedure TExodusRoster.EnableContextMenuItem(const menuID: WideString; const itemID: WideString; enable: WordBool);
 var
-    i, idx: integer;
-    menu: TTntPopupMenu;
+    idx: integer;
     item: TTntMenuitem;
     itemtype: Widestring;
     act: TExMenuListenerAction;
@@ -444,8 +434,6 @@ begin
     if not mapMenuID(menuID, itemtype) then begin
         idx := _menus.IndexOf(menuID);
         if (idx = -1) then exit;
-
-        menu := TTntPopupMenu(_menus.Objects[idx]);
 
         idx := _items.IndexOf(itemID);
         if (idx = -1) then exit;
@@ -464,8 +452,7 @@ end;
 {---------------------------------------}
 procedure TExodusRoster.ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool);
 var
-    i, idx: integer;
-    menu: TTntPopupMenu;
+    idx: integer;
     item: TTntMenuitem;
     itemtype: Widestring;
     act: TExMenuListenerAction;
@@ -473,8 +460,6 @@ begin
     if not mapMenuID(menuID, itemtype) then begin
         idx := _menus.IndexOf(menuID);
         if (idx = -1) then exit;
-
-        menu := TTntPopupMenu(_menus.Objects[idx]);
 
         idx := _items.IndexOf(itemID);
         if (idx = -1) then exit;

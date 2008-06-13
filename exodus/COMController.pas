@@ -666,7 +666,6 @@ procedure ConfigurePlugin(com_name: string);
 var
     idx: integer;
     p: TPlugin;
-    errorStr: WideString;
 begin
     //
     idx := plugs.IndexOf(com_name);
@@ -687,11 +686,8 @@ function IsPluginConfigurable(com_name: string): boolean;
 var
     idx: integer;
     p: TPlugin;
-    errorStr: WideString;
     com2: IExodusPlugin2;
 begin
-    //
-    Result := false;
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
         Result := false;
@@ -1182,8 +1178,7 @@ end;
 procedure TExodusController.AddRosterItem(const jid, nickname,
   group: WideString);
 begin
-    { TODO : Roster refactor }
-    //MainSession.roster.AddItem(jid, nickname, group, true);
+    MainSession.roster.AddItem(jid, nickname, group, true);
 end;
 
 {---------------------------------------}
@@ -1196,24 +1191,25 @@ end;
 
 {---------------------------------------}
 function TExodusController.isRosterJID(const jid: WideString): WordBool;
+var
+    item: IExodusItem;
 begin
-        { TODO : Roster refactor }
-   // Result := (MainSession.Roster.Find(jid) <> nil);
+    item := MainSession.ItemController.GetItem(jid);
+    Result := (item <> nil) and (item.Type_ = 'contact');
 end;
 
 {---------------------------------------}
 function TExodusController.isSubscribed(const jid: WideString): WordBool;
-//var
-//    ritem: TJabberRosterItem;
+var
+    item: IExodusItem;
+    value: Widestring;
 begin
-          { TODO : Roster refactor }
-//    Result := false;
-//    ritem := MainSession.Roster.Find(jid);
-//    if (ritem <> nil) then begin
-//        if (ritem.subscription = 'to') or
-//        (ritem.subscription = 'both') then
-//            Result := true;
-//    end;
+    Result := false;
+    item := MainSession.ItemController.GetItem(jid);
+    if (item <> nil) and (item.Type_ = 'contact') then begin
+        value := item.value['Subscription'];
+        Result := (value = 'to') or (value = 'both');
+    end;
 end;
 
 {---------------------------------------}
@@ -1738,12 +1734,11 @@ end;
 {---------------------------------------}
 function TExodusController.GetActiveContacts(Online: WordBool): OleVariant;
 //var
-//    clist: TList;
-//    i: integer;
-//    ritem: TJabberRosterItem;
+//    items: IExodusItemList;
+//    idx: Integer;
 //    va : Variant;
 begin
- { TODO : Roster refactor }
+    { TODO : Roster refactor }
 //    clist := frmRosterWindow.getSelectedContacts(Online);
 //    va := VarArrayCreate([0,clist.Count], varOleStr);
 //

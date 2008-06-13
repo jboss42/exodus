@@ -82,7 +82,7 @@ implementation
 
 uses
     JabberUtils, ExUtils,  GnuGetText, JabberConst, JabberID, Session, Room,
-    RosterForm;
+    RosterForm, Exodus_TLB;
 
 {$R *.dfm}
 
@@ -336,7 +336,7 @@ end;
 procedure TfrmRoomAdminList.btnAddClick(Sender: TObject);
 var
     j: Widestring;
-//    ritem: TJabberRosterItem;
+    item: IExodusItem;
 begin
     // Add a JID
     if (role) then begin
@@ -353,11 +353,10 @@ begin
         // Select by JID
         j := SelectUIDByType('contact');
         if (j <> '') then begin
-{ TODO : Roster refactor }            
-//            ritem := MainSession.Roster.Find(j);
-//            if (ritem <> nil) then
-//                AddJid(j, ritem.Text)
-//            else
+            item := MainSession.ItemController.GetItem(j);
+            if (item <> nil) and (item.Type_ = 'contact') then
+                AddJid(j, item.value['Name'])
+            else
                 AddJid(j, '');
         end;
     end;
