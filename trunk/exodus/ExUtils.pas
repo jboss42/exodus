@@ -98,7 +98,6 @@ procedure centerMainForm(f: TForm);
 procedure CenterChildForm(f: TForm; anchor: TForm);
 procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
-{ TODO : Roster refactor }
 function promptNewGroup(base_grp: Widestring = ''): IExodusItem;
 
 function IsUnicodeEnabled(): boolean;

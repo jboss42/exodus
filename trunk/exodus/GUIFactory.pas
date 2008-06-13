@@ -242,7 +242,6 @@ begin
         sjid := tag.getAttribute('from');
         tmp_jid := TJabberID.Create(sjid);
         sjid := tmp_jid.getDisplayJID();
-{ TODO : Roster refactor }
 
         item := MainSession.ItemController.GetItem(sjid);
         if (item <> nil) then begin
@@ -264,7 +263,6 @@ begin
         end
         else begin
             sub := TfrmSubscribe.Create(Application);
-{ TODO : Roster refactor }
             sub.setup(tmp_jid, item, tag);
         end;
         tmp_jid.Free();

@@ -3012,23 +3012,23 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.popRosterSubscribeClick(Sender: TObject);
-//var
-//    j: TJabberID;
-//    rm: TRoomMember;
-//    dgrp: Widestring;
+var
+    j: TJabberID;
+    rm: TRoomMember;
+    dgrp: Widestring;
 begin
-     { TODO : Roster refactor }
-//  inherited;
-//    // subscribe to this person
-//    if (lstRoster.Selected = nil) then exit;
-//
-//    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
-//    if ((rm <> nil) and (rm.real_jid <> '')) then begin
-//        j := TJabberID.Create(rm.real_jid);
-//        dgrp := MainSession.Prefs.getString('roster_default');
-//        MainSession.Roster.AddItem(j.jid, rm.nick, dgrp, true);
-//        j.Free();
-//    end;
+    inherited;
+
+    // subscribe to this person
+    if (lstRoster.Selected = nil) then exit;
+
+    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+    if ((rm <> nil) and (rm.real_jid <> '')) then begin
+        j := TJabberID.Create(rm.real_jid);
+        dgrp := MainSession.Prefs.getString('roster_default');
+        MainSession.roster.AddItem(j.jid, rm.nick, dgrp, true);
+        j.Free();
+    end;
 end;
 
 {---------------------------------------}
