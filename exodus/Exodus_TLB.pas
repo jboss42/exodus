@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/5/2008 2:54:24 PM from Type Library described below.
+// File generated on 6/16/2008 10:21:00 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4503,6 +4503,7 @@ type
     procedure UnRegisterCallback; safecall;
     procedure FlashWindow; safecall;
     function Get_DockToolbar: IExodusDockToolbar; safecall;
+    function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant; safecall;
     property OleObject: OleVariant read Get_OleObject;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
@@ -4533,6 +4534,7 @@ type
     procedure UnRegisterCallback; dispid 212;
     procedure FlashWindow; dispid 213;
     property DockToolbar: IExodusDockToolbar readonly dispid 214;
+    function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant; dispid 215;
   end;
 
 // *********************************************************************//

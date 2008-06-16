@@ -56,6 +56,8 @@ type
     procedure UnRegisterCallback; safecall;
     procedure FlashWindow; safecall;
     function Get_DockToolbar: IExodusDockToolbar; safecall;
+    function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant;
+      safecall;
 
   end;
 
@@ -65,7 +67,8 @@ uses
     RosterImages,
     ComServ,
     Notify,
-    PrefController;
+    PrefController,
+    Controls;
 
 constructor TExodusAXWindow.Create(form: TfrmActiveXDockable);
 begin
@@ -225,6 +228,29 @@ begin
     if (_frm <> nil) then
     begin
         Result := _frm.DockToolbar;
+    end;
+end;
+
+function TExodusAXWindow.NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant;
+var
+    AXControl: TAXControl;
+    ParentControl: TWinControl;
+begin
+    Result := unassigned;
+    try
+        ParentControl := _frm.pnlChatTop;
+        AXControl := TAXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
+        if (AXControl <> nil) then begin
+            AXControl.Parent := ParentControl;
+            AXControl.Align := alClient;
+
+            Result := AXControl.OleObject;
+        end
+        else begin
+            Result := unassigned;
+        end;
+    except
+        Result := unassigned;
     end;
 end;
 
