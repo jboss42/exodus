@@ -74,7 +74,8 @@ type
         _items: TWidestringlist;        // our children
         _idents: TWidestringlist;       // our Identities
         _iq: TJabberIQ;
-
+        _lastInfoIQResult: TXMLTag;     //last disco#info iq result, full packet
+        
         _cat: Widestring;
         _cat_type: Widestring;
 
@@ -252,12 +253,14 @@ end;
 {---------------------------------------}
 constructor TJabberEntity.Create(jid: TJabberID; node: Widestring; etype: TJabberEntityType);
 begin
+
     _parent := nil;
     _jid := jid;
     _node := '';
     _name := '';
     _feats := TWidestringlist.Create();
     _refs := TList.Create();
+    _lastInfoIQResult := nil;
     _type := etype;
     _has_info := false;
     _disco_info_error := false;
@@ -290,6 +293,8 @@ begin
     _idents.Clear();
     _idents.Free();
     _feats.Clear();
+    if (_lastInfoIQResult <> nil) then
+        _lastInfoIQResult.free();
     FreeAndNil(_items);
     FreeAndNil(_feats);
     _jid.Free();
@@ -440,6 +445,9 @@ begin
     _type := ent_unknown;
 
     _feats.Clear();
+    if (_lastInfoIQResult <> nil) then
+        _lastInfoIQResult.free();
+    _lastInfoIQResult := nil;
     ClearStringListObjects(_idents);
     _idents.Clear();
 
@@ -460,7 +468,9 @@ begin
     if (_iq <> nil) then exit;
 
     if ((_has_info) or (_type = ent_browse) or (_type = ent_agents)) then
-        _fireOnEntityInfo(js, _jid.full)
+    begin
+        _fireOnEntityInfo(js, _jid.full);
+    end
     else
         _discoInfo(js, InfoCallback);
 end;
@@ -612,7 +622,7 @@ begin
     end
     else begin
         _processDiscoInfo(tag);
-        _fireOnEntityInfo(js, _jid.full);
+        _fireOnEntityInfo(js, tag);
     end;
 end;
 
@@ -723,7 +733,9 @@ begin
 
     _feats.Clear();
     _idents.Clear();
-
+    if (_lastInfoIQResult <> nil) then
+        _lastInfoIQResult.free();
+    _lastInfoIQResult := nil;
     q := tag.GetFirstTag('query');
     if (q = nil) then exit;
 
@@ -755,6 +767,8 @@ begin
     end;
 
     _processLegacyFeatures();
+
+    _lastInfoIQResult := TXMLTag.create(tag);
 end;
 
 {---------------------------------------}
@@ -765,9 +779,10 @@ begin
         //JM fixup test only *remove*
         if (_feats.IndexOf(XMLNS_XHTMLIM) = -1) then
             _feats.Add(XMLNS_XHTMLIM);
-
+{
         if (_feats.IndexOf(XMLNS_MUC) = -1) then
             _feats.Add(XMLNS_MUC);
+}
     end;
     
     // check for some legacy stuff..
@@ -891,7 +906,8 @@ begin
         _processDiscoInfo(tag);
         if (_stopWalk) then
         begin
-            _fireOnEntityInfo(js, _jid.full);
+            _fireOnEntityInfo(js, tag);
+
             if (_parent <> nil) then
                 _parent._childDiscoWalkFinished(js, Self);
         end
@@ -971,7 +987,11 @@ begin
 
     if (_has_items) then //entity done with walk
     begin
-        _fireOnEntityInfo(js, _jid.full);
+        if (_lastInfoIQResult <> nil) then
+            _fireOnEntityInfo(js, _lastInfoIQResult)
+        else
+            _fireOnEntityInfo(js, _jid.full);
+
         _fireOnEntityItems(js, _jid.full);
         if (_parent <> nil) then
             _parent._childDiscoWalkFinished(js, Self);
@@ -992,6 +1012,10 @@ begin
 
     // this item can have ns elements.. *sigh*
     _feats.Clear();
+    if (_lastInfoIQResult <> nil) then
+        _lastInfoIQResult.free();
+    _lastInfoIQResult := nil;
+
     nss := item.QueryTags('ns');
     for n := 0 to nss.Count - 1 do
         _feats.Add(nss[n].Data);
@@ -1254,7 +1278,7 @@ end;
 
 procedure TJabberEntity._fireOnEntityItems(jso: TObject; tag: TXMLTag);
 begin
-    DebugMessage('Entity firing /session/entity/items, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
+//    DebugMessage('Entity firing /session/entity/items, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
     TJabberSession(jso).FireEvent('/session/entity/items', tag);
 end;
 
@@ -1293,7 +1317,10 @@ begin
             break;
     if (i = _items.Count) then
     begin
-        _fireOnEntityInfo(jso, _jid.full); //can only get here if _has_info
+        if (_lastInfoIQResult <> nil) then
+            _fireOnEntityInfo(jso, _lastInfoIQResult)
+        else
+            _fireOnEntityInfo(jso, _jid.full);
         _fireOnEntityItems(jso, _jid.full);
 
         if (_parent <> nil) then
