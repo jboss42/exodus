@@ -1665,32 +1665,10 @@ library Exodus
     id(0x0000012E)
     ]
     HRESULT _stdcall OnSentMessageXML([in] BSTR XML );
-  };
-
-  [
-    uuid(FD3F0F9F-0BD9-4087-B892-C8FE5E332E40), 
-    version(1.0), 
-    dual, 
-    oleautomation
-  ]
-   interface IExodusChat3: IExodusChat
-  {
     [
-    id(0x000000E0)
+    id(0x0000012F)
     ]
-    HRESULT _stdcall Close( void );
-    [
-    id(0x000000E1)
-    ]
-    HRESULT _stdcall BringToFront( void );
-    [
-    id(0x000000E2)
-    ]
-    HRESULT _stdcall Dock( void );
-    [
-    id(0x000000E3)
-    ]
-    HRESULT _stdcall Float( void );
+    HRESULT _stdcall OnChatEvent([in] BSTR event, [in] VARIANT value, [out, retval] VARIANT_BOOL * handled );
   };
 
   
@@ -2139,6 +2117,16 @@ library Exodus
     id(0x000000EA)
     ]
     HRESULT _stdcall MainToolBarImages([out, retval] IExodusRosterImages ** value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000EB)
+    ]
+    HRESULT _stdcall EnableFilesDragAndDrop([out, retval] VARIANT_BOOL * value );
+    [
+    propput, 
+    id(0x000000EB)
+    ]
+    HRESULT _stdcall EnableFilesDragAndDrop([in] VARIANT_BOOL value );
   };
 
   [
@@ -8874,6 +8862,10 @@ library Exodus
     id(0x000000D6)
     ]
     HRESULT _stdcall DockToolbar([out, retval] IExodusDockToolbar ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall NewTitleBarActiveX([in] BSTR ActiveX_GUID, [out, retval] VARIANT * ActiveX_Wrapper );
   };
 
   [
@@ -9502,6 +9494,40 @@ library Exodus
     id(0x000000CA)
     ]
     HRESULT _stdcall ItemGroupsChanged([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(FD3F0F9F-0BD9-4087-B892-C8FE5E332E40), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusChat3: IDispatch
+  {
+    [
+    id(0x000000E0)
+    ]
+    HRESULT _stdcall Close( void );
+    [
+    id(0x000000E1)
+    ]
+    HRESULT _stdcall BringToFront( void );
+    [
+    id(0x000000E2)
+    ]
+    HRESULT _stdcall Dock( void );
+    [
+    id(0x000000E3)
+    ]
+    HRESULT _stdcall Float( void );
+    [
+    id(0x00000191)
+    ]
+    HRESULT _stdcall AddRosterMenu([in] BSTR Caption, [in] IExodusMenuListener * MenuListener /*Warning: unable to validate structure name: */, [out, retval] BSTR * menuID );
+    [
+    id(0x00000192)
+    ]
+    HRESULT _stdcall RemoveRosterMenu([in] BSTR menuID );
   };
 
 };
