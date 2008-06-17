@@ -73,6 +73,9 @@ type
       procedure RemoveItemFromGroup(const UID, Group: WideString); safecall;
     function GetItemsByType(const Type_: WideString): IExodusItemList; safecall;
     function AddGroup(const grp: WideString): IExodusItem; safecall;
+    function RegisterHover(const ItemType, GUID: WideString;
+      const Listener: IExodusHoverListener): Integer; safecall;
+    function UnregisterHover(const ItemType: WideString): Integer; safecall;
   private
       _Items: TWideStringList;
       _JS: TObject;
@@ -710,6 +713,17 @@ begin
     Result := _AddGroup(grp).ExodusItem;
 end;
 
+function TExodusItemController.RegisterHover(const ItemType, GUID: WideString;
+      const Listener: IExodusHoverListener): Integer;
+begin
+
+end;
+
+
+function TExodusItemController.UnregisterHover(const ItemType: WideString): Integer;
+begin
+
+end;
 
 constructor TExodusGroupCallback.Create(ctrl: TExodusItemController);
 begin
@@ -737,6 +751,7 @@ begin
     _ctrl._SendGroups();
     TJabberSession(_ctrl._JS).FireEvent('/item/update', item);
 end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusItemController, Class_ExodusItemController,
