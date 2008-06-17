@@ -36,7 +36,7 @@ const
     CTI_ACTIVITY_ENABLED_INDEX  : Integer = 8;
 {$ENDIF}
 var
-    ContactToolbarImages : TContactToolbarImages;
+    MainbarImages : TContactToolbarImages;
 
 implementation
 
@@ -61,9 +61,9 @@ begin
 end;
 
 initialization
-    ContactToolbarImages := TContactToolbarImages.Create(IMAGE_LIST_ID_CONTACT_TOOLBAR);
+    MainbarImages := TContactToolbarImages.Create(IMAGE_LIST_ID_CONTACT_TOOLBAR);
 
 finalization
-    ContactToolbarImages.Free();
+    MainbarImages.Free();
 
 end.

@@ -84,7 +84,7 @@ function TExodusMainToolBarImages.AddImageBase64(const id,
 var
     idx: integer;
 begin
-    idx := ContactToolbarImages.Find(id);
+    idx := MainbarImages.Find(id);
     if (idx >= 0) then begin
         Result := idx;
         exit;
@@ -98,7 +98,7 @@ begin
     _mem.Position := 0;
 
     _bmp.LoadFromStream(_mem);
-    Result := ContactToolbarImages.AddImage(id, _bmp);
+    Result := MainbarImages.AddImage(id, _bmp);
 end;
 
 {---------------------------------------}
@@ -107,14 +107,14 @@ function TExodusMainToolBarImages.AddImageFilename(const id,
 var
     idx: integer;
 begin
-    idx := ContactToolbarImages.Find(id);
+    idx := MainbarImages.Find(id);
     if (idx >= 0) then begin
         Result := idx;
         exit;
     end;
 
     _bmp.LoadFromFile(filename);
-    Result := ContactToolbarImages.AddImage(id, _bmp);
+    Result := MainbarImages.AddImage(id, _bmp);
 end;
 
 {---------------------------------------}
@@ -125,7 +125,7 @@ var
     ins: THandle;
     idx: integer;
 begin
-    idx := ContactToolbarImages.Find(id);
+    idx := MainbarImages.Find(id);
     if (idx >= 0) then begin
         Result := idx;
         exit;
@@ -135,7 +135,7 @@ begin
     ins := LoadLibrary(PChar(lname));
     if (ins > 0) then begin
         _bmp.LoadFromResourceName(ins, ResName);
-        Result := ContactToolbarImages.AddImage(id, _bmp);
+        Result := MainbarImages.AddImage(id, _bmp);
         FreeLibrary(ins);
     end;
 end;
@@ -143,13 +143,13 @@ end;
 {---------------------------------------}
 function TExodusMainToolBarImages.Find(const id: WideString): Integer;
 begin
-    Result := ContactToolbarImages.Find(id);
+    Result := MainbarImages.Find(id);
 end;
 
 {---------------------------------------}
 procedure TExodusMainToolBarImages.Remove(const id: WideString);
 begin
-    ContactToolbarImages.RemoveImage(id);
+    MainbarImages.RemoveImage(id);
 end;
 
 {---------------------------------------}
@@ -158,7 +158,7 @@ var
   Idx: Integer;
 begin
    Result := '';
-   Idx := ContactToolbarImages.Find(Id);
+   Idx := MainbarImages.Find(Id);
    if (Idx = -1) then
       exit;
    Result := GetImageByIndex(Idx);
@@ -173,7 +173,7 @@ begin
    //First, save bitmap to stream.
    Bitmap := TBitmap.Create();
     //RosterTreeImages.ImageList.GetBitmap(Idx, _bmp);
-    ContactToolbarImages.ImageList.GetBitmap(Idx, Bitmap);
+    MainbarImages.ImageList.GetBitmap(Idx, Bitmap);
    _mem.Clear();
    _mem.Position := 0;
    //_bmp.SaveToStream(_mem);

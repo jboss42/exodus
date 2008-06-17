@@ -286,7 +286,7 @@ type
     Contact1: TTntMenuItem;
     txtStatus: TTntEdit;
     imgAd: TImage;
-    ImageList2: TImageList;
+    MainbarImageList: TImageList;
     ToolbarBevel: TColorBevel;
     popViewStates: TTntPopupMenu;
     popShowOnline: TTntMenuItem;
@@ -1187,7 +1187,7 @@ begin
     // setup our master image lists
     RosterTreeImages.setImageList(ImageList1);
     GetRosterWindow().ImageList := RosterTreeImages.ImageList;
-    ContactToolbarImages.setImageList(ImageList2);
+    MainbarImages.setImageList(MainbarImageList);
 
     // if we are testing auto-away, then fire the
     // timer every 1 second, instead of every 10 secs.
