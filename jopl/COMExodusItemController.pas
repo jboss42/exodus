@@ -25,7 +25,8 @@ unit COMExodusItemController;
 interface
 
 uses
-  ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode, XMLTag, PrefFile, GroupParser, COMExodusItemWrapper;
+  ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode, XMLTag, PrefFile, GroupParser, COMExodusItemWrapper,
+  PLUGINCONTROLLib_TLB;
 
 type
   {
@@ -75,6 +76,7 @@ type
     function AddGroup(const grp: WideString): IExodusItem; safecall;
     function AddHover(const ItemType, GUID: WideString): IExodusHover; safecall;
     procedure RemoveHover(const ItemType: WideString); safecall;
+    function GetHoverByType(const ItemType: WideString): IExodusHover; safecall;
   private
       _Items: TWideStringList;
       _JS: TObject;
@@ -175,7 +177,6 @@ begin
     end;
     _HoverControls.Free;
 end;
-
 
 {---------------------------------------}
 procedure TExodusItemController._SessionCallback(Event: string; Tag: TXMLTag);
@@ -775,6 +776,18 @@ begin
 
     _ctrl._SendGroups();
     TJabberSession(_ctrl._JS).FireEvent('/item/update', item);
+end;
+
+
+function TExodusItemController.GetHoverByType(
+  const ItemType: WideString): IExodusHover;
+var
+    Idx: Integer;
+begin
+    Result := nil;
+    Idx := _HoverControls.IndexOf(ItemType);
+    if (Idx > -1) then
+        Result := TCOMExodusHover(_HoverControls.Objects[Idx]);
 end;
 
 

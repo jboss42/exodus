@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/17/2008 11:33:19 AM from Type Library described below.
+// File generated on 6/17/2008 2:11:10 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -4662,6 +4662,7 @@ type
     function AddGroup(const grp: WideString): IExodusItem; safecall;
     function AddHover(const ItemType: WideString; const GUID: WideString): IExodusHover; safecall;
     procedure RemoveHover(const ItemType: WideString); safecall;
+    function GetHoverByType(const ItemType: WideString): IExodusHover; safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
     property Item[index: Integer]: IExodusItem read Get_Item;
@@ -4699,6 +4700,7 @@ type
     function AddGroup(const grp: WideString): IExodusItem; dispid 204;
     function AddHover(const ItemType: WideString; const GUID: WideString): IExodusHover; dispid 212;
     procedure RemoveHover(const ItemType: WideString); dispid 213;
+    function GetHoverByType(const ItemType: WideString): IExodusHover; dispid 216;
   end;
 
 // *********************************************************************//
@@ -5405,6 +5407,8 @@ type
     function Get_Listener: IExodusHoverListener; safecall;
     procedure Set_Listener(const Value: IExodusHoverListener); safecall;
     function Get_AxControl: IUnknown; safecall;
+    procedure Show(const Item: IExodusItem); safecall;
+    procedure Hide(const Item: IExodusItem); safecall;
     property Listener: IExodusHoverListener read Get_Listener write Set_Listener;
     property AxControl: IUnknown read Get_AxControl;
   end;
@@ -5418,6 +5422,8 @@ type
     ['{4CF49CD8-4B9B-4648-A07C-280111E724DA}']
     property Listener: IExodusHoverListener dispid 201;
     property AxControl: IUnknown readonly dispid 202;
+    procedure Show(const Item: IExodusItem); dispid 203;
+    procedure Hide(const Item: IExodusItem); dispid 204;
   end;
 
 // *********************************************************************//

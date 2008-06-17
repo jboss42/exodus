@@ -5,7 +5,7 @@ unit COMExodusHover;
 interface
 
 uses
-  ComObj, ActiveX, Exodus_TLB, StdVcl, PLUGINCONTROLLib_TLB;
+  ComObj, ActiveX, Exodus_TLB, StdVcl, PLUGINCONTROLLib_TLB, ExFrame;
 
 type
   TCOMExodusHover = class(TAutoObject, IExodusHover)
@@ -16,21 +16,27 @@ type
     function Get_Listener: IExodusHoverListener; safecall;
     procedure Set_Listener(const Value: IExodusHoverListener); safecall;
     function Get_AxControl: IUnknown; safecall;
+    procedure Show(const Item: IExodusItem); safecall;
+    procedure Hide(const Item: IExodusItem); safecall;
   private
     _AxControl: TAxControl;
     _ItemType: WideString;
     _Listener: IExodusHoverListener;
+    _HoverFrame: TExFrame;
   end;
 
 implementation
 
-uses ComServ;
+uses ComServ, RosterForm, ExItemHoverForm;
 
 constructor TCOMExodusHover.Create(ItemType: WideString; GUID: WideString);
 begin
+    _Listener := nil;
     _ItemType := ItemType;
     try
        _AxControl := TAXControl.Create(nil, StringToGuid(GUID));
+       _HoverFrame := TExFrame.Create(nil);
+       _AxControl.Parent := _HoverFrame;
     except
         _AxControl := nil;
     end;
@@ -39,6 +45,7 @@ end;
 destructor TCOMExodusHover.Destroy();
 begin
    _AxControl.Free();
+   _HoverFrame.Free();
 end;
 
 function TCOMExodusHover.Get_Listener: IExodusHoverListener;
@@ -54,6 +61,22 @@ end;
 function TCOMExodusHover.Get_AxControl: IUnknown;
 begin
     Result := _AxControl as IUnknown;
+end;
+
+procedure TCOMExodusHover.Show(const Item: IExodusItem);
+begin
+    _HoverFrame.Parent := GetRosterWindow().HoverWindow;
+    GetRosterWindow().HoverWindow.CurrentFrame := _HoverFrame;
+    if (_Listener <> nil) then
+        _Listener.OnShow(Item);
+end;
+
+procedure TCOMExodusHover.Hide(const Item: IExodusItem);
+begin
+    if (_Listener <> nil) then
+        _Listener.OnHide(Item);
+    GetRosterWindow().HoverWindow.CurrentFrame := nil;
+    _HoverFrame.Parent := nil;    
 end;
 
 initialization

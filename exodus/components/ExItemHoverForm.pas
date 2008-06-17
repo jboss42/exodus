@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, Exodus_TLB, ExtCtrls, ExBrandPanel, ExGroupBox, StdCtrls,
   TntStdCtrls, Menus, TntMenus, AppEvnts, ExContactHoverFrame, ExRoomHoverFrame,
-  Exframe;
+  Exframe, ExHoverFrame;
 
 type
   TExItemHoverForm = class(TExForm)
@@ -35,6 +35,7 @@ type
     procedure ActivateHover(Point: TPoint; Item: IExodusItem);
     procedure CancelHover();
     procedure SetHover();
+    property CurrentFrame: TExFrame read _CurrentFrame write _CurrentFrame;
   end;
 
 implementation
@@ -60,7 +61,7 @@ begin
         exit;
     end;
 
-    if ((Item.Type_ <> EI_TYPE_ROOM) and (Item.Type_ <> EI_TYPE_CONTACT)) then
+    if (Item.Type_ = EI_TYPE_GROUP) then
     begin
         Hide;
         exit;
@@ -75,6 +76,8 @@ begin
 end;
 
 procedure TExItemHoverForm._InitControls(Item: IExodusItem);
+var
+    Hover: IExodusHover;
 begin
     Caption := Item.Text;
     if (_CurrentFrame <> nil) then
@@ -91,7 +94,12 @@ begin
         _CurrentFrame := _RoomFrame;
         _RoomFrame.Parent := Self;
         _RoomFrame.InitControls(Item);
-    end;   
+    end
+    else
+    begin
+        Hover := MainSession.ItemController.GetHoverByType(Item.Type_);
+        Hover.Show(Item);
+    end;
     AutoSize := true;
 end;
 

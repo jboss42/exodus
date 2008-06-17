@@ -300,7 +300,8 @@ uses
   BookmarkForm in 'BookmarkForm.pas',
   FontConsts in '..\jopl\FontConsts.pas',
   COMMainToolBarImages in 'COMMainToolBarImages.pas',
-  COMExodusHover in 'COMExodusHover.pas' {COMExodusHover: CoClass};
+  COMExodusHover in 'COMExodusHover.pas' {COMExodusHover: CoClass},
+  ExHoverFrame in 'components\ExHoverFrame.pas' {Frame1: TFrame};
 
 {$R *.TLB}
 
