@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/16/2008 10:21:00 AM from Type Library described below.
+// File generated on 6/17/2008 10:10:48 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -147,6 +147,7 @@ const
   CLASS_MainToolBarImages: TGUID = '{EED39569-B9B7-4888-A591-2640F31B3BC0}';
   IID_IExodusChatPlugin2: TGUID = '{B92A81A9-79B8-47F0-8A79-1CAC711089E5}';
   IID_IExodusChat3: TGUID = '{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}';
+  IID_IExodusHoverListener: TGUID = '{71150EFD-FFF5-4114-A7AC-A9540453376A}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -334,6 +335,8 @@ type
   IExodusChatPlugin2Disp = dispinterface;
   IExodusChat3 = interface;
   IExodusChat3Disp = dispinterface;
+  IExodusHoverListener = interface;
+  IExodusHoverListenerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -4652,6 +4655,9 @@ type
     function GetItemsByType(const Type_: WideString): IExodusItemList; safecall;
     function Get_GroupsLoaded: WordBool; safecall;
     function AddGroup(const grp: WideString): IExodusItem; safecall;
+    function RegisterHover(const ItemType: WideString; const GUID: WideString; 
+                           const Listener: IExodusHoverListener): Integer; safecall;
+    function UnregisterHover(const ItemType: WideString): Integer; safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
     property Item[index: Integer]: IExodusItem read Get_Item;
@@ -4687,6 +4693,9 @@ type
     function GetItemsByType(const Type_: WideString): IExodusItemList; dispid 215;
     property GroupsLoaded: WordBool readonly dispid 221;
     function AddGroup(const grp: WideString): IExodusItem; dispid 204;
+    function RegisterHover(const ItemType: WideString; const GUID: WideString; 
+                           const Listener: IExodusHoverListener): Integer; dispid 212;
+    function UnregisterHover(const ItemType: WideString): Integer; dispid 213;
   end;
 
 // *********************************************************************//
@@ -5359,6 +5368,28 @@ type
     procedure Float; dispid 227;
     function AddRosterMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 401;
     procedure RemoveRosterMenu(const menuID: WideString); dispid 402;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusHoverListener
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {71150EFD-FFF5-4114-A7AC-A9540453376A}
+// *********************************************************************//
+  IExodusHoverListener = interface(IDispatch)
+    ['{71150EFD-FFF5-4114-A7AC-A9540453376A}']
+    function OnShow(const Item: IExodusItem): WordBool; safecall;
+    procedure OnHide(const Item: IExodusItem); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusHoverListenerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {71150EFD-FFF5-4114-A7AC-A9540453376A}
+// *********************************************************************//
+  IExodusHoverListenerDisp = dispinterface
+    ['{71150EFD-FFF5-4114-A7AC-A9540453376A}']
+    function OnShow(const Item: IExodusItem): WordBool; dispid 201;
+    procedure OnHide(const Item: IExodusItem); dispid 202;
   end;
 
 // *********************************************************************//
