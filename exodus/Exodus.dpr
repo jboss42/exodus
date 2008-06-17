@@ -299,7 +299,8 @@ uses
   SndBroadcastDlg in 'SndBroadcastDlg.pas' {dlgSndBroadcast},
   BookmarkForm in 'BookmarkForm.pas',
   FontConsts in '..\jopl\FontConsts.pas',
-  COMMainToolBarImages in 'COMMainToolBarImages.pas';
+  COMMainToolBarImages in 'COMMainToolBarImages.pas',
+  COMExodusHover in 'COMExodusHover.pas' {COMExodusHover: CoClass};
 
 {$R *.TLB}
 

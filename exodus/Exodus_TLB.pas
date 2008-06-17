@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/17/2008 10:10:48 AM from Type Library described below.
+// File generated on 6/17/2008 11:33:19 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -148,6 +148,8 @@ const
   IID_IExodusChatPlugin2: TGUID = '{B92A81A9-79B8-47F0-8A79-1CAC711089E5}';
   IID_IExodusChat3: TGUID = '{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}';
   IID_IExodusHoverListener: TGUID = '{71150EFD-FFF5-4114-A7AC-A9540453376A}';
+  IID_IExodusHover: TGUID = '{4CF49CD8-4B9B-4648-A07C-280111E724DA}';
+  CLASS_COMExodusHover: TGUID = '{9004F424-7233-404F-8AC7-59F29BC5EFFB}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -337,6 +339,8 @@ type
   IExodusChat3Disp = dispinterface;
   IExodusHoverListener = interface;
   IExodusHoverListenerDisp = dispinterface;
+  IExodusHover = interface;
+  IExodusHoverDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -374,6 +378,7 @@ type
   ExodusHistorySQLSearchHandler = IExodusHistorySearchHandler;
   ExodusActionController = IExodusActionController;
   MainToolBarImages = IExodusRosterImages;
+  COMExodusHover = IExodusHover;
 
 
 // *********************************************************************//
@@ -4655,9 +4660,8 @@ type
     function GetItemsByType(const Type_: WideString): IExodusItemList; safecall;
     function Get_GroupsLoaded: WordBool; safecall;
     function AddGroup(const grp: WideString): IExodusItem; safecall;
-    function RegisterHover(const ItemType: WideString; const GUID: WideString; 
-                           const Listener: IExodusHoverListener): Integer; safecall;
-    function UnregisterHover(const ItemType: WideString): Integer; safecall;
+    function AddHover(const ItemType: WideString; const GUID: WideString): IExodusHover; safecall;
+    procedure RemoveHover(const ItemType: WideString); safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
     property Item[index: Integer]: IExodusItem read Get_Item;
@@ -4693,9 +4697,8 @@ type
     function GetItemsByType(const Type_: WideString): IExodusItemList; dispid 215;
     property GroupsLoaded: WordBool readonly dispid 221;
     function AddGroup(const grp: WideString): IExodusItem; dispid 204;
-    function RegisterHover(const ItemType: WideString; const GUID: WideString; 
-                           const Listener: IExodusHoverListener): Integer; dispid 212;
-    function UnregisterHover(const ItemType: WideString): Integer; dispid 213;
+    function AddHover(const ItemType: WideString; const GUID: WideString): IExodusHover; dispid 212;
+    procedure RemoveHover(const ItemType: WideString); dispid 213;
   end;
 
 // *********************************************************************//
@@ -5393,6 +5396,31 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusHover
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {4CF49CD8-4B9B-4648-A07C-280111E724DA}
+// *********************************************************************//
+  IExodusHover = interface(IDispatch)
+    ['{4CF49CD8-4B9B-4648-A07C-280111E724DA}']
+    function Get_Listener: IExodusHoverListener; safecall;
+    procedure Set_Listener(const Value: IExodusHoverListener); safecall;
+    function Get_AxControl: IUnknown; safecall;
+    property Listener: IExodusHoverListener read Get_Listener write Set_Listener;
+    property AxControl: IUnknown read Get_AxControl;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusHoverDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {4CF49CD8-4B9B-4648-A07C-280111E724DA}
+// *********************************************************************//
+  IExodusHoverDisp = dispinterface
+    ['{4CF49CD8-4B9B-4648-A07C-280111E724DA}']
+    property Listener: IExodusHoverListener dispid 201;
+    property AxControl: IUnknown readonly dispid 202;
+  end;
+
+// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -5776,6 +5804,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusRosterImages;
   end;
 
+// *********************************************************************//
+// The Class CoCOMExodusHover provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusHover exposed by              
+// the CoClass COMExodusHover. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoCOMExodusHover = class
+    class function Create: IExodusHover;
+    class function CreateRemote(const MachineName: string): IExodusHover;
+  end;
+
 implementation
 
 uses ComObj;
@@ -6098,6 +6138,16 @@ end;
 class function CoMainToolBarImages.CreateRemote(const MachineName: string): IExodusRosterImages;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_MainToolBarImages) as IExodusRosterImages;
+end;
+
+class function CoCOMExodusHover.Create: IExodusHover;
+begin
+  Result := CreateComObject(CLASS_COMExodusHover) as IExodusHover;
+end;
+
+class function CoCOMExodusHover.CreateRemote(const MachineName: string): IExodusHover;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_COMExodusHover) as IExodusHover;
 end;
 
 end.

@@ -73,9 +73,8 @@ type
       procedure RemoveItemFromGroup(const UID, Group: WideString); safecall;
     function GetItemsByType(const Type_: WideString): IExodusItemList; safecall;
     function AddGroup(const grp: WideString): IExodusItem; safecall;
-    function RegisterHover(const ItemType, GUID: WideString;
-      const Listener: IExodusHoverListener): Integer; safecall;
-    function UnregisterHover(const ItemType: WideString): Integer; safecall;
+    function AddHover(const ItemType, GUID: WideString): IExodusHover; safecall;
+    procedure RemoveHover(const ItemType: WideString); safecall;
   private
       _Items: TWideStringList;
       _JS: TObject;
@@ -84,6 +83,7 @@ type
       _GroupsLoaded: Boolean;
       _ServerStorage: Boolean;
       _GroupParser : TGroupParser;
+      _HoverControls: TWideStringList;
 
       procedure _SessionCallback(Event: string; Tag: TXMLTag);
       procedure _GetGroups();
@@ -119,7 +119,7 @@ implementation
 
 uses ComServ, Classes,
      JabberConst, IQ, Session, {GroupInfo,} Variants, Contnrs,
-     COMExodusItem, COMExodusItemList;
+     COMExodusItem, COMExodusItemList, COMExodusHover;
 
 
 {---------------------------------------}
@@ -151,10 +151,13 @@ begin
     _ServerStorage := true;
     _GroupParser := TGroupParser.Create(_JS);
     _GroupsCB := TExodusGroupCallback.Create(Self);
+    _HoverControls := TWideStringList.Create();
 end;
 
 {---------------------------------------}
 destructor TExodusItemController.Destroy();
+var
+   Hover: TCOMExodusHover;
 begin
 
     ClearItems();
@@ -164,6 +167,13 @@ begin
 
     _GroupsCB._Release();
     _GroupsCB := nil;
+    while (_HoverControls.Count > 0) do
+    begin
+        Hover := TCOMExodusHover(_HoverControls.Objects[0]);
+        _HoverControls.Delete(0);
+        Hover.Free();
+    end;
+    _HoverControls.Free;
 end;
 
 
@@ -713,16 +723,31 @@ begin
     Result := _AddGroup(grp).ExodusItem;
 end;
 
-function TExodusItemController.RegisterHover(const ItemType, GUID: WideString;
-      const Listener: IExodusHoverListener): Integer;
+function TExodusItemController.AddHover(const ItemType,
+  GUID: WideString): IExodusHover;
+var
+    Hover: TCOMExodusHover;
+    Idx: Integer;
 begin
-
+    Hover := TCOMExodusHover.Create(ItemType, GUID);
+    Idx := _HoverControls.Add(ItemType);
+    _HoverControls.Objects[Idx] := Hover; 
+    Result := Hover;
 end;
 
 
-function TExodusItemController.UnregisterHover(const ItemType: WideString): Integer;
+procedure TExodusItemController.RemoveHover(const ItemType: WideString);
+var
+    Idx: Integer;
+    Hover: TCOMExodusHover;
 begin
-
+    Idx := _HoverControls.IndexOf(ItemType);
+    if (Idx > -1) then
+    begin
+        Hover := TComExodusHover(_HoverControls.Objects[Idx]);
+        _HoverControls.Delete(Idx);
+        Hover.Free();
+    end;
 end;
 
 constructor TExodusGroupCallback.Create(ctrl: TExodusItemController);
