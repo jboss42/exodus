@@ -20,7 +20,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 652
+  ExplicitHeight = 646
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
@@ -353,7 +353,7 @@ inherited frmExodus: TfrmExodus
       ButtonHeight = 30
       ButtonWidth = 39
       DragKind = dkDock
-      Images = ImageList2
+      Images = MainbarImageList
       TabOrder = 0
       Transparent = True
       Wrapable = False
@@ -13043,14 +13043,14 @@ inherited frmExodus: TfrmExodus
       Caption = 'Add Contact...'
     end
   end
-  object ImageList2: TImageList
+  object MainbarImageList: TImageList
     Height = 24
     ShareImages = True
     Width = 32
     Left = 112
     Top = 144
     Bitmap = {
-      494C01010B000E00040020001800FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01010B000D00040020001800FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004800000001002000000000000090
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -24,17 +24,17 @@ unit COMToolbarButton;
 interface
 
 uses
-  ComCtrls, ComObj, ActiveX, Exodus_TLB, StdVcl;
+  ComCtrls, ComObj, ActiveX, Exodus_TLB, ExodusImageList, StdVcl;
 
 type
   TExodusToolbarButton = class(TAutoObject, IExodusToolbarButton, IExodusToolbarButton2)
   private
     _button: TToolButton;
     _menu_listener: IExodusMenuListener;
-
+    _imgList: TExodusImageList;
   public
-    constructor Create(btn: TToolButton);
-
+    constructor Create(btn: TToolButton; imgList: TExodusImageList = nil);
+    destructor Destroy(); override;
   protected
     function Get_ImageID: WideString; safecall;
     function Get_Tooltip: WideString; safecall;
@@ -47,25 +47,48 @@ type
     function Get_MenuListener: IExodusMenuListener; safecall;
     procedure Set_MenuListener(const Value: IExodusMenuListener); safecall;
     function Get_Name: Widestring; safecall;
+
+    procedure SetImageList(images: TExodusImageList);
   public
     procedure OnClick(Sender: TObject);
   end;
+
 
 implementation
 
 uses
     RosterImages, ComServ, Debug;
 
-constructor TExodusToolbarButton.Create(btn: TToolButton);
+constructor TExodusToolbarButton.Create(btn: TToolButton; imgList: TExodusImageList);
 begin
     _button := btn;
     if (not Assigned(_button.OnClick)) then
         _button.OnClick := Self.OnClick;
+
+    if (imgList <> nil) then
+        SetImageList(imgList)
+    else
+        SetImageList(RosterTreeImages);
+end;
+
+destructor TExodusToolbarButton.Destroy();
+begin
+    _menu_listener := nil;
+    //TODO JJF button may not be valid here, may have already been freed by parent
+    //toolbar. Even so, if we assigned an onlcick handler to the button
+    //we should clear it now.
+    _button := nil;
+    inherited;
+end;
+
+procedure TExodusToolbarButton.SetImageList(images: TExodusImageList);
+begin
+    _imgList := images;
 end;
 
 function TExodusToolbarButton.Get_ImageID: WideString;
 begin
-    Result := RosterTreeImages.GetID(_button.ImageIndex);
+    Result := _imgList.GetID(_button.ImageIndex);
 end;
 
 function TExodusToolbarButton.Get_Tooltip: WideString;
@@ -82,7 +105,7 @@ procedure TExodusToolbarButton.Set_ImageID(const Value: WideString);
 var
     idx: integer;
 begin
-    idx := RosterTreeImages.Find(Value);
+    idx := _imgList.Find(Value);
     if (idx >= 0) then
         _button.ImageIndex := idx;
 end;

@@ -69,7 +69,7 @@ begin
         Toolbar1.AutoSize := true;
     end;
 
-    idx := ContactToolbarImages.Find(ImageID);
+    idx := MainbarImages.Find(ImageID);
     if (idx >= 0) then
         btn.ImageIndex := idx;
 
@@ -79,8 +79,7 @@ begin
     guid := AnsiReplaceStr(guid, '-', '_');
     btn.Name := 'toolbar_button_' + guid;
 
-
-    Result := TExodusToolbarButton.Create(btn);
+    Result := TExodusToolbarButton.Create(btn, MainbarImages);
 end;
 
 {---------------------------------------}
@@ -97,7 +96,7 @@ begin
     Result := nil;
     if (Index >= 0) and (Index < frmExodus.ToolBar1.ButtonCount) then begin
         btn := frmExodus.ToolBar1.Buttons[Index];
-        Result := TExodusToolbarButton.Create(btn) as IExodusToolbarButton;
+        Result := TExodusToolbarButton.Create(btn, MainbarImages) as IExodusToolbarButton;
     end;
 end;
 
