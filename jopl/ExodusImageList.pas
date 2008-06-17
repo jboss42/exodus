@@ -93,7 +93,9 @@ implementation
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-
+uses
+    SysUtils;
+    
 constructor TExodusImageList.Create(ID : WideString);
 begin
     inherited Create();
@@ -134,6 +136,7 @@ procedure TExodusImageList.setImagelist(images: TImagelist; ids : TWideStringLis
 var
     i : integer;
     img : TImage;
+    defImg: TBitmap;
 begin
     _imgList := images;
     _ids.Clear();
@@ -160,6 +163,23 @@ begin
     finally
         img.Free();
     end;
+    //make sure image list and id arrays are the same length
+    if (_imgList.Count > _ids.Count) then
+    begin
+        //id < images, add fake ids for the unknown images
+        for i := 0 to (_imgList.Count - _ids.Count - 1) do
+            _ids.Add('unknown-image' + IntToStr(i))
+    end
+    else if (_imgList.Count < _ids.count) then
+    begin
+        defImg := TBitmap.Create();
+        _imgList.GetBitmap(0, defImg);
+        //ids > images. populate unknown images with defaults
+        for i := 0 to (_ids.Count - _imgList.Count - 1) do
+        begin
+            _imgList.AddMasked(defImg, defImg.Canvas.Pixels[0,0]);
+        end;
+    end;    
 end;
 
 {**
@@ -218,7 +238,7 @@ begin
             postAddSize := _imgList.Count;
             if (postAddSize = (preAddSize + 1)) then begin
                 // A good add, so add to stringlist
-                _ids.Add(id);
+                _ids.add(id);
             end
             else begin
                 // A bad add, so back out add from _imgList
