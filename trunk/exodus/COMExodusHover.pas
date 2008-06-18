@@ -27,7 +27,11 @@ type
 
 implementation
 
-uses ComServ, RosterForm, ExItemHoverForm;
+uses
+    ComServ,
+    RosterForm,
+    ExItemHoverForm,
+    Controls;
 
 constructor TCOMExodusHover.Create(ItemType: WideString; GUID: WideString);
 begin
@@ -37,6 +41,7 @@ begin
        _AxControl := TAXControl.Create(nil, StringToGuid(GUID));
        _HoverFrame := TExFrame.Create(nil);
        _AxControl.Parent := _HoverFrame;
+       _AXControl.Align := alClient;
     except
         _AxControl := nil;
     end;
