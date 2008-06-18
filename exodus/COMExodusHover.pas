@@ -15,7 +15,7 @@ type
   protected
     function Get_Listener: IExodusHoverListener; safecall;
     procedure Set_Listener(const Value: IExodusHoverListener); safecall;
-    function Get_AxControl: IUnknown; safecall;
+    function Get_AXControl: IUnknown; safecall;
     procedure Show(const Item: IExodusItem); safecall;
     procedure Hide(const Item: IExodusItem); safecall;
   private
@@ -58,9 +58,9 @@ begin
     _Listener  := Value;
 end;
 
-function TCOMExodusHover.Get_AxControl: IUnknown;
+function TCOMExodusHover.Get_AXControl: IUnknown;
 begin
-    Result := _AxControl as IUnknown;
+    Result := IUnknown(_AxControl.OleObject);
 end;
 
 procedure TCOMExodusHover.Show(const Item: IExodusItem);
