@@ -2086,7 +2086,7 @@ library Exodus
     [
     id(0x000000E1)
     ]
-    HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWidnow_Caption, [out, retval] IExodusAXWindow ** ActiveX_Window /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWindow_Caption, [in] VARIANT_BOOL BringToFront, [out, retval] IExodusAXWindow ** ActiveX_Window /*Warning: unable to validate structure name: */ );
     [
     propget, 
     id(0x000000E2)
