@@ -1671,6 +1671,16 @@ library Exodus
     HRESULT _stdcall OnChatEvent([in] BSTR event, [in] VARIANT value, [out, retval] VARIANT_BOOL * handled );
   };
 
+  [
+    uuid(9004F424-7233-404F-8AC7-59F29BC5EFFB), 
+    version(1.0), 
+    helpstring("COMExodusHover")
+  ]
+  coclass COMExodusHover
+  {
+    [default] interface IExodusHover;
+  };
+
   
   typedef BSTR * PWideString1;
 
@@ -2076,7 +2086,7 @@ library Exodus
     [
     id(0x000000E1)
     ]
-    HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWidnow_Title, [out, retval] IExodusAXWindow ** ActiveX_Window /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWidnow_Caption, [out, retval] IExodusAXWindow ** ActiveX_Window /*Warning: unable to validate structure name: */ );
     [
     propget, 
     id(0x000000E2)
@@ -8866,6 +8876,16 @@ library Exodus
     id(0x000000D7)
     ]
     HRESULT _stdcall NewTitleBarActiveX([in] BSTR ActiveX_GUID, [out, retval] VARIANT * ActiveX_Wrapper );
+    [
+    propget, 
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall Caption([in] BSTR value );
   };
 
   [
@@ -8963,6 +8983,18 @@ library Exodus
     id(0x000000CC)
     ]
     HRESULT _stdcall AddGroup([in] BSTR grp, [out, retval] IExodusItem ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall AddHover([in] BSTR ItemType, [in] BSTR GUID, [out, retval] IExodusHover ** Hover /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall RemoveHover([in] BSTR ItemType );
+    [
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall GetHoverByType([in] BSTR ItemType, [out, retval] IExodusHover ** Hover /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -9528,6 +9560,57 @@ library Exodus
     id(0x00000192)
     ]
     HRESULT _stdcall RemoveRosterMenu([in] BSTR menuID );
+  };
+
+  [
+    uuid(71150EFD-FFF5-4114-A7AC-A9540453376A), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusHoverListener: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall OnShow([in] IExodusItem * Item /*Warning: unable to validate structure name: */, [out, retval] VARIANT_BOOL * Result );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall OnHide([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(4CF49CD8-4B9B-4648-A07C-280111E724DA), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusHover: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall listener([out, retval] IExodusHoverListener ** value /*Warning: unable to validate structure name: */ );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall listener([in] IExodusHoverListener * value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall AXControl([out, retval]  IUnknown ** value );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Show([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Hide([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
   };
 
 };

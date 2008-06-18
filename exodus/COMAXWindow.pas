@@ -58,6 +58,8 @@ type
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant;
       safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const value: WideString); safecall;
 
   end;
 
@@ -252,6 +254,16 @@ begin
     except
         Result := unassigned;
     end;
+end;
+
+function TExodusAXWindow.Get_Caption: WideString;
+begin
+    Result := _frm.Caption;
+end;
+
+procedure TExodusAXWindow.Set_Caption(const value: WideString);
+begin
+    _frm.Caption := Value;
 end;
 
 initialization

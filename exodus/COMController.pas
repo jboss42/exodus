@@ -141,7 +141,7 @@ type
     function Get_TabController: IExodusTabController; safecall;
     function Get_ActionController: IExodusActionController; safecall;
     function Get_ItemController: IExodusItemController; safecall;
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Caption: WideString): IExodusAXWindow; safecall;
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
     function GetPrefAsXML(const key: WideString): WideString; safecall;
@@ -2112,13 +2112,13 @@ begin
 end;
 
 // IExodusController2
-function TExodusController.NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
+function TExodusController.NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Caption: WideString): IExodusAXWindow; safecall;
 var
     frm: TfrmActiveXDockable;
 begin
     try
         Result := nil;
-        frm := StartActiveX(ActiveX_GUID, ActiveXWindow_Title, true);
+        frm := StartActiveX(ActiveX_GUID, ActiveXWindow_Caption, true);
         if (frm <> nil) then begin
             Result := TExodusAXWindow.Create(frm);
         end;
