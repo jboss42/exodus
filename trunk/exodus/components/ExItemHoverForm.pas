@@ -27,7 +27,7 @@ type
      procedure _NewWndProc(var Message: TMessage);
      procedure _WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
      procedure _CalcHoverPosition(Point: TPoint);
-     procedure _InitControls(Item: IExodusItem);
+     function _InitControls(Item: IExodusItem): Boolean;
      //
 
   public
@@ -67,7 +67,11 @@ begin
         exit;
     end;
 
-    _InitControls(Item);
+    if (not _InitControls(Item)) then
+    begin
+         Hide;
+         exit;
+    end;
     _CalcHoverPosition(Point);
 
     Self.Show;
@@ -75,10 +79,11 @@ begin
     HoverReenter.Enabled := false;
 end;
 
-procedure TExItemHoverForm._InitControls(Item: IExodusItem);
+function TExItemHoverForm._InitControls(Item: IExodusItem) : Boolean;
 var
     Hover: IExodusHover;
 begin
+    Result := true;
     Caption := Item.Text;
     if (_CurrentFrame <> nil) then
         _CurrentFrame.Parent := nil;
@@ -98,7 +103,13 @@ begin
     else
     begin
         Hover := MainSession.ItemController.GetHoverByType(Item.Type_);
-        Hover.Show(Item);
+        if (Hover <> nil) then        
+            Hover.Show(Item)
+        else
+        begin
+          Result := false;
+          exit;
+        end;
     end;
     AutoSize := true;
 end;
