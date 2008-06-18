@@ -68,7 +68,7 @@ var
   frmActiveXDockable: TfrmActiveXDockable;
 
 function StartActiveX(ActiveX_GUID: widestring;
-                      window_title: widestring;
+                      window_caption: widestring;
                       show_window: boolean;
                       bring_to_front:boolean=true): TfrmActiveXDockable;
 
@@ -84,7 +84,7 @@ uses
 
 
 function StartActiveX(ActiveX_GUID: widestring;
-                      window_title: widestring;
+                      window_caption: widestring;
                       show_window: boolean;
                       bring_to_front:boolean=true): TfrmActiveXDockable;
 var
@@ -94,7 +94,7 @@ begin
     Result := TfrmActiveXDockable.Create(nil);
 
     if (Result <> nil) then begin
-        Result.Caption := window_title;
+        Result.Caption := window_caption;
 
         ParentControl := Result.pnlMsgList;
         try
@@ -128,15 +128,19 @@ end;
 procedure TfrmActiveXDockable.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-    inherited;
+  inherited;
 
-    if (_callback <> nil) then
-    begin
-        _callback.OnClose();
+    try
+        if (_callback <> nil) then
+        begin
+            _callback.OnClose();
+        end;
+        _callback := nil;
+
+        _AXControl.Free();
+    except
+
     end;
-    _callback := nil;
-
-    _AXControl.Free();
     _AXControl := nil;
 end;
 
