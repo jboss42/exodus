@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/17/2008 2:11:10 PM from Type Library described below.
+// File generated on 6/18/2008 8:15:42 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -488,7 +488,7 @@ type
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
     function Get_TabController: IExodusTabController; safecall;
     function Get_ItemController: IExodusItemController; safecall;
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Title: WideString): IExodusAXWindow; safecall;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Caption: WideString): IExodusAXWindow; safecall;
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
     function Get_ActionController: IExodusActionController; safecall;
@@ -630,7 +630,7 @@ type
     property BookmarkManager: IExodusBookmarkManager readonly dispid 222;
     property TabController: IExodusTabController readonly dispid 223;
     property ItemController: IExodusItemController readonly dispid 224;
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Title: WideString): IExodusAXWindow; dispid 225;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Caption: WideString): IExodusAXWindow; dispid 225;
     property DataStore: IExodusDataStore readonly dispid 226;
     property HistorySearchManager: IExodusHistorySearchManager readonly dispid 227;
     property ActionController: IExodusActionController readonly dispid 228;
@@ -4512,6 +4512,8 @@ type
     procedure FlashWindow; safecall;
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant; safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const value: WideString); safecall;
     property OleObject: OleVariant read Get_OleObject;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
@@ -4519,6 +4521,7 @@ type
     property WindowType: WideString read Get_WindowType write Set_WindowType;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
     property DockToolbar: IExodusDockToolbar read Get_DockToolbar;
+    property Caption: WideString read Get_Caption write Set_Caption;
   end;
 
 // *********************************************************************//
@@ -4543,6 +4546,7 @@ type
     procedure FlashWindow; dispid 213;
     property DockToolbar: IExodusDockToolbar readonly dispid 214;
     function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant; dispid 215;
+    property Caption: WideString dispid 216;
   end;
 
 // *********************************************************************//
@@ -5404,13 +5408,13 @@ type
 // *********************************************************************//
   IExodusHover = interface(IDispatch)
     ['{4CF49CD8-4B9B-4648-A07C-280111E724DA}']
-    function Get_Listener: IExodusHoverListener; safecall;
-    procedure Set_Listener(const Value: IExodusHoverListener); safecall;
-    function Get_AxControl: IUnknown; safecall;
+    function Get_listener: IExodusHoverListener; safecall;
+    procedure Set_listener(const value: IExodusHoverListener); safecall;
+    function Get_AXControl: IUnknown; safecall;
     procedure Show(const Item: IExodusItem); safecall;
     procedure Hide(const Item: IExodusItem); safecall;
-    property Listener: IExodusHoverListener read Get_Listener write Set_Listener;
-    property AxControl: IUnknown read Get_AxControl;
+    property listener: IExodusHoverListener read Get_listener write Set_listener;
+    property AXControl: IUnknown read Get_AXControl;
   end;
 
 // *********************************************************************//
@@ -5420,8 +5424,8 @@ type
 // *********************************************************************//
   IExodusHoverDisp = dispinterface
     ['{4CF49CD8-4B9B-4648-A07C-280111E724DA}']
-    property Listener: IExodusHoverListener dispid 201;
-    property AxControl: IUnknown readonly dispid 202;
+    property listener: IExodusHoverListener dispid 201;
+    property AXControl: IUnknown readonly dispid 202;
     procedure Show(const Item: IExodusItem); dispid 203;
     procedure Hide(const Item: IExodusItem); dispid 204;
   end;
