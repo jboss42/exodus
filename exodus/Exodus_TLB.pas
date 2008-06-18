@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/18/2008 8:15:42 AM from Type Library described below.
+// File generated on 6/18/2008 12:09:00 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -488,7 +488,8 @@ type
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
     function Get_TabController: IExodusTabController; safecall;
     function Get_ItemController: IExodusItemController; safecall;
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Caption: WideString): IExodusAXWindow; safecall;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Caption: WideString; 
+                         BringToFront: WordBool): IExodusAXWindow; safecall;
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
     function Get_ActionController: IExodusActionController; safecall;
@@ -630,7 +631,8 @@ type
     property BookmarkManager: IExodusBookmarkManager readonly dispid 222;
     property TabController: IExodusTabController readonly dispid 223;
     property ItemController: IExodusItemController readonly dispid 224;
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Caption: WideString): IExodusAXWindow; dispid 225;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Caption: WideString; 
+                         BringToFront: WordBool): IExodusAXWindow; dispid 225;
     property DataStore: IExodusDataStore readonly dispid 226;
     property HistorySearchManager: IExodusHistorySearchManager readonly dispid 227;
     property ActionController: IExodusActionController readonly dispid 228;
