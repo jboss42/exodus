@@ -43,6 +43,7 @@ body {
     font-weight: bold;
     display: block;
     /*font-size: larger;*/
+	margin-left: 3;
 }
 
 .other {
@@ -52,6 +53,7 @@ body {
     font-weight: bold;
     display: block;
     /*font-size: larger;*/
+	margin-left: 3;
 }
 
 .line1 {
@@ -79,6 +81,7 @@ body {
 
 .svr {
 	color:/*color_server*/;
+	margin-left: 3;
 }
 
 .alert {
