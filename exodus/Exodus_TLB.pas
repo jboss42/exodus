@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/18/2008 12:09:00 PM from Type Library described below.
+// File generated on 6/19/2008 9:20:10 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -5390,6 +5390,7 @@ type
     ['{71150EFD-FFF5-4114-A7AC-A9540453376A}']
     function OnShow(const Item: IExodusItem): WordBool; safecall;
     procedure OnHide(const Item: IExodusItem); safecall;
+    function CanHideQuery: WordBool; safecall;
   end;
 
 // *********************************************************************//
@@ -5401,6 +5402,7 @@ type
     ['{71150EFD-FFF5-4114-A7AC-A9540453376A}']
     function OnShow(const Item: IExodusItem): WordBool; dispid 201;
     procedure OnHide(const Item: IExodusItem); dispid 202;
+    function CanHideQuery: WordBool; dispid 203;
   end;
 
 // *********************************************************************//

@@ -2,16 +2,16 @@ inherited ExItemHoverForm: TExItemHoverForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'Display Name'
-  ClientHeight = 237
-  ClientWidth = 320
+  ClientHeight = 193
+  ClientWidth = 260
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy
   OnMouseEnter = TntFormMouseEnter
   OnMouseLeave = TntFormMouseLeave
-  ExplicitWidth = 326
-  ExplicitHeight = 265
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 266
+  ExplicitHeight = 217
+  PixelsPerInch = 96
+  TextHeight = 13
   object HoverHide: TTimer
     Enabled = False
     Interval = 5000
