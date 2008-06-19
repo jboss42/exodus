@@ -90,6 +90,8 @@ type
         _no_auth: boolean;
         //_intfItemController: IExodusItemController;
 
+        _sjid: TJabberID;   //differentiate between auth and session
+
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
         procedure SetUsername(username: WideString);
@@ -97,6 +99,8 @@ type
         procedure SetServer(server: WideString);
         procedure SetResource(resource: WideString);
         procedure SetPort(port: integer);
+
+        procedure SetSessionJid(jid: TJabberID);
 
         procedure handleDisconnect();
         procedure manualBlastPresence(p: TXMLTag);
@@ -491,29 +495,35 @@ end;
 {---------------------------------------}
 function TJabberSession.GetUsername(): WideString;
 begin
-    if (_profile = nil) then
-        result := ''
+    if (_sjid <> nil) then
+        result := _sjid.user
+    else if (_profile <> nil) then
+        result := _profile.Username
     else
-        result := _profile.Username;
+        result := '';
 end;
 
 {---------------------------------------}
 function TJabberSession.GetFullJid(): WideString;
 begin
-    if (_profile = nil) then
-        result := ''
-    else
+    if (_sjid <> nil) then
+        result := _sjid.full
+    else if (_profile <> nil) then
         result := _profile.Username + '@' + _profile.Server + '/' +
-            _profile.Resource;
+            _profile.Resource
+    else
+        result := '';
 end;
 
 {---------------------------------------}
 function TJabberSession.GetBareJid(): Widestring;
 begin
-    if (_profile = nil) then
-        Result := ''
+    if (_sjid <> nil) then
+        Result := _sjid.jid
+    else if (_profile <> nil) then
+        Result := _profile.username + '@' + _profile.server
     else
-        Result := _profile.username + '@' + _profile.server;
+        Result := '';
 end;
 
 {---------------------------------------}
@@ -540,12 +550,14 @@ end;
 {---------------------------------------}
 function TJabberSession.GetServer(): WideString;
 begin
-    if (_profile = nil) then
-        result := ''
+    if (_sjid <> nil) then
+        result := _sjid.domain
     else if (_cur_server <> '') then
         result := _cur_server
+    else if (_profile <> nil) then
+        result := _profile.Server
     else
-        result := _profile.Server;
+        result := '';
 end;
 
 {---------------------------------------}
@@ -557,10 +569,19 @@ end;
 {---------------------------------------}
 function TJabberSession.GetResource(): WideString;
 begin
-    if (_profile = nil) then
-        result := ''
+    if (_sjid <> nil) then
+        result := _sjid.resource
+    else if (_profile <> nil) then
+        result := _profile.Resource
     else
-        result := _profile.Resource;
+        result := '';
+end;
+
+procedure TJabberSession.SetSessionJid(jid: TJabberID);
+begin
+    if (_sjid <> nil) then
+        _sjid.Free();
+    _sjid := jid;
 end;
 
 {---------------------------------------}
@@ -702,6 +723,7 @@ begin
         Self.Play();
 **}
     FreeAndNil(_features);
+    FreeAndNil(_sjid);
 
     ppdb.Clear;
     ItemController.ClearItems;
@@ -868,11 +890,7 @@ begin
     else begin
         j := tag.QueryXPData('/iq/bind[@xmlns="urn:ietf:params:xml:ns:xmpp-bind"]/jid');
         if (j <> '') then begin
-            jid := TJabberID.Create(j);
-            Profile.Username := jid.user;
-            Profile.Host := jid.domain;
-            Profile.Resource := jid.resource;
-            jid.Free();
+            SetSessionJID(TJabberID.Create(j));
         end;
 
         iq := TJabberIQ.Create(Self, generateID(), SessionCallback, AUTH_TIMEOUT);
@@ -1438,7 +1456,7 @@ begin
     _authd := ok;
     Prefs.setString('temp-pw', '');
     if (ok) then begin
-
+        SetSessionJid(TJabberID.Create(GetFullJid()));
         _profile.NewAccount := false;
         _register := false;
 
