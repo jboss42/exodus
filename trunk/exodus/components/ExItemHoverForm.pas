@@ -24,10 +24,13 @@ type
      _RoomFrame: TExRoomHoverFrame;
      _CurrentFrame: TExFrame;
      _OldWndProc: TWndMethod;
+     _AXHover: IExodusHover;
+     _Item: IExodusItem;
      procedure _NewWndProc(var Message: TMessage);
      procedure _WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
      procedure _CalcHoverPosition(Point: TPoint);
      function _InitControls(Item: IExodusItem): Boolean;
+     function _HideForm(): boolean;
      //
 
   public
@@ -54,22 +57,23 @@ end;
 
 procedure TExItemHoverForm.ActivateHover(Point: TPoint; Item: IExodusItem);
 begin
+    _Item := Item;
     HoverHide.Enabled := false;
     if (Item = nil) then
     begin
-        Hide;
+        _HideForm();
         exit;
     end;
 
     if (Item.Type_ = EI_TYPE_GROUP) then
     begin
-        Hide;
+        _HideForm();
         exit;
     end;
 
     if (not _InitControls(Item)) then
     begin
-         Hide;
+         _HideForm();
          exit;
     end;
     _CalcHoverPosition(Point);
@@ -80,14 +84,13 @@ begin
 end;
 
 function TExItemHoverForm._InitControls(Item: IExodusItem) : Boolean;
-var
-    Hover: IExodusHover;
 begin
+    _AXHover := nil;
     Result := true;
     Caption := Item.Text;
     if (_CurrentFrame <> nil) then
         _CurrentFrame.Parent := nil;
-    AutoSize := false;    
+    AutoSize := false;
     if (Item.Type_ = EI_TYPE_CONTACT) then
     begin
         _CurrentFrame := _ContactFrame;
@@ -102,9 +105,9 @@ begin
     end
     else
     begin
-        Hover := MainSession.ItemController.GetHoverByType(Item.Type_);
-        if (Hover <> nil) then        
-            Hover.Show(Item)
+        _AXHover := MainSession.ItemController.GetHoverByType(Item.Type_);
+        if (_AXHover <> nil) then
+            _AXHover.Show(Item)
         else
         begin
           Result := false;
@@ -129,16 +132,20 @@ procedure TExItemHoverForm.HoverHideTimer(Sender: TObject);
 begin
   inherited;
   OutputDebugString(PChar('Hide Timer fired'));
-  HoverHide.Enabled := false;
-  Hide;
+  if (_HideForm()) then 
+  begin
+    HoverHide.Enabled := false;
+  end;
 end;
 
 procedure TExItemHoverForm.HoverReenterTimer(Sender: TObject);
 begin
   inherited;
   //OutputDebugString(PChar('Reenter Timer fired'));
-  HoverReenter.Enabled := false;
-  Hide;
+  if (_HideForm()) then
+  begin
+    HoverReenter.Enabled := false;
+  end;
 end;
 
 
@@ -180,7 +187,7 @@ procedure TExItemHoverForm._WMSysCommand(var msg: TWmSysCommand);
 begin
   if msg.CmdType and $FFF0 = SC_CLOSE then
   begin
-    Hide;
+    _HideForm();
   end;
 end;
 
@@ -204,10 +211,39 @@ begin
 
     if Point.X < CurMonitor.Left then
         Point.X := Point.X + GetRosterWindow().Width + Width;
-    
+
     SetWindowPos(Handle, HWND_TOPMOST, Point.X, Point.Y, Width, Height,
       0);
 end;
+
+function TExItemHoverForm._HideForm(): boolean;
+var
+    canHide: boolean;
+begin
+    canHide := true;
+    if (_AXHover <> nil) then
+    begin
+        if (_AXHover.listener <> nil) then
+        begin
+            canHide := _AXHover.listener.CanHideQuery;
+        end;
+        if (canHide) then
+        begin
+            _AXHover.Hide(_Item);
+            _AXHover := nil;
+        end;
+    end;
+
+    if (canHide) then
+    begin
+        Hide;
+    end;
+
+    Result := canHide;
+end;
+
+
+
 {$R *.dfm}
 
 end.

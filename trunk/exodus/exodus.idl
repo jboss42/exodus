@@ -9578,6 +9578,10 @@ library Exodus
     id(0x000000CA)
     ]
     HRESULT _stdcall OnHide([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall CanHideQuery([out, retval] VARIANT_BOOL * CanHide );
   };
 
   [

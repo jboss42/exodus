@@ -10,7 +10,7 @@ uses
 type
   TCOMExodusHover = class(TAutoObject, IExodusHover)
   public
-    constructor Create(ItemType: WideString; GUID: WideString); 
+    constructor Create(ItemType: WideString; GUID: WideString);
     destructor Destroy(); override;
   protected
     function Get_Listener: IExodusHoverListener; safecall;
@@ -18,6 +18,7 @@ type
     function Get_AXControl: IUnknown; safecall;
     procedure Show(const Item: IExodusItem); safecall;
     procedure Hide(const Item: IExodusItem); safecall;
+
   private
     _AxControl: TAxControl;
     _ItemType: WideString;
@@ -31,7 +32,8 @@ uses
     ComServ,
     RosterForm,
     ExItemHoverForm,
-    Controls;
+    Controls,
+    SysUtils;
 
 constructor TCOMExodusHover.Create(ItemType: WideString; GUID: WideString);
 begin
@@ -81,8 +83,10 @@ begin
     if (_Listener <> nil) then
         _Listener.OnHide(Item);
     GetRosterWindow().HoverWindow.CurrentFrame := nil;
-    _HoverFrame.Parent := nil;    
+    _HoverFrame.Parent := nil;
 end;
+
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TCOMExodusHover, Class_COMExodusHover,
