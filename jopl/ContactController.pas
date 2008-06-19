@@ -89,6 +89,7 @@ type
 
     procedure ItemDeleted(const item: IExodusItem); safecall;
     procedure ItemGroupsChanged(const item: IExodusItem); safecall;
+    procedure ItemUpdated(const Item: IExodusItem); safecall;
   end;
 
   TContactUpdateItemOp = class
@@ -796,6 +797,11 @@ begin
     if IsIgnored(item.UID) then exit;
 
     TContactUpdateItemOp.Create(_contactCtrl, item);
+end;
+
+procedure TExodusContactsCallback.ItemUpdated(const Item: IExodusItem);
+begin
+    // no-op
 end;
 
 constructor TContactUpdateItemOp.Create(

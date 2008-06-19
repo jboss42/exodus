@@ -59,6 +59,7 @@ type TExodusRoomsCallback = class(TAutoIntfObject, IExodusItemCallback)
 
         procedure ItemDeleted(const item: IExodusItem); safecall;
         procedure ItemGroupsChanged(const item: IExodusItem); safecall;
+        procedure ItemUpdated(const Item: IExodusItem); safecall;
 end;
 
 implementation
@@ -356,6 +357,11 @@ begin
 
     _roomCtrl.SaveRooms();
     TJabberSession(_roomCtrl._JS).FireEvent('/item/update', item);
+end;
+
+procedure TExodusRoomsCallback.ItemUpdated(const Item: IExodusItem);
+begin
+    // no-op
 end;
 
 end.
