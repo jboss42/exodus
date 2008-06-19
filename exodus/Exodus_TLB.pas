@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/19/2008 11:58:08 AM from Type Library described below.
+// File generated on 6/19/2008 12:07:27 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -150,6 +150,7 @@ const
   IID_IExodusHoverListener: TGUID = '{71150EFD-FFF5-4114-A7AC-A9540453376A}';
   IID_IExodusHover: TGUID = '{4CF49CD8-4B9B-4648-A07C-280111E724DA}';
   CLASS_COMExodusHover: TGUID = '{9004F424-7233-404F-8AC7-59F29BC5EFFB}';
+  IID_IExodusListener2: TGUID = '{F96175B2-34C2-48F8-B491-90CF2A6A62EA}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -341,6 +342,8 @@ type
   IExodusHoverListenerDisp = dispinterface;
   IExodusHover = interface;
   IExodusHoverDisp = dispinterface;
+  IExodusListener2 = interface;
+  IExodusListener2Disp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -385,6 +388,7 @@ type
 // Declaration of structures, unions and aliases.                         
 // *********************************************************************//
   PWideString1 = ^WideString; {*}
+  PWordBool1 = ^WordBool; {*}
 
 
 // *********************************************************************//
@@ -5434,6 +5438,26 @@ type
     property AXControl: IUnknown readonly dispid 202;
     procedure Show(const Item: IExodusItem); dispid 203;
     procedure Hide(const Item: IExodusItem); dispid 204;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusListener2
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F96175B2-34C2-48F8-B491-90CF2A6A62EA}
+// *********************************************************************//
+  IExodusListener2 = interface(IDispatch)
+    ['{F96175B2-34C2-48F8-B491-90CF2A6A62EA}']
+    procedure ProcessVariantEvent(const Event: WideString; Data: OleVariant; var Handled: WordBool); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusListener2Disp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F96175B2-34C2-48F8-B491-90CF2A6A62EA}
+// *********************************************************************//
+  IExodusListener2Disp = dispinterface
+    ['{F96175B2-34C2-48F8-B491-90CF2A6A62EA}']
+    procedure ProcessVariantEvent(const Event: WideString; Data: OleVariant; var Handled: WordBool); dispid 201;
   end;
 
 // *********************************************************************//
