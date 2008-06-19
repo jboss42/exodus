@@ -86,6 +86,7 @@ type
       _ServerStorage: Boolean;
       _GroupParser : TGroupParser;
       _HoverControls: TWideStringList;
+      _itemupdateCB: integer;
 
       procedure _SessionCallback(Event: string; Tag: TXMLTag);
       procedure _GetGroups();
@@ -94,6 +95,7 @@ type
       function  _GetItemRetainer(const UID: Widestring): TExodusItemRetainer;
       function  _AddGroup(const GroupUID: WideString): TExodusItemRetainer;
       function  _ApplyGroup(item: IExodusItem; GroupTo: Widestring; moving: Boolean = false): Boolean;
+      procedure _ItemUpdateCallback(Event: string; Item: IExodusItem);
   public
       constructor Create(JS: TObject);
       destructor Destroy; override;
@@ -155,6 +157,7 @@ begin
     _GroupParser := TGroupParser.Create(_JS);
     _GroupsCB := TExodusGroupCallback.Create(Self);
     _HoverControls := TWideStringList.Create();
+    _itemupdateCB := TJabberSession(_JS).RegisterCallback(_ItemUpdateCallback, '/item/update');
 end;
 
 {---------------------------------------}
@@ -177,6 +180,11 @@ begin
         Hover.Free();
     end;
     _HoverControls.Free;
+
+    if (_itemupdateCB >= 0) then
+    begin
+        TJabberSession(_JS).UnRegisterCallback(_itemupdateCB);
+    end;
 end;
 
 {---------------------------------------}
@@ -429,6 +437,24 @@ begin
 end;
 
 {---------------------------------------}
+procedure TExodusItemController._ItemUpdateCallback(Event: string; Item: IExodusItem);
+var
+    cb: IExodusItemCallback;
+    ItemWrapper: TExodusItemRetainer;
+    idx: integer;
+begin
+    if (item = nil) then exit;
+    
+    idx := _Items.IndexOf(item.UID);
+    if (Idx = -1) then exit;
+
+    //notify callback
+    ItemWrapper := TExodusItemRetainer(_Items.Objects[idx]);
+    cb := ItemWrapper.Callback;
+    if (cb <> nil) then cb.ItemUpdated(ItemWrapper.ExodusItem);
+end;
+
+{---------------------------------------}
 function TExodusItemController.AddItemByUid(const UID, ItemType: WideString;
   const cb: IExodusItemCallback): IExodusItem;
 var
@@ -544,7 +570,7 @@ begin
     //notify callback
     cb := ItemWrapper.Callback;
     if (cb <> nil) then cb.ItemDeleted(ItemWrapper.ExodusItem);
-    
+
     //fire event
     TJabberSession(_JS).FireEvent('/item/remove', ItemWrapper.ExodusItem);
 
