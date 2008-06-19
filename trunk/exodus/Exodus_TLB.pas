@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/19/2008 9:20:10 AM from Type Library described below.
+// File generated on 6/19/2008 11:58:08 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -5284,6 +5284,7 @@ type
     ['{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}']
     procedure ItemDeleted(const Item: IExodusItem); safecall;
     procedure ItemGroupsChanged(const Item: IExodusItem); safecall;
+    procedure ItemUpdated(const Item: IExodusItem); safecall;
   end;
 
 // *********************************************************************//
@@ -5295,6 +5296,7 @@ type
     ['{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}']
     procedure ItemDeleted(const Item: IExodusItem); dispid 201;
     procedure ItemGroupsChanged(const Item: IExodusItem); dispid 202;
+    procedure ItemUpdated(const Item: IExodusItem); dispid 203;
   end;
 
 // *********************************************************************//

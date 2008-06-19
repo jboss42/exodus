@@ -112,6 +112,7 @@ type
 
     procedure ItemDeleted(const item: IExodusItem); safecall;
     procedure ItemGroupsChanged(const item: IExodusItem); safecall;
+    procedure ItemUpdated(const Item: IExodusItem); safecall;
   end;
 
 var
@@ -767,7 +768,7 @@ end;
 procedure TExodusGroupCallback.ItemDeleted(const item: IExodusItem);
 begin
     if not _ctrl._GroupsLoaded then exit;
-    
+
     _ctrl._SendGroups();
 end;
 procedure TExodusGroupCallback.ItemGroupsChanged(const item: IExodusItem);
@@ -778,6 +779,10 @@ begin
     TJabberSession(_ctrl._JS).FireEvent('/item/update', item);
 end;
 
+procedure TExodusGroupCallback.ItemUpdated(const Item: IExodusItem);
+begin
+    // no-op
+end;
 
 function TExodusItemController.GetHoverByType(
   const ItemType: WideString): IExodusHover;
