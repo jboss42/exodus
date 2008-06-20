@@ -55,6 +55,7 @@ type
         _compression_on: boolean;
         _lang: WideString;
         _sent_stream: boolean;
+        _sjid: TJabberID;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -367,6 +368,8 @@ begin
 
     if (_stream <> nil) then
         _stream.Free();
+    if (_sjid <> nil) then
+        _sjid.Free();
 
     _pauseQueue.Free();
     _queue.Free();
@@ -387,29 +390,35 @@ end;
 {---------------------------------------}
 function TJabberSession.GetUsername(): WideString;
 begin
-    if (_profile = nil) then
-        result := ''
+    if (_sjid <> nil) then
+        result := _sjid.user
+    else if (_profile <> nil) then
+        result := _profile.Username
     else
-        result := _profile.Username;
+        result := '';
 end;
 
 {---------------------------------------}
 function TJabberSession.GetFullJid(): WideString;
 begin
-    if (_profile = nil) then
-        result := ''
-    else
+    if (_sjid <> nil) then
+        result := _sjid.full
+    else if (_profile <> nil) then
         result := _profile.Username + '@' + _profile.Server + '/' +
-            _profile.Resource;
+            _profile.Resource
+    else
+        result := '';
 end;
 
 {---------------------------------------}
 function TJabberSession.GetBareJid(): Widestring;
 begin
-    if (_profile = nil) then
-        Result := ''
+    if (_sjid <> nil) then
+        Result := _sjid.jid
+    else if (_profile <> nil) then
+        Result := _profile.username + '@' + _profile.server
     else
-        Result := _profile.username + '@' + _profile.server;
+        Result := '';
 end;
 
 {---------------------------------------}
@@ -436,12 +445,14 @@ end;
 {---------------------------------------}
 function TJabberSession.GetServer(): WideString;
 begin
-    if (_profile = nil) then
-        result := ''
+    if (_sjid <> nil) then
+        result := _sjid.domain
     else if (_cur_server <> '') then
         result := _cur_server
+    else if (_profile <> nil) then
+         result := _profile.Server
     else
-        result := _profile.Server;
+        result := '';
 end;
 
 {---------------------------------------}
@@ -453,10 +464,12 @@ end;
 {---------------------------------------}
 function TJabberSession.GetResource(): WideString;
 begin
-    if (_profile = nil) then
-        result := ''
+    if (_sjid <> nil) then
+        result := _sjid.resource
+    else if (_profile <> nil) then
+        result := _profile.Resource
     else
-        result := _profile.Resource;
+        result := '';
 end;
 
 {---------------------------------------}
@@ -585,6 +598,7 @@ begin
     _dispatcher.DispatchSignal('/session/disconnected', nil);
 
     // Clear the roster, ppdb and fire the callbacks
+    _sjid := nil;
     _first_pres := false;
     _authd := false;
     _cur_server := '';
@@ -760,11 +774,7 @@ begin
     else begin
         j := tag.QueryXPData('/iq/bind[@xmlns="urn:ietf:params:xml:ns:xmpp-bind"]/jid');
         if (j <> '') then begin
-            jid := TJabberID.Create(j);
-            Profile.Username := jid.user;
-            Profile.Host := jid.domain;
-            Profile.Resource := jid.resource;
-            jid.Free();
+            _sjid := TJabberID.Create(j);
         end;
 
         iq := TJabberIQ.Create(Self, generateID(), SessionCallback, AUTH_TIMEOUT);
@@ -1323,6 +1333,7 @@ begin
         _authd := true;
         _profile.NewAccount := false;
         _register := false;
+        _sjid := TJabberID.Create(_profile.getJabberID().full);
 
         if (reset_stream) then
             ResetStream()
