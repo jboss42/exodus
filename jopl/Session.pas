@@ -204,6 +204,8 @@ type
         property Port: integer read GetPort write SetPort;
         property Profile: TJabberProfile read _profile;
 
+        property SessionJid: TJabberID read _sjid;
+
         // Presence Info
         property Priority: integer read _priority write _priority;
         property Show: WideString read _show;
@@ -1333,7 +1335,7 @@ begin
         _authd := true;
         _profile.NewAccount := false;
         _register := false;
-        _sjid := TJabberID.Create(_profile.getJabberID().full);
+        _sjid := TJabberID.Create(_profile.Username, _profile.Server, _profile.Resource);
 
         if (reset_stream) then
             ResetStream()
