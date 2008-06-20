@@ -48,10 +48,7 @@ const
                                 //UI thread, spin off to another for more.
                                 //don't dog the ui thread!
 
-    PREF_IQ_ENABLE_BROWSE = 'iq_enable_browse_fallback';
-    PREF_IQ_ENABLE_AGENT = 'iq_enable_agent_fallback';
-
-
+    BRANDED_ENABLE_FALLBACK = 'brand_iq_enable_fallback';
 type
 
     TJabberEntityType = (ent_unknown, ent_disco, ent_browse, ent_agents, ent_cached_disco);
@@ -520,10 +517,8 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then
     begin
-        if (_fallback and js.Prefs.getBool(PREF_IQ_ENABLE_BROWSE)) then
+        if (_fallback and js.Prefs.getBool(BRANDED_ENABLE_FALLBACK)) then
             _startIQBrowse(js)
-        else if (_fallback and js.Prefs.getBool(PREF_IQ_ENABLE_AGENT)) then
-            _startIQAgent(js)
         else begin
             _has_items := true;
             _fireOnEntityItems(js, tag); //fire error tag
@@ -611,10 +606,8 @@ begin
     _disco_info_error := (tag.GetAttribute('type') = 'error');
     if ((event <> 'xml') or _disco_info_error) then
     begin
-        if (_fallback and js.Prefs.getBool(PREF_IQ_ENABLE_BROWSE)) then
+        if (_fallback and js.Prefs.getBool(BRANDED_ENABLE_FALLBACK)) then
             _startIQBrowse(js)
-        else if (_fallback and js.Prefs.getBool(PREF_IQ_ENABLE_AGENT)) then
-            _startIQAgent(js)
         else begin
             _has_info := true;
             _fireOnEntityInfo(js, tag); //fire error tag
@@ -1047,7 +1040,7 @@ begin
     if (js.Active = false) then exit;
     _disco_info_error := (tag.GetAttribute('type') = 'error');
     if ((event <> 'xml') or _disco_info_error) then begin
-        if (_fallBack and js.prefs.getBool(PREF_IQ_ENABLE_AGENT)) then
+        if (_fallBack and js.prefs.getBool(BRANDED_ENABLE_FALLBACK)) then
             _startIQAgent(js)
         else begin
             _has_info := true;
