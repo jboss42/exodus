@@ -1,3 +1,0 @@
-defaults XML "defaults.xml"
-langs XML "lang-codes.xml"
-countries XML "country-codes.xml"
