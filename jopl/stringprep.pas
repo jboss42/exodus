@@ -30,6 +30,7 @@ function jabber_resourceprep(input: PChar; output: PChar; buf_sz: integer): inte
 function xmpp_nodeprep(input: Widestring): Widestring;
 function xmpp_nameprep(input: Widestring): Widestring;
 function xmpp_resourceprep(input: Widestring): Widestring;
+function jabber_nameprep_variablelen(str: widestring): widestring;
 
 implementation
 uses
@@ -76,5 +77,27 @@ begin
     except
     end;
 end;
+
+function jabber_nameprep_variablelen(str: widestring): widestring;
+var
+    uin: String;
+    uout: string;
+    len: integer;
+begin
+    Result := '';
+    try
+        uin := UTF8Encode(str);
+        len := Length(uin) * 4;  // Set buffer to 4 * the length.  UTF8 is only going to change 1->4 max.
+        SetLength(uout, len);
+        if ((len > 0) and
+            (jabber_nameprep(PChar(uin), PChar(uout), len) = 0)) then
+        begin
+            uout := Trim(uout);  // Remove any trailing #0
+            Result := UTF8Decode(uout);
+        end;
+    except
+    end;
+end;
+
 
 end.

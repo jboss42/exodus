@@ -48,6 +48,8 @@ function percentDecode(encoded: string; escape: boolean = false): Widestring;
 procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
 procedure WordSplit(value: WideString; list: TWideStringList);
 
+function UnicodePosNoCase(const substr: widestring; const str: widestring): integer;
+
 implementation
 uses
     {$ifdef EXODUS}
@@ -59,7 +61,8 @@ uses
     Windows,
     IdGlobal, // IdGlobal provides TimeZoneBias() for us
     StrUtils,
-    DateUtils;
+    DateUtils,
+    stringprep;
 
 {---------------------------------------}
 function jabberIQResult(orig: TXMLTag): TXMLTag;
@@ -429,6 +432,19 @@ begin
         inc(i);
     end;
     result := UTF8Decode(tmp);
+end;
+
+function UnicodePosNoCase(const substr: widestring; const str: widestring): integer;
+var
+    substrprep: widestring;
+    mainstrprep: widestring;
+begin
+    Result := 0;
+
+    substrprep := jabber_nameprep_variablelen(substr);
+    mainstrprep := jabber_nameprep_variablelen(str);
+
+    Result := Pos(substrprep, mainstrprep);
 end;
 
 end.
