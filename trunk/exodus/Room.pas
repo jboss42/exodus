@@ -252,6 +252,7 @@ type
     procedure AffilChangeCallback(event: string; tag: TXMLTag);
     procedure SendMsg; override;
     procedure pluginMenuClick(Sender: TObject); override;
+    procedure popupMenuClick(Sender: TObject);
 
     procedure ShowMsg(tag: TXMLTag);
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
@@ -2755,9 +2756,30 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.pluginMenuClick(Sender: TObject);
 begin
-    TExodusChat(COMController).fireMenuClick(Sender);
+    TExodusChat(COMController).fireMenuClick(Sender, '');
 end;
 
+{---------------------------------------}
+procedure TfrmRoom.popupMenuClick(Sender: TObject);
+var
+   xml: WideString;
+   JidsTag: TXMLTag;
+   rm: TRoomMember;
+   Item: TListItem;
+begin
+    if (lstRoster.SelCount < 1) then exit;
+    JidsTag := TXMLTag.Create('jids');
+
+    Item := lstRoster.Selected;
+    while (Item <> nil) do
+    begin
+        rm := TRoomMember(Item.Data);
+        JidsTag.AddBasicTag('jid', rm.real_jid);
+        Item := lstRoster.GetNextItem(Item, sdAll, [isSelected]);
+    end;
+
+    TExodusChat(COMController).fireMenuClick(Sender, JidsTag.xml);
+end;
 {---------------------------------------}
 procedure TfrmRoom.popRosterSendJIDClick(Sender: TObject);
 var

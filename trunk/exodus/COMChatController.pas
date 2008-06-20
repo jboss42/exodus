@@ -87,7 +87,7 @@ type
     function  fireAfterMsg(var body: WideString): Widestring;
     function  fireBeforeRecvMsg(body, xml: Widestring): boolean;
     procedure fireAfterRecvMsg(body: Widestring);
-    procedure fireMenuClick(Sender: TObject);
+    procedure fireMenuClick(Sender: TObject; xml: WideString = '');
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
     procedure fireSentMessageXML(tag: TXMLTag);
@@ -112,7 +112,7 @@ implementation
 
 uses
     COMExControls, ChatWin, Controls, BaseMsgList, RTFMsgList, Forms,
-    ComServ, Menus, SysUtils, Debug;
+    ComServ, Menus, SysUtils, Debug, BaseChat;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -301,13 +301,15 @@ var
     i: integer;
     chatplugin2: IExodusChatPlugin2;
 begin
+    Result := false;
     for i := 0 to _plugs.Count - 1 do begin
         try
             chatplugin2 := TChatPlugin(_plugs[i]).com as IExodusChatPlugin2;
             try
                 if (chatplugin2 <> nil) then
                 begin
-                    chatplugin2.OnChatEvent(Event, oleVar);
+                    Result := chatplugin2.OnChatEvent(Event, oleVar);
+                    if (Result) then break;
                 end;
             except
                 // Problem sending XML msg to chat plugin
@@ -378,7 +380,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusChat.fireMenuClick(Sender: TObject);
+procedure TExodusChat.fireMenuClick(Sender: TObject; xml: WideString = '');
 var
     idx : Integer;
 {$IFDEF OLD_MENU_EVENTS}
@@ -401,7 +403,7 @@ begin
         //fire event on one menu listener
         mListener := IExodusMenuListener(TMenuItem(_menu_items.Objects[idx]).Tag);
         if (mListener <> nil) then
-            mListener.OnMenuItemClick(_menu_items[idx], '');
+            mListener.OnMenuItemClick(_menu_items[idx], xml);
 {$ENDIF}
     end;
 end;
@@ -887,13 +889,17 @@ function  TExodusChat.AddRosterMenu (const caption: WideString; const menuListen
 var
     id: Widestring;
     mi: TMenuItem;
+    idx: Integer;
 begin
     // add a new TMenuItem to the Plugins menu
-    id := 'plugin_' + IntToStr(_menu_items.Count);
+    inc(_nextid);
+    idx := _nextid;
+
+    id := 'plugin_' + IntToStr(idx);
     if (_room <> nil) then begin
         mi := TMenuItem.Create(_room);
         mi.Name := id;
-        mi.OnClick := _room.pluginMenuClick;
+        mi.OnClick := _room.popupMenuClick;
         mi.Caption := caption;
         mi.Tag := Integer(menuListener);
         _room.popRoomRoster.Items.Add(mi);
