@@ -2443,7 +2443,10 @@ end;
 {---------------------------------------}
 function TJabberProfile.getJabberID(): TJabberID;
 begin
-    Result := _jabberID;
+    if (MainSession <> nil) and MainSession.Active and (MainSession.SessionJid <> nil) then
+        Result := MainSession.SessionJid
+    else
+        Result := _jabberID;
 end;
 
 
