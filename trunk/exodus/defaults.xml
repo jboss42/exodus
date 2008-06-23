@@ -530,6 +530,7 @@
     <brand_registration_allow_editaccount value="1"/>
 
     <!-- misc. branded options -->
+	<brand_caps_cacheuntrusted value="0"/>
     <brand_invisible_pres value="1"/>
     <brand_muc value="1"/>
     <brand_ft value="1"/>

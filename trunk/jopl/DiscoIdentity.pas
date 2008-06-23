@@ -25,26 +25,30 @@ uses
 type
 TDiscoIdentity = class
 private
+    _lang: Widestring;
     _cat: WideString;
     _type: WideString;
     _name: WideString;
     function _getName(): WideString;
 
 public
-    constructor Create(category: WideString; DiscoType: WideString; Name: WideString);
+    constructor Create(category: WideString; DiscoType: WideString; Name: WideString; lang: Widestring = '');
 
     property Category: WideString read _cat;
     property DiscoType: WideString read _type;
+    property Language: Widestring read _lang;
     property Name: WideString read _getName;
+    property RawName: Widestring read _name;
 end;
 
 implementation
 
-constructor TDiscoIdentity.Create(category: WideString; DiscoType: WideString; Name: WideString);
+constructor TDiscoIdentity.Create(category: WideString; DiscoType: WideString; Name: WideString; lang: Widestring);
 begin
     _cat := Category;
     _type := DiscoType;
     _name := Name;
+    _lang := lang;
 end;
 
 function TDiscoIdentity._getName(): WideString;
