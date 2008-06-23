@@ -70,6 +70,7 @@ type
         _has_items: boolean;            // do we have children?
         _items: TWidestringlist;        // our children
         _idents: TWidestringlist;       // our Identities
+        _forms: TWidestringList;        // our extended info forms
         _iq: TJabberIQ;
         _lastInfoIQResult: TXMLTag;     //last disco#info iq result, full packet
         
@@ -89,6 +90,9 @@ type
 
         function _getIdentity(i: integer): TDiscoIdentity;
         function _getIdentityCount: integer;
+
+        function _getForm(i: Integer): TXMLTag;
+        function _getFormCount: Integer;
 
         procedure _discoInfo(js: TJabberSession; callback: TSignalEvent);
         procedure _discoItems(js: TJabberSession; callback: TSignalEvent);
@@ -116,6 +120,17 @@ type
         //callbacks from children when disco are completed during a walk
         procedure _childDiscoWalkFinished(jso: TObject; child: TJabberEntity);
     protected
+        function AddIdentity(ident: TDiscoIdentity): Boolean; virtual;
+        function RemoveIdentity(ident: TDiscoIdentity): Boolean; virtual;
+
+        function AddFeature(feat: Widestring): Boolean; virtual;
+        function RemoveFeature(feat: Widestring): Boolean; virtual;
+
+        function AddForm(form: TXMLTag): Boolean; virtual;
+        function RemoveForm(form: TXMLTag): Boolean; virtual;
+
+        procedure ProcessSpecifiedInfo(tag: TXMLTag); virtual;
+
         procedure ItemsCallback(event: string; tag: TXMLTag);
         procedure InfoCallback(event: string; tag: TXMLTag);
 
@@ -143,9 +158,9 @@ type
         procedure RemoveReference(e: TJabberEntity);
         procedure ClearReferences();
 
+        function hasIdentity(category, disco_type: Widestring; lang: Widestring = ''): boolean;
         function hasFeature(f: Widestring; allowCached: boolean = false): boolean;
-
-        function hasIdentity(category, disco_type: Widestring): boolean;
+        function hasForm(f: Widestring): boolean;
 
         function ItemByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
         function getItemByFeature(f: Widestring): TJabberEntity;
@@ -172,6 +187,9 @@ type
 
         property IdentityCount: Integer read _getIdentityCount;
         property Identities[Index: integer]: TDiscoIdentity read _getIdentity;
+
+        property FormCount: Integer read _getFormCount;
+        property Forms[Index: Integer]: TXMLTag read _getForm;
 
         property fallbackProtocols: boolean read _fallback write _fallback;
         property timeout: integer read _timeout write _timeout;
@@ -255,7 +273,6 @@ begin
     _jid := jid;
     _node := '';
     _name := '';
-    _feats := TWidestringlist.Create();
     _refs := TList.Create();
     _lastInfoIQResult := nil;
     _type := etype;
@@ -267,7 +284,13 @@ begin
     _items.Sorted := false;
 
     _idents := TWidestringlist.Create();
-    _idents.Sorted := false;
+    _idents.Sorted := true;
+
+    _feats := TWidestringlist.Create();
+    _feats.Sorted := true;
+
+    _forms := TWidestringList.Create();
+    _forms.Sorted := true;
 
     _timeout := 10;
     _node := node;
@@ -289,6 +312,9 @@ begin
     ClearStringListObjects(_idents);
     _idents.Clear();
     _idents.Free();
+    ClearStringListObjects(_forms);
+    _forms.Clear();
+    _forms.Free();
     _feats.Clear();
     if (_lastInfoIQResult <> nil) then
         _lastInfoIQResult.free();
@@ -335,7 +361,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberEntity.hasIdentity(category, disco_type: Widestring): boolean;
+function TJabberEntity.hasIdentity(category, disco_type, lang: Widestring): boolean;
 var
     di: TDiscoIdentity;
     i: integer;
@@ -346,17 +372,37 @@ begin
 
     for i := 0 to _idents.Count - 1 do begin
         di := TDiscoIdentity(_idents.Objects[i]);
-        if ((di.Category = category) and (di.DiscoType = disco_type)) then begin
-            Result := true;
-            exit;
-        end;
+        
+        if ((di.Category <> category) or (di.DiscoType <> disco_type)) then continue;
+        if (lang <> '') and (di.Language <> lang) then continue;
+
+        Result := true;
+        exit;
     end;
 
     // check the idents of our regs
     for i := 0 to _refs.Count - 1 do begin
         r := TJabberEntity(_refs[i]);
-        Result := r.hasIdentity(category, disco_type);
+        Result := r.hasIdentity(category, disco_type, lang);
         if (Result) then exit;
+    end;
+end;
+
+{---------------------------------------}
+function TJabberEntity.hasForm(f: WideString): boolean;
+var
+    idx: Integer;
+begin
+    idx := _forms.IndexOf(f);
+    if (idx <> -1) then begin
+        Result := true;
+        exit;
+    end;
+
+    //check references
+    for idx := 0 to _refs.Count - 1 do begin
+        Result := TJabberEntity(_refs[idx]).hasForm(f);
+        if Result then exit;
     end;
 end;
 
@@ -387,6 +433,18 @@ function TJabberEntity._getIdentity(i: integer): TDiscoIdentity;
 begin
     if (i < _idents.Count) then
         Result := TDiscoIdentity(_idents.Objects[i])
+    else
+        Result := nil;
+end;
+
+function TJabberEntity._getFormCount(): Integer;
+begin
+    Result := _forms.Count;
+end;
+function TJabberEntity._getForm(i: Integer): TXMLTag;
+begin
+    if (i > -1) and (i < _forms.Count) then
+        Result := TXMLTag(_forms.Objects[i])
     else
         Result := nil;
 end;
@@ -484,7 +542,7 @@ begin
 
     if (_node <> '') then
         _iq.qTag.setAttribute('node', _node);
-        
+
     _iq.Send();
 end;
 
@@ -688,6 +746,15 @@ end;
 
 {---------------------------------------}
 procedure TJabberEntity._processDiscoInfo(tag: TXMLTag);
+begin
+    ProcessSpecifiedInfo(tag);
+    _processLegacyFeatures();
+
+    _lastInfoIQResult := TXMLTag.create(tag);
+end;
+
+{---------------------------------------}
+procedure TJabberEntity.ProcessSpecifiedInfo(tag: TXMLTag);
 var
     id, q: TXMLTag;
     fset: TXMLTagList;
@@ -732,65 +799,59 @@ begin
     q := tag.GetFirstTag('query');
     if (q = nil) then exit;
 
-    // process features
-    fset := q.QueryTags('feature');
-    for i := 0 to fset.count - 1 do
-        _feats.Add(fset[i].GetAttribute('var'));
-    fset.Free();
-
+    // process identities
     // XXX: Is this what to do w/ the other <identity> elements?
     fset := q.QueryTags('identity');
     for i := 0 to fset.count - 1 do
     begin
         id := fset[i];
-        _idents.AddObject(id.GetAttribute('category') + '/' + id.GetAttribute('type'),
-                          TDiscoIdentity.Create(id.GetAttribute('category'),
+        AddIdentity(TDiscoIdentity.Create(id.GetAttribute('category'),
                                                 id.GetAttribute('type'),
-                                                id.GetAttribute('name')));
+                                                id.GetAttribute('name'),
+                                                id.GetAttribute('xml:lang')));
     end;
     fset.Free();
 
-    //initialize entities catagory, cat type and possibly name from first identity
-    if (_idents.Count > 0) then
+    // process features
+    fset := q.QueryTags('feature');
+    for i := 0 to fset.count - 1 do
+        AddFeature(fset[i].GetAttribute('var'));
+    fset.Free();
+
+    // process forms
+    fset := q.QueryTags('x');
+    for i := 0 to fset.Count - 1 do
     begin
-        _cat := TDiscoIdentity(_idents.Objects[0]).Category;
-        _cat_type := TDiscoIdentity(_idents.Objects[0]).DiscoType;
-        if (_name = '') then
-            _name := TDiscoIdentity(_idents.Objects[0]).Name;
+        id := fset[i];
+        if (id.GetAttribute('xmlns') <> 'jabber:x:data') then continue;
+        AddForm(id);
     end;
-
-    _processLegacyFeatures();
-
-    _lastInfoIQResult := TXMLTag.create(tag);
+    fset.Free();
 end;
-
 {---------------------------------------}
 procedure TJabberEntity._processLegacyFeatures();
 begin
     if (Pos('http://jm.jabber.com/caps#3', Self._node) <> 0) then
     begin
         //JM fixup test only *remove*
-        if (_feats.IndexOf(XMLNS_XHTMLIM) = -1) then
-            _feats.Add(XMLNS_XHTMLIM);
+        AddFeature(XMLNS_XHTMLIM);
 {
         if (_feats.IndexOf(XMLNS_MUC) = -1) then
             _feats.Add(XMLNS_MUC);
 }
     end;
-    
+
     // check for some legacy stuff..
-    if (_feats.IndexOf(XMLNS_SEARCH) <> -1) then
-        _feats.Add(FEAT_SEARCH);
-    if (_feats.IndexOf(XMLNS_REGISTER) <> -1) then
-        _feats.Add(FEAT_REGISTER);
+    AddFeature(FEAT_SEARCH);
+    AddFeature(FEAT_REGISTER);
     if ((_feats.IndexOf(XMLNS_MUC) <> -1) or (_feats.IndexOf('gc-1.0') <> -1) or (_cat = 'conference')) then
-        _feats.Add(FEAT_GROUPCHAT);
+        AddFeature(FEAT_GROUPCHAT);
 
     // this is for transports.
     if  ((_cat_type = FEAT_AIM) or (_cat_type = FEAT_MSN) or
          (_cat_type = FEAT_ICQ) or (_cat_type = FEAT_YAHOO) or
          (_feats.IndexOf('jabber:iq:gateway') <> -1)) then
-        _feats.Add(_cat_type);
+        AddFeature(_cat_type);
 end;
 
 {---------------------------------------}
@@ -1011,7 +1072,7 @@ begin
 
     nss := item.QueryTags('ns');
     for n := 0 to nss.Count - 1 do
-        _feats.Add(nss[n].Data);
+        AddFeature(nss[n].Data);
     nss.Free();
 
     _processLegacyFeatures();
@@ -1155,20 +1216,20 @@ begin
     _disco_info_error := false;
 
     tmps := item.GetBasicText('service');
-    if (tmps <> '') then _feats.Add(tmps);
+    if (tmps <> '') then AddFeature(tmps);
     _cat_type := tmps;
 
-    if (item.tagExists('register')) then _feats.Add(FEAT_REGISTER);
-    if (item.tagExists('search')) then _feats.Add(FEAT_SEARCH);
+    if (item.tagExists('register')) then AddFeature(FEAT_REGISTER);
+    if (item.tagExists('search')) then AddFeature(FEAT_SEARCH);
 
     if (item.tagExists('groupchat')) then begin
         _cat := 'conference';
-        _feats.Add(FEAT_GROUPCHAT);
+        AddFeature(FEAT_GROUPCHAT);
     end;
 
     nss := item.QueryTags('ns');
     for n := 0 to nss.COunt - 1 do
-        _feats.Add(nss[n].Data);
+        AddFeature(nss[n].Data);
 
 end;
 
@@ -1356,6 +1417,102 @@ begin
             tstr := '<NULL>';
         tstr := 'JID:' + TJabberEntity(_refs[i]).Jid.full + ':NODE:' + tstr;
         Result := Result + '  Reference#' + inttoStr(i) +  ' DiscoID: ' + tstr + #13#10;
+    end;
+end;
+
+function IdentityKey(ident: TDiscoIdentity): Widestring;
+begin
+    if (ident = nil) then
+        Result := ''
+    else begin
+        if (ident.Language <> '') then
+            Result := ident.Category + '/' + ident.DiscoType + '/' + ident.Language
+        else
+            Result := ident.Category + '/' + ident.DiscoType;
+    end;
+end;
+
+function TJabberEntity.AddIdentity(ident: TDiscoIdentity): Boolean;
+var
+    key: Widestring;
+begin
+    Key := IdentityKey(ident);
+    Result := (key <> '') and (_idents.IndexOf(key) = -1);
+    if Result then begin
+        _idents.AddObject(key, ident);
+
+        if (_idents.Count = 1) then begin
+            _cat := ident.Category;
+            _cat_type := ident.DiscoType;
+            _name := ident.Name;
+        end;
+    end;
+end;
+function TJabberEntity.RemoveIdentity(ident: TDiscoIdentity): Boolean;
+var
+    key: Widestring;
+    idx: Integer;
+begin
+    key := IdentityKey(ident);
+    idx := _idents.IndexOf(key);
+    Result := (idx <> -1);
+    if Result then begin
+        _idents.Delete(idx);
+    end;
+end;
+
+function TJabberEntity.AddFeature(feat: WideString): Boolean;
+begin
+    Result := (feat <> '') and (_feats.IndexOf(feat) = -1);
+    if Result then begin
+        _feats.Add(feat);
+    end;
+end;
+
+function TJabberEntity.RemoveFeature(feat: WideString): Boolean;
+var
+    idx: Integer;
+begin
+    idx := _feats.IndexOf(feat);
+    Result := (idx <> -1);
+    if Result then begin
+        _feats.Delete(idx);
+    end;
+end;
+
+
+function FormKey(form: TXMLTag): Widestring;
+var
+    fset: TXMLTagList;
+    field: TXMLTag;
+    idx: Integer;
+begin
+    Result := '';
+    if (form = nil) then exit;
+
+    Result := form.QueryXPData('field[@var="FORM_TYPE"]/value');
+end;
+
+function TJabberEntity.AddForm(form: TXMLTag): Boolean;
+var
+    key: Widestring;
+begin
+    key := FormKey(form);
+    Result := (form <> nil) and (_forms.IndexOf(key) = -1);
+    if Result then begin
+        _forms.AddObject(key, TXMLTag.Create(form));
+    end;
+end;
+function TJabberEntity.RemoveForm(form: TXMLTag): Boolean;
+var
+    key: Widestring;
+    idx: Integer;
+begin
+    key := FormKey(form);
+    idx := _forms.IndexOf(key);
+    Result := (form <> nil) and (_forms.IndexOf(key) <> -1);
+    if Result then begin
+        _forms.Delete(idx);
     end;
 end;
 

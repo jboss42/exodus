@@ -24,9 +24,26 @@ uses
     {$ifdef Exodus}
     TntClasses,
     {$endif}
-    Entity, XMLTag, Unicode, Classes, SysUtils;
+    Entity, JabberID, XMLTag, Unicode, Classes, SysUtils;
 
 type
+    TJabberCapsEntity = class(TJabberEntity)
+    private
+        _ver: Widestring;
+        _hash: Widestring;
+        _verified: Boolean;
+
+    protected
+        constructor Create(jid: TJabberID; node: Widestring; hash: Widestring = '');
+
+        procedure ProcessSpecifiedInfo(tag: TXMLTag); override;
+        function CalculateHash(): Widestring; virtual;
+    public
+        destructor Destroy(); override;
+
+        property Hash: Widestring read _hash;
+        property Verified: Boolean read _verified;
+    end;
 
     TJabberCapsPending = class
     public
@@ -77,8 +94,8 @@ const
 implementation
 
 uses
-    PrefController, XMLParser,
-    DiscoIdentity, JabberUtils, JabberID, EntityCache, JabberConst, Session;
+    PrefController, XMLParser, SecHash, IdCoderMIME,
+    DiscoIdentity, JabberUtils, EntityCache, JabberConst, Session;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -193,7 +210,7 @@ procedure TJabberCapsCache.Save(filename: Widestring = '');
 var
     c, f, i: integer;
     di: TDiscoIdentity;
-    e: TJabberEntity;
+    e: TJabberCapsEntity;
     iq, q, cur, cache: TXMLTag;
     s: TWidestringlist;
 begin
@@ -202,25 +219,33 @@ begin
     cache := TXMLTag.Create('caps-cache');
 
     for c := 0 to _cache.Count - 1 do begin
-        e := TJabberEntity(_cache.Objects[c]);
+        e := TJabberCapsEntity(_cache.Objects[c]);
 
-        if ((e.hasInfo) and (not e.discoInfoError)) then begin
-            iq := cache.AddTag('iq');
-            iq.setAttribute('from', 'caps-cache');
-            iq.setAttribute('capid', _cache[c]);
+        if ((not e.hasInfo) or (e.discoInfoError)) then continue;
+        if ((not e.Verified) and not TJabberSession(_js).Prefs.getBool('brand_caps_cacheuntrusted')) then continue;
 
-            q := iq.AddTagNS('query', XMLNS_DISCOINFO);
-            for i := 0 to e.IdentityCount - 1 do begin
-                di := e.Identities[i];
-                cur := q.AddTag('identity');
-                cur.setAttribute('category', di.Category);
-                cur.setAttribute('type', di.DiscoType);
-            end;
+        iq := cache.AddTag('iq');
+        iq.setAttribute('from', 'caps-cache');
+        iq.setAttribute('capid', _cache[c]);
+        if (e.Verified) then iq.setAttribute('hash', e.Hash);
 
-            for f := 0 to e.FeatureCount - 1 do begin
-                cur := q.AddTag('feature');
-                cur.setAttribute('var', e.Features[f]);
-            end;
+        q := iq.AddTagNS('query', XMLNS_DISCOINFO);
+        for i := 0 to e.IdentityCount - 1 do begin
+            di := e.Identities[i];
+            cur := q.AddTag('identity');
+            cur.setAttribute('category', di.Category);
+            cur.setAttribute('type', di.DiscoType);
+            cur.setAttribute('name', di.RawName);
+            if (di.Language <> '') then cur.setAttribute('xml:lang', di.Language);
+        end;
+
+        for f := 0 to e.FeatureCount - 1 do begin
+            cur := q.AddTag('feature');
+            cur.setAttribute('var', e.Features[f]);
+        end;
+
+        for f := 0 to e.FormCount - 1 do begin
+            q.addInsertedXML(e.Forms[f].XML);
         end;
     end;
 
@@ -244,7 +269,7 @@ var
     parser: TXMLTagParser;
     iq, cache: TXMLTag;
     iqs: TXMLTagList;
-    capid, from: Widestring;
+    capid, from, hash: Widestring;
 begin
     parser := TXMLTagParser.Create();
 
@@ -266,16 +291,25 @@ begin
     for i := 0 to iqs.Count - 1 do begin
         iq := iqs.Tags[i];
         capid := iq.GetAttribute('capid');
+        hash := iq.getAttribute('hash');
         from := 'caps-cache';
-        if ((capid <> '') and (from <> '')) then begin
-            e := jEntityCache.getByJid(from, capid);
-            if (e = nil) then begin
-                e := TJabberEntity.Create(TJabberID.Create(from), capid, ent_cached_disco);
-                jEntityCache.Add(from, e);
-            end;
-            e.LoadInfo(iq);
-            _cache.AddObject(capid, e);
+
+        if ((capid = '') or (from = '')) then continue;
+        if ((hash = '') and not TJabberSession(_js).Prefs.getBool('brand_caps_cacheuntrusted')) then continue;
+
+        e := jEntityCache.getByJid(from, capid);
+        if (not e.InheritsFrom(TJabberCapsEntity)) then begin
+            jEntityCache.Remove(e);
+            e.Free();
+            e := nil;
         end;
+        if (e = nil) then begin
+            //e := TJabberEntity.Create(TJabberID.Create(from), capid, ent_cached_disco);
+            e := TJabberCapsEntity.Create(TJabberID.Create(from), capid, hash);
+            jEntityCache.Add(from, e);
+        end;
+        e.LoadInfo(iq);
+        _cache.AddObject(capid, e);
     end;
 
     iqs.Free();
@@ -298,7 +332,7 @@ end;
 {---------------------------------------}
 procedure TJabberCapsCache.PresCallback(event: string; tag: TXMLTag);
 
-    function getCache(capid: Widestring; jid: TJabberID): TJabberEntity;
+    function getCache(capid, hash: Widestring; jid: TJabberID): TJabberEntity;
     var
         cache: TJabberEntity;
         idx: integer;
@@ -311,8 +345,14 @@ procedure TJabberCapsCache.PresCallback(event: string; tag: TXMLTag);
         end
         else begin
             // this is something new, query for it.
-            cache := jEntityCache.discoInfo(jid.full, TJabberSession(_js), capid);
+            //cache := jEntityCache.discoInfo(jid.full, TJabberSession(_js), capid);
+            
+            //TODO:  create caps-specific Entity object
+            cache := TJabberCapsEntity.Create(jid, capid, hash);
+            jEntityCache.Add(jid.full, cache);
             _cache.AddObject(capid, cache);
+            
+            cache.getInfo(TJabberSession(_js));
         end;
 
         Result := cache;
@@ -332,7 +372,7 @@ var
     c: TXMLTag;
     exts: Widestring;
     from: TJabberID;
-    node, cid, capid: Widestring;
+    node, cid, capid, ver, hash: Widestring;
     ids: TWidestringlist;
 begin
     if (event <> 'xml') then exit;
@@ -347,13 +387,27 @@ begin
             xmlns='http://jabber.org/protocol/caps'/>
         <priority>0</priority>
     </presence>
+
+    OR like this:
+
+    <presence from='pgvantek@aol.com'
+        to='pmillard@corp.jabber.com/Jinx-pgm'
+        type='subscribed'>
+        <c  node='http://jabber.com/aim'
+            ver='q1elkfdslvnq2ein2klvenl12//=='
+            hash='sha-1'
+            xmlns='http://jabber.org/protocol/caps'/>
+        <priority>0</priority>
+    </presence>
     }
 
     c := tag.QueryXPTag(_xp);
     assert(c <> nil);
 
     node := c.GetAttribute('node');
-    capid := node + '#' + c.getAttribute('ver');
+    ver := c.getAttribute('ver');
+    hash := c.getAttribute('hash');
+    capid := node + '#' + ver;
     cid := capid;
 
     from := TJabberID.Create(tag.getAttribute('from'));
@@ -369,17 +423,20 @@ begin
 
         e.ClearReferences(); //refs will be rebuilt here
 
-        cache := getCache(capid, from);
+        cache := getCache(capid, hash, from);
         e.AddReference(cache);
         has_info := checkInfo(cache, cid, from);
 
+        //TODO:  differentiate between 'ext' and 'hash' (one or the other)
+        //NOTE:  we *might* trust persisting of this caps if hash is present
+        //NOTE:  we *never* trust persisting if no hash
         exts := c.GetAttribute('ext');
         if (exts <> '') then begin
             ids := TWidestringlist.Create();
             split(exts, ids, ' ');
             for i := 0 to ids.count - 1 do begin
                 capid := node + '#' + ids[i];
-                cache := getCache(capid, from);
+                cache := getCache(capid, '', from);
                 has_info := (has_info and checkInfo(cache, capid, from));
                 e.AddReference(cache);
             end;
@@ -413,6 +470,147 @@ begin
     Result := 'Caps Cache.' + #13#10 + 'Enity Count: ' + intToStr(_cache.Count) + #13#10 + 'Entities:' + #13#10;
     for c := 0 to _cache.Count - 1 do begin
         Result := Result + #13#10 + '***** Entity#' + IntToStr(c) + ' *****' + #13#10 + TJabberEntity(_cache.Objects[c]).toString();
+    end;
+end;
+
+
+{--------------------------}
+{--------------------------}
+{--------------------------}
+constructor TJabberCapsEntity.Create(jid: TJabberID; node: Widestring; hash: Widestring);
+var
+    idx: Integer;
+begin
+    inherited Create(jid, node, ent_disco);
+
+    _hash := hash;
+    if (hash <> '') then begin
+        idx := AnsiPos('#', node);
+        if (idx <> 0) then
+            _ver := Copy(node, idx + 1, Length(node));
+    end;
+end;
+
+{--------------------------}
+destructor TJabberCapsEntity.Destroy;
+begin
+    inherited;
+end;
+
+{--------------------------}
+procedure TJabberCapsEntity.ProcessSpecifiedInfo(tag: TXMLTag);
+begin
+    inherited ProcessSpecifiedInfo(tag);
+
+    //TODO:  process hash
+    if not Verified and (Hash <> '') then begin
+        _verified := CalculateHash() = _ver;
+    end;
+end;
+
+function TJabberCapsEntity.CalculateHash(): Widestring;
+var
+    Str: Widestring;
+    idx: Integer;
+    ident: TDiscoIdentity;
+
+    function EncodeForm(form: TXMLTag): Widestring;
+    var
+        fvar: Widestring;
+        field: TXMLTag;
+        fset: TXMLTagList;
+        fsorted, vsorted: TWidestringList;
+        idx, jdx: Integer;
+    begin
+        Result := '';
+
+        fsorted := TWidestringList.Create();
+        fsorted.Sorted := true;
+        fsorted.Duplicates := dupAccept;
+
+        vsorted := TWidestringList.Create();
+        vsorted.Sorted := true;
+        vsorted.Duplicates := dupAccept;
+
+        //sort fields
+        fset := form.QueryTags('field');
+        for idx := 0 to fset.Count - 1 do begin
+            field := fset[idx];
+            fvar := field.getAttribute('var');
+            if (fvar = 'FORM_TYPE') then
+                Result := field.QueryXPData('value') + '<'
+            else
+                fsorted.AddObject(fvar, field);
+        end;
+        fset.Free();
+
+        //process fields
+        for idx := 0 to fsorted.Count - 1 do begin
+            //sort values
+            field := TXMLTag(fsorted.Objects[idx]);
+            fset := field.QueryTags('value');
+            for jdx := 0 to fset.Count - 1 do begin
+                vsorted.Add(fset[jdx].Data);
+            end;
+            fset.Free();
+
+            //process values
+            Result := Result + fsorted[idx] + '<';
+            for jdx := 0 to vsorted.Count - 1 do begin
+                Result := Result + vsorted[jdx] + '<';
+            end;
+            vsorted.Clear();
+        end;
+
+        //Cleanup
+        vsorted.Free();
+        fsorted.Free();
+    end;
+
+    function GenHashSHA1(input: Widestring): Widestring;
+    var
+        sha1: TSecHash;
+        b64: TIdEncoderMIME;
+        tmp: String;
+        idx: Integer;
+        h: TByteDigest;
+    begin
+        tmp := UTF8Encode(input);
+
+        sha1 := TSecHash.Create(nil);
+        h := sha1.IntDigestToByteDigest(sha1.computeString(tmp));
+        sha1.Free();
+
+        tmp := '';
+        for idx := 0 to 19 do tmp := tmp + Chr(h[idx]);
+        b64 := TIdEncoderMIME.Create(nil);
+        result := b64.encode(tmp);
+        b64.Free();
+    end;
+begin
+    Str := '';
+
+    //include identities
+    for idx := 0 to IdentityCount - 1 do begin
+        ident := Identities[idx];
+        Str := Str + ident.Category + '/' + ident.DiscoType + '/' + ident.Language + '/' + ident.RawName + '<';
+    end;
+
+    //include features
+    for idx := 0 to FeatureCount - 1 do begin
+        Str := Str + Features[idx] + '<';
+    end;
+
+    //include forms
+    for idx := 0 to FormCount - 1 do begin
+        Str := Str + EncodeForm(Forms[idx]);
+    end;
+
+    if Hash = 'sha-1' then begin
+        Result := GenHashSHA1(Str);
+    end
+    else begin
+        Result := '';
     end;
 end;
 
