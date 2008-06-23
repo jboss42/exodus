@@ -26,7 +26,7 @@ uses
     COMRosterImages, COMMainToolBarImages, COMController, COMRoster, COMPPDB, JabberID,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify, Regexpr,
     S10n, COMExodusDataStore, SQLLogger, COMExodusHistorySearchManager,
-    SQLSearchHandler,
+    SQLSearchHandler, COMExodusPacketDispatcher,
 
     // Delphi stuff
     Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils,
@@ -101,6 +101,8 @@ var
     COMToolbar: IExodusToolbar;
     ExCOMBookmarkManager: TExodusBookmarkManager;
     COMBookmarkManager: IExodusBookmarkManager;
+
+    COMExPacketDispatcher: IExodusPacketDispatcher;
 
     ExRegController: TRegController;
     ExStartup: TExStartParams;
@@ -228,7 +230,7 @@ var
     tstr: widestring;
 
     dbfile: widestring;
-    
+
 begin
     // setup all the session stuff, parse cmd line params, etc..
     // Initialize random # generator
@@ -599,32 +601,9 @@ begin
         StartDebugLogger(log_filename);
     end;
 
-    // if we don't have sound registry settings, then add them
-    // sigh.  If we had an installer, that would be the place to
-    // do this.
-    {** JJf moved to installer
-    try
-        reg := TRegistry.Create();
-        reg.RootKey := HKEY_CURRENT_USER;
-        reg.OpenKey('\AppEvents\Schemes\Apps\' + getAppInfo().ID , true);
-        reg.WriteString('', getAppInfo().ID);
-        AddSound(reg, 'notify_chatactivity', _(sSoundChatactivity));
-        AddSound(reg, 'notify_invite', _(sSoundInvite));
-        AddSound(reg, 'notify_keyword', _(sSoundKeyword));
-        AddSound(reg, 'notify_newchat', _(sSoundNewchat));
-        AddSound(reg, 'notify_normalmsg', _(sSoundNormalmsg));
-        AddSound(reg, 'notify_offline', _(sSoundOffline));
-        AddSound(reg, 'notify_online', _(sSoundOnline));
-        AddSound(reg, 'notify_roomactivity', _(sSoundRoomactivity));
-        AddSound(reg, 'notify_s10n', _(sSoundS10n));
-        AddSound(reg, 'notify_oob', _(sSoundOOB));
-        AddSound(reg, 'notify_autoresponse', _(sSoundAutoResponse));
-        reg.CloseKey();
-    except
-        // do nothing... just silently ignore
-    end;
-    **}
     // create COM interfaces for plugins to use
+    COMExPacketDispatcher := TExodusPacketDispatcher.Create();
+
     ExCOMController := TExodusController.Create();
     COMController := ExCOMController;
     ExCOMRoster := TExodusRoster.Create();

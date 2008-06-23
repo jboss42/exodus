@@ -12,16 +12,17 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/23/2008 2:21:58 PM from Type Library described below.
+// File generated on 6/23/2008 5:25:20 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\MomentIM-trunk\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
+//   (2) v2.0 MSXML, (C:\WINDOWS\system32\msxml.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -29,7 +30,7 @@ unit Exodus_TLB;
 {$VARPROPSETTER ON}
 interface
 
-uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
+uses Windows, ActiveX, Classes, Graphics, MSXML_TLB, StdVCL, Variants;
   
 
 // *********************************************************************//
@@ -151,7 +152,12 @@ const
   IID_IExodusHover: TGUID = '{4CF49CD8-4B9B-4648-A07C-280111E724DA}';
   CLASS_COMExodusHover: TGUID = '{9004F424-7233-404F-8AC7-59F29BC5EFFB}';
   IID_IExodusListener2: TGUID = '{F96175B2-34C2-48F8-B491-90CF2A6A62EA}';
-  IID_IExodusMenuListener2: TGUID = '{D5D89865-B9C9-4D92-B3CC-7882E286C700}';
+  IID_IExodusEventXML: TGUID = '{8FB96A63-DA5C-459A-9B28-A177A6406CBC}';
+  CLASS_ExodusEventXML: TGUID = '{34677FDC-B4F5-4DD1-A3C6-B74856AF4CC5}';
+  IID_IExodusPacketControlListener: TGUID = '{073CBAFE-8BE0-42DE-B976-FFCF6AE2C958}';
+  IID_IExodusPacketDispatcher: TGUID = '{96BB23C1-F6BC-4007-8CE6-83107C7D0B29}';
+  CLASS_ExodusPacketDispatcher: TGUID = '{DB860D8B-51E5-479E-A8A0-648288C8D031}';
+  IID_IExodusMenuListener2: TGUID = '{046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -345,6 +351,11 @@ type
   IExodusHoverDisp = dispinterface;
   IExodusListener2 = interface;
   IExodusListener2Disp = dispinterface;
+  IExodusEventXML = interface;
+  IExodusEventXMLDisp = dispinterface;
+  IExodusPacketControlListener = interface;
+  IExodusPacketDispatcher = interface;
+  IExodusPacketDispatcherDisp = dispinterface;
   IExodusMenuListener2 = interface;
   IExodusMenuListener2Disp = dispinterface;
 
@@ -385,6 +396,8 @@ type
   ExodusActionController = IExodusActionController;
   MainToolBarImages = IExodusRosterImages;
   COMExodusHover = IExodusHover;
+  ExodusEventXML = IDispatch;
+  ExodusPacketDispatcher = IExodusPacketDispatcher;
 
 
 // *********************************************************************//
@@ -5464,22 +5477,91 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusEventXML
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {8FB96A63-DA5C-459A-9B28-A177A6406CBC}
+// *********************************************************************//
+  IExodusEventXML = interface(IDispatch)
+    ['{8FB96A63-DA5C-459A-9B28-A177A6406CBC}']
+    function GetTag: Integer; safecall;
+    procedure SetTag(XMLTagPointer: Integer); safecall;
+    function GetString: WideString; safecall;
+    procedure SetString(const XMLString: WideString); safecall;
+    function GetDOM: IXMLDOMDocument; safecall;
+    procedure SetDOM(const XMLDom: IXMLDOMDocument); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusEventXMLDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {8FB96A63-DA5C-459A-9B28-A177A6406CBC}
+// *********************************************************************//
+  IExodusEventXMLDisp = dispinterface
+    ['{8FB96A63-DA5C-459A-9B28-A177A6406CBC}']
+    function GetTag: Integer; dispid 201;
+    procedure SetTag(XMLTagPointer: Integer); dispid 202;
+    function GetString: WideString; dispid 203;
+    procedure SetString(const XMLString: WideString); dispid 204;
+    function GetDOM: IXMLDOMDocument; dispid 205;
+    procedure SetDOM(const XMLDom: IXMLDOMDocument); dispid 206;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusPacketControlListener
+// Flags:     (0)
+// GUID:      {073CBAFE-8BE0-42DE-B976-FFCF6AE2C958}
+// *********************************************************************//
+  IExodusPacketControlListener = interface(IUnknown)
+    ['{073CBAFE-8BE0-42DE-B976-FFCF6AE2C958}']
+    function OnPacketReceived(const xpath: WideString; const packet: IExodusEventXML; 
+                              const modifiedPacket: IExodusEventXML; var allow: WordBool): HResult; stdcall;
+    function OnPacketSent(const xpath: WideString; const packet: IExodusEventXML; 
+                          const modifiedPacket: IExodusEventXML; var allow: WordBool): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusPacketDispatcher
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {96BB23C1-F6BC-4007-8CE6-83107C7D0B29}
+// *********************************************************************//
+  IExodusPacketDispatcher = interface(IDispatch)
+    ['{96BB23C1-F6BC-4007-8CE6-83107C7D0B29}']
+    procedure RegisterPacketControlListener(const xpath: WideString; 
+                                            const listener: IExodusPacketControlListener); safecall;
+    procedure UnregisterPacketControlListener(const xpath: WideString; 
+                                              const listener: IExodusPacketControlListener); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusPacketDispatcherDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {96BB23C1-F6BC-4007-8CE6-83107C7D0B29}
+// *********************************************************************//
+  IExodusPacketDispatcherDisp = dispinterface
+    ['{96BB23C1-F6BC-4007-8CE6-83107C7D0B29}']
+    procedure RegisterPacketControlListener(const xpath: WideString; 
+                                            const listener: IExodusPacketControlListener); dispid 201;
+    procedure UnregisterPacketControlListener(const xpath: WideString; 
+                                              const listener: IExodusPacketControlListener); dispid 202;
+  end;
+
+// *********************************************************************//
 // Interface: IExodusMenuListener2
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {D5D89865-B9C9-4D92-B3CC-7882E286C700}
+// GUID:      {046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}
 // *********************************************************************//
   IExodusMenuListener2 = interface(IDispatch)
-    ['{D5D89865-B9C9-4D92-B3CC-7882E286C700}']
+    ['{046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}']
     procedure OnMenuItemShow(const menuID: WideString; const XML: WideString; var enable: WordBool); safecall;
   end;
 
 // *********************************************************************//
 // DispIntf:  IExodusMenuListener2Disp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {D5D89865-B9C9-4D92-B3CC-7882E286C700}
+// GUID:      {046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}
 // *********************************************************************//
   IExodusMenuListener2Disp = dispinterface
-    ['{D5D89865-B9C9-4D92-B3CC-7882E286C700}']
+    ['{046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}']
     procedure OnMenuItemShow(const menuID: WideString; const XML: WideString; var enable: WordBool); dispid 201;
   end;
 
@@ -5879,6 +5961,30 @@ type
     class function CreateRemote(const MachineName: string): IExodusHover;
   end;
 
+// *********************************************************************//
+// The Class CoExodusEventXML provides a Create and CreateRemote method to          
+// create instances of the default interface IDispatch exposed by              
+// the CoClass ExodusEventXML. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusEventXML = class
+    class function Create: IDispatch;
+    class function CreateRemote(const MachineName: string): IDispatch;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusPacketDispatcher provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusPacketDispatcher exposed by              
+// the CoClass ExodusPacketDispatcher. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusPacketDispatcher = class
+    class function Create: IExodusPacketDispatcher;
+    class function CreateRemote(const MachineName: string): IExodusPacketDispatcher;
+  end;
+
 implementation
 
 uses ComObj;
@@ -6211,6 +6317,26 @@ end;
 class function CoCOMExodusHover.CreateRemote(const MachineName: string): IExodusHover;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_COMExodusHover) as IExodusHover;
+end;
+
+class function CoExodusEventXML.Create: IDispatch;
+begin
+  Result := CreateComObject(CLASS_ExodusEventXML) as IDispatch;
+end;
+
+class function CoExodusEventXML.CreateRemote(const MachineName: string): IDispatch;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusEventXML) as IDispatch;
+end;
+
+class function CoExodusPacketDispatcher.Create: IExodusPacketDispatcher;
+begin
+  Result := CreateComObject(CLASS_ExodusPacketDispatcher) as IExodusPacketDispatcher;
+end;
+
+class function CoExodusPacketDispatcher.CreateRemote(const MachineName: string): IExodusPacketDispatcher;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPacketDispatcher) as IExodusPacketDispatcher;
 end;
 
 end.
