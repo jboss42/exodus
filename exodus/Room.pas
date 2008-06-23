@@ -217,6 +217,7 @@ type
     function GetRoomRosterVisibleCount(): Integer;
     procedure ToggleDuplicateMember(rm: TRoomMember;  tag: TXMLTag);
     procedure _checkForAdhoc();
+    function _getSelectedMembers() : TXMLTag;
   protected
     btnViewHistory: TToolButton;
     {
@@ -2325,6 +2326,7 @@ procedure TfrmRoom.popRoomRosterPopup(Sender: TObject);
 var
     e: boolean;
     rm: TRoomMember;
+    JidsTag: TXMLTag;
 begin
     e := (lstRoster.Selected <> nil);
 
@@ -2379,6 +2381,9 @@ begin
             popVoice.Enabled := popModerator.Enabled;
         end;
     end;
+    JidsTag := _getSelectedMembers();
+    TExodusChat(COMController).fireMenuShow(JidsTag.xml);
+    JidsTag.Free;
     inherited;
 end;
 
@@ -2760,6 +2765,24 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmRoom._getSelectedMembers() : TXMLTag;
+var
+   rm: TRoomMember;
+   Item: TListItem;
+begin
+   if (lstRoster.SelCount < 1) then exit;
+   Result := TXMLTag.Create('jids');
+
+   Item := lstRoster.Selected;
+   while (Item <> nil) do
+   begin
+       rm := TRoomMember(Item.Data);
+       Result.AddBasicTag('jid', rm.real_jid);
+       Item := lstRoster.GetNextItem(Item, sdAll, [isSelected]);
+   end;
+end;
+
+{---------------------------------------}
 procedure TfrmRoom.popupMenuClick(Sender: TObject);
 var
    xml: WideString;
@@ -2767,18 +2790,9 @@ var
    rm: TRoomMember;
    Item: TListItem;
 begin
-    if (lstRoster.SelCount < 1) then exit;
-    JidsTag := TXMLTag.Create('jids');
-
-    Item := lstRoster.Selected;
-    while (Item <> nil) do
-    begin
-        rm := TRoomMember(Item.Data);
-        JidsTag.AddBasicTag('jid', rm.real_jid);
-        Item := lstRoster.GetNextItem(Item, sdAll, [isSelected]);
-    end;
-
+    JidsTag := _getSelectedMembers();
     TExodusChat(COMController).fireMenuClick(Sender, JidsTag.xml);
+    JidsTag.Free();
 end;
 {---------------------------------------}
 procedure TfrmRoom.popRosterSendJIDClick(Sender: TObject);

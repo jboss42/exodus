@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/19/2008 12:07:27 PM from Type Library described below.
+// File generated on 6/23/2008 2:21:58 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -151,6 +151,7 @@ const
   IID_IExodusHover: TGUID = '{4CF49CD8-4B9B-4648-A07C-280111E724DA}';
   CLASS_COMExodusHover: TGUID = '{9004F424-7233-404F-8AC7-59F29BC5EFFB}';
   IID_IExodusListener2: TGUID = '{F96175B2-34C2-48F8-B491-90CF2A6A62EA}';
+  IID_IExodusMenuListener2: TGUID = '{D5D89865-B9C9-4D92-B3CC-7882E286C700}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -344,6 +345,8 @@ type
   IExodusHoverDisp = dispinterface;
   IExodusListener2 = interface;
   IExodusListener2Disp = dispinterface;
+  IExodusMenuListener2 = interface;
+  IExodusMenuListener2Disp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -5447,7 +5450,7 @@ type
 // *********************************************************************//
   IExodusListener2 = interface(IDispatch)
     ['{F96175B2-34C2-48F8-B491-90CF2A6A62EA}']
-    procedure ProcessVariantEvent(const Event: WideString; Data: OleVariant; var Handled: WordBool); safecall;
+    procedure ProcessVariantEvent(const event: WideString; Data: OleVariant; var handled: WordBool); safecall;
   end;
 
 // *********************************************************************//
@@ -5457,7 +5460,27 @@ type
 // *********************************************************************//
   IExodusListener2Disp = dispinterface
     ['{F96175B2-34C2-48F8-B491-90CF2A6A62EA}']
-    procedure ProcessVariantEvent(const Event: WideString; Data: OleVariant; var Handled: WordBool); dispid 201;
+    procedure ProcessVariantEvent(const event: WideString; Data: OleVariant; var handled: WordBool); dispid 201;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusMenuListener2
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D5D89865-B9C9-4D92-B3CC-7882E286C700}
+// *********************************************************************//
+  IExodusMenuListener2 = interface(IDispatch)
+    ['{D5D89865-B9C9-4D92-B3CC-7882E286C700}']
+    procedure OnMenuItemShow(const menuID: WideString; const XML: WideString; var enable: WordBool); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusMenuListener2Disp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D5D89865-B9C9-4D92-B3CC-7882E286C700}
+// *********************************************************************//
+  IExodusMenuListener2Disp = dispinterface
+    ['{D5D89865-B9C9-4D92-B3CC-7882E286C700}']
+    procedure OnMenuItemShow(const menuID: WideString; const XML: WideString; var enable: WordBool); dispid 201;
   end;
 
 // *********************************************************************//
