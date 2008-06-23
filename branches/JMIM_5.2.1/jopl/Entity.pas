@@ -44,6 +44,7 @@ const
     WALK_LIMIT          = 20;   // max # of items to do disco#info on
     WALK_MAX_TIMEOUT    = 30;   // max # of seconds for iq timeouts.
 
+    BRANDED_ENABLE_FALLBACKS = 'brand_enable_iq_fallbacks';
 type
 
     TJabberEntityType = (ent_unknown, ent_disco, ent_browse, ent_agents, ent_cached_disco);
@@ -105,11 +106,10 @@ type
         procedure _finishDiscoItems(jso: TObject; tag: TXMLTag);
         procedure _finishWalk(jso: TObject);
         procedure _finishBrowse(jso: TObject);
-
     public
         Tag: integer;
         Data: TObject;
-        
+
         constructor Create(jid: TJabberID; node: Widestring = ''; etype: TJabberEntityType = ent_unknown);
         destructor Destroy; override;
 
@@ -491,7 +491,7 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
-        if (not _fallback) then exit;
+        if (not _fallback) or (not js.Prefs.GetBool(BRANDED_ENABLE_FALLBACKS)) then exit;
 
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
@@ -556,7 +556,7 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a browse query
-        if (not _fallback) then begin
+        if (not _fallback) or (not js.Prefs.GetBool(BRANDED_ENABLE_FALLBACKS)) then begin
             _has_info := true;
             if (tag.GetAttribute('type') = 'error') then
                 _disco_info_error := true;
