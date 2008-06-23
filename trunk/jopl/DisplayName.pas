@@ -374,8 +374,11 @@ end;
 
 Destructor TDisplayNameEventListener.Destroy();
 begin
-    DNSession.UnRegisterCallback(_DNCB);
-    DNSession.UnRegisterCallback(_ProfileResultCB);
+    if (DNSession <> nil) then
+    begin
+        DNSession.UnRegisterCallback(_DNCB);
+        DNSession.UnRegisterCallback(_ProfileResultCB);
+    end;
     inherited;
 end;
 
