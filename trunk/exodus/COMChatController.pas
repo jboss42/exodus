@@ -91,7 +91,8 @@ type
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
     procedure fireSentMessageXML(tag: TXMLTag);
-    function fireChatEvent(Event: Widestring; oleVar: OleVariant ): boolean;
+    function  fireChatEvent(Event: Widestring; oleVar: OleVariant ): boolean;
+    procedure fireMenuShow(xml: WideString = '');
 
   private
     //JJF TODO msgqueue refactor _im: TfrmMsgRecv;
@@ -317,6 +318,35 @@ begin
             end;
         except
             // Not a IExodusChat2 plugin - eat error
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusChat.fireMenuShow(xml: WideString = '');
+var
+    idx : Integer;
+    i: integer;
+    Listener : IExodusMenuListener2;
+    Enabled: WordBool;
+begin
+    Enabled := true;
+
+    for i := 0 to _menu_items.Count - 1 do
+    begin
+        Listener := nil;
+        try
+            //fire event on one menu listener2
+            Listener := IUnknown(TMenuItem(_menu_items.Objects[i]).Tag) as IExodusMenuListener2;
+        except
+            DebugMessage('COM Exception in TExodusChat.fireMenuShow');
+        end;
+        if (Listener <> nil) then
+        begin
+               Listener.OnMenuItemShow(_menu_items[i], xml, Enabled);
+               TMenuItem(_menu_items.Objects[i]).Enabled := Enabled;
+               if (not Enabled) then
+                   break;
         end;
     end;
 end;
