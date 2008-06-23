@@ -32,6 +32,11 @@ uses
     {$endif}
     Classes, SysUtils;
 
+const
+    BRANDED_MIN_TIMEOUT = 'brand_minimum_iq_timeout';
+    PREF_DEFAULT_TIMEOUT = 'test_default_iq_timeout';
+
+    DEFAULT_TIMEOUT = 15;
 type
     TJabberIQ = class(TXMLTag)
     private
@@ -43,10 +48,6 @@ type
         _timer: TTimer;
         _ticks: longint;
         _timeout: longint;
-    published
-        procedure Timeout(Sender: TObject);
-        procedure iqCallback(event: string; xml: TXMLTag);
-        procedure disCallback(event: string; xml: TXMLTag);
     public
         Namespace: string;
         iqType: string;
@@ -55,17 +56,21 @@ type
 
         constructor Create(session: TJabberSession;
             id: Widestring; cb: TPacketEvent;
-            seconds: longint = 15); reintroduce; overload;
+            seconds: longint = -1); reintroduce; overload;
 
         constructor Create(session: TJabberSession; id: Widestring;
-            seconds: longint = 15); reintroduce; overload;
+            seconds: longint = -1); reintroduce; overload;
 
         constructor Create(session: TJabberSession; id: Widestring;
             payload: TXMLTag; cb: TPacketEvent;
-            seconds: longint = 15); reintroduce; overload;
+            seconds: longint = -1); reintroduce; overload;
 
         destructor Destroy; override;
         procedure Send;
+
+        procedure Timeout(Sender: TObject);
+        procedure iqCallback(event: string; xml: TXMLTag);
+        procedure disCallback(event: string; xml: TXMLTag);
 
         property ElapsedTime: longint read _ticks;
         property JabberSession: TJabberSession read _js;
@@ -76,8 +81,12 @@ end;
 {---------------------------------------}
 implementation
 
-constructor TJabberIQ.Create(session: TJabberSession; id: Widestring;
-    seconds: longint = 15);
+var
+    _computedMinTimeout: integer;
+
+constructor TJabberIQ.Create(session: TJabberSession;
+                             id: Widestring;
+                             seconds: longint);
 begin
     inherited Create();
 
@@ -89,59 +98,47 @@ begin
     _timer.Enabled := false;
     _timer.OnTimer := Timeout;
     _ticks := 0;
-    _timeout := seconds;
+
+    //see if a default has been set in the prefs
+    if (_computedMinTimeout < 0) then
+    begin
+        //use a default if its specified in prefs, if not, use hard coded DEFAULT_TIMEOUT
+        //this allows us to set short timeouts for testing
+        _computedMinTimeout := session.Prefs.getInt(PREF_DEFAULT_TIMEOUT);
+        if (_computedMinTimeout <= 0) then _computedMinTimeout := DEFAULT_TIMEOUT;
+
+        _timeout := session.Prefs.getInt(BRANDED_MIN_TIMEOUT);
+        if (_timeout >  _computedMinTimeout) then
+            _computedMinTimeout := _timeout;
+    end;
+    _timeout := _computedMinTimeout;
+
+    if (seconds > _timeout) then
+        _timeout := seconds;
 
     // manip the xml tag
     Self.Name := 'iq';
     qTag := Self.AddTag('query');
 end;
+
 
 {---------------------------------------}
 constructor TJabberIQ.Create(session: TJabberSession; id: Widestring;
     cb: TPacketEvent; seconds: longint);
 begin
-    inherited Create();
-
-    _js := session;
-    _id := id;
+    Self.create(Session, id, seconds);
     _callback := cb;
-    _cbIndex := -1;
-    _timer := TTimer.Create(nil);
-    _timer.Interval := 1000;
-    _timer.Enabled := false;
-    _timer.OnTimer := Timeout;
-    _ticks := 0;
-    _timeout := seconds;
-
-    // manip the xml tag
-    Self.Name := 'iq';
-    qTag := Self.AddTag('query');
 end;
 
 {---------------------------------------}
 constructor TJabberIQ.Create(session: TJabberSession; id: Widestring;
-    payload: TXMLTag; cb: TPacketEvent; seconds: longint = 15);
-var
-    payloadtag: TXMLTag;
+    payload: TXMLTag; cb: TPacketEvent; seconds: longint);
 begin
-    inherited Create();
+    Self.create(Session, id, cb, seconds);
+    //remove default query tag and add payload
+    RemoveTag(qTag);
 
-    _js := session;
-    _id := id;
-    _callback := cb;
-    _cbIndex := -1;
-    _timer := TTimer.Create(nil);
-    _timer.Interval := 1000;
-    _timer.Enabled := false;
-    _timer.OnTimer := Timeout;
-    _ticks := 0;
-    _timeout := seconds;
-
-    // manip the xml tag
-    Self.Name := 'iq';
-    payloadtag := TXMLTag.Create(payload);
-    qTag := Self.AddTag(payloadtag);
-
+    qTag := Self.AddTag(TXMLTag.Create(payload));
 end;
 {---------------------------------------}
 destructor TJabberIQ.Destroy;
@@ -238,6 +235,8 @@ begin
 end;
 
 
+initialization
+    _computedMinTimeout := -1;
 
 end.
 
