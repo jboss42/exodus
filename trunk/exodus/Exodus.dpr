@@ -301,7 +301,9 @@ uses
   FontConsts in '..\jopl\FontConsts.pas',
   COMMainToolBarImages in 'COMMainToolBarImages.pas',
   COMExodusHover in 'COMExodusHover.pas' {COMExodusHover: CoClass},
-  ExHoverFrame in 'components\ExHoverFrame.pas' {Frame1: TFrame};
+  ExHoverFrame in 'components\ExHoverFrame.pas' {Frame1: TFrame},
+  COMExEventData in 'COMExEventData.pas' {ExodusEventXML: CoClass},
+  COMExodusPacketDispatcher in 'COMExodusPacketDispatcher.pas';
 
 {$R *.TLB}
 

@@ -456,7 +456,6 @@ end;
 Destructor TJabberSession.Destroy;
 begin
     // Clean up everything
-
     ClearStringListObjects(ppdb);
     ppdb.Clear();
     Prefs.Free();
@@ -473,17 +472,13 @@ begin
 
     if (_stream <> nil) then
         _stream.Free();
-{** JJF msgqueue refactor
-    _pauseQueue.Free();
-**}    
     Presence_XML.Free();
 
-    // Free the dispatcher... this should free the signals
-    _dispatcher.Free;
     OnSessionEndProfile();
     OnSessionEndRoomProperties();
-    
-    inherited Destroy;
+    // Free the dispatcher... this should free the signals
+    _dispatcher.Free;
+   inherited Destroy;
 end;
 
 {---------------------------------------}
@@ -679,7 +674,6 @@ begin
             tag.setAttribute('xml:lang', _lang);
 
         _stream.SendTag(tag);
-        tag.Free;
     end
     else begin
         tag.Free;
