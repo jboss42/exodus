@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/23/2008 11:13:43 PM from Type Library described below.
+// File generated on 6/24/2008 12:54:47 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\MomentIM-trunk\src\Exodus\exodus\Exodus.tlb (1)
@@ -525,6 +525,7 @@ type
     function Get_MainToolBarImages: IExodusRosterImages; safecall;
     function Get_EnableFilesDragAndDrop: WordBool; safecall;
     procedure Set_EnableFilesDragAndDrop(value: WordBool); safecall;
+    function Get_PacketDispatcher: IExodusPacketDispatcher; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -551,6 +552,7 @@ type
     property ActionController: IExodusActionController read Get_ActionController;
     property MainToolBarImages: IExodusRosterImages read Get_MainToolBarImages;
     property EnableFilesDragAndDrop: WordBool read Get_EnableFilesDragAndDrop write Set_EnableFilesDragAndDrop;
+    property PacketDispatcher: IExodusPacketDispatcher read Get_PacketDispatcher;
   end;
 
 // *********************************************************************//
@@ -667,6 +669,7 @@ type
                                  const eventXML: WideString; ImageIndex: Integer); dispid 233;
     property MainToolBarImages: IExodusRosterImages readonly dispid 234;
     property EnableFilesDragAndDrop: WordBool dispid 235;
+    property PacketDispatcher: IExodusPacketDispatcher readonly dispid 236;
   end;
 
 // *********************************************************************//

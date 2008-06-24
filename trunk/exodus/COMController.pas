@@ -29,7 +29,7 @@ uses
     Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl, COMExodusItem;
 
 type
-  TExodusController = class(TAutoObject, IExodusController, IExodusPacketDispatcher)
+  TExodusController = class(TAutoObject, IExodusController)
   protected
     function Get_Connected: WordBool; safecall;
     function Get_Server: WideString; safecall;
@@ -157,12 +157,7 @@ type
     function Get_EnableFilesDragAndDrop: WordBool; safecall;
     procedure Set_EnableFilesDragAndDrop(Value: WordBool); safecall;
 
-    //IExodusPacketDispatcher
-    procedure RegisterPacketControlListener(const xpath: WideString;
-                                            const listener: IExodusPacketControlListener); safecall;
-    procedure UnregisterPacketControlListener(const xpath: WideString;
-                                              const listener: IExodusPacketControlListener); safecall;
-
+    function Get_PacketDispatcher: IExodusPacketDispatcher; safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -2245,16 +2240,9 @@ begin
     GetActivityWindow().FilesDragAndDrop := Value;
 end;
 
-procedure TExodusController.RegisterPacketControlListener(const xpath: WideString;
-                                                          const listener: IExodusPacketControlListener);
+function TExodusController.Get_PacketDispatcher: IExodusPacketDispatcher;
 begin
-    COMExPacketDispatcher.RegisterPacketControlListener(xpath, listener);
-end;
-
-procedure TExodusController.UnregisterPacketControlListener(const xpath: WideString;
-                                                            const listener: IExodusPacketControlListener);
-begin
-    COMExPacketDispatcher.UnregisterPacketControlListener(xpath, listener);
+    Result := COMExPacketDispatcher;
 end;
 
 initialization
