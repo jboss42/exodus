@@ -481,7 +481,7 @@
 	<brand_about_additional_list/>
 	
 	<!-- IQ behavior, enable_fallback = true will attempt iq:browse and then iq:agent if iq:diso fails -->
-    <brand_iq_enable_fallback value='0'/>
+    <brand_enable_iq_fallbacks value='0'/>
 	<!-- minimum timeout for ALL iqs. -->
     <brand_minimum_iq_timeout value='15'/>
 

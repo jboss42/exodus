@@ -491,13 +491,18 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
-        if (not _fallback) or (not js.Prefs.GetBool(BRANDED_ENABLE_FALLBACKS)) then exit;
-
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
-        _iq.toJid := _jid.full;
-        _iq.Namespace := XMLNS_BROWSE;
-        _iq.iqType := 'get';
-        _iq.Send();
+        if (not _fallback) or (not js.Prefs.GetBool(BRANDED_ENABLE_FALLBACKS)) then
+        begin
+            _has_items := true;
+             js.FireEvent('/session/entity/items', tag);
+        end
+        else begin
+            _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
+            _iq.toJid := _jid.full;
+            _iq.Namespace := XMLNS_BROWSE;
+            _iq.iqType := 'get';
+            _iq.Send();
+        end;
         exit;
     end;
 
@@ -561,14 +566,14 @@ begin
             if (tag.GetAttribute('type') = 'error') then
                 _disco_info_error := true;
             js.FireEvent('/session/entity/info', tag);
-            exit;
+        end
+        else begin
+            _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
+            _iq.toJid := _jid.full;
+            _iq.Namespace := XMLNS_BROWSE;
+            _iq.iqType := 'get';
+            _iq.Send();
         end;
-        
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
-        _iq.toJid := _jid.full;
-        _iq.Namespace := XMLNS_BROWSE;
-        _iq.iqType := 'get';
-        _iq.Send();
         exit;
     end;
 
@@ -840,12 +845,20 @@ begin
     if (js.Active = false) then exit;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        // Dispatch a disco#items query
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
-        _iq.toJid := _jid.full;
-        _iq.Namespace := XMLNS_BROWSE;
-        _iq.iqType := 'get';
-        _iq.Send();
+        if (not _fallback) or (not js.Prefs.GetBool(BRANDED_ENABLE_FALLBACKS)) then begin
+            _has_info := true;
+            if (tag.GetAttribute('type') = 'error') then
+                _disco_info_error := true;
+            js.FireEvent('/session/entity/info', tag);
+        end
+        else begin
+            // Dispatch a disco#items query
+            _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
+            _iq.toJid := _jid.full;
+            _iq.Namespace := XMLNS_BROWSE;
+            _iq.iqType := 'get';
+            _iq.Send();
+        end;
         exit;
     end;
 
