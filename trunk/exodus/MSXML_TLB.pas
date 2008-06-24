@@ -12,7 +12,7 @@ unit MSXML_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/23/2008 5:25:20 PM from Type Library described below.
+// File generated on 6/23/2008 11:13:43 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\WINDOWS\system32\msxml.dll (1)
