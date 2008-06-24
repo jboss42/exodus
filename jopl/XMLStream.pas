@@ -678,7 +678,7 @@ procedure TXMLStream.Send(xml: Widestring);
 begin
     //only parse if we have packet control listeners
     if (_ControlCallbacks.Count > 0) then
-        SendTag(ParseXML(xml))
+        SendTag(StringToXMLTag(xml))
     else SendXML(xml);
 end;
 
