@@ -260,8 +260,8 @@ inherited frmDebug: TfrmDebug
   end
   object PopupMenu1: TTntPopupMenu
     AutoHotkeys = maManual
-    Left = 40
-    Top = 144
+    Left = 48
+    Top = 136
     object Clear1: TTntMenuItem
       Caption = 'Clear '
       ShortCut = 16430
@@ -269,6 +269,7 @@ inherited frmDebug: TfrmDebug
     end
     object SendXML1: TTntMenuItem
       Caption = 'Send XML'
+      ShortCut = 16397
       OnClick = btnSendRawClick
     end
     object Find1: TTntMenuItem
