@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/24/2008 12:54:47 AM from Type Library described below.
+// File generated on 6/24/2008 10:55:15 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\MomentIM-trunk\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4518,7 +4518,7 @@ type
 // *********************************************************************//
   IExodusAXWindow = interface(IDispatch)
     ['{8F2F3430-1E7E-4FA7-B65D-A25B48EFE880}']
-    function Get_OleObject: OleVariant; safecall;
+    function Get_AXControl: IUnknown; safecall;
     procedure Close; safecall;
     procedure BringToFront; safecall;
     function Get_UnreadMsgCount: Integer; safecall;
@@ -4537,10 +4537,10 @@ type
     procedure UnRegisterCallback; safecall;
     procedure FlashWindow; safecall;
     function Get_DockToolbar: IExodusDockToolbar; safecall;
-    function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant; safecall;
+    function NewTitleBarActiveX(const ActiveX_GUID: WideString): IUnknown; safecall;
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const value: WideString); safecall;
-    property OleObject: OleVariant read Get_OleObject;
+    property AXControl: IUnknown read Get_AXControl;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
     property PriorityFlag: WordBool read Get_PriorityFlag write Set_PriorityFlag;
@@ -4557,7 +4557,7 @@ type
 // *********************************************************************//
   IExodusAXWindowDisp = dispinterface
     ['{8F2F3430-1E7E-4FA7-B65D-A25B48EFE880}']
-    property OleObject: OleVariant readonly dispid 201;
+    property AXControl: IUnknown readonly dispid 201;
     procedure Close; dispid 202;
     procedure BringToFront; dispid 203;
     property UnreadMsgCount: Integer dispid 204;
@@ -4571,7 +4571,7 @@ type
     procedure UnRegisterCallback; dispid 212;
     procedure FlashWindow; dispid 213;
     property DockToolbar: IExodusDockToolbar readonly dispid 214;
-    function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant; dispid 215;
+    function NewTitleBarActiveX(const ActiveX_GUID: WideString): IUnknown; dispid 215;
     property Caption: WideString dispid 216;
   end;
 

@@ -37,7 +37,6 @@ type
     constructor Create(form: TfrmActiveXDockable);
 
   protected
-    function Get_OleObject: OleVariant; safecall;
     procedure Close; safecall;
     procedure BringToFront; safecall;
     function Get_UnreadMsgCount: Integer; safecall;
@@ -56,10 +55,10 @@ type
     procedure UnRegisterCallback; safecall;
     procedure FlashWindow; safecall;
     function Get_DockToolbar: IExodusDockToolbar; safecall;
-    function NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant;
-      safecall;
+    function NewTitleBarActiveX(const ActiveX_GUID: WideString): IUnknown; safecall;
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const value: WideString); safecall;
+    function Get_AXControl: IUnknown; safecall;
 
   end;
 
@@ -75,18 +74,6 @@ uses
 constructor TExodusAXWindow.Create(form: TfrmActiveXDockable);
 begin
     _frm := form;
-end;
-
-function TExodusAXWindow.Get_OleObject: OleVariant;
-begin
-    Result := unassigned;
-    try
-        if ((_frm <> nil) and
-            (_frm.AXControl <> nil)) then begin
-            Result := _frm.AXControl.OleObject;
-        end;
-    except
-    end;
 end;
 
 procedure TExodusAXWindow.Close;
@@ -233,12 +220,13 @@ begin
     end;
 end;
 
-function TExodusAXWindow.NewTitleBarActiveX(const ActiveX_GUID: WideString): OleVariant;
+function TExodusAXWindow.NewTitleBarActiveX(
+  const ActiveX_GUID: WideString): IUnknown;
 var
     AXControl: TAXControl;
     ParentControl: TWinControl;
 begin
-    Result := unassigned;
+    Result := nil;
     try
         ParentControl := _frm.pnlChatTop;
         AXControl := TAXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
@@ -246,13 +234,13 @@ begin
             AXControl.Parent := ParentControl;
             AXControl.Align := alClient;
 
-            Result := AXControl.OleObject;
+            Result := IUnknown(AXControl.OleObject);
         end
         else begin
-            Result := unassigned;
+            Result := nil;
         end;
     except
-        Result := unassigned;
+        Result := nil;
     end;
 end;
 
@@ -264,6 +252,18 @@ end;
 procedure TExodusAXWindow.Set_Caption(const value: WideString);
 begin
     _frm.Caption := Value;
+end;
+
+function TExodusAXWindow.Get_AXControl: IUnknown;
+begin
+    Result := nil;
+    try
+        if ((_frm <> nil) and
+            (_frm.AXControl <> nil)) then begin
+            Result := IUnknown(_frm.AXControl.OleObject);
+        end;
+    except
+    end;
 end;
 
 initialization

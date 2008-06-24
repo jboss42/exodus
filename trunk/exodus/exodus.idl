@@ -8,6 +8,7 @@ library Exodus
 {
 
   importlib("stdole2.tlb");
+  importlib("msxml.dll");
 
   [
     uuid(E89B1EBA-8CF8-4A00-B15D-18149A0FA830), 
@@ -1681,8 +1682,46 @@ library Exodus
     [default] interface IExodusHover;
   };
 
+  [
+    uuid(34677FDC-B4F5-4DD1-A3C6-B74856AF4CC5), 
+    version(1.0), 
+    helpstring("Exidus event data for XML DOMS, TXMLTag, IXMLDOMDocument and string")
+  ]
+  coclass ExodusEventXML
+  {
+    interface IExodusEventXML;
+    [default] interface IDispatch;
+  };
+
+  [
+    uuid(DB860D8B-51E5-479E-A8A0-648288C8D031), 
+    version(1.0), 
+    helpstring("ExodusPacketDispatcher Object")
+  ]
+  coclass ExodusPacketDispatcher
+  {
+    [default] interface IExodusPacketDispatcher;
+  };
+
+  [
+    uuid(046DE4B3-E2B0-4B39-9A55-98541ABFC8FA), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusMenuListener2: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall OnMenuItemShow([in] BSTR menuID, [in] BSTR XML, [in, out] VARIANT_BOOL * enable );
+  };
+
   
   typedef BSTR * PWideString1;
+
+  
+  typedef VARIANT_BOOL * PWordBool1;
 
   [
     uuid(A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C), 
@@ -2137,6 +2176,11 @@ library Exodus
     id(0x000000EB)
     ]
     HRESULT _stdcall EnableFilesDragAndDrop([in] VARIANT_BOOL value );
+    [
+    propget, 
+    id(0x000000EC)
+    ]
+    HRESULT _stdcall PacketDispatcher([out, retval] IExodusPacketDispatcher ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -8788,7 +8832,7 @@ library Exodus
     propget, 
     id(0x000000C9)
     ]
-    HRESULT _stdcall OleObject([out, retval] VARIANT * value );
+    HRESULT _stdcall AXControl([out, retval]  IUnknown ** controll );
     [
     id(0x000000CA)
     ]
@@ -8875,7 +8919,7 @@ library Exodus
     [
     id(0x000000D7)
     ]
-    HRESULT _stdcall NewTitleBarActiveX([in] BSTR ActiveX_GUID, [out, retval] VARIANT * ActiveX_Wrapper );
+    HRESULT _stdcall NewTitleBarActiveX([in] BSTR ActiveX_GUID, [out, retval]  IUnknown ** ActiveX_Wrapper );
     [
     propget, 
     id(0x000000D8)
@@ -9526,6 +9570,10 @@ library Exodus
     id(0x000000CA)
     ]
     HRESULT _stdcall ItemGroupsChanged([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall ItemUpdated([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -9615,6 +9663,91 @@ library Exodus
     id(0x000000CC)
     ]
     HRESULT _stdcall Hide([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(F96175B2-34C2-48F8-B491-90CF2A6A62EA), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusListener2: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ProcessVariantEvent([in] BSTR event, [in] VARIANT Data, [in] VARIANT_BOOL * handled );
+  };
+
+  [
+    uuid(8FB96A63-DA5C-459A-9B28-A177A6406CBC), 
+    version(1.0), 
+    helpstring("XMLDOM wrapper for Exodus event data, TXMLTag, IXMLDOMDocument and string "), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusEventXML: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall GetTag([out, retval] long * Result );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall SetTag([in] long XMLTagPointer );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall GetString([out, retval] BSTR * Result );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall SetString([in] BSTR XMLString );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall GetDOM([out, retval] IXMLDOMDocument ** Result /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall SetDOM([in] IXMLDOMDocument * XMLDom /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(96BB23C1-F6BC-4007-8CE6-83107C7D0B29), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusPacketDispatcher: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall RegisterPacketControlListener([in] BSTR xpath, [in] IExodusPacketControlListener listener /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall UnregisterPacketControlListener([in] BSTR xpath, [in] IExodusPacketControlListener listener /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(1DDEA354-6FA2-43E1-AE81-8ABE167AB791), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusPacketControlListener: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall OnPacketReceived([in] BSTR xpath, [in] IExodusEventXML packet /*Warning: unable to validate structure name: */, IExodusEventXML modifiedPacket /*Warning: unable to validate structure name: */, VARIANT_BOOL * allow );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall OnPacketSent([in] BSTR xpath, [in] IExodusEventXML packet /*Warning: unable to validate structure name: */, IExodusEventXML modifiedPacket /*Warning: unable to validate structure name: */, VARIANT_BOOL * allow );
   };
 
 };
