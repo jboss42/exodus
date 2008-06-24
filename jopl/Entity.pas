@@ -48,7 +48,7 @@ const
                                 //UI thread, spin off to another for more.
                                 //don't dog the ui thread!
 
-    BRANDED_ENABLE_FALLBACK = 'brand_iq_enable_fallback';
+    BRANDED_ENABLE_FALLBACK = 'brand_enable_iq_fallbacks';
 type
 
     TJabberEntityType = (ent_unknown, ent_disco, ent_browse, ent_agents, ent_cached_disco);
