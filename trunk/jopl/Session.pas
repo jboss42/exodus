@@ -628,6 +628,8 @@ begin
         // don't I18N
         raise Exception.Create('Invalid connection type');
     end;
+    //fire a stream ready event, so anything that wants to add listeners can
+    _dispatcher.DispatchSignal('/session/stream/ready', nil);
 
     // Register our session to get XML Tags
     _stream.RegisterStreamCallback(Self.StreamCallback);
@@ -740,14 +742,7 @@ begin
     // Something is happening... our stream says so.
     if ((msg = 'connected') and (_sent_stream = false)) then begin
         // we are connected... send auth stuff.
-        lang := Prefs.getString('locale');
-        if (lang <> '') then l := ' xml:lang="' + lang + '" ' else l := '';
-        tmps := '<stream:stream to="' + Trim(Server) +
-            '" xmlns="jabber:client" ' +
-            'xmlns:stream="http://etherx.jabber.org/streams" ' + l +
-            'version="1.0" ' +
-            '>';
-        _stream.Send(tmps);
+        _stream.SendStreamHeader(Server, Prefs.getString('locale'));
         _sent_stream := true;
     end
 
@@ -1411,17 +1406,10 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.ResetStream();
-var
-    tmps: Widestring;
 begin
     // send a new stream:stream...
     _stream.ResetParser();
-    tmps := '<stream:stream to="' + Trim(Server) +
-        '" xmlns="jabber:client" ' +
-        'xmlns:stream="http://etherx.jabber.org/streams" ' +
-        'version="1.0" ' +
-        '>';
-    _stream.Send(tmps);
+    _stream.SendStreamHeader(Server, Prefs.getString('locale'));
 end;
 
 {---------------------------------------}
