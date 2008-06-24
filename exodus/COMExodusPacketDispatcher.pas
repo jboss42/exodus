@@ -12,19 +12,24 @@ type
   TExodusPacketDispatcher = class(TAutoObject, IExodusPacketDispatcher)
   private
     _listenersByXPath: TWidestringList;
+    _disconnectCB: integer;
+    _streamreadyCB: integer;
   protected
-    procedure InitializeStreamListener();
-    procedure UninitializeStreamListener();
-
     procedure PacketControlCallback(direction: TPacketDirection;
                                     const inPacket: TXMLTag;
                                     var outPacket: TXMLTag;
                                     var allow: WordBool);
+
+    procedure SessionListenerCallback(event: string; tag: TXMLTag);
   public
+    Destructor Destroy(); override;
+
     procedure RegisterPacketControlListener(const xpath: WideString;
       const listener: IExodusPacketControlListener); safecall;
     procedure UnregisterPacketControlListener(const xpath: WideString;
       const listener: IExodusPacketControlListener); safecall;
+
+    procedure Initialize();override;
   end;
 
 implementation
@@ -55,6 +60,7 @@ type
 
 constructor TPacketListener.Create(xpStr: widestring);
 begin
+    _xp := TXPLite.Create;
     _xpStr := Trim(xpStr);
     _xp.Parse(xpStr);
 
@@ -87,7 +93,7 @@ end;
 
 function TPacketListener.IsMatch(tag: TXMLtag): boolean;
 begin
-    Result :=  (_listeners.count > 0) and ((_xpStr = '') or _xp.Compare(tag));
+    Result :=  (_listeners.count > 0) and ((_xpStr = '<ALL>') or _xp.Compare(tag));
 end;
 
 procedure TPacketListener.AddListener(listener: IExodusPacketControlListener);
@@ -102,21 +108,27 @@ begin
     _listUpdated := true;
 end;
 
-
-procedure TExodusPacketDispatcher.InitializeStreamListener();
+Destructor TExodusPacketDispatcher.Destroy();
 begin
-    if (_listenersByXPath.Count = 1) then
-    begin
-        Session.MainSession.Stream.RegisterPacketControlCallback(PacketControlCallback);
-    end;
+    _listenersByXPath.free(); //free objects at some poitn
+
 end;
 
-procedure TExodusPacketDispatcher.UninitializeStreamListener();
+procedure TExodusPacketDispatcher.Initialize();
 begin
-    if (_listenersByXPath.Count = 0) then
-    begin
-        Session.MainSession.Stream.UnregisterPacketControlCallback(PacketControlCallback);
-    end;
+    inherited;
+    _listenersByXPath := TWidestringlist.create();
+
+    _streamreadyCB := Session.MainSession.RegisterCallback(SessionListenerCallback, '/session/stream/ready');
+    _disconnectCB := Session.MainSession.RegisterCallback(SessionListenerCallback, '/session/disconnected');
+end;
+
+procedure TExodusPacketDispatcher.SessionListenerCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/stream/ready') then
+        Session.MainSession.Stream.RegisterPacketControlCallback(PacketControlCallback)
+    else if (event = '/session/disconnected') then
+        Session.MainSession.Stream.UnRegisterPacketControlCallback(PacketControlCallback)
 end;
 
 procedure TExodusPacketDispatcher.RegisterPacketControlListener(
@@ -124,18 +136,19 @@ procedure TExodusPacketDispatcher.RegisterPacketControlListener(
 var
     idx : integer;
     tpl: TPacketListener;
+    s: widestring;
 begin
-    if (_listenersByXPath = nil) then
-        _listenersByXPath := TWidestringList.create();
-    idx := _listenersByXPath.IndexOf(xpath);
+    s := xpath;
+    if (s = '') then s := '<ALL>';
+
+    idx := _listenersByXPath.IndexOf(s);
     if (idx <> -1) then
         tpl := TPacketListener(_listenersByXPath.objects[idx])
-    else begin 
-        tpl := TPacketListener.Create(xpath);
-        _listenersByXPath.AddObject(xpath, tpl);
+    else begin
+        tpl := TPacketListener.Create(s);
+        _listenersByXPath.AddObject(s, tpl);
     end;
     tpl.AddListener(listener);
-    InitializeStreamListener();
 end;
 
 procedure TExodusPacketDispatcher.UnregisterPacketControlListener(
@@ -143,15 +156,16 @@ procedure TExodusPacketDispatcher.UnregisterPacketControlListener(
 var
     idx : integer;
     tpl: TPacketListener;
+    s: widestring;
 begin
-    if (_listenersByXPath = nil) then
-        _listenersByXPath := TWidestringList.create();
+    s := xpath;
+    if (s = '') then s := '<ALL>';
 
-    idx := _listenersByXPath.IndexOf(xpath);
+    idx := _listenersByXPath.IndexOf(s);
     if (idx <> -1) then
     begin
         tpl := TPacketListener(_listenersByXPath.objects[idx]);
-        tpl.RemoveListener(listener);        
+        tpl.RemoveListener(listener);
     end;
 end;
 
