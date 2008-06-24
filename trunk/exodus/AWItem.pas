@@ -39,7 +39,10 @@ uses
     ExtCtrls,
     ExFrame,
     ExGradientPanel,
-    Graphics, Menus, TntMenus, SClrRGrp;
+    Graphics,
+    Menus,
+    TntMenus,
+    SClrRGrp;
 
 type
     TfAWItem = class(TExFrame)
@@ -146,8 +149,13 @@ type
 implementation
 
 uses
-    Jabber1, ActivityWindow, Session,
-    XMLTag, StateForm, ExUtils;
+    Jabber1,
+    ActivityWindow,
+    Session,
+    XMLTag,
+    StateForm,
+    ExUtils,
+    TntSysUtils;
 
 
 {$R *.dfm}
@@ -534,7 +542,7 @@ end;
 {---------------------------------------}
 procedure TfAWItem._setName(val:widestring);
 begin
-    lblName.Caption := val;
+    lblName.Caption := Tnt_WideStringReplace(val, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
 end;
 
 {---------------------------------------}

@@ -247,7 +247,8 @@ uses
     EntityCache,
     IEMsgList,
     TypInfo, Dockable, ActiveX,
-    HistorySearch, ActivityWindow;
+    HistorySearch, ActivityWindow,
+    TntSysUtils;
 
 const
     sReplying = ' is replying.';
@@ -584,7 +585,7 @@ begin
     else
         _displayName := TDisplayNameEventListener.getDisplayName(_jid.jid);
 
-    lblNick.Caption := _displayName;
+    lblNick.Caption := Tnt_WideStringReplace(_displayName, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
     Caption := _displayName;
     Hint := _jid.jid;
     MsgList.setTitle(_displayName);
