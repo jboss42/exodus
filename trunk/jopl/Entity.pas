@@ -82,6 +82,9 @@ type
         _fallback: boolean;
         _stopWalk: boolean; //flag to stop walk after getting second level items
 
+        function _getReference(i: integer): TJabberEntity;
+        function _getReferenceCount: integer;
+
         function _getFeature(i: integer): Widestring;
         function _getFeatureCount: integer;
 
@@ -97,9 +100,7 @@ type
         procedure _discoInfo(js: TJabberSession; callback: TSignalEvent);
         procedure _discoItems(js: TJabberSession; callback: TSignalEvent);
 
-        procedure _processDiscoInfo(tag: TXMLTag);
         procedure _processDiscoItems(tag: TXMLTag; parent: TJabberEntity; out newItems: TWidestringList; itemLimit: integer = -1);
-        procedure _processLegacyFeatures();
 
         procedure _finishWalk(jso: TObject; newItems: TWidestringList);
         procedure _finishDiscoItems(jso: TObject; tag: TXMLTag; newItems: TWidestringList);
@@ -120,6 +121,8 @@ type
         //callbacks from children when disco are completed during a walk
         procedure _childDiscoWalkFinished(jso: TObject; child: TJabberEntity);
     protected
+        procedure SetNode(node: Widestring);
+
         function AddIdentity(ident: TDiscoIdentity): Boolean; virtual;
         function RemoveIdentity(ident: TDiscoIdentity): Boolean; virtual;
 
@@ -129,7 +132,7 @@ type
         function AddForm(form: TXMLTag): Boolean; virtual;
         function RemoveForm(form: TXMLTag): Boolean; virtual;
 
-        procedure ProcessSpecifiedInfo(tag: TXMLTag); virtual;
+        procedure _processDiscoInfo(tag: TXMLTag); virtual;
 
         procedure ItemsCallback(event: string; tag: TXMLTag);
         procedure InfoCallback(event: string; tag: TXMLTag);
@@ -139,6 +142,9 @@ type
 
         procedure WalkInfoCallback(event: string; tag: TXMLTag);
         procedure WalkItemsCallback(event: string; tag: TXMLTag);
+
+        property ReferenceCount: Integer read _getReferenceCount;
+        property References[Index: Integer]: TJabberEntity read _getReference;
     public
         Tag: integer;
         Data: TObject;
@@ -326,6 +332,21 @@ begin
 end;
 
 {---------------------------------------}
+function TJabberEntity._getReferenceCount: Integer;
+begin
+    Result := _refs.Count;
+end;
+
+{---------------------------------------}
+function TJabberEntity._getReference(i: Integer): TJabberEntity;
+begin
+    if (i > -1) and (i < _refs.Count) then
+        result := TJabberEntity(_refs[i])
+    else
+        Result := nil;
+end;
+
+{---------------------------------------}
 function TJabberEntity._getFeature(i: integer): Widestring;
 begin
     if (i < _feats.Count) then
@@ -345,8 +366,8 @@ begin
         Result := false
     else begin
         Result := (_feats.IndexOf(f) >= 0);
-        // if we didn't find it directly, check our references
         if (not Result) then begin
+            // if we didn't find it directly, check our references
             for i := 0 to _refs.Count - 1 do begin
                 r := TJabberEntity(_refs[i]);
                 //go ahead and check caps cache entities here
@@ -356,6 +377,12 @@ begin
                     break;
                 end;
             end;
+
+            // if we STILL didn't find it, pretend we did for certain ones...
+            if (f = FEAT_GROUPCHAT) then
+                Result := hasFeature('gc-1.0') or hasFeature(XMLNS_MUC) or hasFeature('conference')
+            else if (f = FEAT_REGISTER) or (f = FEAT_SEARCH) then
+                Result := true;
         end;
     end;
 end;
@@ -746,15 +773,6 @@ end;
 
 {---------------------------------------}
 procedure TJabberEntity._processDiscoInfo(tag: TXMLTag);
-begin
-    ProcessSpecifiedInfo(tag);
-    _processLegacyFeatures();
-
-    _lastInfoIQResult := TXMLTag.create(tag);
-end;
-
-{---------------------------------------}
-procedure TJabberEntity.ProcessSpecifiedInfo(tag: TXMLTag);
 var
     id, q: TXMLTag;
     fset: TXMLTagList;
@@ -805,10 +823,7 @@ begin
     for i := 0 to fset.count - 1 do
     begin
         id := fset[i];
-        AddIdentity(TDiscoIdentity.Create(id.GetAttribute('category'),
-                                                id.GetAttribute('type'),
-                                                id.GetAttribute('name'),
-                                                id.GetAttribute('xml:lang')));
+        AddIdentity(TDiscoIdentity.Create(id));
     end;
     fset.Free();
 
@@ -827,20 +842,13 @@ begin
         AddForm(id);
     end;
     fset.Free();
+
+    _lastInfoIQResult := TXMLTag.create(tag);
 end;
 {---------------------------------------}
+{
 procedure TJabberEntity._processLegacyFeatures();
 begin
-    if (Pos('http://jm.jabber.com/caps#3', Self._node) <> 0) then
-    begin
-        //JM fixup test only *remove*
-        AddFeature(XMLNS_XHTMLIM);
-{
-        if (_feats.IndexOf(XMLNS_MUC) = -1) then
-            _feats.Add(XMLNS_MUC);
-}
-    end;
-
     // check for some legacy stuff..
     AddFeature(FEAT_SEARCH);
     AddFeature(FEAT_REGISTER);
@@ -853,7 +861,7 @@ begin
          (_feats.IndexOf('jabber:iq:gateway') <> -1)) then
         AddFeature(_cat_type);
 end;
-
+}
 {---------------------------------------}
 procedure TJabberEntity._processDiscoItems(tag: TXMLTag;
                                            parent: TJabberEntity;
@@ -1074,8 +1082,6 @@ begin
     for n := 0 to nss.Count - 1 do
         AddFeature(nss[n].Data);
     nss.Free();
-
-    _processLegacyFeatures();
 
     // we have the info about this object..
     _has_info := true;
@@ -1422,26 +1428,16 @@ begin
     end;
 end;
 
-function IdentityKey(ident: TDiscoIdentity): Widestring;
+procedure TJabberEntity.SetNode(node: WideString);
 begin
-    if (ident = nil) then
-        Result := ''
-    else begin
-        if (ident.Language <> '') then
-            Result := ident.Category + '/' + ident.DiscoType + '/' + ident.Language
-        else
-            Result := ident.Category + '/' + ident.DiscoType;
-    end;
+    _node := node;
 end;
 
 function TJabberEntity.AddIdentity(ident: TDiscoIdentity): Boolean;
-var
-    key: Widestring;
 begin
-    Key := IdentityKey(ident);
-    Result := (key <> '') and (_idents.IndexOf(key) = -1);
+    Result := (ident <> nil) and (_idents.IndexOf(ident.Key) = -1);
     if Result then begin
-        _idents.AddObject(key, ident);
+        _idents.AddObject(ident.Key, ident);
 
         if (_idents.Count = 1) then begin
             _cat := ident.Category;
@@ -1452,15 +1448,16 @@ begin
 end;
 function TJabberEntity.RemoveIdentity(ident: TDiscoIdentity): Boolean;
 var
-    key: Widestring;
     idx: Integer;
 begin
-    key := IdentityKey(ident);
-    idx := _idents.IndexOf(key);
-    Result := (idx <> -1);
-    if Result then begin
-        _idents.Delete(idx);
-    end;
+    Result := false;
+    if (ident = nil) then exit;
+    
+    idx := _idents.IndexOf(ident.Key);
+    if (idx = -1) then exit;
+
+    _idents.Delete(idx);
+    Result := true;
 end;
 
 function TJabberEntity.AddFeature(feat: WideString): Boolean;

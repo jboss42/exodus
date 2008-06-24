@@ -20,7 +20,7 @@ unit DiscoIdentity;
 }
 interface
 uses
-    Unicode, Classes, SysUtils;
+    Unicode, Classes, SysUtils, XMLTag;
 
 type
 TDiscoIdentity = class
@@ -29,16 +29,21 @@ private
     _cat: WideString;
     _type: WideString;
     _name: WideString;
+    _key: Widestring;
+
     function _getName(): WideString;
 
 public
-    constructor Create(category: WideString; DiscoType: WideString; Name: WideString; lang: Widestring = '');
+    constructor Create(category: WideString; DiscoType: WideString; Name: WideString; lang: Widestring = ''); overload;
+    constructor Create(tag: TXMLTag); overload;
 
+    property Key: Widestring read _key;
     property Category: WideString read _cat;
     property DiscoType: WideString read _type;
     property Language: Widestring read _lang;
     property Name: WideString read _getName;
-    property RawName: Widestring read _name;
+
+    function AddTag(owner: TXMLTag): TXMLTag;
 end;
 
 implementation
@@ -49,6 +54,17 @@ begin
     _type := DiscoType;
     _name := Name;
     _lang := lang;
+
+    _key := _cat + '/' + _type + '/' + _lang + '/' + _name;
+end;
+constructor TDiscoIdentity.Create(tag: TXMLTag);
+begin
+    _cat := tag.GetAttribute('category');
+    _type := tag.GetAttribute('type');
+    _name := tag.getAttribute('name');
+    _lang := tag.getAttribute('xml:lang');
+
+    _key := _cat + '/' + _type + '/' + _lang + '/' + _name;
 end;
 
 function TDiscoIdentity._getName(): WideString;
@@ -59,6 +75,15 @@ begin
     end;
 
     Result := _cat + '/' + _type;
+end;
+
+function TDiscoIdentity.AddTag(owner: TXMLTag): TXMLTag;
+begin
+    Result := owner.AddTag('identity');
+    Result.setAttribute('category', _cat);
+    Result.setAttribute('type', _type);
+    if (_name <> '') then Result.setAttribute('name', _name);
+    if (_lang <> '') then Result.setAttribute('xml:lang', _lang);
 end;
 
 

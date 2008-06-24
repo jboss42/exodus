@@ -165,6 +165,7 @@ type
     _msg_menus: TWidestringList;
     _nextid: longint;
     _parser: TXMLTagParser;
+    _caps_exts: TWidestringList;
     // XXX: _cookie: integer;
 
     _contact_logger: IExodusLogger;
@@ -251,6 +252,26 @@ type
         listener : IExodusMenuListener;
     end;
 
+    TLegacyCapsInfo = class
+    private
+        _ext: Widestring;
+        _feats: TWidestringList;
+
+        function _getFeatureCount(): Integer;
+        function _getFeature(idx: Integer): Widestring;
+    public
+        constructor Create(ext: Widestring);
+        destructor Destroy(); override;
+
+        function Add(feat: Widestring): Boolean;
+        function Remove(feat: Widestring): Boolean;
+        procedure Clear();
+
+        property Extent: Widestring read _ext;
+        property FeatureCount: Integer read _getFeatureCount;
+        property Features[Index: Integer]: Widestring read _getFeature;
+    end;
+
 
 // Forward declares for plugin utils
 function CheckPluginDll(dll : WideString; var progID: Widestring; var doc: Widestring): boolean;
@@ -267,7 +288,7 @@ var
 implementation
 
 uses
-    DockContainer, Profile,
+    DockContainer, Profile, CapsCache,
     ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
     Chat, JabberID,
 //    MsgRecv,
@@ -999,7 +1020,8 @@ begin
     _msg_menus := TWidestringlist.Create();
     _nextid := 0;
     _parser := TXMLTagParser.Create();
-    
+    _caps_exts := TWidestringList.Create();
+
     (*
     // XXX: Joe: figure out this OLE stuff please so it doesn't core on exit
 
@@ -1901,14 +1923,33 @@ end;
 {---------------------------------------}
 procedure TExodusController.RegisterCapExtension(const ext,
   feature: WideString);
+var
+    idx: Integer;
+    caps: TLegacyCapsInfo;
 begin
-    MainSession.AddExtension(ext, feature);
+    idx := _caps_exts.IndexOf(ext);
+    if (idx <> -1) then
+        caps := TLegacyCapsInfo(_caps_exts.Objects[idx])
+    else begin
+        caps := TLegacyCapsInfo.Create(ext);
+        _caps_exts.AddObject(ext, caps);
+    end;
+
+    caps.Add(feature);
 end;
 
 {---------------------------------------}
 procedure TExodusController.UnregisterCapExtension(const ext: WideString);
+var
+    idx: Integer;
+    caps: TLegacyCapsInfo;
 begin
-    MainSession.RemoveExtension(ext);
+    idx := _caps_exts.IndexOf(ext);
+    if (idx <> -1) then begin
+        caps := TLegacyCapsInfo(_caps_exts.Objects[idx]);
+        caps.Free();
+        _caps_exts.Delete(idx);
+    end;
 end;
 
 {---------------------------------------}
@@ -2244,6 +2285,64 @@ function TExodusController.Get_PacketDispatcher: IExodusPacketDispatcher;
 begin
     Result := COMExPacketDispatcher;
 end;
+
+constructor TLegacyCapsInfo.Create(ext: WideString);
+begin
+    _ext := ext;
+    _feats := TWidestringList.Create();
+end;
+
+destructor TLegacyCapsInfo.Destroy();
+var
+    idx: Integer;
+begin
+    Clear();
+    _feats.Free();
+
+    inherited;
+end;
+
+function TLegacyCapsInfo._getFeatureCount(): Integer;
+begin
+    Result := _feats.Count;
+end;
+function TLegacyCapsInfo._getFeature(idx: Integer): Widestring;
+begin
+    if (idx > -1) and (idx < _feats.Count) then
+        result := _feats[idx]
+    else
+        Result := '';
+end;
+
+function TLegacyCapsInfo.Add(feat: WideString): Boolean;
+begin
+    Result := (feat <> '') and (_feats.IndexOf(feat) = -1);
+    if (result) then  begin
+        _feats.Add(feat);
+        jSelfCaps.AddFeature(feat);
+    end;
+end;
+function TLegacyCapsInfo.Remove(feat: Widestring): Boolean;
+var
+    idx: Integer;
+begin
+    idx := _feats.IndexOf(feat);
+    Result := (feat <> '') and (idx <> -1);
+    if Result then begin
+        _feats.Delete(idx);
+        jSelfCaps.RemoveFeature(feat);
+    end;
+end;
+procedure TLegacyCapsInfo.Clear();
+var
+    idx: Integer;
+begin
+    for idx := _feats.Count - 1 downto 0 do begin
+        jSelfCaps.RemoveFeature(_feats[idx]);
+        _feats.Delete(idx);
+    end;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,

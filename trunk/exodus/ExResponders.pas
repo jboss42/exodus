@@ -148,7 +148,7 @@ uses
     {$ifdef TRACE_EXCEPTIONS}
     IdException, JclDebug, JclHookExcept, TypInfo,
     {$endif}
-    DisplayName,
+    CapsCache, DisplayName,
     RosterRecv,
     Room,
     RosterImages, COMController, ExSession, GnuGetText,
@@ -709,25 +709,7 @@ begin
     // other nodes, from plugins for example, MUST register their own callback
     node := q.GetAttribute('node');
     if (node <> '') then begin
-        i := pos('#', node);
-        if (i = 0) then
-            error := true
-        else begin
-            uri := copy(node, 1, i - 1);
-            if (uri <> _session.Prefs.getString('client_caps_uri')) then
-                error := true
-            else begin
-                ext := copy(node, i+1, length(node) - i + 1);
-                if ext <> GetAppVersion() then begin
-                    j := MainSession.GetExtList().IndexOf(ext);
-                    if (j < 0) then
-                        error := true
-                    else begin
-                        extension := TWideStringList(MainSession.GetExtList().Objects[j]);
-                    end;
-                end;
-            end;
-        end;
+        error := (node <> jSelfCaps.Node);
     end;
 
     r := TXMLTag.Create('iq');
@@ -751,59 +733,14 @@ begin
 
     r.setAttribute('type', 'result');
 
-    if (extension <> nil) then begin
-        for j := 0 to extension.Count - 1 do begin
-            addFeature(q, extension[j]);
-        end;
-    end
-    else begin
-        // no node or uri#ver
-        addFeature(q, XMLNS_AGENTS);
-
-        addFeature(q, XMLNS_IQOOB);
-        addFeature(q, XMLNS_TIME);
-        addFeature(q, XMLNS_TIME_202);
-        addFeature(q, XMLNS_VERSION);
-        addFeature(q, XMLNS_LAST);
-        addFeature(q, XMLNS_DISCOITEMS);
-        addFeature(q, XMLNS_DISCOINFO);
-
-        // Various core extensions
-        addFeature(q, XMLNS_BM);
-        addFeature(q, XMLNS_XDATA);
-        addFeature(q, XMLNS_XEVENT);
-
-        // MUC Stuff
-        addFeature(q, XMLNS_MUC);
-        addFeature(q, XMLNS_MUCUSER);
-        addFeature(q, XMLNS_MUCOWNER);
-
-        // File xfer
-        addFeature(q, XMLNS_SI);
-        addFeature(q, XMLNS_FTPROFILE);
-        addFeature(q, XMLNS_BYTESTREAMS);
-
-{$IFDEF DEPRICATED_PROTOCOL}
-         addFeature(q, XMLNS_BROWSE);
-         addFeature(q, XMLNS_XCONFERENCE);
-{$ENDIF}
-        
-        //if currently sending/displaying rich text include the NS
-        if (node = '') then begin
-            with q.AddTag('identity') do begin
-                setAttribute('category', 'user');
-                setAttribute('type', 'client');
-                setAttribute('name', _session.Username);
-            end;
-
-            for i := 0 to MainSession.GetExtList().Count - 1 do begin
-                extension := TWideStringList(MainSession.GetExtList().Objects[i]);
-                for j := 0 to extension.Count - 1 do begin
-                    addFeature(q, extension[j]);
-                end;
-            end;
+    if (node = '') then begin
+        with q.AddTag('identity') do begin
+            setAttribute('category', 'user');
+            setAttribute('type', 'client');
+            setAttribute('name', _session.Username);
         end;
     end;
+    jSelfCaps.AddToDisco(q);
 
     f := nil;
     DoNotify(f, 'notify_autoresponse',
