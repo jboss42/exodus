@@ -68,6 +68,8 @@ type
     { Private declarations }
     _scb: integer;
 
+    procedure _activityListDump();
+
   protected
     procedure SessionCallback(event: string; tag: TXMLTag);
   published
@@ -102,7 +104,14 @@ uses
     WideStrUtils,
     RosterImages,
     DisplayName,
-    MsgDisplay, GnuGetText, Signals, Session, JabberUtils, ExUtils,  Jabber1;
+    MsgDisplay,
+    GnuGetText,
+    Signals,
+    Session,
+    JabberUtils,
+    ExUtils,
+    Jabber1,
+    ActivityWindow;
 
 
 var
@@ -273,7 +282,7 @@ begin
     if (cmd[1] = '/') then begin
         // we are giving some kind of interactive debugger cmd
         if (cmd ='/help') then
-            DebugMessage('/dispcount'#13#10'/dispdump'#13#10'/args')
+            DebugMessage('/dispcount'#13#10'/dispdump'#13#10'/args'#13#10'/aldump')
         else if (cmd = '/args') then begin
             for i := 0 to ParamCount do
                 DebugMessage(ParamStr(i))
@@ -298,10 +307,138 @@ begin
                     DebugMessage(''#13#10);
                 end;
             end;
+        end
+        else if (cmd = '/aldump') then begin
+            _activityListDump();
         end;
     end
     else
         MainSession.Stream.Send(cmd);
+end;
+
+{---------------------------------------}
+procedure TfrmDebug._activityListDump();
+var
+    aw: TfrmActivityWindow;
+    i: integer;
+begin
+    aw := GetActivityWindow();
+    if (aw <> nil) then begin
+        DebugMessage('Activity list item count:  ' + IntToStr(aw.itemCount));
+        DebugMessage('Activity list items----------------');
+        for i := 0 to aw.itemCount -1 do
+        begin
+            DebugMessage('Activity window item tab info:');
+
+            if (aw.findItem(i).awItem <> nil) then
+            begin
+                try
+                    with aw.findItem(i).awItem do
+                    begin
+                        DebugMessage('    Name:  ' + name);
+                        DebugMessage('    Unread message count:  ' + IntToStr(count));
+                        DebugMessage('    ImgIndex:  ' + IntToStr(imgIndex));
+                        if (active) then begin
+                            DebugMessage('    Is active:  true');
+                        end
+                        else begin
+                            DebugMessage('    Is active:  false');
+                        end;
+
+                        if (priority) then begin
+                            DebugMessage('    Is priority:  true');
+                        end
+                        else begin
+                            DebugMessage('    Is priority:  false');
+                        end;
+
+                        if (newWindowHighlight) then begin
+                            DebugMessage('    Is new window highlight:  true');
+                        end
+                        else begin
+                            DebugMessage('    Is new window highlight:  false');
+                        end;
+
+                        if (newMessageHighlight) then begin
+                            DebugMessage('    Is new message highlight:  true');
+                        end
+                        else begin
+                            DebugMessage('    Is new message highlight:  false');
+                        end;
+                    end;
+                except
+                    DebugMessage('ACTIVITY WINDOW TAB ITEM ACCESS EXCEPTION');
+                end;
+            end
+            else begin
+                DebugMessage('FAILED TO GET HOLD OF ACTIVITY WINDOW TAB ITEM');
+            end;
+
+            DebugMessage('Docked window item form info:');
+
+            if (aw.findItem(i).frm <> nil) then
+            begin
+                try
+                    with aw.findItem(i).frm do
+                    begin
+                        if (Docked) then
+                        begin
+                            DebugMessage('    Is Docked:  true');
+                        end
+                        else begin
+                            DebugMessage('    Is Docked:  false');
+                        end;
+
+                        DebugMessage('    Form ImgIndex:  ' + IntToStr(ImageIndex));
+                        DebugMessage(Format('    Float pos: top(%d), left(%d), Right(%d), Bottom(%d)', [FloatPos.Top, FloatPos.Left, FloatPos.Right, FloatPos.Bottom]));
+                        DebugMessage('    UID:  ' + UID);
+                        DebugMessage('    Unread message count:  ' + IntToStr(UnreadMsgCount));
+
+                        if (PriorityFlag) then
+                        begin
+                            DebugMessage('    Priority Flag:  true');
+                        end
+                        else begin
+                            DebugMessage('    Prioirty Flag:  false');
+                        end;
+
+                        if (Activating) then
+                        begin
+                            DebugMessage('    Activating Flag:  true');
+                        end
+                        else begin
+                            DebugMessage('    Activating Flag:  false');
+                        end;
+
+                        try
+                            DebugMessage('    LastActivity:  ' + DateTimeToStr(LastActivity));
+                        except
+                            DebugMessage('    LastActivity:  ???');
+                        end;
+
+                        DebugMessage('    Window type:  ' + WindowType);
+
+                        if (Activating) then
+                        begin
+                            DebugMessage('    Persist Unread Messages:  true');
+                        end
+                        else begin
+                            DebugMessage('    Persist Unread Messages:  false');
+                        end;
+                    end;
+                except
+                    DebugMessage('ACTIVITY WINDOW ITEM FORM ACCESS EXCEPTION');
+                end;
+            end
+            else begin
+                DebugMessage('FAILED TO GET HANDLE TO FORM');
+            end;
+            DebugMessage('-----------------------------------');
+        end;
+    end
+    else begin
+        DebugMessage('Failed to get handle to activity window for dump.');
+    end;
 end;
 
 {---------------------------------------}
