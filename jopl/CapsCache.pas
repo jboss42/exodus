@@ -24,7 +24,7 @@ uses
     {$ifdef Exodus}
     TntClasses,
     {$endif}
-    Entity, JabberID, XMLTag, Unicode, Classes, SysUtils;
+    DiscoIdentity, Entity, JabberID, XMLTag, Unicode, Classes, SysUtils;
 
 type
     TJabberCapsEntity = class(TJabberEntity)
@@ -34,17 +34,44 @@ type
         _verified: Boolean;
 
     protected
-        constructor Create(jid: TJabberID; node: Widestring; hash: Widestring = '');
+        procedure _processDiscoInfo(tag: TXMLTag); override;
+        function CalculateHash(): Widestring;
 
-        procedure ProcessSpecifiedInfo(tag: TXMLTag); override;
-        function CalculateHash(): Widestring; virtual;
+        property Version: Widestring read _ver write _ver;
     public
+        constructor Create(jid: TJabberID; node: Widestring; hash: Widestring = '');
         destructor Destroy(); override;
 
         property Hash: Widestring read _hash;
         property Verified: Boolean read _verified;
     end;
 
+    TJabberSelfEntity = class(TJabberCapsEntity)
+    private
+        _js: TObject;
+        
+    protected
+        constructor Create();
+        
+        procedure Update(send_pres: Boolean);
+
+        procedure SessionCallback(event: string; tag: TXMLTag);
+    public
+        procedure SetSession(js: TObject);
+
+        function AddIdentity(ident: TDiscoIdentity): Boolean; override;
+        function RemoveIdentity(ident: TDiscoIdentity): Boolean; override;
+
+        function AddFeature(feat: Widestring): Boolean; override;
+        function RemoveFeature(feat: Widestring): Boolean; override;
+
+        function AddForm(form: TXMLTag): Boolean; override;
+        function RemoveForm(form: TXMLTag): Boolean; override;
+
+        function AddToPresence(pres: TXMLTag): TXMLTag;
+        function AddToDisco(q: TXMLTag): TXMLTag;
+    end;
+    
     TJabberCapsPending = class
     public
         capsid: Widestring;
@@ -64,13 +91,15 @@ type
         procedure addPending(ejid, node, caps_jid: Widestring);
         procedure fireCaps(jid, capid: Widestring);
 
+        procedure RemoveCached(e: TJabberCapsEntity);
+        procedure AddCached(e: TJabberCapsEntity);
     public
         constructor Create();
         destructor Destroy(); override;
 
         procedure SetSession(js: TObject);
 
-        function find(capid: Widestring): TJabberEntity;
+        function find(capid: Widestring): TJabberCapsEntity;
 
         procedure Clear();
         procedure Save(filename: Widestring = '');
@@ -84,6 +113,7 @@ type
 
 var
     jCapsCache: TJabberCapsCache;
+    jSelfCaps: TJabberSelfEntity;
 
 const
     capsFilename = 'capscache.xml';
@@ -95,7 +125,7 @@ implementation
 
 uses
     PrefController, XMLParser, SecHash, IdCoderMIME,
-    DiscoIdentity, JabberUtils, EntityCache, JabberConst, Session;
+    JabberUtils, EntityCache, JabberConst, Session, XMLUtils;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -126,6 +156,8 @@ end;
 {---------------------------------------}
 destructor TJabberCapsCache.Destroy();
 begin
+    FreeAndNil(jSelfCaps);
+
     _cache.Free();
     _pending.Free();
     _xp.Free();
@@ -140,6 +172,11 @@ begin
     TJabberSession(js).RegisterCallback(PresCallback,
         '/packet/presence[@type!="error"]/c[@xmlns="' + XMLNS_CAPS + '"]');
     TJabberSession(js).RegisterCallback(SessionCallback, '/session');
+
+    if (jSelfCaps = nil) then
+        jSelfCaps := TJabberSelfEntity.Create();
+
+    jSelfCaps.SetSession(js);
 end;
 
 {---------------------------------------}
@@ -157,7 +194,10 @@ begin
         TJabberSession(_js).FireEvent(DEPMOD_READY_EVENT + DEPMOD_CAPS_CACHE, tag);
     end
     else if (event = '/session/disconnected') then
-        Save()
+    begin
+        Save();
+        jSelfCaps.Version := '';
+    end
     else if ((event = '/session/entity/info') and (tag <> nil)) then begin
         // check to see if this is in our pending list
         q := tag.QueryXPTag(_xp_q);
@@ -232,11 +272,7 @@ begin
         q := iq.AddTagNS('query', XMLNS_DISCOINFO);
         for i := 0 to e.IdentityCount - 1 do begin
             di := e.Identities[i];
-            cur := q.AddTag('identity');
-            cur.setAttribute('category', di.Category);
-            cur.setAttribute('type', di.DiscoType);
-            cur.setAttribute('name', di.RawName);
-            if (di.Language <> '') then cur.setAttribute('xml:lang', di.Language);
+            di.AddTag(q);
         end;
 
         for f := 0 to e.FeatureCount - 1 do begin
@@ -298,18 +334,17 @@ begin
         if ((hash = '') and not TJabberSession(_js).Prefs.getBool('brand_caps_cacheuntrusted')) then continue;
 
         e := jEntityCache.getByJid(from, capid);
-        if (not e.InheritsFrom(TJabberCapsEntity)) then begin
+        if not (e is TJabberCapsEntity) then begin
             jEntityCache.Remove(e);
             e.Free();
             e := nil;
         end;
         if (e = nil) then begin
-            //e := TJabberEntity.Create(TJabberID.Create(from), capid, ent_cached_disco);
             e := TJabberCapsEntity.Create(TJabberID.Create(from), capid, hash);
             jEntityCache.Add(from, e);
         end;
         e.LoadInfo(iq);
-        _cache.AddObject(capid, e);
+        AddCached(TJabberCapsEntity(e));
     end;
 
     iqs.Free();
@@ -319,43 +354,54 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberCapsCache.find(capid: Widestring): TJabberEntity;
+function TJabberCapsCache.find(capid: Widestring): TJabberCapsEntity;
 var
     idx: integer;
 begin
     Result := nil;
     idx := _cache.IndexOf(capid);
     if (idx >= 0) then
-        Result := TJabberEntity(_cache.Objects[idx]);
+        Result := TJabberCapsEntity(_cache.Objects[idx]);
+end;
+
+{---------------------------------------}
+procedure TJabberCapsCache.AddCached(e: TJabberCapsEntity);
+var
+    idx: Integer;
+begin
+    if (e = nil) then exit;
+
+    idx := _cache.IndexOfObject(e);
+    if (idx = -1) then
+        _cache.AddObject(e.Node, e);
+end;
+{---------------------------------------}
+procedure TJabberCapsCache.RemoveCached(e: TJabberCapsEntity);
+var
+    idx: Integer;
+begin
+    if (e = nil) then exit;
+
+    idx := _cache.IndexOfObject(e);
+    if (idx <> -1) then
+        _cache.Delete(idx);
 end;
 
 {---------------------------------------}
 procedure TJabberCapsCache.PresCallback(event: string; tag: TXMLTag);
 
-    function getCache(capid, hash: Widestring; jid: TJabberID): TJabberEntity;
-    var
-        cache: TJabberEntity;
-        idx: integer;
+    function getCache(capid, hash: Widestring; jid: TJabberID): TJabberCapsEntity;
     begin
-        idx := _cache.IndexOf(capid);
-        if (idx >= 0) then begin
-            // we've already queried for this entry, just associate the results
-            // with this user's entity
-            cache := TJabberEntity(_cache.Objects[idx]);
-        end
-        else begin
+        Result := find(capid);
+        if (Result = nil) then begin
             // this is something new, query for it.
-            //cache := jEntityCache.discoInfo(jid.full, TJabberSession(_js), capid);
-            
-            //TODO:  create caps-specific Entity object
-            cache := TJabberCapsEntity.Create(jid, capid, hash);
-            jEntityCache.Add(jid.full, cache);
-            _cache.AddObject(capid, cache);
-            
-            cache.getInfo(TJabberSession(_js));
-        end;
+            //create caps-specific Entity object
+            Result := TJabberCapsEntity.Create(jid, capid, hash);
+            jEntityCache.Add(jid.full, Result);
+            AddCached(Result);
 
-        Result := cache;
+            Result.getInfo(TJabberSession(_js));
+        end;
     end;
 
     function checkInfo(cache: TJabberEntity; capid: Widestring; jid: TJabberID): boolean;
@@ -473,7 +519,6 @@ begin
     end;
 end;
 
-
 {--------------------------}
 {--------------------------}
 {--------------------------}
@@ -483,9 +528,15 @@ var
 begin
     inherited Create(jid, node, ent_disco);
 
+    if (Pos('http://jm.jabber.com/caps#3', node) <> 0) then
+    begin
+        //JM fixup test only *remove*
+        AddFeature(XMLNS_XHTMLIM);
+    end;
+    
     _hash := hash;
     if (hash <> '') then begin
-        idx := AnsiPos('#', node);
+        idx := Pos('#', node);
         if (idx <> 0) then
             _ver := Copy(node, idx + 1, Length(node));
     end;
@@ -498,9 +549,9 @@ begin
 end;
 
 {--------------------------}
-procedure TJabberCapsEntity.ProcessSpecifiedInfo(tag: TXMLTag);
+procedure TJabberCapsEntity._processDiscoInfo(tag: TXMLTag);
 begin
-    inherited ProcessSpecifiedInfo(tag);
+    inherited _processDiscoInfo(tag);
 
     //TODO:  process hash
     if not Verified and (Hash <> '') then begin
@@ -509,11 +560,6 @@ begin
 end;
 
 function TJabberCapsEntity.CalculateHash(): Widestring;
-var
-    Str: Widestring;
-    idx: Integer;
-    ident: TDiscoIdentity;
-
     function EncodeForm(form: TXMLTag): Widestring;
     var
         fvar: Widestring;
@@ -587,13 +633,16 @@ var
         result := b64.encode(tmp);
         b64.Free();
     end;
+var
+    Str: Widestring;
+    idx: Integer;
+
 begin
     Str := '';
 
     //include identities
     for idx := 0 to IdentityCount - 1 do begin
-        ident := Identities[idx];
-        Str := Str + ident.Category + '/' + ident.DiscoType + '/' + ident.Language + '/' + ident.RawName + '<';
+        Str := Str + Identities[idx].Key + '<';
     end;
 
     //include features
@@ -611,6 +660,177 @@ begin
     end
     else begin
         Result := '';
+    end;
+end;
+
+{--------------------------}
+{--------------------------}
+{--------------------------}
+constructor TJabberSelfEntity.Create();
+begin
+    inherited Create(TJabberID.Create('self-caps'), '', 'sha-1');
+
+    // no node or uri#ver
+    addFeature(XMLNS_AGENTS);
+
+    addFeature(XMLNS_IQOOB);
+    addFeature(XMLNS_TIME);
+    addFeature(XMLNS_TIME_202);
+    addFeature(XMLNS_VERSION);
+    addFeature(XMLNS_LAST);
+    addFeature(XMLNS_DISCOITEMS);
+    addFeature(XMLNS_DISCOINFO);
+
+    // Various core extensions
+    addFeature(XMLNS_BM);
+    addFeature(XMLNS_XDATA);
+    addFeature(XMLNS_XEVENT);
+
+    // MUC Stuff
+    addFeature(XMLNS_MUC);
+    addFeature(XMLNS_MUCUSER);
+    addFeature(XMLNS_MUCOWNER);
+
+    // File xfer
+    addFeature(XMLNS_SI);
+    addFeature(XMLNS_FTPROFILE);
+    addFeature(XMLNS_BYTESTREAMS);
+
+{$IFDEF DEPRICATED_PROTOCOL}
+    addFeature(XMLNS_BROWSE);
+    addFeature(XMLNS_XCONFERENCE);
+{$ENDIF}
+end;
+
+procedure TJabberSelfEntity.SetSession(js: TObject);
+begin
+    _js := js;
+
+    TJabberSession(_js).RegisterCallback(SessionCallback, '/session');
+end;
+
+procedure TJabberSelfEntity.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/disconnected') then
+        Version := '';
+end;
+
+{--------------------------}
+procedure TJabberSelfEntity.Update(send_pres: Boolean);
+var
+    session: TJabberSession;
+    ref: TJabberCapsEntity;
+    uri: Widestring;
+    capid: Widestring;
+begin
+    session := TJabberSession(_js);
+    uri := session.Prefs.getString('client_caps_uri');
+
+    //unlink old referene
+    if (Version <> '') then begin
+        capid := Self.Node;
+        ref := jCapsCache.find(capid);
+        if (ref <> nil) then ref.RemoveReference(Self);
+    end;
+
+    //make sure we have one identity
+    if IdentityCount = 0 then begin
+        AddIdentity(TDiscoIdentity.Create(
+            'client',
+            'pc',
+            PrefController.getAppInfo.Caption + ' ' + GetAppVersion()));
+    end;
+
+    //recalulate hash
+    Version := CalculateHash();
+    Self.SetNode(uri + '#' + Version);
+
+    //link new reference
+    if (Version <> '') then begin
+        capid := Self.Node;
+        ref := jCapsCache.find(capid);
+        if (ref = nil) then begin
+            ref := TJabberCapsEntity.Create(TJabberID.Create('caps-cache'), capid, Hash);
+            jCapsCache.AddCached(ref);
+        end;
+        ref.AddReference(Self);
+    end;
+
+    if (send_pres) then begin
+        session.setPresence(session.Show, session.Status, session.Priority);
+    end;
+end;
+
+{--------------------------}
+function TJabberSelfEntity.AddIdentity(ident: TDiscoIdentity): Boolean;
+begin
+    Result := inherited AddIdentity(ident);
+    if Result and (Version <> '') then Update(true);
+end;
+function TJabberSelfEntity.RemoveIdentity(ident: TDiscoIdentity): Boolean;
+begin
+    Result := inherited RemoveIdentity(ident);
+    if Result and (Version <> '') then Update(true);
+end;
+
+function TJabberSelfEntity.AddFeature(feat: WideString): Boolean;
+begin
+    Result := inherited AddFeature(feat);
+    if Result and (Version <> '') then Update(true);
+end;
+function TJabberSelfEntity.RemoveFeature(feat: WideString): Boolean;
+begin
+    Result := inherited RemoveFeature(feat);
+    if Result and (Version <> '') then Update(true);
+end;
+
+function TJabberSelfEntity.AddForm(form: TXMLTag): Boolean;
+begin
+    Result := inherited AddForm(form);
+    if Result and (Version <> '')then Update(true);
+end;
+function TJabberSelfEntity.RemoveForm(form: TXMLTag): Boolean;
+begin
+    Result := inherited RemoveForm(form);
+    if Result and (Version <> '') then Update(true);
+end;
+
+function TJabberSelfEntity.AddToPresence(pres: TXMLTag): TXMLTag;
+var
+    uri: Widestring;
+begin
+    uri := TJabberSession(jCapsCache._js).Prefs.getString('client_caps_uri');
+    if (Version = '') then Update(false);
+
+    Result := pres.AddTagNS('c', XMLNS_CAPS);
+    result.setAttribute('node', uri);
+    result.setAttribute('ver', Version);
+    result.setAttribute('hash', Hash);
+end;
+function TJabberSelfEntity.AddToDisco(q: TXMLTag): TXMLTag;
+var
+    idx: Integer;
+    child: TXMLTag;
+begin
+    if (Version = '') then Update(false);
+
+    Result := q;
+
+    //add identities
+    for idx := 0 to IdentityCount - 1 do begin
+        Identities[idx].AddTag(q);
+    end;
+
+    //add features
+    for idx := 0 to FeatureCount - 1 do begin
+        child := q.AddTag('feature');
+        child.setAttribute('var', Features[idx]);
+    end;
+
+    //add forms
+    for idx := 0 to FormCount - 1 do begin
+        child := Forms[idx];
+        q.addInsertedXML(child.XML);
     end;
 end;
 

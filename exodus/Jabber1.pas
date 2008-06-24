@@ -805,7 +805,7 @@ implementation
 uses
 
     // XXX: ZipMstr
-    StateForm,
+    StateForm, CapsCache,
     RosterImages, ToolbarImages,
     ExodusImageList,
     COMToolbar, COMToolbarButton, COMToolbarControl, COMExodusItemList,
@@ -1964,13 +1964,15 @@ begin
         restoreAlpha();
         //add or remove xhtml-im caps feature based on pref. Push presence if
         //cpas ext modified.
-        extExists := (MainSession.GetExtList.IndexOf('xhtml-im') <> -1);
+        //extExists := (MainSession.GetExtList.IndexOf('xhtml-im') <> -1);
+        extExists := jSelfCaps.hasFeature(XMLNS_XHTMLIM);
         RTEnabled := MainSession.Prefs.getBool('richtext_enabled');
         if (extExists <> RTEnabled) then begin
             if (not RTEnabled) then
-                MainSession.RemoveExtension('xhtml-im')
+                jSelfCaps.RemoveFeature(XMLNS_XHTMLIM)
             else
-                MainSession.AddExtension('xhtml-im', XMLNS_XHTMLIM);
+                jSelfCaps.AddFeature(XMLNS_XHTMLIM);
+
             //send presence if not starting up
             if ((tag = nil) or (tag.Name <> 'startup')) then
                 MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
