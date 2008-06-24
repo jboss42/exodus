@@ -70,8 +70,6 @@ function StringToXMLTag(input: widestring): TXMLTag;
 
 function ErrorText(tag :TXMLTag): Widestring;
 
-function ParseXML(xml: widestring): TXMLTag;
-
 {$ifdef VER150}
     {$define INDY9}
 {$endif}
@@ -99,9 +97,6 @@ uses
     XMLParser,
     StrUtils,
     DateUtils;
-var
-    _xmlParser: TXMLTagParser;
-
 function XPLiteEscape(value: widestring): widestring;
 var
     r: WideString;
@@ -853,20 +848,5 @@ begin
         Result := tag.QueryXPTag(XP_MSGDELAY);
 end;
 
-function ParseXML(xml: widestring): TXMLTag;
-begin
-    if (Trim(xml) = '') then
-        Result := nil
-    else begin
-        _xmlParser.clear();
-        _xmlParser.ParseString(xml);
-        Result := _xmlParser.popTag;
-    end;
-end;
-
-initialization
-    _xmlParser := TXMLTagParser.create();
-finalization
-    _xmlParser.free();
 
 end.
