@@ -96,6 +96,7 @@ type
 
         procedure Connect(profile : TJabberProfile); virtual; abstract;
 
+        procedure SendStreamHeader(Server: widestring; lang: widestring='');
         procedure SendTag(tag: TXMLTag);
         procedure Send(xml: Widestring);
 
@@ -530,6 +531,20 @@ begin
     inherited;
 end;
 
+procedure TXMLStream.SendStreamHeader(Server: widestring; lang: widestring='');
+var
+    l: widestring;
+    tstr: widestring;
+begin
+    if (lang <> '') then l := ' xml:lang="' + lang + '" ' else l := '';
+    tstr := '<stream:stream to="' + Trim(Server) +
+            '" xmlns="jabber:client" ' +
+            'xmlns:stream="http://etherx.jabber.org/streams" ' + l +
+            'version="1.0" ' +
+            '>';
+    SendXML(tstr);
+end;
+
 {---------------------------------------}
 procedure TXMLStream.RegisterStreamCallback(p: TXMLStreamCallback);
 var
@@ -659,7 +674,7 @@ begin
     //before forwarding onto other callbacks
     allow := true;
     dispPacket := nil;
-    DoPacketControlCallbacks(pdInbound, tag, dispPacket, allow);
+    DoPacketControlCallbacks(pdOutbound, tag, dispPacket, allow);
     
     if (allow) then
     begin
