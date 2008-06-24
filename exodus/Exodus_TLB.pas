@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/23/2008 5:25:20 PM from Type Library described below.
+// File generated on 6/23/2008 11:13:43 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\MomentIM-trunk\src\Exodus\exodus\Exodus.tlb (1)
@@ -154,10 +154,10 @@ const
   IID_IExodusListener2: TGUID = '{F96175B2-34C2-48F8-B491-90CF2A6A62EA}';
   IID_IExodusEventXML: TGUID = '{8FB96A63-DA5C-459A-9B28-A177A6406CBC}';
   CLASS_ExodusEventXML: TGUID = '{34677FDC-B4F5-4DD1-A3C6-B74856AF4CC5}';
-  IID_IExodusPacketControlListener: TGUID = '{073CBAFE-8BE0-42DE-B976-FFCF6AE2C958}';
   IID_IExodusPacketDispatcher: TGUID = '{96BB23C1-F6BC-4007-8CE6-83107C7D0B29}';
   CLASS_ExodusPacketDispatcher: TGUID = '{DB860D8B-51E5-479E-A8A0-648288C8D031}';
   IID_IExodusMenuListener2: TGUID = '{046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}';
+  IID_IExodusPacketControlListener: TGUID = '{1DDEA354-6FA2-43E1-AE81-8ABE167AB791}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -353,11 +353,12 @@ type
   IExodusListener2Disp = dispinterface;
   IExodusEventXML = interface;
   IExodusEventXMLDisp = dispinterface;
-  IExodusPacketControlListener = interface;
   IExodusPacketDispatcher = interface;
   IExodusPacketDispatcherDisp = dispinterface;
   IExodusMenuListener2 = interface;
   IExodusMenuListener2Disp = dispinterface;
+  IExodusPacketControlListener = interface;
+  IExodusPacketControlListenerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -5507,19 +5508,6 @@ type
   end;
 
 // *********************************************************************//
-// Interface: IExodusPacketControlListener
-// Flags:     (0)
-// GUID:      {073CBAFE-8BE0-42DE-B976-FFCF6AE2C958}
-// *********************************************************************//
-  IExodusPacketControlListener = interface(IUnknown)
-    ['{073CBAFE-8BE0-42DE-B976-FFCF6AE2C958}']
-    function OnPacketReceived(const xpath: WideString; const packet: IExodusEventXML; 
-                              const modifiedPacket: IExodusEventXML; var allow: WordBool): HResult; stdcall;
-    function OnPacketSent(const xpath: WideString; const packet: IExodusEventXML; 
-                          const modifiedPacket: IExodusEventXML; var allow: WordBool): HResult; stdcall;
-  end;
-
-// *********************************************************************//
 // Interface: IExodusPacketDispatcher
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {96BB23C1-F6BC-4007-8CE6-83107C7D0B29}
@@ -5563,6 +5551,32 @@ type
   IExodusMenuListener2Disp = dispinterface
     ['{046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}']
     procedure OnMenuItemShow(const menuID: WideString; const XML: WideString; var enable: WordBool); dispid 201;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusPacketControlListener
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {1DDEA354-6FA2-43E1-AE81-8ABE167AB791}
+// *********************************************************************//
+  IExodusPacketControlListener = interface(IDispatch)
+    ['{1DDEA354-6FA2-43E1-AE81-8ABE167AB791}']
+    procedure OnPacketReceived(const xpath: WideString; const packet: IExodusEventXML; 
+                               const modifiedPacket: IExodusEventXML; var allow: WordBool); safecall;
+    procedure OnPacketSent(const xpath: WideString; const packet: IExodusEventXML; 
+                           const modifiedPacket: IExodusEventXML; var allow: WordBool); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusPacketControlListenerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {1DDEA354-6FA2-43E1-AE81-8ABE167AB791}
+// *********************************************************************//
+  IExodusPacketControlListenerDisp = dispinterface
+    ['{1DDEA354-6FA2-43E1-AE81-8ABE167AB791}']
+    procedure OnPacketReceived(const xpath: WideString; const packet: IExodusEventXML; 
+                               const modifiedPacket: IExodusEventXML; var allow: WordBool); dispid 201;
+    procedure OnPacketSent(const xpath: WideString; const packet: IExodusEventXML; 
+                           const modifiedPacket: IExodusEventXML; var allow: WordBool); dispid 202;
   end;
 
 // *********************************************************************//
