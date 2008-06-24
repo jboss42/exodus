@@ -270,7 +270,7 @@ constructor TJabberEntity.Create(jid: TJabberID; node: Widestring; etype: TJabbe
 begin
 
     _parent := nil;
-    _jid := jid;
+    _jid := TJabberID.create(jid);
     _node := '';
     _name := '';
     _refs := TList.Create();
@@ -661,7 +661,7 @@ begin
     // if we're not connected anymore, just bail.
     if (js.Active = false) then exit;
 
-    _disco_info_error := (tag.GetAttribute('type') = 'error');
+    _disco_info_error := (event = 'timeout') or ((tag <> nil) and (tag.GetAttribute('type') = 'error'));
     if ((event <> 'xml') or _disco_info_error) then
     begin
         if (_fallback and js.Prefs.getBool(BRANDED_ENABLE_FALLBACK)) then
@@ -1316,7 +1316,6 @@ end;
 
 procedure TJabberEntity._fireOnEntityInfo(jso: TObject; tag: TXMLTag);
 begin
-    DebugMessage('Entity firing /session/entity/info, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
     TJabberSession(jso).FireEvent('/session/entity/info', tag);
 end;
 
@@ -1332,7 +1331,6 @@ end;
 
 procedure TJabberEntity._fireOnEntityItems(jso: TObject; tag: TXMLTag);
 begin
-//    DebugMessage('Entity firing /session/entity/items, tag: ' + tag.xml+ #13#10 + 'entity: ' + #13#10 + Self.toString());
     TJabberSession(jso).FireEvent('/session/entity/items', tag);
 end;
 
@@ -1391,7 +1389,11 @@ begin
     tstr := _node;
     if (tstr = '') then
         tstr := '<NULL>';
-    tstr := 'JID:' + JID.full + ':NODE' + tstr;
+    if (JID = nil) then
+        tstr := 'JID: <NULL>, NODE: ' + tstr
+    else
+        tstr := 'JID: ' + JID.full + ', NODE: ' + tstr;
+
     Result := tstr + #13#10;
     if (hasInfo) then begin
         Result := Result + 'Identity Count: ' + IntToStr(IdentityCount) + #13#10;
