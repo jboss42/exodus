@@ -215,6 +215,8 @@ end;
 procedure TfrmDockWindow.FormCreate(Sender: TObject);
 begin
     inherited;
+    pnlActivityList.Constraints.MinWidth := MainSession.Prefs.getInt('activity_list_min_width');
+    
     setWindowCaption('');
     _docked_forms := TList.Create;
     _dockState := dsUninitialized;

@@ -416,6 +416,8 @@
     <brand_glue_activity_window value="1"/>
     <brand_glue_activity_window_range value="10"/>
     
+    <activity_list_min_width value="30"/>
+    
     <!-- /ACTIVITY WINDOW PREFS -->
     
     <!-- HISTORY SEARCH WINDOW PREFS -->
