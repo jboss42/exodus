@@ -735,7 +735,6 @@ end;
 procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
     biq: TJabberIQ;
-    l, lang, tmps: WideString;
     methods: TXMLTagList;
     i: integer;
 begin
