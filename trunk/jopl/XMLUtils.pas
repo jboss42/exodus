@@ -39,7 +39,8 @@ function MD5File(filename: Widestring): string; overload;
 function MD5File(stream: TStream): string; overload;
 function EncodeString(value: Widestring): Widestring;
 function DecodeString(value: Widestring): Widestring;
-function MungeName(str: Widestring): Widestring;
+function MungeFileName(str: Widestring): Widestring;
+function MungeXMLName(str: Widestring): Widestring;
 function SafeInt(str: Widestring): integer;
 function SafeBool(str: Widestring): boolean;
 function SafeBoolStr(value: boolean) : Widestring;
@@ -396,7 +397,7 @@ begin
 end;
 
 {---------------------------------------}
-function MungeName(str: Widestring): Widestring;
+function MungeFileName(str: Widestring): Widestring;
 var
     i: integer;
     c, fn: Widestring;
@@ -406,8 +407,16 @@ begin
     fn := '';
     for i := 0 to Length(str) - 1 do begin
         c := str[i + 1];
-        if ( (c='@') or (c=':') or (c='|') or (c='<') or
-        (c='>') or (c='\') or (c='/') or (c='*') or (c=' ') or (c=',')) then
+        if ( (c='@') or
+             (c=':') or
+             (c='|') or
+             (c='<') or
+             (c='>') or
+             (c='\') or
+             (c='/') or
+             (c='*') or
+             (c=' ') or
+             (c=',')) then
             fn := fn + '_'
         else if (c > Chr(122)) then
             fn := fn + '_'
@@ -415,6 +424,37 @@ begin
             fn := fn + c;
     end;
     Result := fn;
+end;
+
+{---------------------------------------}
+{ This function will take a string and translate it into a valid XML element name.
+  NOTE: It does NOT make 100% sure that the name is valid XML as it doesn't
+        check to see that the first char is a letter or - nor does it check
+        to make sure the first 3 chars are not XML or some variation.  It only
+        makes sure the chars are: a-z, A-Z, 0-9, -, _, .   All other chars
+        are changed to _.  }
+function MungeXMLName(str: Widestring): Widestring;
+var
+    i: integer;
+    name: Widestring;
+    c: Widechar;
+const
+    validchars : set of char = ['a'..'z', 'A'..'Z', '0'..'9', '-', '_', '.'];
+begin
+    // Munge some string into a filename
+    // Removes all chars which aren't allowed
+    name := '';
+    for i := 0 to Length(str) - 1 do begin
+        c := str[i + 1];
+        if (c in validchars) then
+        begin
+            name := name + c;
+        end
+        else begin
+            name := name + '_';
+        end;
+    end;
+    Result := name;
 end;
 
 {---------------------------------------}

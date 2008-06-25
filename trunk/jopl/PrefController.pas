@@ -1591,7 +1591,7 @@ procedure TPrefController.SavePosition(form: TForm);
 var
     fkey: Widestring;
 begin
-    fkey := MungeName(form.ClassName);
+    fkey := MungeXMLName(form.ClassName);
     SavePosition(form, fkey);
 end;
 
@@ -1703,7 +1703,7 @@ var
     t,l,w,h: integer;
 begin
     // set the bounds based on the position info
-    fkey := MungeName(form.Classname);
+    fkey := MungeXMLName(form.Classname);
 
     f := _pref_file.getPositionTag(fkey);
     if (f <> nil) then begin

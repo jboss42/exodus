@@ -573,7 +573,9 @@ end;
 function TfrmChat.GetWindowStateKey() : WideString;
 begin
     //todo jjf remove profile from this state key once prefs are profile aware
-    Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self._jid.jid);
+    Result := inherited GetWindowStateKey() + '-' +
+              MungeXMLName(MainSession.Profile.Name) + '-' +
+              MungeXMLName(Self._jid.jid);
 end;
 
 {---------------------------------------}

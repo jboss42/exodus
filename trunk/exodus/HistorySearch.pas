@@ -1360,7 +1360,7 @@ var
     fn: widestring;
     filetype: integer;
 begin
-    dlgSave.FileName := MungeName(lstResults.Selected.Caption);
+    dlgSave.FileName := MungeFileName(lstResults.Selected.Caption);
 
     case _MsglistType of
         RTF_MSGLIST  : dlgSave.Filter := 'RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt'; // RTF

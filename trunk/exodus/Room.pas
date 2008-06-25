@@ -619,7 +619,9 @@ end;
 function TfrmRoom.GetWindowStateKey() : WideString;
 begin
     //todo jjf remove profile from this state key once prefs are profile aware
-    Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self.jid);
+    Result := inherited GetWindowStateKey() + '-' +
+              MungeXMLName(MainSession.Profile.Name) + '-' +
+              MungeXMLName(Self.jid);
 end;
 
 function TfrmRoom.GetChatController(): TObject;
@@ -2723,7 +2725,7 @@ var
     fn: widestring;
     filetype: integer;
 begin
-    dlgSave.FileName := MungeName(self.jid);
+    dlgSave.FileName := MungeFileName(self.jid);
 
     case _msglist_type of
         RTF_MSGLIST  : dlgSave.Filter := 'RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt'; // RTF
