@@ -834,9 +834,6 @@ end;
 procedure TPluginProxy.Callback(event: string; tag: TXMLTag);
 var
     xml: WideString;
-    l2: IExodusListener2;
-    Handled: WordBool;
-    data: OleVariant;
 begin
     // call the plugin back
     // Lets just wholesale catch exceptions here. This will prevent
@@ -860,19 +857,7 @@ begin
             end;
         end
         else if (l <> nil) then
-        begin
             l.ProcessEvent(event, xml);
-            try
-                l2 := l as IExodusListener2;
-            except
-                l2 := nil;
-            end;
-            if (l2 <> nil) then
-            begin
-                data := tag.xml;
-                l2.ProcessVariantEvent(event, data, Handled);
-            end;
-        end;
     except
         self.Free();
     end;
