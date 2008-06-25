@@ -686,10 +686,8 @@ procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
     end;
 
 var
-    i, j: integer;
     r, q: TXMLTag;
     node: WideString;
-    uri, ext: WideString;
     extension : TWideStringList;
     error: boolean;
     f: TForm;

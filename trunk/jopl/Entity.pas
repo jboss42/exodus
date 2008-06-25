@@ -1481,10 +1481,6 @@ end;
 
 
 function FormKey(form: TXMLTag): Widestring;
-var
-    fset: TXMLTagList;
-    field: TXMLTag;
-    idx: Integer;
 begin
     Result := '';
     if (form = nil) then exit;
