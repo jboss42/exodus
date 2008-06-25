@@ -865,7 +865,6 @@ procedure TJabberSession.BindCallback(event: string; tag: TXMLTag);
 var
     iq: TJabberIQ;
     j: WideString;
-    jid: TJabberID;
 begin
     // Callback for our xmpp-bind request
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin

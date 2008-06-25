@@ -2293,8 +2293,6 @@ begin
 end;
 
 destructor TLegacyCapsInfo.Destroy();
-var
-    idx: Integer;
 begin
     Clear();
     _feats.Free();
