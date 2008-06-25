@@ -48,6 +48,7 @@ object frmDockWindow: TfrmDockWindow
     Height = 412
     Align = alLeft
     BevelOuter = bvNone
+    Constraints.MinWidth = 30
     ParentColor = True
     TabOrder = 1
     OnDockDrop = FormDockDrop
