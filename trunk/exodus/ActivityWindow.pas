@@ -199,9 +199,16 @@ var
 implementation
 
 uses
-    Room, ChatWin, Session,
-    Jabber1, RosterImages, gnugettext,
-    XMLTag, ExUtils, ShellAPI;
+    Room,
+    ChatWin,
+    Session,
+    Jabber1,
+    RosterImages,
+    gnugettext,
+    XMLTag,
+    ExUtils,
+    ShellAPI,
+    stringprep;
 
 {$R *.dfm}
 
@@ -1365,13 +1372,8 @@ begin
     end;
 
     _trackingList.Clear;
-
-    for i := 0 to tempList.Count - 1 do
-    begin
-        _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
-    end;
-
-    templist.Free();
+    _trackingList.Free();
+    _trackingList := tempList;
 end;
 
 {---------------------------------------}
@@ -1502,13 +1504,8 @@ begin
     end;
 
     _trackingList.Clear;
-
-    for i := 0 to tempList.Count - 1 do
-    begin
-        _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
-    end;
-
-    templist.Free();
+    _trackingList.Free();
+    _trackingList := tempList;
 end;
 
 {---------------------------------------}
@@ -1519,6 +1516,7 @@ var
     j: Integer;
     itemadded: boolean;
     item1, item2: TAWTrackerItem;
+    str1, str2: Widestring;
 begin
     templist := TWidestringList.Create();
 
@@ -1532,7 +1530,9 @@ begin
             if ((item1 <> nil) and
                 (item2 <> nil)) then
             begin
-                if (LowerCase(item1.awItem.name) < LowerCase(item2.awItem.name)) then
+                str1 := jabber_nameprep_variablelen(item1.awItem.name);
+                str2 := jabber_nameprep_variablelen(item2.awItem.name);
+                if (str1 < str2) then
                 begin
                     itemadded := true;
                     tempList.InsertObject(j, _trackingList.Strings[i], _trackingList.Objects[i]);
