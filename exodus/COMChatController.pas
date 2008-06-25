@@ -325,7 +325,6 @@ end;
 {---------------------------------------}
 procedure TExodusChat.fireMenuShow(xml: WideString = '');
 var
-    idx : Integer;
     i: integer;
     Listener : IExodusMenuListener2;
     Enabled: WordBool;

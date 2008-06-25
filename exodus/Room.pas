@@ -2785,10 +2785,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popupMenuClick(Sender: TObject);
 var
-   xml: WideString;
    JidsTag: TXMLTag;
-   rm: TRoomMember;
-   Item: TListItem;
 begin
     JidsTag := _getSelectedMembers();
     TExodusChat(COMController).fireMenuClick(Sender, JidsTag.xml);
