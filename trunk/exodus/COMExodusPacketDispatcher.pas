@@ -179,6 +179,7 @@ var
     l: TPacketListener;
     ListenerList: TInterfaceList;
     setMod: boolean;
+    xpath: widestring;
 begin
     outPacket := nil;
     Allow := true;
@@ -194,16 +195,18 @@ begin
         for i := 0 to _listenersByXPath.Count - 1 do
         begin
             l :=  TPacketListener(_listenersByXPath.Objects[i]);
-
+            xpath := l._xpStr;
+            if (xpath = '<ALL>') then
+                xpath := '';
             if l.IsMatch(TXMLtag(Pointer(inXML.GetTag()))) then
             begin
                 ListenerList := TPacketListener(_listenersByXPath.Objects[i]).Listeners;
                 for j := 0 to ListenerList.Count - 1 do
                 begin
                     if (direction = pdInbound) then
-                        IExodusPacketControlListener(ListenerList[j]).OnPacketReceived(l._xpStr, InXML, modXML, allow)
+                        IExodusPacketControlListener(ListenerList[j]).OnPacketReceived(xpath, InXML, modXML, allow)
                     else
-                        IExodusPacketControlListener(ListenerList[j]).OnPacketSent(l._xpStr, inXML, modXML, allow);
+                        IExodusPacketControlListener(ListenerList[j]).OnPacketSent(xpath, inXML, modXML, allow);
 
                     if (not allow) then exit;
 
