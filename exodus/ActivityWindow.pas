@@ -166,7 +166,7 @@ type
     { Public declarations }
     procedure activateItem(awitem: TfAWItem);
     procedure DockActivityWindow(dockSite : TWinControl);
-    procedure removeItem(item:TAWTrackerItem);
+    procedure removeItem(var item:TAWTrackerItem);
     function addItem(frm:TfrmDockable): TAWTrackerItem;
     function findItem(id:widestring): TAWTrackerItem; overload;
     function findItem(frm:TfrmDockable): TAWTrackerItem; overload;
@@ -475,13 +475,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow.removeItem(item:TAWTrackerItem);
+procedure TfrmActivityWindow.removeItem(var item:TAWTrackerItem);
 var
     i: integer;
 begin
     if (item = nil) then exit;
 
-    for i := 0 to _trackingList.Count - 1 do begin
+    for i := 0 to _trackingList.Count - 1 do
+    begin                                                         
         if (item = TAWTrackerItem(_trackingList.Objects[i])) then begin
             // Change active item
             if (_activeitem = item.awItem) then begin
@@ -489,17 +490,26 @@ begin
             end;
             if ((_trackingList.Count > 1) and
                 (item.frm.Docked)) then begin
-                _activateNextDockedItem(i);
+                _activateNextDockedItem(i); // This calls _updateData which can change the _trackingList order.
             end;
 
+            break;
+        end;
+    end;
+
+    // Go through the find process again, because call to _activateNextDockedItem above might have changed list order
+    for i := 0 to _trackingList.Count - 1 do
+    begin
+        if (item = TAWTrackerItem(_trackingList.Objects[i])) then begin
             // Remove from list
             _trackingList.Delete(i);
 
-            // Delete item
+            // Delete item (this is the item passed in, so it will be invalid after this)
             item.frm := nil;
             item.awItem.Free();
             item.awItem := nil;
             item.Free();
+            item := nil;
 
             // Update list view
             _updateDisplay();
@@ -1521,13 +1531,13 @@ begin
     begin
         itemadded := false;
         item1 := TAWTrackerItem(_trackingList.Objects[i]);
+        str1 := jabber_nameprep_variablelen(item1.awItem.name);
         for j := 0 to tempList.Count - 1 do
         begin
             item2 := TAWTrackerItem(tempList.Objects[j]);
             if ((item1 <> nil) and
                 (item2 <> nil)) then
             begin
-                str1 := jabber_nameprep_variablelen(item1.awItem.name);
                 str2 := jabber_nameprep_variablelen(item2.awItem.name);
                 if (str1 < str2) then
                 begin
