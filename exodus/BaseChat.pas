@@ -38,6 +38,15 @@ const
     HTML_MSGLIST = 1;
 
 type
+    TFileLinkClickInfo = record
+    {
+      This record contains inforamtion relevant to error
+      occured during file transfer.
+    }
+        Handled: Boolean;
+        ExtendedURL:  WideString;
+    end;
+
   TfrmBaseChat = class(TfrmDockable)
     pnlMsgList: TPanel;
     pnlInput: TPanel;
@@ -118,8 +127,9 @@ type
     _close_shift: TShiftState;
     _msgframe: TObject;
     _session_chat_toolbar_callback: integer;
+    _filelink_callback: integer;
     _msglist_type: integer;
-
+    _fileLinkInfo: TFileLinkClickInfo;
     procedure _scrollBottom();
    {
         Set the left and top properties of the given form.
@@ -143,6 +153,11 @@ type
     procedure SetPriorityNormal();
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     function GetChatController(): TObject; virtual; abstract;
+    procedure ProcessNavigate(Sender: TObject;
+              const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
+              Headers: OleVariant; var Cancel: WordBool);
+    procedure OnFileLinkCallback(event: string; tag: TXMLTag);
+
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -178,6 +193,7 @@ type
     procedure OnColorSelect(selColor: TColor);
 
   end;
+
 
 var
   frmBaseChat: TfrmBaseChat;
@@ -486,8 +502,15 @@ begin
         // Pick which frame to build
         _msglist_type := MainSession.prefs.getInt('msglist_type');
         case _msglist_type of
-            RTF_MSGLIST  : _msgframe := TfRTFMsgList.Create(Self);
-            HTML_MSGLIST : _msgframe := TfIEMsgList.Create(Self);
+            RTF_MSGLIST  :
+            begin
+               _msgframe := TfRTFMsgList.Create(Self);
+            end;
+            HTML_MSGLIST :
+            begin
+            _msgframe := TfIEMsgList.Create(Self);
+            TfIEMsgList(_msgframe).browser.OnBeforeNavigate2 := ProcessNavigate;
+            end
             else begin
                 _msgframe := TfRTFMsgList.Create(Self);
             end;
@@ -526,6 +549,7 @@ begin
         tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
 
         _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
+        _filelink_callback := MainSession.RegisterCallback(OnFileLinkCallback, '/session/filelink/click/response');
 
         MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar);
         MsgOutToolbar.ObjAddRef();
@@ -537,6 +561,14 @@ begin
         DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
     except
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.OnFileLinkCallback(event: string; tag: TXMLTag);
+begin
+    if (event <> '/session/filelink/click/response') then exit;
+    if (_fileLinkInfo.ExtendedURL <> tag.Data) then exit;
+    _fileLinkInfo.Handled := true;
 end;
 
 {---------------------------------------}
@@ -560,6 +592,7 @@ begin
     _hotkeys_text_stringlist.Free();
 
     MainSession.UnRegisterCallback(_session_chat_toolbar_callback);
+    MainSession.UnRegisterCallback(_filelink_callback);
     if (frmExodus <> nil) then
         frmExodus.ActiveChat := nil;
     TfBaseMsgList(_msgframe).Free();
@@ -940,6 +973,27 @@ begin
     // let Windows know that you're done
     DragFinish( msg.Drop );
 end;
+
+procedure TfrmBaseChat.ProcessNavigate(Sender: TObject; const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
+Headers: OleVariant; var Cancel: WordBool);
+var
+   Tag: TXMLTag;
+begin
+    _fileLinkInfo.ExtendedURL := UTF8Encode(URL);
+    _fileLinkInfo.Handled := false;
+
+    Tag := TXMLTag.Create('filelink', _fileLinkInfo.ExtendedURL);
+
+    MainSession.fireEvent('/session/filelink/click', Tag);
+    if ( _fileLinkInfo.Handled) then
+    begin
+        Cancel := true;
+        exit;
+    end;
+
+   TfIEMsgList(_msgframe).browserBeforeNavigate2(Sender, pDisp, URL, Flags,  TargetFrameName, PostData, Headers, Cancel);
+end;
+
 
 end.
 
