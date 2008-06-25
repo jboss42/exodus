@@ -204,9 +204,9 @@ function TfrmActiveXDockable.GetWindowStateKey() : WideString;
 begin
     Result := inherited GetWindowStateKey() +
               '-' +
-              MungeName(MainSession.Profile.Name) +
+              MungeXMLName(MainSession.Profile.Name) +
               '-' +
-              MungeName(Self.Caption);
+              MungeXMLName(Self.Caption);
 end;
 
 

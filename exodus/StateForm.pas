@@ -498,7 +498,7 @@ begin
 
     tstr := 'event-' + event;
     if (Profile <> '') then
-        tstr := tstr + '-' + XMLUtils.MungeName(Profile);
+        tstr := tstr + '-' + XMLUtils.MungeXMLName(Profile);
 
     //replace if tag already exists...
     eTag := aoTag.GetFirstTag(tstr);
@@ -532,7 +532,7 @@ begin
 
     tstr := 'event-' + event;
     if (Profile <> '') then
-        tstr := tstr + '-' + XMLUtils.MungeName(Profile);
+        tstr := tstr + '-' + XMLUtils.MungeXMLName(Profile);
 
     eTag := aoTag.GetFirstTag(tstr);
     if (eTag = nil) or (eTag.ChildCount = 0) then exit;
@@ -873,7 +873,7 @@ end;
 }
 function TfrmState.GetWindowStateKey() : WideString;
 begin
-    Result := XMLUtils.MungeName(Self.ClassName);
+    Result := XMLUtils.MungeXMLName(Self.ClassName);
 end;
 
 {
