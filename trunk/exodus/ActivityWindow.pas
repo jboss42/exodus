@@ -545,9 +545,6 @@ begin
             _showingTopItem := 0;
         end;
 
-        // Keep sort
-        _sortTrackingList(_curListSort);
-
         _updateDisplay();
     end;
 end;
@@ -848,6 +845,7 @@ var
     slotsFilled: integer;
     remainder: integer;
 begin
+    _sortTrackingList(_curListSort);
     try
         if (_trackingList.Count > 0) then begin
             // Compute the maximum showing items
@@ -1182,7 +1180,6 @@ end;
 {---------------------------------------}
 procedure TfrmActivityWindow.itemChangeUpdate();
 begin
-    _sortTrackingList(_curListSort);
     _updateDisplay();
 end;
 
