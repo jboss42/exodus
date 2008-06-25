@@ -1088,7 +1088,7 @@ end;
 
 function TfrmSimpleDisplay.GetWindowStateKey() : WideString;
 begin
-    Result := inherited GetWindowStateKey() + ':' + XMLUtils.MungeName(Self.UID);
+    Result := inherited GetWindowStateKey() + '-' + XMLUtils.MungeName(Self.UID);
 end;
 
 function TfrmSimpleDisplay.GetMsgList(): TfBaseMsgList;
