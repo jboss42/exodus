@@ -100,6 +100,7 @@ type
         procedure SetResource(resource: WideString);
         procedure SetPort(port: integer);
 
+        function GetSessionJid(): TJabberID;
         procedure SetSessionJid(jid: TJabberID);
 
         procedure handleDisconnect();
@@ -568,6 +569,15 @@ begin
         result := '';
 end;
 
+{---------------------------------------}
+function TJabberSession.GetSessionJid(): TJabberID;
+begin
+    if (_sjid <> nil) then
+        Result := _sjid
+    else
+        Result := _profile.GetJabberID();
+end;
+{---------------------------------------}
 procedure TJabberSession.SetSessionJid(jid: TJabberID);
 begin
     if (_sjid <> nil) then
@@ -1381,13 +1391,19 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag; reset_stream: boolean);
+var
+    jid: TJabberID;
 begin
     // our auth-agent is all set\
     //remove temp password from prefs
     _authd := ok;
     Prefs.setString('temp-pw', '');
     if (ok) then begin
-        SetSessionJid(TJabberID.Create(GetFullJid()));
+        jid := TJabberID.Create(
+                _profile.Username,
+                _profile.Server,
+                _profile.Resource);
+        SetSessionJid(jid);
         _profile.NewAccount := false;
         _register := false;
 
