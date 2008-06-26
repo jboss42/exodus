@@ -230,7 +230,7 @@ USES
   (*$IFDEF D5_OR_NEWER *)  // The Contnrs Unit was introduced in Delphi 5
   Contnrs,
   (*$ENDIF*)
-  Unicode,
+  Unicode, 
   Math;
 
 CONST
@@ -1551,7 +1551,6 @@ PROCEDURE TXmlParser.AnalyzeText (VAR IsDone : BOOLEAN);
     Name           : WideString;
     EntityDef      : TEntityDef;
     ExternalEntity : TXmlParser;
-    wc             : WideChar;
   BEGIN
     P := StrScan (CurFinal , ';');
     IF P <> NIL THEN BEGIN
@@ -1563,19 +1562,8 @@ PROCEDURE TXmlParser.AnalyzeText (VAR IsDone : BOOLEAN);
         // todo: Verify Char Entities work correctly w/ unicode
         if (((CurFinal + 2)^ = 'X') or ((CurFinal + 2)^ = 'x'))
         // IF UpCase ((CurFinal+2)^) = 'X'       // !!! Can't use "CHR" for Unicode characters > 255:
-          THEN BEGIN
-            // Converted to work with any UTF-16 double byte (16bit) unicode char (not 32 bit) - dda 6/20/08
-            //CurContent := CurContent + CHR (StrToIntDef ('$'+ Copy (Name, 3, MaxInt), 32));
-            word(wc) := StrToIntDef ('$'+ Copy (Name, 3, MaxInt), 32);
-            CurContent := CurContent + wc;
-          END
-          ELSE BEGIN
-            // Converted to work with any UTF-16 double byte (16bit) unicode char (not 32 bit) - dda 6/20/08
-            //CurContent := CurContent + CHR (StrToIntDef (Copy (Name, 2, MaxInt), 32));
-            word(wc) := StrToIntDef (Copy (Name, 2, MaxInt), 32);
-            CurContent := CurContent + wc;
-
-          END;
+          THEN CurContent := CurContent + CHR (StrToIntDef ('$'+ Copy (Name, 3, MaxInt), 32))
+          ELSE CurContent := CurContent + CHR (StrToIntDef (Copy (Name, 2, MaxInt), 32));
         CurFinal := P + 1;
         EXIT;
     end

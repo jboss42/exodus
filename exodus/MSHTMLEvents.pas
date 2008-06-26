@@ -34,7 +34,6 @@ unit MSHTMLEvents;
 
 interface
 
-
 uses
   Windows, ActiveX, Classes, ComObj, OleCtrls
   //SinkUses//
@@ -1959,9 +1958,7 @@ type
 
 procedure Register;
 
-
 implementation
-
 
 uses
   SysUtils;
@@ -6897,8 +6894,4 @@ begin
   //SinkRegisterEnd//
 end;
 
-
 end.
-
-
-

@@ -23,11 +23,9 @@ interface
 
 uses
     StateForm,
-    XMLTag, JabberID,
+    XMLTag, NodeItem, JabberID,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus, TntForms,
-    Exodus_TLB,
-  ExFrame;
+    StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus;
 
 type
   TfrmSubscribe = class(TfrmState)
@@ -40,6 +38,7 @@ type
     lblGroup: TTntLabel;
     cboGroup: TTntComboBox;
     PopupMenu1: TTntPopupMenu;
+    mnuMessage: TTntMenuItem;
     mnuChat: TTntMenuItem;
     mnuProfile: TTntMenuItem;
     Panel1: TPanel;
@@ -49,6 +48,7 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure mnuMessageClick(Sender: TObject);
     procedure mnuChatClick(Sender: TObject);
     procedure mnuProfileClick(Sender: TObject);
     procedure lblJIDClick(Sender: TObject);
@@ -67,8 +67,8 @@ type
   public
     { Public declarations }
     showhandler: TObject;
-    
-    procedure setup(jid: TJabberID; item: IExodusItem; tag: TXMLTag);
+
+    procedure setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
     procedure EnableAdd(e: boolean);
   end;
 
@@ -86,20 +86,19 @@ uses
     DisplayName,
     Notify,
     JabberConst, JabberUtils, ExUtils, CapsCache, EntityCache, Entity,
-    ChatWin, GnuGetText,
-    Session, Profile, Presence;
+    ChatWin, GnuGetText, MsgRecv, Session, Profile, Presence;
 
 var
     _subscribe_windows: TList;
 
 {$R *.DFM}
 type
-    TShowHandler = class(TDisplayNameEventListener)
+    TShowHandler = class(TDisplayNameListener)
         jid: TJabberID;
         sub: TfrmSubscribe;
 
 
-        procedure FireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
+        procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
         procedure getDispNameAndShow(subFrm: TfrmSubscribe; newJID: TJabberID);
 
         destructor Destroy();override;
@@ -140,16 +139,14 @@ begin
     sub := subFrm;
 
     //newJID may already be in roster. Force a displayname lookup if needed
-{    if (Self.ProfileEnabled) then
+    if (Self.ProfileEnabled) then
     begin
         dName := Self.getProfileDisplayName(newJID, changePending);
         if (dName = '') then
           dname := getDisplayName(newJID, changePending);
     end
     else
-}
-//TODO : display name work. Add a way of overriding roster when getting dn
-        dname := TDisplayNameEventListener.getDisplayName(newJID.jid, changePending);
+        dname := getDisplayName(newJID, changePending);
 
     if (not changePending) then begin
         //show now and destroy ourself
@@ -162,7 +159,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmSubscribe.setup(jid: TJabberID; item: IExodusItem; tag: TXMLTag);
+procedure TfrmSubscribe.setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
 var
     c: TXMLTag;
     dgrp, id, capid: Widestring;
@@ -170,47 +167,35 @@ var
     idx: integer;
     skipImage: boolean;
     showNow: boolean; //show immediately, goit dispname from roster
-
-    procedure populateGroups();
-    var
-        items: IExodusItemList;
-        idx: Integer;
-    begin
-        items := MainSession.ItemController.GetItemsByType('group');
-        for idx := 0 to items.Count - 1 do begin
-            cboGroup.Items.Add(items.Item[idx].UID);
-        end;
-    end;
 begin
-//    { TODO : Roster refactor }
     showNow := false;
     _jid := TJabberID.Create(jid);
     lblJID.Caption := _jid.getDisplayFull;
-//
+
     chkSubscribe.Checked := true;
     chkSubscribe.Enabled := true;
-//
-    if (item <> nil) then begin
-        if ((item.value['Subscription'] = 'to') or (item.value['Subscription'] = 'both')) then begin
+
+    if (ri <> nil) then begin
+        if ((ri.Subscription = 'to') or (ri.Subscription = 'both')) then begin
             chkSubscribe.Checked := false;
             chkSubscribe.Enabled := false;
         end;
     end;
-//
+
     EnableAdd(chkSubscribe.Enabled);
-//
+
     if (chkSubscribe.Enabled) then begin
-        populateGroups();
+        MainSession.Roster.AssignGroups(cboGroup.Items);
         dgrp := MainSession.Prefs.getString('roster_default');
-        cboGroup.ItemIndex := cboGroup.Items.IndexOf(dgrp);
-        if (item <> nil) then begin
-            txtNickName.Text := item.Text;
-            showNow := true;
-            if (item.GroupCount > 0) then
-                cboGroup.itemIndex := cboGroup.Items.indexof(item.Group[0]);
+        cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
+        if (ri <> nil) then begin
+            txtNickName.Text := ri.Text;
+//            showNow := true;
+            if (ri.GroupCount > 0) then
+                cboGroup.itemIndex := cboGroup.Items.indexof(ri.Group[0]);
         end;
     end;
-    
+
     idx := -1;
     skipImage := false;
     c := tag.QueryXPTag('/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
@@ -218,6 +203,7 @@ begin
         capid := c.GetAttribute('node') + '#' + c.getAttribute('ver');
         e := jCapsCache.find(capid);
         if (e <> nil) then begin
+
             // make sure we're not waiting for caps
             if (not e.hasInfo) then begin
                 // bail out early so we leave the image empty
@@ -234,9 +220,8 @@ begin
     end;
 
     if (not skipImage) then begin
-        if (idx = -1) then begin
+        if (idx = -1) then
             idx := RosterTreeImages.Find('available');
-        end;
 
         if (idx >= 0) then
             RosterTreeImages.GetImage(idx, imgIdent);
@@ -303,10 +288,8 @@ begin
     MainSession.SendTag(p1);
 
     // do an iq-set
-{ TODO : Roster refactor }    
     if chkSubscribe.Checked then
         MainSession.Roster.AddItem(sjid, snick, sgrp, true);
-//        MainSession.Roster.AddItem(sjid, snick, sgrp, true);
     Self.Close;
 end;
 
@@ -331,6 +314,12 @@ procedure TfrmSubscribe.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
+end;
+
+{---------------------------------------}
+procedure TfrmSubscribe.mnuMessageClick(Sender: TObject);
+begin
+    StartMsg(_jid.full());
 end;
 
 {---------------------------------------}
@@ -363,8 +352,7 @@ begin
     TranslateComponent(Self);
     _subscribe_windows.Add(Self);
     _capscb := -1;
-{ TODO : Roster refactor }    
-//    MainSession.Roster.AssignGroups(cboGroup.Items);
+    MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 end;
 

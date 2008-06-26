@@ -1,16 +1,21 @@
-inherited frmCustomPres: TfrmCustomPres
+object frmCustomPres: TfrmCustomPres
   Left = 254
   Top = 169
   BorderStyle = bsDialog
   Caption = 'Custom Presence'
   ClientHeight = 261
   ClientWidth = 313
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  ExplicitWidth = 319
-  ExplicitHeight = 293
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -23,14 +28,14 @@ inherited frmCustomPres: TfrmCustomPres
   object Label2: TTntLabel
     Left = 8
     Top = 43
-    Width = 35
+    Width = 33
     Height = 13
     Caption = 'Status:'
   end
   object Label3: TTntLabel
     Left = 8
     Top = 75
-    Width = 34
+    Width = 31
     Height = 13
     Caption = 'Priority'
   end
@@ -40,14 +45,6 @@ inherited frmCustomPres: TfrmCustomPres
     Width = 313
     Height = 34
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 5
     TabStop = True
     ExplicitTop = 227
@@ -130,7 +127,7 @@ inherited frmCustomPres: TfrmCustomPres
     object lblTitle: TTntLabel
       Left = 8
       Top = 18
-      Width = 24
+      Width = 23
       Height = 13
       Caption = 'Title:'
       Enabled = False
@@ -138,7 +135,7 @@ inherited frmCustomPres: TfrmCustomPres
     object lblHotkey: TTntLabel
       Left = 8
       Top = 50
-      Width = 39
+      Width = 38
       Height = 13
       Caption = 'HotKey:'
       Enabled = False
@@ -160,7 +157,6 @@ inherited frmCustomPres: TfrmCustomPres
       Enabled = False
       HotKey = 32833
       TabOrder = 1
-      OnChange = txtHotkeyChange
     end
   end
 end

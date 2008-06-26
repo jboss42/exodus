@@ -1,6 +1,7 @@
-inherited fBaseMsgList: TfBaseMsgList
+object fBaseMsgList: TfBaseMsgList
+  Left = 0
+  Top = 0
   Width = 242
   Height = 143
-  ExplicitWidth = 242
-  ExplicitHeight = 143
+  TabOrder = 0
 end

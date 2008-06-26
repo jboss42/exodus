@@ -60,6 +60,9 @@ const
     proxy_socks5 = 3;
     proxy_http = 4;
 
+    roster_chat = 0;
+    roster_msg = 1;
+
     // Different consts for ssl int on profiles.
     ssl_tls = 0;
     ssl_only_tls = 1;
@@ -72,6 +75,16 @@ const
     notify_sound = 8;
     notify_tray  = 16;
     notify_front = 32;
+
+    // normal msg options
+    msg_normal = 0;
+    msg_all_chat = 1;
+    msg_existing_chat = 2;
+
+    // invite options
+    invite_normal = 0;
+    invite_popup = 1;
+    invite_accept = 2;
 
     // roster visible levels
     show_offline = -1;
@@ -86,6 +99,7 @@ const
     P_OFFLINEGROUP = 'roster_offline_group';
     P_TIMESTAMP = 'timestamp';
     P_AUTOUPDATE = 'auto_updates';
+    P_CHAT = 'roster_chat';
     P_SUB_AUTO = 's10n_auto_accept';
     P_SUB_AUTO_ADD = 's10n_auto_add';
     P_AUTO_COMPLETE_JIDS = 'brand_auto_complete_jids';
@@ -98,20 +112,15 @@ const
     P_FONT_ULINE = 'font_underline';
 
     P_COLOR_BG     = 'color_bg';
-    P_COLOR_ALT_BG = 'color_alt_bg';
     P_COLOR_ME     = 'color_me';
     P_COLOR_OTHER  = 'color_other';
     P_COLOR_TIME   = 'color_time';
     P_COLOR_ACTION = 'color_action';
     P_COLOR_SERVER = 'color_server';
     P_COLOR_PRIORITY = 'color_priority';
-    P_COLOR_DATE   = 'color_date';
-    P_COLOR_DATE_BG = 'color_date_bg';
 
     P_TAB_WIDTH    = 'event_width';
     P_ROSTER_WIDTH = 'roster_width';
-    P_ACTIVITY_WINDOW_WIDTH = 'activity_window_width';
-    P_ACTIVITY_WINDOW_TAB_WIDTH = 'activity_window_tab_width';
 type
     TPrefMapValue = class
     private
@@ -183,7 +192,7 @@ type
         NumPollKeys: integer;
 
         constructor Create(prof_name: Widestring; prefs: TPrefController);
-        destructor Destroy(); reintroduce;
+        destructor Destroy();
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -343,15 +352,10 @@ type
         function LoadBookmarks(): TXMLTag;
         procedure SaveBookmarks(tag: TXMLTag);
 
-        // Local Groups storage
-        function LoadGroups(): TXMLTag;
-        procedure SaveGroups(tag: TXMLTag);
-
         // Misc.
         procedure SetSession(js: TObject);
         procedure FetchServerPrefs();
         procedure SaveServerPrefs();
-        function GetSoundFile(key: widestring): widestring;
 
 //        function getXMLTag(name: Widestring): TXMLTag;
 
@@ -456,10 +460,10 @@ end;
 
 function getBestFile(userFile : TPrefFile; pkey : WideString) : TPrefFile;
 begin
-    if (lockedDown(s_brand_file, pkey)) then
-        Result := s_brand_file
-    else if (lockedDown(s_default_file, pkey)) then
+    if (lockedDown(s_default_file, pkey)) then
         Result := s_default_file
+    else if (lockedDown(s_brand_file, pkey)) then
+        Result := s_brand_file
     else if (userFile.hasPref(pkey)) then
         Result := userFile
     else if (s_brand_file.hasPref(pkey)) then
@@ -784,7 +788,6 @@ var
     reg  : TRegistry;
 {$endif}
     p    : WideString;
-    temptag: TXMLTag;
 begin
     inherited Create();
 
@@ -807,9 +810,7 @@ begin
 
     getDefaultPos();
 
-    temptag := getXMLPref('brand_images');
-    s_Graphics.setBranded(temptag);
-    temptag.Free();
+    s_Graphics.setBranded(getXMLPref('brand_images'));
     
     {$ifdef Exodus}
     // Write out the current prefs file..
@@ -834,9 +835,6 @@ end;
 
 {---------------------------------------}
 destructor TPrefController.Destroy;
-var
-    i: integer;
-    p: TJabberProfile;
 begin
     // Kill our cache'd nodes, etc.
     if (_pref_file <> nil) then
@@ -844,12 +842,7 @@ begin
     if (_server_file <> nil) then
         _server_file.Free();
 
-    for i := _profiles.Count - 1 downto 0 do begin
-        p := TJabberProfile(_profiles.Objects[i]);
-        if (p <> nil) then
-            p.Destroy;
-        _profiles.Delete(i);
-    end;
+    ClearStringListObjects(_profiles);
 
     _profiles.Free();
 
@@ -1591,7 +1584,7 @@ procedure TPrefController.SavePosition(form: TForm);
 var
     fkey: Widestring;
 begin
-    fkey := MungeXMLName(form.ClassName);
+    fkey := MungeName(form.ClassName);
     SavePosition(form, fkey);
 end;
 
@@ -1703,7 +1696,7 @@ var
     t,l,w,h: integer;
 begin
     // set the bounds based on the position info
-    fkey := MungeXMLName(form.Classname);
+    fkey := MungeName(form.Classname);
 
     f := _pref_file.getPositionTag(fkey);
     if (f <> nil) then begin
@@ -1898,21 +1891,9 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.LoadGroups(): TXMLTag;
-begin
-    Result := _pref_file.Groups;
-end;
-
-{---------------------------------------}
 procedure TPrefController.SaveBookmarks(tag: TXMLTag);
 begin
     _pref_file.SaveBookmarks(tag);
-end;
-
-{---------------------------------------}
-procedure TPrefController.SaveGroups(tag: TXMLTag);
-begin
-    _pref_file.SaveGroups(tag);
 end;
 
 {---------------------------------------}
@@ -2148,36 +2129,6 @@ begin
     end;
 end;
 
-function TPrefController.GetSoundFile(key: widestring): widestring;
-var
-    uf: TPrefFile;
-    Reg: TRegistry;
-    regKey: widestring;
-begin
-    //check prefs file first, if not there try regigistry
-    uf := getBestFile(_pref_file, key + '_sound');
-    Result := uf.getString(key + '_sound');
-    if (Result = '') then begin
-        regKey := 'AppEvents\Schemes\Apps\'+getString('brand_caption')+'\exodus_'+key;
-
-        Reg := TRegistry.Create();
-        try
-            if (Reg.OpenKey(RegKey, false)) then begin
-                Result := Reg.ReadString('');
-                if (Result <> '') then begin
-                    //if we found it here, write it to the pefs file and delete reg key
-                    SetString(key + '_sound', Result);
-                    Reg.DeleteKey(RegKey);
-                end;
-            end;
-        finally
-            Reg.Free();
-        end;
-    end;
-
-end;
-
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -2224,13 +2175,9 @@ begin
 
 end;
 
-destructor TJabberProfile.Destroy();
+destructor TJabberProfile.Destroy;
 begin
-    try
-        _jabberID.Free();
-        _profilePrefs.Free();
-    except
-    end;
+    _profilePrefs.Free();
 end;
 
 {---------------------------------------}
@@ -2271,7 +2218,6 @@ begin
     tmps1 := tag.GetBasicText('resource');
     if (tmps1 = '') then tmps1 := 'Exodus';
 
-    _jabberID.Free();
     _jabberID := TJabberID.create(tag.GetBasicText('username'), tmps, tmps1);
     SASLRealm := tag.GetBasicText('saslrealm');
 
@@ -2497,7 +2443,10 @@ end;
 {---------------------------------------}
 function TJabberProfile.getJabberID(): TJabberID;
 begin
-    Result := _jabberID;
+    if (MainSession <> nil) and MainSession.Active and (MainSession.SessionJid <> nil) then
+        Result := MainSession.SessionJid
+    else
+        Result := _jabberID;
 end;
 
 
@@ -2515,6 +2464,5 @@ finalization
     s_default_file.Free();
     s_brand_file.Free();
     cachedAppInfo.Free();
-    s_Graphics.Free();
 end.
 

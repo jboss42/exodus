@@ -16,8 +16,9 @@ inherited frmDockWizard: TfrmDockWizard
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 2
+    ExplicitTop = 316
+    ExplicitWidth = 416
     DesignSize = (
       494
       41)
@@ -68,46 +69,54 @@ inherited frmDockWizard: TfrmDockWizard
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 1
+    ExplicitWidth = 416
+    ExplicitHeight = 263
     object TabSheet1: TTabSheet
       Caption = 'TabSheet1'
+      ExplicitLeft = 8
+      ExplicitTop = 25
     end
   end
   inherited pnlDockTop: TPanel
     Width = 494
     Height = 53
-    ExplicitWidth = 494
+    ExplicitWidth = 416
     ExplicitHeight = 53
     inherited tbDockBar: TToolBar
       Left = 445
-      Height = 44
-      ExplicitLeft = 3
-      ExplicitHeight = 44
+      Height = 47
+      ExplicitLeft = 367
+      ExplicitHeight = 47
     end
     object Panel1: TPanel
       Left = 0
       Top = 0
       Width = 442
-      Height = 50
+      Height = 53
       Align = alClient
       BevelOuter = bvNone
+      Color = clWhite
       Ctl3D = False
       ParentBackground = False
-      ParentColor = True
       ParentCtl3D = False
       TabOrder = 1
-      OnResize = Panel1Resize
-      ExplicitLeft = -3
-      ExplicitTop = -6
-      ExplicitHeight = 53
+      ExplicitWidth = 364
+      object Bevel2: TBevel
+        Left = 0
+        Top = 44
+        Width = 442
+        Height = 9
+        Align = alBottom
+        Shape = bsBottomLine
+        ExplicitTop = 51
+        ExplicitWidth = 416
+      end
       object lblWizardTitle: TTntLabel
         Left = 16
-        Top = 5
+        Top = 8
         Width = 135
         Height = 13
-        Align = alCustom
-        AutoSize = False
         Caption = 'Wizard Label goes here'
-        EllipsisPosition = epEndEllipsis
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -119,20 +128,17 @@ inherited frmDockWizard: TfrmDockWizard
       object lblWizardDetails: TTntLabel
         Left = 32
         Top = 24
-        Width = 363
+        Width = 297
         Height = 29
-        Align = alCustom
         AutoSize = False
         Caption = 'lblWizardDetails'
-        EllipsisPosition = epEndEllipsis
         Transparent = True
-        WordWrap = True
       end
       object Image1: TImage
         Left = 401
         Top = 0
         Width = 41
-        Height = 50
+        Height = 44
         Align = alRight
         Center = True
         Picture.Data = {
@@ -1075,25 +1081,6 @@ inherited frmDockWizard: TfrmDockWizard
         Transparent = True
         ExplicitLeft = 375
         ExplicitHeight = 51
-      end
-    end
-    object pnlBevel: TTntPanel
-      Left = 0
-      Top = 50
-      Width = 494
-      Height = 3
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 2
-      object Bevel2: TBevel
-        Left = 0
-        Top = -19
-        Width = 494
-        Height = 22
-        Align = alBottom
-        Shape = bsBottomLine
-        ExplicitTop = 0
-        ExplicitWidth = 442
       end
     end
   end

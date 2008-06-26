@@ -25,7 +25,7 @@ interface
 
 uses
     Unicode, TntClasses, Menus, TntMenus,
-    ComObj, ActiveX, Exodus_TLB, StdVcl, Classes, ExActions;
+    ComObj, ActiveX, Exodus_TLB, StdVcl, Classes;
 
 type
 
@@ -65,11 +65,11 @@ type
   private
     _predefined_menus: TWidestringlist;
     _menus: TWidestringlist;
-    _items: TWidestringList;
-    _actions: TWidestringList;
+    _items: Twidestringlist;
 
-    function mapMenuID(menuID: Widestring; var itemtype: Widestring): Boolean;
+  published
     procedure MenuClick(Sender: TObject);
+
   public
     constructor Create();
     destructor Destroy(); override;
@@ -80,16 +80,6 @@ type
 
   end;
 
-  TExMenuListenerAction = class(TExBaseAction)
-  private
-    _listener: IExodusMenuListener;
-
-  public
-    constructor Create(name, caption: Widestring; listener: IExodusMenuListener);
-
-    procedure execute(const items: IExodusItemList); override;
-  end;
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -97,38 +87,29 @@ implementation
 
 uses
     XMLTag, StrUtils, SysUtils, XMLUtils, COMRosterGroup,
-    COMRosterItem, ContactController, JabberID, Session,
-    Jabber1, ComServ,RosterForm, ExActionCtrl;
+    COMRosterItem, NodeItem, Roster, JabberID, Session,
+    Jabber1, ComServ,RosterWindow;
 
 {---------------------------------------}
 constructor TExodusRoster.Create();
 begin
     _predefined_menus := TWidestringlist.Create();
     _menus := TWidestringlist.Create();
-    _items := TWidestringList.Create();
-    _actions := TWidestringList.Create();
+    _items := TWidestringlist.Create();
 end;
 
 {---------------------------------------}
 destructor TExodusRoster.Destroy();
 begin
     ClearStringListObjects(_predefined_menus);
-    _predefined_menus.Clear();
-    _predefined_menus.Free();
-    
-//JJF causing a GPF when clearing menu objects,
-//commenting out for now
-//    ClearStringListObjects(_menus);
-    _menus.Clear();
-    _menus.Free();
-
     ClearStringListObjects(_items);
+    ClearStringListObjects(_menus);
     _items.Clear();
     _items.Free();
-
-    ClearStringListObjects(_actions);
-    _actions.Clear();
-    _actions.Free();
+    _menus.Clear();
+    _menus.Free();
+    _predefined_menus.Clear();
+    _predefined_menus.Free();
 end;
 
 {---------------------------------------}
@@ -136,7 +117,7 @@ procedure TExodusRoster.AddPredefinedMenu(name: Widestring; menu: TTntPopupMenu)
 var
     idx: integer;
 begin
-    // used to add the GUI defined menus from other parts of Exodus
+    // used to add the GUI defined menus from RosterWindow.pas
     if (menu = nil) or
        (name = '') then exit;
 
@@ -167,18 +148,20 @@ begin
             // Make sure there are no items left on menu
             // Not doing this causes a crash if item is left on predefined
             // popup menu.
-            temp_stringlist := TWidestringList.Create();
-            for i := 0 to menu.items.Count - 1 do begin
-                temp_string := LeftStr(menu.Items[i].Name, Length('pluginContext_item'));
-                if (temp_string = 'pluginContext_item') then
-                    temp_stringlist.Add(menu.Items[i].Name);
-            end;
-            if (temp_stringlist.Count > 0) then begin
-                for i := 0 to temp_stringlist.Count - 1 do begin
-                    Self.removeContextMenuItem(name, temp_stringlist.Strings[i]);
+            if (_items.Count > 0) then begin
+                temp_stringlist := TWidestringList.Create();
+                for i := 0 to menu.items.Count - 1 do begin
+                    temp_string := LeftStr(menu.Items[i].Name, Length('pluginContext_item'));
+                    if (temp_string = 'pluginContext_item') then
+                        temp_stringlist.Add(menu.Items[i].Name);
                 end;
+                if (temp_stringlist.Count > 0) then begin
+                    for i := 0 to temp_stringlist.Count - 1 do begin
+                        Self.removeContextMenuItem(name, temp_stringlist.Strings[i]);
+                    end;
+                end;
+                temp_stringlist.Free();
             end;
-            temp_stringlist.Free();
 
             // do actual remove
             _predefined_menus.Delete(predefined_idx);
@@ -188,30 +171,80 @@ begin
 end;
 
 {---------------------------------------}
+procedure TExodusRoster.MenuClick(Sender: TObject);
+var
+    idx: integer;
+{$IFDEF OLD_MENU_EVENTS}
+    ri: TJabberRosterItem;
+{$ELSE}
+    mi : TTnTMenuItem;
+    sel: TList;
+    resultset, newtag: TXMLTag;
+    i: integer;
+{$ENDIF}
+begin
+    idx := _items.IndexOfObject(Sender);
+    if (idx >= 0) then begin
+{$IFDEF OLD_MENU_EVENTS}
+        ri := MainSession.Roster.ActiveItem;
+        MainSession.FireEvent(_items[idx], ri.Tag);
+{$ELSE}
+        mi := TTntMenuItem(_items.Objects[idx]);
+        resultset:= TXMLTag.Create('selected_roster_list'); //freed by
+        sel := frmRosterWindow.getSelectedContacts(false);
+        if (sel.Count > 0) then begin
+            for i := 0 to sel.Count - 1 do begin
+                newtag := TXMLTag.Create(TJabberRosterItem(sel[i]).Tag);
+                resultset.AddTag(newtag);
+            end;
+            IExodusMenuListener(mi.Tag).OnMenuItemClick(mi.Name, resultset.XML);
+        end;
+        resultset.Free();
+        sel.Free();
+{$ENDIF}
+    end;
+end;
+
+{---------------------------------------}
 function TExodusRoster.addItem(
   const JabberID: WideString): IExodusRosterItem;
+var
+    x: TXMLTag;
+    ri: TJabberRosterItem;
 begin
-    Result := Subscribe(JabberID, '', '', True);
+    x := TXMLTag.Create('item');
+    x.setAttribute('jid', JabberID);
+    x.setAttribute('xmlns', 'exodus:plugin-item');
+    ri := MainSession.Roster.newItem(JabberID);
+    ri.Tag := x;
+    
+    Result := TExodusRosterItem.Create(ri);
 end;
 
 {---------------------------------------}
 function TExodusRoster.Subscribe(const JabberID, nickname,
   Group: WideString; Subscribe: WordBool): IExodusRosterItem;
 var
-    item: IExodusItem;
+    ri: TJabberRosterItem;
 begin
-    item := MainSession.roster.AddItem(JabberID, nickname, Group, Subscribe);
-    Result := TExodusRosterItem.Create(item);
+    MainSession.roster.AddItem(JabberID, Nickname, Group, Subscribe);
+    ri := MainSession.Roster.Find(JabberID);
+    if (ri <> nil) then
+        Result := TExodusRosterItem.Create(ri)
+    else
+        Result := nil;
 end;
 
 {---------------------------------------}
 function TExodusRoster.Find(const JabberID: WideString): IExodusRosterItem;
 var
-    item: IExodusItem;
+    ri: TJabberRosterItem;
 begin
-    item := MainSession.ItemController.GetItem(JabberID);
-    if (item <> nil) then
-        result := TExodusRosterItem.Create(item)
+    // Should we be spinning up new COM objects for every item??
+    // they should go away via RefCounting.
+    ri := MainSession.roster.Find(JabberID);
+    if (ri <> nil) then
+        Result := TExodusRosterItem.Create(ri)
     else
         Result := nil;
 end;
@@ -219,25 +252,21 @@ end;
 {---------------------------------------}
 procedure TExodusRoster.Fetch;
 begin
-    { TODO : Roster refactor }
-    //MainSession.roster.Fetch();
+    MainSession.roster.Fetch();
 end;
 
 {---------------------------------------}
 function TExodusRoster.Item(Index: Integer): IExodusRosterItem;
 var
-    contacts: IExodusItemList;
-    item: IExodusItem;
+    ri: TJabberRosterItem;
 begin
-    contacts := MainSession.ItemController.GetItemsByType('contact');
-
-    if (Index >= 0) and (Index < contacts.Count) then
-        item := contacts.Item[index]
+    if ((Index >= 0) and (Index < MainSession.roster.Count)) then
+        ri := MainSession.roster.Items[Index]
     else
-        item := nil;
+        ri := nil;
 
-    if (item <> nil) then
-        Result := TExodusRosterItem.Create(item)
+    if (ri <> nil) then
+        Result := TExodusRosterItem.Create(ri)
     else
         Result := nil;
 end;
@@ -245,32 +274,32 @@ end;
 {---------------------------------------}
 function TExodusRoster.Count: Integer;
 begin
-   Result := MainSession.ItemController.GetItemsByType('contact').Count;
+    Result := MainSession.roster.Count;
 end;
 
 {---------------------------------------}
 function TExodusRoster.addGroup(const grp: WideString): IExodusRosterGroup;
 var
-    item: IExodusItem;
+    go: TJabberGroup;
 begin
-    item := MainSession.ItemController.AddGroup(grp);
-    Result := TExodusRosterGroup.Create(item);
+    go := MainSession.Roster.addGroup(grp);
+    Result := TExodusRosterGroup.Create(go);
 end;
 
 {---------------------------------------}
 function TExodusRoster.Get_GroupsCount: Integer;
 begin
-    Result := MainSession.ItemController.GetItemsByType('group').Count;
+    Result := MainSession.Roster.GroupsCount;
 end;
 
 {---------------------------------------}
 function TExodusRoster.getGroup(const grp: WideString): IExodusRosterGroup;
 var
-    item: IExodusItem;
+    go: TJabberGroup;
 begin
-    item := MainSession.ItemController.GetItem(grp);
-    if (item <> nil) and (item.Type_ = 'group') then
-        Result := TExodusRosterGroup(item)
+    go := MainSession.Roster.getGroup(grp);
+    if (go <> nil) then
+        Result := TExodusRosterGroup.Create(go)
     else
         Result := nil;
 end;
@@ -278,59 +307,41 @@ end;
 {---------------------------------------}
 function TExodusRoster.Groups(Index: Integer): IExodusRosterGroup;
 var
-    items: IExodusItemList;
+    go: TJabberGroup;
 begin
-    items := MainSession.ItemController.GetItemsByType('group');
-    if (Index >= 0) and (Index < items.Count) then
-        Result := TExodusRosterGroup.Create(items.Item[index])
-    else
-        Result := nil;
+    go := MainSession.Roster.Groups[Index];
+    Result := TExodusRosterGroup.Create(go);
 end;
 
 {---------------------------------------}
 function TExodusRoster.Items(Index: Integer): IExodusRosterItem;
+var
+    ri: TJabberRosterItem;
 begin
-    Result := Item(Index);
+    ri := MainSession.Roster.Items[index];
+    Result := TExodusRosterItem.Create(ri);
 end;
 
 {---------------------------------------}
 procedure TExodusRoster.removeGroup(const grp: IExodusRosterGroup);
 var
-    ctrl: IExodusItemController;
-    found: IExodusItem;
+    go: TJabberGroup;
 begin
-    ctrl := MainSession.ItemController;
-    found := ctrl.GetItem(grp.FullName);
-    if (found <> nil) and (found.Type_ = 'group') then
-        ctrl.RemoveItem(found.UID);
+    go := MainSession.Roster.getGroup(grp.FullName);
+    if (go <> nil) then
+        MainSession.roster.removeGroup(go);
 end;
 
 {---------------------------------------}
 procedure TExodusRoster.removeItem(const Item: IExodusRosterItem);
 begin
-    MainSession.ItemController.RemoveItem(Item.JabberID);
-end;
-
-{---------------------------------------}
-function TExodusRoster.addContextMenu(const id: WideString): WordBool;
-begin
-    //Custom context menus not supported
-    Result := false;
-end;
-{---------------------------------------}
-procedure TExodusRoster.removeContextMenu(const id: WideString);
-begin
-    //custom context menus not supported
+    MainSession.Roster.RemoveItem(Item.JabberID);
 end;
 
 {---------------------------------------}
 function TExodusRoster.AddContextMenuItem(const menuID, caption: WideString;
   const menuListener: IExodusMenuListener): WideString;
 var
-    actCtrl: IExodusActionController;
-    typedActs: IExodusTypedActions;
-    act: TExMenuListenerAction;
-    itemtype: Widestring;
     midx: integer;
     menu: TTntPopupMenu;
     mi: TTntMenuItem;
@@ -338,74 +349,99 @@ var
     guid: string;
 begin
     Result := '';
-    actCtrl := GetActionController();
+    midx := _menus.IndexOf(menuID);
+    if (midx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[midx]);
 
     CreateGUID(g);
     guid := GUIDToString(g);
     guid := AnsiMidStr(guid, 2, length(guid) - 2);
-    if not mapMenuID(menuID, itemtype) then begin
-        midx := _menus.IndexOf(menuID);
-        if (midx = -1) then exit;
+    guid := AnsiReplaceStr(guid, '-', '_');
+    mi := TTntMenuItem.Create(menu);
+    mi.Name := 'pluginContext_item_' + guid;
+    mi.Caption := caption;
+    mi.OnClick := Self.MenuClick;
+    mi.Tag := Integer(menuListener);
+    menu.Items.Add(mi);
 
-        menu := TTntPopupMenu(_menus.Objects[midx]);
+    _items.AddObject(mi.Name, mi);
 
-        guid := AnsiReplaceStr(guid, '-', '_');
-        mi := TTntMenuItem.Create(menu);
-        mi.Name := 'pluginContext_item_' + guid;
-        mi.Caption := caption;
-        mi.OnClick := Self.MenuClick;
-        mi.Tag := Integer(menuListener);
-        menu.Items.Add(mi);
-        _items.AddObject(mi.Name, mi);
-
-        Result := mi.Name;
-    end
-    else begin
-        typedActs := actCtrl.actionsForType(itemtype);
-
-        act := TExMenuListenerAction.Create(
-            '{999-http://exodus.googlecode.com/plugins}' + guid,
-            caption,
-            menuListener);
-        actCtrl.registerAction(itemtype, act);
-        _actions.AddObject(itemtype + ':' + act.Get_Name(), act);
-
-        Result := act.Get_Name();
-    end;
+    Result := mi.Name;
 end;
+
+{---------------------------------------}
+function TExodusRoster.addContextMenu(const id: WideString): WordBool;
+var
+    idx: integer;
+    menu: TTntPopupMenu;
+begin
+    Result := false;
+    idx := _menus.IndexOf(id);
+    if (idx >= 0) then exit;
+
+    menu := TTntPopupMenu.Create(nil);
+    menu.Name := 'pluginContext_' + id;
+    menu.AutoHotkeys := maManual;
+    menu.AutoPopup := true;
+
+    _menus.AddObject(id, menu);
+    Result := true;
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.removeContextMenu(const id: WideString);
+var
+    i, midx, idx, pidx: integer;
+    menu: TTntPopupMenu;
+    item: TTntMenuItem;
+begin
+    // Cannot remove predefined menus.
+    pidx := _predefined_menus.IndexOf(id);
+    if (pidx >= 0) then exit;
+
+    idx := _menus.IndexOf(id);
+    if (idx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[idx]);
+    for i := menu.Items.Count - 1 downto 0 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        midx := _items.IndexOfObject(item);
+        assert(midx <> -1);
+        _items.Delete(midx);
+        item.Tag := 0;
+        item.Free();
+    end;
+    menu.Items.Clear();
+    menu.Free();
+
+    _menus.Delete(idx);
+end;
+
 {---------------------------------------}
 procedure TExodusRoster.removeContextMenuItem(const menu_id,
   item_id: WideString);
 var
-    idx: integer;
+    i, midx, idx: integer;
     menu: TTntPopupMenu;
-    mi: TTntMenuitem;
-    itemtype: Widestring;
+    item: TTntMenuitem;
 begin
+    idx := _menus.IndexOf(menu_id);
+    if (idx = -1) then exit;
 
-    if not mapMenuID(menu_id, itemtype) then begin
-        idx := _menus.IndexOf(menu_id);
-        if (idx = -1) then exit;
+    menu := TTntPopupMenu(_menus.Objects[idx]);
 
-        menu := TTntPopupMenu(_menus.Objects[idx]);
-        idx := _items.IndexOf(item_id);
-        if (idx = -1) then exit;
-
-        mi := TTntMenuItem(_items.Objects[idx]);
-        _items.Delete(idx);
-
-        idx := menu.Items.IndexOf(mi);
-        if (idx <> -1) then menu.Items.Delete(idx);
-
-        mi.Tag := 0;
-        mi.Free();
-    end
-    else begin
-        idx := _actions.IndexOf(itemtype + ':' + item_id);
-        if (idx = -1) then exit;
-
-        //TODO:  support removing actions from controller???
-        _actions.Delete(idx);
+    for i := 0 to menu.Items.Count - 1 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        if (item.Name = item_id) then begin
+            menu.Items.Delete(i);
+            midx := _items.IndexOfObject(item);
+            assert(midx <> -1);
+            _items.Delete(midx);
+            item.Tag := 0;
+            item.Free();
+            exit;
+        end;
     end;
 end;
 
@@ -426,53 +462,42 @@ end;
 {---------------------------------------}
 procedure TExodusRoster.EnableContextMenuItem(const menuID: WideString; const itemID: WideString; enable: WordBool);
 var
-    idx: integer;
+    i, idx: integer;
+    menu: TTntPopupMenu;
     item: TTntMenuitem;
-    itemtype: Widestring;
-    act: TExMenuListenerAction;
 begin
-    if not mapMenuID(menuID, itemtype) then begin
-        idx := _menus.IndexOf(menuID);
-        if (idx = -1) then exit;
+    idx := _menus.IndexOf(menuID);
+    if (idx = -1) then exit;
 
-        idx := _items.IndexOf(itemID);
-        if (idx = -1) then exit;
+    menu := TTntPopupMenu(_menus.Objects[idx]);
 
-        item := TTntMenuItem(_items.Objects[idx]);
-        item.Enabled := enable;
-    end else begin
-        idx := _actions.IndexOf(itemtype + ':' + itemID);
-        if (idx = -1) then exit;
-
-        act := TExMenuListenerAction(_actions.Objects[idx]);
-        act.Enabled := enable;
+    for i := 0 to menu.Items.Count - 1 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        if (item.Name = itemID) then begin
+            item.Enabled := enable;
+            exit;
+        end;
     end;
 end;
 
 {---------------------------------------}
 procedure TExodusRoster.ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool);
 var
-    idx: integer;
+    i, idx: integer;
+    menu: TTntPopupMenu;
     item: TTntMenuitem;
-    itemtype: Widestring;
-    act: TExMenuListenerAction;
 begin
-    if not mapMenuID(menuID, itemtype) then begin
-        idx := _menus.IndexOf(menuID);
-        if (idx = -1) then exit;
+    idx := _menus.IndexOf(menuID);
+    if (idx = -1) then exit;
 
-        idx := _items.IndexOf(itemID);
-        if (idx = -1) then exit;
+    menu := TTntPopupMenu(_menus.Objects[idx]);
 
-        item := TTntMenuItem(_items.Objects[idx]);
-        item.Visible := show;
-    end
-    else begin
-        idx := _actions.IndexOf(itemtype + ':' + itemID);
-        if (idx = -1) then exit;
-
-        act := TExMenuListenerAction(_actions.Objects[idx]);
-        act.Enabled := show;
+    for i := 0 to menu.Items.Count - 1 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        if (item.Name = itemID) then begin
+            item.Visible := show;
+            exit;
+        end;
     end;
 end;
 
@@ -518,70 +543,6 @@ begin
     end;
 end;
 
-function TExodusRoster.mapMenuID(menuID: WideString; var itemtype: Widestring): Boolean;
-begin
-    Result := true;
-    itemtype := menuID;
-
-    if (menuID = 'Roster') then
-        itemtype := 'contact'
-    else if (menuID = 'Group') then
-        itemtype := 'group'
-    else if (menuID = 'Bookmark') then
-        itemtype := 'room'
-    else if (menuID = 'Actions') then
-        itemtype := ''
-    else begin
-        itemtype := '';
-        Result := false;
-    end;
-end;
-
-procedure TExodusRoster.MenuClick(Sender: TObject);
-var
-    mi: TTntMenuItem;
-    resultset: TXMLTag;
-begin
-    if (_items.IndexOfObject(Sender) = -1) then exit;
-    mi := TTntMenuItem(Sender);
-    resultset := TXMLTag.Create('<selected_roster_list>');
-    IExodusMenuListener(mi.Tag).OnMenuItemClick(mi.Name, resultset.XML);
-    resultset.Free();
-end;
-
-constructor TExMenuListenerAction.Create(name: WideString; caption: WideString; listener: IExodusMenuListener);
-begin
-    inherited Create(name);
-    set_Caption(caption);
-    set_Enabled(true);
-
-    _listener := listener;
-end;
-
-procedure TExMenuListenerAction.execute(const items: IExodusItemList);
-var
-    resultset: TXMLTag;
-    idx, jdx: Integer;
-    item: IExodusItem;
-begin
-    resultset := TXMLTag.Create('selected_roster_list');
-
-    for idx := 0 to items.Count - 1 do begin
-        item := items.Item[idx];
-        with resultset.AddTag('item') do begin
-            SetAttribute('jid', item.UID);
-            SetAttribute('name', item.value['Name']);
-            SetAttribute('subscription', item.value['Subscription']);
-            SetAttribute('ask', item.value['Ask']);
-
-            for jdx := 0 to item.GroupCount - 1 do
-                AddBasicTag('group', item.Group[jdx]);
-        end;
-    end;
-    _listener.OnMenuItemClick(Get_Name(), resultset.XML);
-
-    resultset.Free();
-end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusRoster, Class_ExodusRoster,

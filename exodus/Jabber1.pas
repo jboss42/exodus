@@ -23,19 +23,16 @@ interface
 
 uses
     // Exodus stuff
-    BaseChat, ExResponders, LoginWindow, RosterForm, Presence, XMLTag,
-    ShellAPI, Registry, Emote, 
-    Dockable, DisplayName,
+    BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
+    ShellAPI, Registry, SelContact, Emote, NodeItem,
+    Dockable,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
-    TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
-    ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
-    XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
-    SClrRGrp, IEMsgList;
+    TntForms, ExTracer, VistaAltFixUnit;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -77,14 +74,96 @@ type
     TGetLastInputFunc = function(var lii: tagLASTINPUTINFO): Bool; stdcall;
     TInitHooks = procedure; stdcall;
     TStopHooks = procedure; stdcall;
+    {
+      Dock states
+    }
+    TDockStates = (dsRosterOnly, dsDock, dsUninitialized);
 
-  TfrmExodus = class(TExForm)
+    IExodusDockManager = interface
+    {
+        Close the tab for the given form.
+
+        Adjust layout as needed
+    }
+    procedure CloseDocked(frm: TfrmDockable);
+
+    {
+        Open a tab and dock the given form
+
+        Adjust the layout as needed (none docked, embedded roster etc)
+    }
+    function OpenDocked(frm : TfrmDockable) : TTntTabSheet;
+
+    {
+        Float the given form.
+
+        Adjust layout as needed
+    }
+    procedure FloatDocked(frm : TfrmDockable);
+
+    {
+        Get the current docksite for the main window.
+
+        Pretty much the window itself but this absctraction
+        should allow us to have a free floting dock manager
+    }
+    function GetDockSite() : TWinControl;
+
+    {
+        Bring the given docked form to the front of the tab list
+
+        If form is currently docked, make it the active tab.
+        Sets focus to the new tab
+    }
+    procedure BringDockedToTop(form: TfrmDockable);
+
+    {
+        Get the currently top docked form.
+
+        May return nil if topmost docked form is not TfrmDockable(????) or
+        nothing is docked.
+    }
+    function getTopDocked() : TfrmDockable;
+
+    procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
+
+    procedure OnNotify(frm: TForm; notifyEvents: integer);
+
+
+    {
+        frm has had some kind of state change and its presentation needs to
+        be updated.
+
+        form may have changed tab icon, notification state.
+    }
+    procedure UpdateDocked(frm: TfrmDockable);
+
+    {
+        Bring the dock manager to front.
+
+        Restore if minimized and bring to top of z-order. Don't take focus
+    }
+    procedure BringToFront();
+
+    function isActive(): boolean;
+  end;
+
+
+  TfrmExodus = class(TTntForm, IExodusDockManager)
     MainMenu1: TTntMainMenu;
-    ImageList1: TImageList;
+    ImageList2: TImageList;
+    timFlasher: TTimer;
     timAutoAway: TTimer;
+    popTabs: TTntPopupMenu;
     popTray: TTntPopupMenu;
     AppEvents: TApplicationEvents;
     Toolbar: TCoolBar;
+    ToolBar1: TToolBar;
+    btnOnlineRoster: TToolButton;
+    btnAddContact: TToolButton;
+    btnRoom: TToolButton;
+    btnBrowser: TToolButton;
+    btnFind: TToolButton;
     timReconnect: TTimer;
     timTrayAlert: TTimer;
     XMPPAction: TDdeServerConv;
@@ -105,6 +184,7 @@ type
     Help1: TTntMenuItem;
     Tools1: TTntMenuItem;
     Exodus1: TTntMenuItem;
+    ShowEventsWindow1: TTntMenuItem;
     mnuExpanded: TTntMenuItem;
     mnuStatBar: TTntMenuItem;
     mnuToolbar: TTntMenuItem;
@@ -122,10 +202,13 @@ type
     N2: TTntMenuItem;
     mnuPresence: TTntMenuItem;
     mnuContacts: TTntMenuItem;
+    popFloatTab: TTntMenuItem;
+    popCloseTab: TTntMenuItem;
     trayExit: TTntMenuItem;
     N01: TTntMenuItem;
     trayDisconnect: TTntMenuItem;
     N4: TTntMenuItem;
+    trayMessage: TTntMenuItem;
     trayPresence: TTntMenuItem;
     trayShow: TTntMenuItem;
     mnuServerVCard: TTntMenuItem;
@@ -179,7 +262,7 @@ type
     mnuFile_MyProfiles_CreateNewProfile: TTntMenuItem;
     mnuFile_MyProfiles_DeleteProfile: TTntMenuItem;
     mnuFile_MyProfiles_ModifyProfile: TTntMenuItem;
-    mnuFile_Exit: TTntMenuItem;
+    File_Exit: TTntMenuItem;
     mnuPeople_Search: TTntMenuItem;
     mnuPeople_Contacts: TTntMenuItem;
     mnuPeople_Contacts_AddContact: TTntMenuItem;
@@ -197,12 +280,25 @@ type
     N13: TTntMenuItem;
     mnuPeople_Group_AddContacttoGroup: TTntMenuItem;
     mnuPeople_Group_RemoveContactfromGroup: TTntMenuItem;
+    mnuPeople_Group_View: TTntMenuItem;
+    mnuPeople_Group_View_All: TTntMenuItem;
+    mnuPeople_Group_View_OnlineOnly: TTntMenuItem;
+    mnuPeople_Group_View_BlockedContacts: TTntMenuItem;
+    mnuPeople_Group_View_AllRooms: TTntMenuItem;
+    mnuPeople_Group_View_AllChats: TTntMenuItem;
     mnuPeople_Conference: TTntMenuItem;
     mnuPeople_Conference_InviteContacttoConference: TTntMenuItem;
     mnuPeople_Conference_OpenNewConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_CloseConferenceRoom: TTntMenuItem;
     mnuPeople_Conference_SearchforConferenceRoom: TTntMenuItem;
+    N16: TTntMenuItem;
+    mnuPeople_Conference_InvitePeopletoConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_RemovePeopleFromConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_BlockPeopleFromConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_RenamePeopleFromConferenceRoom: TTntMenuItem;
     mnuPeople_Conference_ViewHistory: TTntMenuItem;
     mnuOptions_Password: TTntMenuItem;
+    mnuOptions_Password_ChangePassword: TTntMenuItem;
     mnuOptions_Registration: TTntMenuItem;
     mnuOptions_Registration_EditRegistration: TTntMenuItem;
     mnuOptions_Registration_EditAvatar: TTntMenuItem;
@@ -218,6 +314,7 @@ type
     mnuOptions_Plugins: TTntMenuItem;
     mnuWindows_CloseAll: TTntMenuItem;
     mnuWindows_List1: TTntMenuItem;
+    mnuWindows_Layout: TTntMenuItem;
     mnuWindows_MinimizetoSystemTray: TTntMenuItem;
     mnuWindows_MinimizetoTaskBar: TTntMenuItem;
     mnuFile_MyProfiles_RenameProfile: TTntMenuItem;
@@ -231,72 +328,27 @@ type
     mnuFile_MyStatus_XtendedAway: TTntMenuItem;
     mnuFile_MyStatus_Invisible: TTntMenuItem;
     N6: TTntMenuItem;
+    btnOptions: TToolButton;
+    btnSendFile: TToolButton;
+    ToolButtonSep1: TToolButton;
+    btnConnect: TToolButton;
+    ToolButtonSep2: TToolButton;
+    btnDisconnect: TToolButton;
     mnuWindows_View: TTntMenuItem;
     mnuWindows_View_ShowToolbar: TTntMenuItem;
     mnuWindows_View_ShowChatToolbar: TTntMenuItem;
     mnuWindows_View_ShowInstantMessages1: TTntMenuItem;
-    mnuFile_ShowDebugXML: TTntMenuItem;
-    mnuOptions_Notifications_NewConversation: TTntMenuItem;
-    mnuWindows_View_ShowActivityWindow: TTntMenuItem;
-    trayShowActivityWindow: TTntMenuItem;
-    tbsView: TPageControl;
-    tabLogin: TTabSheet;
-    tabRoster: TTabSheet;
-    pnlLogin: TPanel;
+    mnuWindows_View_ShowDebugXML: TTntMenuItem;
+    Panel1: TPanel;
     pnlRoster: TPanel;
-    GridPanel1: TGridPanel;
-    imgSSL: TImage;
-    lblDisplayName: TTntLabel;
-    pnlStatus: TPanel;
-    lblStatus: TTntLabel;
-    imgDown: TImage;
-    popPresence: TTntPopupMenu;
-    TntMenuItem1: TTntMenuItem;
-    TntMenuItem2: TTntMenuItem;
-    TntMenuItem3: TTntMenuItem;
-    TntMenuItem4: TTntMenuItem;
-    TntMenuItem5: TTntMenuItem;
-    TntMenuItem6: TTntMenuItem;
-    Custom1: TTntMenuItem;
-    TntMenuItem7: TTntMenuItem;
-    imgPresence: TImage;
-    N19: TTntMenuItem;
-    N20: TTntMenuItem;
-    mnuFile_Password: TTntMenuItem;
-    N21: TTntMenuItem;
-    mnuFile_Preferences: TTntMenuItem;
-    mnuFile_Registration: TTntMenuItem;
-    mnuFile_Registration_EditReg: TTntMenuItem;
-    mnuFile_Registration_VCard: TTntMenuItem;
-    pnlToolbar: TPanel;
-    ToolBar1: TToolBar;
-    btnConnect: TToolButton;
-    btnDisconnect: TToolButton;
-    btnOnlineRoster: TToolButton;
-    btnAddContact: TToolButton;
-    btnRoom: TToolButton;
-    btnFind: TToolButton;
-    btnSendFile: TToolButton;
-    btnBrowser: TToolButton;
-    ToolButtonSep1: TToolButton;
-    btnOptions: TToolButton;
-    btnActivityWindow: TToolButton;
-    popCreate: TTntPopupMenu;
-    Folder1: TTntMenuItem;
-    Contact1: TTntMenuItem;
-    txtStatus: TTntEdit;
-    imgAd: TImage;
-    MainbarImageList: TImageList;
-    ToolbarBevel: TColorBevel;
-    popViewStates: TTntPopupMenu;
-    popShowOnline: TTntMenuItem;
-    popShowAll: TTntMenuItem;
-    mnuContacts_ViewHistory: TTntMenuItem;
-    pnlStatusLabel: TPanel;
+    splitRoster: TSplitter;
+    Tabs: TTntPageControl;
+    mnuOptions_Notifications_NewConversation: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnOnlineRosterClick(Sender: TObject);
     procedure btnAddContactClick(Sender: TObject);
     procedure mnuConferenceClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -306,6 +358,7 @@ type
     procedure btnDelPersonClick(Sender: TObject);
     procedure ShowXML1Click(Sender: TObject);
     procedure Exit2Click(Sender: TObject);
+    procedure timFlasherTimer(Sender: TObject);
     procedure JabberorgWebsite1Click(Sender: TObject);
     procedure JabberCentralWebsite1Click(Sender: TObject);
     procedure About1Click(Sender: TObject);
@@ -318,6 +371,10 @@ type
     procedure Properties2Click(Sender: TObject);
     procedure mnuVCardClick(Sender: TObject);
     procedure mnuSearchClick(Sender: TObject);
+    procedure TabsMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure popCloseTabClick(Sender: TObject);
+    procedure popFloatTabClick(Sender: TObject);
     procedure mnuChatClick(Sender: TObject);
     procedure mnuBookmarkClick(Sender: TObject);
     procedure presCustomClick(Sender: TObject);
@@ -329,13 +386,24 @@ type
     procedure mnuVersionClick(Sender: TObject);
     procedure mnuPasswordClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure mnuRegisterServiceClick(Sender: TObject);
+    procedure TabsUnDock(Sender: TObject; Client: TControl;
+      NewTarget: TWinControl; var Allow: Boolean);
+    procedure TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
+      Y: Integer);
     procedure mnuMessageClick(Sender: TObject);
     procedure Test1Click(Sender: TObject);
+    procedure trayMessageClick(Sender: TObject);
     procedure mnuBrowserClick(Sender: TObject);
     procedure timReconnectTimer(Sender: TObject);
+    procedure ShowEventsWindow1Click(Sender: TObject);
     procedure presToggleClick(Sender: TObject);
     procedure AppEventsActivate(Sender: TObject);
     procedure AppEventsDeactivate(Sender: TObject);
+    procedure TabsChange(Sender: TObject);
+    procedure TabsDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure timTrayAlertTimer(Sender: TObject);
     procedure JabberUserGuide1Click(Sender: TObject);
     procedure mnuPluginDummyClick(Sender: TObject);
@@ -351,6 +419,9 @@ type
       const AStatusText: String);
     procedure mnuPluginOptsClick(Sender: TObject);
     procedure mnuDisconnectClick(Sender: TObject);
+    procedure FormDockDrop(Sender: TObject; Source: TDragDockObject; X,
+      Y: Integer);
+    procedure splitRosterMoved(Sender: TObject);
 
     {
         Event fired when programaticvally undocking
@@ -361,10 +432,13 @@ type
     procedure TabsUnDockNoLayoutChange(Sender: TObject; Client: TControl;
                                        NewTarget: TWinControl; var Allow: Boolean);
     procedure mnuChatToolbarClick(Sender: TObject);
+    procedure TabsContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
     procedure mnuFile_MyProfiles_DeleteProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_CreateNewProfileClick(Sender: TObject);
+    procedure StatusClick(Sender: TObject);
     procedure mnuPeople_Contacts_BlockContactClick(Sender: TObject);
     procedure mnuOptions_FontClick(Sender: TObject);
     procedure mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
@@ -382,26 +456,14 @@ type
     procedure mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
     procedure mnuOpenNewConferenceRoom1Click(Sender: TObject);
     procedure mnuFile_ConnectClick(Sender: TObject);
+    procedure mnuWindows_LayoutClick(Sender: TObject);
     procedure mnuPeople_Contacts_SendFileClick(Sender: TObject);
     procedure mnuOptions_Notifications_NewConversationClick(Sender: TObject);
     procedure mnuPeople_ConferenceClick(Sender: TObject);
     procedure btnFindClick(Sender: TObject);
-    procedure mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
-    procedure trayShowActivityWindowClick(Sender: TObject);
-    procedure clickChangeStatus(Sender: TObject);
-    procedure clickEditStatus(Sender: TObject);
-    procedure txtStatusKeyPress(Sender: TObject; var Key: Char);
-    procedure txtStatusExit(Sender: TObject);
-    procedure imgAdClick(Sender: TObject);
-    procedure popChangeView(Sender: TObject);
-    procedure mnuContacts_ViewHistoryClick(Sender: TObject);
-    procedure popCreatePopup(Sender: TObject);
-    procedure clickCreatePopupItem(Sender: TObject);
-    procedure PeopleClick(Sender: TObject);
-    procedure mnuRegisterUDClick(Sender: TObject);
-    procedure mnuFileRegistrationClick(Sender: TObject);
-    procedure pnlStatusLabelMouseEnter(Sender: TObject);
-    procedure pnlStatusLabelMouseLeave(Sender: TObject);
+    procedure splitRosterCanResize(Sender: TObject; var NewSize: Integer;
+      var Accept: Boolean);
+
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -412,6 +474,7 @@ type
     _auto_login: boolean;
     _expanded: boolean;                 // are we expanded or not?
     _docked_forms: TList;               // list of all of the docked forms
+    _nextNotifyButton: TDockbarButton;
     // Various state flags
     _windows_ver: integer;
     _is_broadcast: boolean;             // Should this copy broadcast pres changes
@@ -428,8 +491,6 @@ type
     _profileScreenLastWidth: integer;   // Storage for width of roster window when logged in
     _enforceConstraints: boolean;       // Should minimum size constraints be enforced
 
-    _dnListener: TDisplayNameEventListener;
-
     // Stuff for the Autoaway
     _idle_hooks: THandle;               // handle the lib
     _GetLastTick: TGetLastTick;         // function ptrs inside the lib
@@ -444,6 +505,7 @@ type
     _last_show: Widestring;             // last show for restoring after auto-away
     _last_status: Widestring;           // last status    (ditto)
     _last_priority: integer;            // last priority  (ditto)
+    _killshow: boolean;
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -453,7 +515,9 @@ type
 
     // Some callbacks
     _sessioncb: integer;
+    _rostercb: integer;
     _dns_cb: integer;
+    _currDockState: TDockStates;
 
     // Reconnect variables
     _reconnect_interval: integer;
@@ -464,21 +528,12 @@ type
     _win32_tracker: Array of integer;
     _win32_idx: integer;
 
-    // Dockmanager stuff
-    _dockManager: IExodusDockManager;
-    _dockWindow: TfrmDockWindow;
-    _dockWindowGlued: boolean;
-
-    // Other
-    _killshow: boolean;
-    _glueRange: integer;
-    _hiddenIEMsgList: TfIEMsgList;
-    _mnuRegisterUD: TTntMenuItem;
-
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     procedure SaveBands();
     procedure RestoreBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     procedure setupReconnect();
     procedure setupTrayIcon();
@@ -489,14 +544,7 @@ type
     procedure SetAutoAvailable();
     procedure SetupAutoAwayTimer();
 
-    procedure ShowLogin();
-    procedure ShowRoster();
-    procedure UpdatePresenceDisplay();
-    procedure UpdateDisplayName();
-
     function win32TrackerIndex(windows_msg: integer): integer;
-
-    procedure CTCPCallback(event: string; tag: TXMLTag);
 
     procedure _sendInitPresence();
     {**
@@ -508,7 +556,18 @@ type
      *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
     **}
     procedure waitForCleanup();
-    procedure _chkUserDirectory();
+
+    {
+        Forces a focus to the active tabs's docked form
+    }
+    procedure focusActiveTab();
+
+    function getNextDockedNotifying(start: TTabSheet): TfrmDockable;
+
+    procedure updateNextNotifyButton();
+    procedure checkFlash();
+    procedure OnNextNotifyClick();
+
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -532,9 +591,6 @@ type
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
 
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
-    procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
-    procedure WMMove(var Msg: TWMMove); message WM_MOVE;
-    procedure WMExitSizeMove(var Message: TMessage) ; message WM_EXITSIZEMOVE;
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
@@ -552,8 +608,31 @@ type
     procedure updateLayoutPrefChange();
 
     {
+        Update UI after some dock event has occurred.
+
+        HideDock if last tab was undocked, ShowNormalDock if moving from
+        no tabs to at least one tab, handle embedded roster state changes.
+
+        Since it can be difficult to know exactly when to perform a
+        change in the DockState (in some instances this method may be called
+        before the TPageControl has had a chance to cleanup an tab), a
+        flag is passed to force a state change.
+
+        @param frm the form that was just docked/undocked
+        @param toggleState if true, toggle UI docked.undocked. If moving to
+                docked, use frm to figure out if embedded or not.
+    }
+    procedure updateLayoutDockChange(frm: TfrmDockable; docking: boolean; FirstOrLastDock: boolean);
+
+    {
         Adjust layout so roster panel and dock panel are shown
     }
+//    procedure layoutRosterDock();
+//
+//    {
+//        Adjust layout so only dock panel is shown
+//    }
+    procedure layoutDock();
 
     {
         Adjust layout so only roster panel is shown
@@ -561,17 +640,26 @@ type
     procedure layoutRosterOnly();
 
     {
+        Save the current roster and dock panel widths.
+
+        Depending on current state...
+    }
+    procedure saveRosterDockWidths();
+
+    {
         Undock all docked forms.
 
         Prevents tab change, onundock events from firing. Does not update
         layout.
     }
+    procedure undockAllForms();
     procedure DoDisconnect();
 
 published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure RosterCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
     // This is only used for testing..
@@ -580,13 +668,16 @@ published
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
-    procedure OnDisplayNameChange(jid, dn: Widestring);
+
+    property DockState : TDockStates read _currDockState;
   public
     ActiveChat: TfrmBaseChat;
 //    Tabs: TExodusTabs;
 
     function getLastTick(): dword;
     function screenStatus(): integer;
+    function getTabForm(tab: TTabSheet): TForm;
+    function getTabSheet(frm : TfrmDockable) : TTntTabSheet;
     function IsAutoAway(): boolean;
     function IsAutoXA(): boolean;
     function isMinimized(): boolean;
@@ -594,6 +685,7 @@ published
     procedure Startup();
     procedure DoConnect();
     procedure CancelConnect();
+    procedure CTCPCallback(event: string; tag: TXMLTag);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DefaultHandler(var msg); override;
     procedure TrackWindowsMsg(windows_msg: integer);
@@ -606,7 +698,54 @@ published
     procedure PreModal(frm: TForm);
     procedure PostModal();
 
-    procedure glueWindow(doGlue: boolean = true);
+
+    {
+        Close the tab for the given form.
+
+        Adjust layout as needed
+    }
+    procedure CloseDocked(frm: TfrmDockable);
+
+    {
+        Open a tab and dock the given form
+
+        Adjust the layout as needed (none docked, embedded roster etc)
+    }
+    function OpenDocked(frm : TfrmDockable) : TTntTabSheet;
+
+
+    {
+        Float the given form.
+
+        Adjust layout as needed
+    }
+    procedure FloatDocked(frm : TfrmDockable);
+
+    {
+        Get the current docksite for the main window.
+
+        Pretty much the window itself but this absctraction
+        should allow us to have a free floting dock manager
+    }
+    function GetDockSite() : TWinControl;
+
+    {
+        Bring the given docked form to the front of the tab list
+
+        If form is currently docked, make it the active tab.
+        Sets focus to the new tab
+    }
+    procedure BringDockedToTop(form: TfrmDockable);
+
+    {
+        Get the currently top docked form.
+
+        May return nil if topmost docked form is not TfrmDockable(????) or
+        nothing is docked.
+    }
+    function getTopDocked() : TfrmDockable;
+
+    procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
 
     {
         Do notifyEvents notification events in the context of frm.
@@ -628,6 +767,15 @@ published
 
     }
     procedure OnNotify(frm: TForm; notifyEvents: integer);
+
+
+    {
+        frm has had some kind of state change and its presentation needs to
+        be updated.
+
+        form may have changed tab icon, notification state.  
+    }
+    procedure UpdateDocked(frm: TfrmDockable);
 
     procedure BringToFront();
 
@@ -656,11 +804,7 @@ published
     procedure RemoveMenuShortCut(value: integer);
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
-    procedure doHide();
-    function IsShortcut(var Message: TWMKey): Boolean; override;
-    function AppKeyDownHook(var Msg: TMessage): Boolean;
 
-    property dockManager:IExodusDockManager read _dockManager;
   end;
 
   {
@@ -752,9 +896,6 @@ const
     sBrandingError = 'Branding error!';
     sQueryTypeError = 'Unknown query type: ';
     sUserExistsErr = ''#13#10' ERROR: The username ''%s'' already exists.';
-    sRegNotImplErr = ''#13#10' ERROR: This server does not support in-band registration.';
-
-    sOutOfSystemResourcesError = 'Out of system resources.';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -805,12 +946,12 @@ implementation
 uses
 
     // XXX: ZipMstr
-    StateForm, CapsCache,
-    RosterImages, ToolbarImages,
+    StateForm,
+    RosterImages,
     ExodusImageList,
-    COMToolbar, COMToolbarButton, COMToolbarControl, COMExodusItemList,
-    NewUser, CommandWizard, Notify,
-    About, AutoUpdate, AutoUpdateStatus, Browser, Chat,
+    COMToolbar, COMToolbarButton, COMToolbarControl,
+    NewUser, CommandWizard, Exodus_TLB, Notify,
+    About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController,
     ChatWin,
     Debug, DNSUtils, Entity,
@@ -818,69 +959,24 @@ uses
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
-    JoinRoom, MsgController, MsgDisplay,
-    Password,
+    JoinRoom, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow,
     Room, XferManager, Stringprep, SSLWarn,
-    RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
-    XMLUtils, XMLParser,
-    ComServ, PrefFile,
-    ManagePluginsDlg,
-    DebugManager, TntGraphics, SelectItem,
-    HistorySearch,
-    FrmUtils,
-    ExActionCtrl;
+    Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
+    XMLUtils, XMLParser, DisplayName,
+    ComServ, PrefFile;
 
 {$R *.DFM}
 
-const
-    sRosterAvail = 'Available';
-    sRosterChat = 'Free to Chat';
-    sRosterAway = 'Away';
-    sRosterXA = 'Extended Away';
-    sRosterDND = 'Do Not Disturb';
-    sRosterOffline = 'Offline';
-
-//Hidden Helpers!
-type TActionHelper = class
-private
-    _typedActs: IExodusTypedActions;
-    _actName: Widestring;
-
-public
-    constructor Create(typedActs: IExodusTypedActions; actname: Widestring);
-    destructor Destroy; override;
-
-    property TypedActions: IExodusTypedActions read _typedActs;
-    property ActionName: Widestring read _actName;
-
-    procedure click(Sender: TObject);
-end;
-constructor TActionHelper.Create(typedActs: IExodusTypedActions; actname: WideString);
-begin
-    _typedActs := typedActs;
-    _actName := actname;
-end;
-destructor TActionHelper.Destroy;
-begin
-    _typedActs := nil;
-
-    inherited;
-end;
-procedure TActionHelper.click(Sender: TObject);
-begin
-    if (TypedActions <> nil) then TypedActions.execute(ActionName);
-end;
-
 function getDockManager(): IExodusDockManager;
 begin
-    Result := frmExodus.dockManager;
+    Result := frmExodus;
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuFile_MyProfiles_CreateNewProfileClick(Sender: TObject);
 begin
-    GetLoginWindow().clickCreateProfile(Sender);
+    frmRosterWindow.lblCreateClick(Sender);
 end;
 
 procedure TfrmExodus.CreateParams(var Params: TCreateParams);
@@ -898,6 +994,23 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Flash();
 begin
+    If (Self.Active and not MainSession.Prefs.getBool('notify_docked_flasher')) then begin
+        timFlasher.Enabled := false;
+        exit; //0.9.1.0 behavior
+    end;
+    // flash window
+    if (_hidden) then begin
+        Self.WindowState := wsMinimized;
+        Self.Visible := true;
+        ShowWindow(Handle, SW_SHOWMINNOACTIVE);
+    end;
+    if MainSession.Prefs.getBool('notify_flasher') then begin
+        timFlasher.Enabled := true;
+    end
+    else begin
+        timFlasher.Enabled := false;
+        timFlasherTimer(Self);
+    end;
 end;
 
 {---------------------------------------}
@@ -919,12 +1032,6 @@ begin
         Self.AutoSize := false;
         _was_max := false;
     end;
-
-    if ((_dockwindow <> nil) and
-        (not _dockwindow.Showing)) then begin
-        getDockManager().ShowDockManagerWindow(true, false);
-    end;
-
     SetForegroundWindow(Self.Handle);
 end;
 
@@ -998,7 +1105,7 @@ begin
     SC_MINIMIZE: begin
         _hidden := true;
         _was_max := (Self.WindowState = wsMaximized);
-        Self.Visible := false;
+//        Self.Visible := false;
         ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
     end;
@@ -1009,7 +1116,7 @@ begin
     SC_CLOSE: begin
         if ((_close_min) and (not _shutdown)) then begin
             _hidden := true;
-            Self.Visible := false;
+//            Self.Visible := false;
             ShowWindow(Handle, SW_HIDE);
             msg.Result := 0;
         end
@@ -1030,14 +1137,18 @@ begin
     // manually handle popping up the tray menu..
     // since the delphi/vcl impl isn't quite right.
     if (Msg.LParam = WM_LBUTTONDBLCLK) then begin
-        // restore our app
-        doRestore();
-        _hidden := false;
-
-        getDockManager().BringToFront(); // takes focus
-        Self.BringToFront(); // take back focus
-
-        msg.Result := 0;
+        if (_hidden) then begin
+            // restore our app
+            doRestore();
+            _hidden := false;
+            msg.Result := 0;
+        end
+        else begin
+            // minimize our app
+            _hidden := true;
+            Self.Visible := false;
+            PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
+        end;
     end
     else if ((Msg.LParam = WM_LBUTTONDOWN) and (not Application.Active) and (not _hidden))then begin
         SetForegroundWindow(Self.Handle);
@@ -1080,8 +1191,6 @@ begin
     // Show the login window
     _reconnect_tries := 0;
     _new_account := false;
-
-    //TODO:  display login window
 end;
 
 {---------------------------------------}
@@ -1130,29 +1239,21 @@ begin
     DoDisconnect();
 end;
 
-{---------------------------------------}
-procedure TfrmExodus.WMActivate(var msg: TMessage);
+ procedure TfrmExodus.WMActivate(var msg: TMessage);
+ var
+    f: TfrmDockable;
  begin
+
     if (Msg.WParamLo <> WA_INACTIVE) then begin
 //        outputdebugMsg('TfrmExodus.WMActivate');
-
-        Notify.StopFlash(Self);
-        stopTrayAlert();
-
-        if ((_dockWindow <> nil) and
-            (_dockWindow.Showing) and
-            (_dockWindowGlued) and
-            (_dockWindow.WindowState = wsNormal)) then begin
-            // This will keep the glued window on top
-            // when this window is activated.
-            SetWindowPos(_dockWindow.Handle, Self.Handle,
-                    0, 0, 0, 0,
-                    SWP_NOSIZE or SWP_NOMOVE or SWP_NOACTIVATE or SWP_NOSENDCHANGING);
-        end;
+        checkFlash();
+        StopTrayAlert();
+        f := getTopDocked();
+        if ((f <> nil) and f.IsNotifying) then
+            f.gotActivate();
     end;
     inherited;
  end;
-
 {---------------------------------------}
 {---------------------------------------}
 procedure TfrmExodus.FormCreate(Sender: TObject);
@@ -1163,15 +1264,13 @@ var
     mi: TMenuItem;
     s: TXMLTag;
     prefstate: TPrefState;
-    adVal: Widestring;
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
-
-    Application.HookMainWindow(AppKeyDownHook);
 
     _killshow := false;
 
     Randomize();
+    _currDockState := dsUninitialized;
 
     ActiveChat := nil;
     _docked_forms := TList.Create;
@@ -1184,10 +1283,8 @@ begin
     // setup our tray icon
     _tray_icon := TIcon.Create();
 
-    // setup our master image lists
-    RosterTreeImages.setImageList(ImageList1);
-    GetRosterWindow().ImageList := RosterTreeImages.ImageList;
-    MainbarImages.setImageList(MainbarImageList);
+    // setup our master image list
+    RosterTreeImages.setImageList(Imagelist2);
 
     // if we are testing auto-away, then fire the
     // timer every 1 second, instead of every 10 secs.
@@ -1203,35 +1300,13 @@ begin
     // Init our emoticons
     InitializeEmoticonLists();
 
-    _dnListener := TDisplayNameEventListener.Create();
-    _dnListener.OnDisplayNameChange := OnDisplayNameChange;
-
     // Setup our caption and the help menus.
     with MainSession.Prefs do begin
-        adVal := GetString('brand_ad');
-        if adVal <> '' then begin
-            try
-                imgAd.Picture.LoadFromFile(adVal);
-            except
-                //TODO:  loggit?
-            end;
-        end;
-
-        adVal := GetString('brand_ad_url');
-        if adVal <> '' then begin
-            imgAd.Hint := adVal;
-            imgAd.Cursor := crHandPoint;
-        end;
-
-
         self.Caption := GetString('brand_caption');
         trayShow.Caption := _('Show ') + getAppInfo.Caption;
         trayExit.Caption := _('Exit ') + getAppInfo.Caption;
         Exodus1.Caption := getAppInfo.ID;
         RestorePosition(Self);
-
-        File1.Caption := GetString('brand_application_id');
-        About1.Caption := _('About ') + getAppInfo.Caption;
 
         menu_list := TWideStringList.Create();
         fillStringlist('brand_help_menu_list', menu_list);
@@ -1254,14 +1329,19 @@ begin
 
         _enforceConstraints := true;
         frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
-        frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width');
-
-        mnuContacts_ViewHistory.Visible := getBool('brand_history_search');
+        if ((splitRoster.Visible) and
+            (MainSession.Prefs.getBool('expanded'))) then begin
+            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_docked');
+        end
+        else begin
+            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
+        end;
     end;
-//
-//    // Setup our session callback
+
+    // Setup our session callback
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
-//
+    _rostercb := MainSession.RegisterCallback(RosterCallback, '/roster/end');
+
     // setup some branding stuff
     with (MainSession.Prefs) do begin
         mnuConference.Visible := getBool('brand_muc');
@@ -1275,11 +1355,7 @@ begin
         mnuPlugins.Visible := getBool('brand_plugs');
         mnuVCard.Visible := getBool('brand_vcard');
         mnuMyVCard.Visible := getBool('brand_vcard');
-
-        mnuFile_Password.Visible := getBool('brand_changepassword');
-        mnuFile_Registration_VCard.Visible := getBool('brand_vcard');
-        mnuFile_Registration_EditReg.Visible := getBool('brand_registration');
-        mnuRegistration.Visible := mnuFile_Registration_EditReg.Visible and mnuFile_Registration_VCard.Visible;
+        mnuRegistration.Visible := getBool('brand_registration');
 
         mnuBrowser.Visible := getBool('brand_browser');
         if (not mnuBrowser.Visible) then begin
@@ -1290,24 +1366,25 @@ begin
         btnSendFile.Visible := getBool('brand_ft');
         mnuPeople_Contacts_BlockContact.Visible := getBool('brand_allow_blocking_jids');
         mnuOptions_Plugins.Visible := getBool('brand_plugs');
-        mnuFile_ShowDebugXML.Visible := getBool('brand_show_debug_in_menu');
+        mnuWindows_View_ShowDebugXML.Visible := getBool('brand_show_debug_in_menu');
     end;
 
     prefstate := PrefController.getPrefState('auto_start');
     mnuOptions_EnableStartupWithWindows.Enabled := (prefstate <> psReadOnly);
     mnuOptions_EnableStartupWithWindows.Visible := (prefstate <> psInvisible);
-//
-//    // Make sure presence menus have unified captions
-////    setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
-////    setRosterMenuCaptions(mnuFile_MyStatus_Available, mnuFile_MyStatus_FreeToChat,
-////                            mnuFile_MyStatus_Away, mnuFile_MyStatus_XtendedAway,
-////                            mnuFile_MyStatus_DoNotDisturb);
-////    setRosterMenuCaptions(trayPresOnline, trayPresChat, trayPresAway,
-////        trayPresXA, trayPresDND);
-//
-//    // Setup the Tabs, toolbar, panel, and roster madness
+
+    // Make sure presence menus have unified captions
+    setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
+    setRosterMenuCaptions(mnuFile_MyStatus_Available, mnuFile_MyStatus_FreeToChat,
+                            mnuFile_MyStatus_Away, mnuFile_MyStatus_XtendedAway,
+                            mnuFile_MyStatus_DoNotDisturb);
+    setRosterMenuCaptions(trayPresOnline, trayPresChat, trayPresAway,
+        trayPresXA, trayPresDND);
+
+    // Setup the Tabs, toolbar, panel, and roster madness
     restoreMenus(false);
     restoreToolbar();
+    Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs');
 
     // some gui related flags
     _appclosing := false;
@@ -1319,8 +1396,8 @@ begin
     _shutdown := false;
     _cleanupComplete := false;
     _close_min := MainSession.prefs.getBool('close_min');
-//
-//    // Setup the IdleUI stuff..
+
+    // Setup the IdleUI stuff..
     _is_autoaway := false;
     _is_autoxa := false;
     _is_broadcast := false;
@@ -1342,6 +1419,7 @@ begin
         // at this point.
         _killshow := true;
     end;
+
     Self.Visible := true;
 
     // Set our default presence info.
@@ -1354,48 +1432,13 @@ begin
     sExodusGMHook := 0;
 
     OptionsMenuItemsChecks();
-//
-//    // Remove the "old menus" from user view
-//    // Eventually will have to actually remove menus
-    Old1.Visible := false;
 
-    _dockWindowGlued := false;
+    // Remove the "old menus" from user view
+    // Eventually will have to actually remove menus
+    Old1.Visible := false
 
-    _dockWindow := TfrmDockWindow.Create(Application);
-    _dockManager := _dockWindow;
-    Self.DockSite := false;
-    btnActivityWindow.Visible := true;
-    trayShowActivityWindow.Visible := true;
-    mnuWindows_View_ShowActivityWindow.Visible := true;
 
-    with GetLoginWindow() do begin
-        DockWindow(pnlLogin);
-        Visible := true;
-    end;
-    with GetRosterWindow() do begin
-        DockWindow(pnlRoster);
-        Visible := true;
-    end;
 
-    if (MainSession.Prefs.getBool('brand_glue_activity_window')) then begin
-        _glueRange := MainSession.Prefs.getInt('brand_glue_activity_window_range');
-    end
-    else begin
-        _glueRange := -1;
-    end;
-
-    if (MainSession.Prefs.getInt('msglist_type') = 1) then begin
-        // msglist_type = HTML_MSGLIST
-        // Need to start up an instance of IE because the first IE startup
-        // can be VERY slow.
-        _hiddenIEMsgList := TfIEMsgList.Create(nil);
-    end
-    else begin
-        _hiddenIEMsgList := nil;
-    end;
-    _mnuRegisterUD := nil;
-
-    ExCOMRoster.AddPredefinedMenu('Status', popPresence);
 end;
 
 {---------------------------------------}
@@ -1414,7 +1457,7 @@ var
 begin
     // Create the tray icon, etc..
     picon := TIcon.Create();
-    ImageList1.GetIcon(0, picon);
+    ImageList2.GetIcon(0, picon);
     with _tray do begin
         Wnd := Self.Handle;
         uFlags := NIF_ICON + NIF_MESSAGE + NIF_TIP;
@@ -1446,16 +1489,24 @@ begin
 
 
     updateLayoutPrefChange();
-    ShowLogin();
+    RosterWindow.DockRoster(pnlRoster);
+    RosterWindow.GetRosterWindow().Show;
 
     // load up all the plugins..
     if (MainSession.Prefs.getBool('brand_plugs')) then
     begin
         InitPlugins();
-        {JJF todo fix this
-        if ( IsRequiredPluginsSelected() = false ) then
-            StartPrefs(pref_plugins);
-        }
+      // Check for required plugins - SIG
+      if ( IsRequiredPluginsSelected() = false ) then
+        StartPrefs(pref_plugins);
+    end;
+
+    // If they had logging turned on, warn them that they need to
+    // enable a logging plugin now.
+    if (MainSession.Prefs.getBool('log') and (ExCOMController.ContactLogger = nil)) then begin
+        MainSession.Prefs.setBool('log', false);
+        MessageDlgW(_('Message logging is now performed by plugins. Please enable a logging plugin to regain this functionality.'),
+            mtWarning, [mbOK], 0);
     end;
 
     _expanded := false;
@@ -1465,9 +1516,6 @@ begin
     // window async since it's a modal dialog.
     with MainSession.Prefs do begin
         if (ExStartup.debug) then begin
-            if (_dockWindow <> nil) then begin
-                getDockManager().ShowDockManagerWindow(true, false);
-            end;
             ShowDebugForm(false);
         end;
         if (ExStartup.auto_login) then begin
@@ -1479,7 +1527,9 @@ begin
         else
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
     end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     RestoreBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 end;
 
 {---------------------------------------}
@@ -1489,13 +1539,6 @@ var
     req_srv, req_a: string;
     pw : WideString;
 begin
-    // Hack to deal with fact that the first time IE gets started
-    // it has a noticible delay.  By doing the reset here,
-    // the delay is "hidden" amongst other login steps
-    if (_hiddenIEMsgList <> nil) then begin
-        _hiddenIEMsgList.Reset();
-    end;
-
     // Make sure that the active profile
     // has the password field filled out.
     // If not, pop up the password prompt,
@@ -1512,7 +1555,7 @@ begin
         if ((not InputQueryW(_(sPasswordCaption), _(sPasswordPrompt), pw, True)) or
             (pw = '')) then
             begin
-                GetLoginWindow().ToggleGUI(lgsDisconnected);
+                frmRosterWindow.ToggleGUI(gui_disconnected);
                 exit;
             end;
         MainSession.Password := pw;
@@ -1616,7 +1659,7 @@ procedure TfrmExodus.setTrayIcon(iconNum: integer);
 begin
     // setup the tray icon based on a specific icon index
     _tray_icon_idx := iconNum;
-    ImageList1.GetIcon(iconNum, _tray_icon);
+    ImageList2.GetIcon(iconNum, _tray_icon);
     _tray.hIcon := _tray_icon.Handle;
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
 end;
@@ -1642,7 +1685,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuPeople_Contacts_SendFileClick(Sender: TObject);
 begin
-//    frmRosterWindow.popSendFile.Click();
+    frmRosterWindow.popSendFile.Click();
 end;
 
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
@@ -1656,7 +1699,6 @@ var
     extExists, RTEnabled: boolean;
     logmsg: TJabberMessage;
     tmpjid: TJabberID;
-    rawXMLTag: TXMLTag;
 begin
     // session related events
     if event = '/session/connected' then begin
@@ -1739,12 +1781,10 @@ begin
             tmp := tag.GetFirstTag('error');
             if (tmp <> nil) then begin
                 code := StrToIntDef(tmp.GetAttribute('code'), 0);
-                case code of
-                    409: m := m + WideFormat(_(sUserExistsErr), [MainSession.Profile.Username]);
-                    501: m := m + _(sRegNotImplErr);
-                    else
-                        m := m + ''#13#10' ERROR: ' + ErrorText(tmp);
-                end;
+                if (code = 409) then
+                    m := m + WideFormat(_(sUserExistsErr), [MainSession.Profile.Username])
+                else
+                    m := m + ''#13#10' ERROR: ' + tmp.Data;
             end;
         end;
 
@@ -1768,14 +1808,7 @@ begin
 
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
-
-        //Set Display Name listener to only fire on "My JID" DN updates
-        _dnListener.UID := MainSession.profile.getJabberID().jid;
-
-        UpdateDisplayName();
-
         setTrayInfo(Self.Caption);
-        imgSSL.Visible := MainSession.SSLEnabled;
 
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
@@ -1783,13 +1816,15 @@ begin
             (MainSession.Prefs.getBool('brand_ft'))) then
             DragAcceptFiles(Handle, True);
 
+        // 1. Fetch the roster
+        // 2. Discover our server stuff..
         // 3. Make the roster the active tab
         // 4. Activate the menus
         // 5. turn on the auto-away timer
         // 6. check for new brand.xml file
         // 7. check for new version
-        ShowRoster();
-
+        Roster.Fetch;
+        jEntityCache.fetch(MainSession.Server, MainSession);
         restoreMenus(true);
         if (_valid_aa) then timAutoAway.Enabled := true;
         InitUpdateBranding();
@@ -1808,16 +1843,24 @@ begin
         // We are logged in, so change main form to roster witdth
         with MainSession.Prefs do begin
             frmExodus.Constraints.MinHeight := getInt('brand_min_roster_window_height');
-            frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width');
+            if (splitRoster.Visible) then
+                frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width_docked')
+            else
+                frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width_undocked');
         end;
 
-        _profileScreenLastWidth := Self.Width;
-        Self.Width := MainSession.Prefs.getInt('roster_width');
+        if (not splitRoster.Visible) then begin
+            // We don't have a docked window (for example, the debug window)
+            _profileScreenLastWidth := Self.Width;
+            Self.Width := MainSession.Prefs.getInt('roster_width');
+        end
+        else
+            _profileScreenLastWidth := 0;
 
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
-        _sendInitPresence();
+
     end
 
     else if (event = '/session/disconnected') then begin
@@ -1832,11 +1875,6 @@ begin
         Self.Caption := getAppInfo().Caption;
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
-
-        imgSSL.Visible := false;
-
-        lblDisplayName.Caption := '';
-        lblDisplayName.Hint := '';
 
         _new_account := false;
         restoreMenus(false);
@@ -1878,17 +1916,28 @@ begin
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
 
-        ShowLogin();
-
         // Change back to profile width from roster width
         with MainSession.Prefs do begin
             frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
-            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width');
+            if (splitRoster.Visible) then
+                frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_docked')
+            else
+                frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
         end;
 
-        if (_profileScreenLastWidth > 0) then
-            //Didn't have a docked window at login so restore to width at that time.
-            Self.Width := _profileScreenLastWidth;
+        if (not splitRoster.Visible) then begin
+            // We don't have a docked window so free to muck with sizes.
+            if (_profileScreenLastWidth > 0) then
+                // Didn't have a docked window at login so restore to width at that time.
+                Self.Width := _profileScreenLastWidth
+            else
+                // had a docked window at login so restore to roster_width
+                Self.Width := MainSession.Prefs.getInt('roster_width');
+        end
+        else begin
+            if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then
+                pnlRoster.Width := MainSession.Prefs.getInt('brand_min_profiles_spliter_width');
+        end;
     end
     else if event = '/session/commtimeout' then begin
         timAutoAway.Enabled := false;
@@ -1946,7 +1995,7 @@ begin
 
         // do gui stuff
         if ((tag = nil) or (tag.Name <> 'startup')) then begin
-            //updateLayoutPrefChange();
+            updateLayoutPrefChange();
             //This is gross. For all TfrmDockable windows, call the onDock or onFloat
             //events, allowing the windows to update preferences.
             for i := 0 to Screen.FormCount - 1 do begin
@@ -1962,17 +2011,16 @@ begin
         restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
+        Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs');
         //add or remove xhtml-im caps feature based on pref. Push presence if
         //cpas ext modified.
-        //extExists := (MainSession.GetExtList.IndexOf('xhtml-im') <> -1);
-        extExists := jSelfCaps.hasFeature(XMLNS_XHTMLIM);
+        extExists := (MainSession.GetExtList.IndexOf('xhtml-im') <> -1);
         RTEnabled := MainSession.Prefs.getBool('richtext_enabled');
         if (extExists <> RTEnabled) then begin
             if (not RTEnabled) then
-                jSelfCaps.RemoveFeature(XMLNS_XHTMLIM)
+                MainSession.RemoveExtension('xhtml-im')
             else
-                jSelfCaps.AddFeature(XMLNS_XHTMLIM);
-
+                MainSession.AddExtension('xhtml-im', XMLNS_XHTMLIM);
             //send presence if not starting up
             if ((tag = nil) or (tag.Name <> 'startup')) then
                 MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
@@ -1980,15 +2028,24 @@ begin
     end
 
     else if (event = '/session/presence') then begin
-        //ShowPresence(MainSession.show);
-        UpdatePresenceDisplay();
+        // Our presence was changed.. reflect that in the tray icon
+        if (MainSession.Show = '') then
+            SetTrayIcon(1)
+        else if (MainSession.Show = 'away') then
+            SetTrayIcon(2)
+        else if (MainSession.Show = 'dnd') then
+            SetTrayIcon(3)
+        else if (MainSession.Show = 'chat') then
+            SetTrayIcon(4)
+        else if (MainSession.Show = 'xa') then
+            SetTrayIcon(10);
 
         // don't send message on autoaway
         if (_is_autoaway or _is_autoxa) then exit;
-
+        
         //don't send message if auto-return
         if (_is_broadcast) then exit;
-
+        
         // Send a windows msg so other copies of Exodus will change their
         // status to match ours.
         if (not MainSession.Prefs.getBool('presence_message_send')) then exit;
@@ -2000,20 +2057,7 @@ begin
     else if (event = '/session/log_message') then begin
         // We got a message to log using the log plugins
         if (tag <> nil) then begin
-            logmsg := nil;
-            rawXMLTag := tag.GetFirstTag('raw_msg_xml');
-            if ((rawXMLTag <> nil) and
-                (rawXMLTag.ChildCount > 0)) then begin
-                rawXMLTag := rawXMLTag.GetFirstTag('message');
-                if (rawXMLTag <> nil) then begin
-                    logmsg := TJabberMessage.Create(rawXMLTag);
-                end;
-            end;
-
-            if (logmsg = nil) then begin
-                logmsg := TJabberMessage.Create(tag);
-            end;
-
+            logmsg := TJabberMessage.Create(tag);
             logmsg.Time := StrToDateTime(tag.GetFirstTag('time').Data);
             tmpjid := TJabberID.Create(logmsg.FromJID);
             if (tmpjid.getDisplayJID() = MainSession.BareJid) then begin
@@ -2026,24 +2070,20 @@ begin
                 logmsg.isMe := false;
                 logmsg.Nick := DisplayName.getDisplayNameCache().getDisplayName(tmpjid);
             end;
-            if (tag.GetFirstTag('isme') <> nil) then
+            if (tag.GetFirstTag('isme') <>nil) then
                 logmsg.isMe := true;
 
             LogMessage(logmsg);
             tmpjid.Free();
             logmsg.Free();
         end
-    end
-
-    else if (event = '/session/error-out-of-system-resources') then
-    begin
-        DebugMessage(_(sOutOfSystemResourcesError));
-        MessageBoxW(Application.Handle,
-                   PWideChar(_(sOutOfSystemResourcesError)),
-                   PWideChar(MainSession.Prefs.GetString('brand_caption')),
-                   MB_OK or MB_ICONERROR);
-        Application.Terminate();
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.RosterCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
+begin
+    _sendInitPresence();
 end;
 
 {---------------------------------------}
@@ -2083,7 +2123,7 @@ begin
     DebugMsg('Setting reconnect timer to: ' + IntToStr(_reconnect_interval));
 
     _reconnect_cur := 0;
-//    frmRosterWindow.aniWait.Visible := false;
+    frmRosterWindow.aniWait.Visible := false;
     PostMessage(Self.Handle, WM_RECONNECT, 0, 0);
 end;
 
@@ -2094,15 +2134,15 @@ begin
     with MainSession.Prefs do begin
         mnuExpanded.Checked := getBool('expanded');
 
+        btnOnlineRoster.Down := getBool('roster_only_online');
         mnuOnline.Checked := btnOnlineRoster.Down;
-        pnlToolbar.Visible := getBool('toolbar');
-        mnuToolbar.Checked := pnlToolbar.Visible;
-        mnuWindows_View_ShowToolbar.Checked := pnlToolbar.Visible;
-
-        popShowOnline.Checked := getBool('roster_only_online');
-        popShowAll.Checked := not popShowOnline.Checked;
+        Toolbar.Visible := getBool('toolbar');
+        mnuToolbar.Checked := Toolbar.Visible;
+        mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
     end;
+    // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     Toolbar1.Wrapable := false;
+    // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 end;
 
 {---------------------------------------}
@@ -2119,13 +2159,11 @@ begin
             Self.AlphaBlendValue := MainSession.Prefs.getInt('roster_alpha_val')
         else
             Self.AlphaBlendValue := 255;
-{
         if (frmMsgQueue <> nil) then begin
             frmMsgQueue.lstEvents.Color := TColor(getInt('roster_bg'));
             frmMsgQueue.txtMsg.Color := TColor(getInt('roster_bg'));
             AssignDefaultFont(frmMsgQueue.txtMsg.Font);
         end;
-}        
     end;
 end;
 
@@ -2154,6 +2192,7 @@ begin
 
     // (dis)enable the tray menus
     trayPresence.Enabled := enable;
+    trayMessage.Enabled := enable;
     trayDisconnect.Enabled := enable;
 
     // Enable toolbar btns
@@ -2166,24 +2205,20 @@ begin
         btnSendFile.Enabled := false;
 
     // Build the custom presence menus.
-    //if (enable) then begin
-    //    BuildPresMenus(mnuPresence, presOnlineClick);
-    //end;
+    if (enable) then begin
+        BuildPresMenus(mnuPresence, presOnlineClick);
+    end;
 
     // File Menu
     mnuFile_Connect.Visible := not enable;
     mnuFile_Disconnect.Visible := enable;
     mnuFile_MyStatus.Enabled := enable;
-    //mnuFile_MyProfiles.Enabled := not enable;
-
-    mnuFile_Password.Enabled := enable;
-    mnuFile_Registration.Enabled := enable;
+    mnuFile_MyProfiles.Enabled := not enable;
 
     // Build the custom presence menus.
     if (enable) then begin
         BuildPresMenus(mnuFile_MyStatus, presOnlineClick);
         BuildPresMenus(trayPresence, presOnlineClick);
-        BuildPresMenus(popPresence, presOnlineClick);
     end;
 
     // deal with connect tool bar buttons.
@@ -2192,14 +2227,12 @@ begin
     if (enable) then begin
         btnConnect.Visible := not enable;
         mnuFile_Connect.Enabled := not enable;
-
         btnDisconnect.Visible := enable;
         mnuFile_Disconnect.Enabled := enable;
     end
     else begin
         btnDisconnect.Visible := enable;
         mnuFile_Disconnect.Enabled := enable;
-
         btnConnect.Visible := not enable;
         mnuFile_Connect.Enabled := not enable;
     end;
@@ -2218,12 +2251,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.CTCPCallback(event: string; tag: TXMLTag);
-{** JJF msgqueue refactor
 var
     e: TJabberEvent;
-**}    
 begin
-{** JJF msgqueue refactor
     // record some kind of CTCP result
     if ((tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
         if MainSession.IsPaused then
@@ -2234,7 +2264,6 @@ begin
             RenderEvent(e); //msg queue now own event, don't free
         end;
     end
-**}    
 end;
 
 {**
@@ -2242,7 +2271,9 @@ end;
 **}
 procedure TfrmExodus.cleanup();
 begin
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     SaveBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     //mainsession should never be nil here. It is created before this object
     //and only destroyed on ExSession finalization.
@@ -2264,16 +2295,15 @@ begin
         sExodusCWPHook := 0;
     end;
 
+    // Close up the msg queue
+    closeMsgQueue();
     // Close whatever rooms we have
+
     CloseAllRooms();
     CloseAllChats();
-    CloseDebugForm();
 
     // Unload all of the remaining plugins
     UnloadPlugins();
-
-    // Close the Activity Window
-    _dockWindow.Close();
 
     // Unregister callbacks, etc.
     MainSession.UnRegisterCallback(_sessioncb);
@@ -2290,10 +2320,10 @@ begin
         FreeAndNil(_docked_forms);
 
     Shell_NotifyIcon(NIM_DELETE, @_tray);
-    FreeAndNil(_dnListener);
 
     // Close the roster window
-    RosterForm.CloseRosterWindow();
+    RosterWindow.CloseRosterWindow();
+
 
     _cleanupComplete := true;
 end;
@@ -2321,11 +2351,7 @@ begin
     //mainsession should never be nil here, it is created before this object
     //and destroyed in ExSession finalization
 
-    // Kill any History searches that may be in progress as they hold
-    // COM objects open and will trip the next check.
-    HistorySearchManager.CancelAllSearches();
-
-    // Ask before closing in COM server situation
+    // Ask before clsoing in COM server situation
     if ((MainSession.Prefs.getBool('brand_warn_close_com_server')) and
         (ComServer.ObjectCount > 0) and
         (not _ApprovedExitWithCOMActive))then begin
@@ -2338,9 +2364,6 @@ begin
 
     // Disable showing error dialog when exiting
     Application.OnException := CatchersMit.gotExceptionNoDlg;
-
-    //Save our current width...
-    MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, Self.ClientWidth);
 
     // If we are not already disconnected, then
     // disconnect. Once we successfully disconnect,
@@ -2362,19 +2385,36 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmExodus.btnOnlineRosterClick(Sender: TObject);
+var
+    filter: boolean;
+begin
+    // show only online
+    with MainSession.Prefs do begin
+        filter := not getBool('roster_only_online');
+        setBool('roster_only_online', filter);
+        btnOnlineRoster.Down := filter;
+        mnuOnline.Checked := filter;
+    end;
+
+    if MainSession.Active then begin
+        frmRosterWindow.SessionCallback('/session/prefs', nil);
+        {
+        if ((Jabber1.GetDockState() <> dsForbidden) and
+            (Tabs.ActivePage <> tbsRoster)) then
+            Tabs.ActivePage := tbsRoster;
+            }
+    end;
+
+    // This forces a tree refresh which de-selects the current node item.
+    btnSendFile.Enabled := false;
+end;
 
 {---------------------------------------}
 procedure TfrmExodus.btnAddContactClick(Sender: TObject);
-var
-    cp: TPoint;
 begin
     // add a contact
-    //ShowAddContact();
-    if MainSession.Active then begin
-        cp := btnAddContact.ClientOrigin;
-        cp.Y := cp.Y + btnAddContact.ClientHeight;
-        popCreate.Popup(cp.x, cp.y);
-    end;
+    ShowAddContact();
 end;
 
 {---------------------------------------}
@@ -2384,29 +2424,16 @@ begin
     StartJoinRoom();
 end;
 
-{---------------------------------------}
-procedure TfrmExodus.mnuContacts_ViewHistoryClick(Sender: TObject);
-begin
-    inherited;
-
-    StartShowHistory();
-end;
-
-{---------------------------------------}
 procedure TfrmExodus.mnuFile_ConnectClick(Sender: TObject);
-begin
+begin 
     btnConnect.Enabled := false;
     btnOptions.Enabled := false;
     mnuOptions_Options.Enabled := false;
     Preferences1.Enabled := false;
     mnuFile_Connect.Enabled := false;
-    GetLoginWindow().lstProfilesClick(Sender);
-    btnActivityWindow.Enabled := false;
-    mnuWindows_View_ShowActivityWindow.Enabled := false;
-    trayShowActivityWindow.Enabled := false;
+    frmRosterWindow.lblConnectClick(Sender);
 end;
 
-{---------------------------------------}
 procedure TfrmExodus.mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
 begin
     if (mnuOptions_Notifications_ContactOffline.Checked) then
@@ -2418,7 +2445,6 @@ begin
                         not mnuOptions_Notifications_ContactOffline.Checked;
 end;
 
-{---------------------------------------}
 procedure TfrmExodus.mnuOptions_Notifications_ContactOnlineClick(Sender: TObject);
 begin
     if (mnuOptions_Notifications_ContactOnline.Checked) then
@@ -2433,6 +2459,9 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormResize(Sender: TObject);
 begin
+//    if (timFlasher.Enabled) then
+//        timFlasher.Enabled := false;
+
     // Check for constraints
     if (_enforceConstraints) then begin
         if (frmExodus.Width < frmExodus.Constraints.MinWidth) then
@@ -2440,7 +2469,6 @@ begin
         if (frmExodus.Height < frmExodus.Constraints.MinHeight) then
             frmExodus.Height := frmExodus.Constraints.MinHeight;
     end;
-//    MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, frmExodus.Width);
 end;
 
 {---------------------------------------}
@@ -2456,12 +2484,10 @@ end;
 procedure TfrmExodus.ClearMessages1Click(Sender: TObject);
 begin
     // Clear events from the list view.
-{
     if (frmMsgQueue <> nil) then with frmMsgQueue do begin
         while (lstEvents.Items.Count > 0) do
             frmMsgQueue.RemoveItem(0);
     end;
-}    
 end;
 
 {---------------------------------------}
@@ -2536,7 +2562,7 @@ end;
 procedure TfrmExodus.btnDelPersonClick(Sender: TObject);
 begin
     // delete the current contact
-    //frmRosterWindow.popRemoveClick(Self);
+    frmRosterWindow.popRemoveClick(Self);
 end;
 
 procedure TfrmExodus.btnFindClick(Sender: TObject);
@@ -2553,12 +2579,50 @@ begin
       ShowDebugForm();
 end;
 
+procedure TfrmExodus.splitRosterCanResize(Sender: TObject; var NewSize: Integer;
+  var Accept: Boolean);
+begin
+    Accept := true;
+    if (MainSession.Active) then begin
+        if (newSize < MainSession.Prefs.getInt('brand_min_roster_spliter_width')) then begin
+            Accept := false;
+        end;
+    end
+    else begin
+        if (NewSize < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then begin
+            Accept := false;
+        end;
+    end;
+end;
+
+procedure TfrmExodus.splitRosterMoved(Sender: TObject);
+begin
+    if (MainSession.Active) then begin
+        if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_roster_spliter_width')) then begin
+            pnlRoster.Width := MainSession.Prefs.getInt('brand_min_roster_spliter_width');
+        end;
+    end
+    else begin
+        if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then begin
+            pnlRoster.Width := MainSession.Prefs.getInt('brand_min_profiles_spliter_width');
+        end;
+    end;
+    mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
+end;
+
 {---------------------------------------}
 procedure TfrmExodus.Exit2Click(Sender: TObject);
 begin
     // Close the whole honkin' thing
     _shutdown := true;
     Self.Close;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.timFlasherTimer(Sender: TObject);
+begin
+    // Flash the window
+    FlashWindow(Self.Handle, true);
 end;
 
 {---------------------------------------}
@@ -2584,6 +2648,7 @@ begin
 end;
 
 {---------------------------------------}
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 procedure TfrmExodus.SaveBands();
 var I, ID: Integer;
     aFile: TWideStringList;
@@ -2642,7 +2707,9 @@ begin
     I := I+1;
   end;
 end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 {---------------------------------------}
 procedure TfrmExodus.RestoreBands();
 var I, ID, Value : Integer;
@@ -2726,10 +2793,8 @@ begin
   except
       OutputDebugString(PAnsiChar('Exception in Restore'));
   end;
-  ToolBar.ParentColor := true;
-  aFile.Clear();
-  aFile.Free();
 end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
 {--------------------------------------}
 procedure TfrmExodus.About1Click(Sender: TObject);
@@ -2807,48 +2872,48 @@ end;
 procedure TfrmExodus.mnuToolbarClick(Sender: TObject);
 begin
     // toggle toolbar on/off
-    pnlToolbar.Visible := not pnlToolbar.Visible;
-    mnuToolbar.Checked := pnlToolbar.Visible;
-    mnuWindows_View_ShowToolbar.Checked := pnlToolbar.Visible;
-    MainSession.Prefs.setBool('toolbar', pnlToolbar.Visible);
+    Toolbar.Visible := not Toolbar.Visible;
+    mnuToolbar.Checked := Toolbar.Visible;
+    mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
+    MainSession.Prefs.setBool('toolbar', Toolbar.Visible);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.NewGroup2Click(Sender: TObject);
-//var
-//    go: TJabberGroup;
-//    x: TXMLTag;
+var
+    go: TJabberGroup;
+    x: TXMLTag;
 begin
-//    // Add a roster grp.
-//    go := promptNewGroup();
-//    if (go = nil) then exit;
-//    if (go.Data <> nil) then exit;
-//    
-//    with frmRosterWindow do begin
-//        RenderGroup(go);
-//        treeRoster.AlphaSort(true);
-//    end;
-//    x := TXMLTag.Create('group');
-//    x.setAttribute('name', go.FullName);
-//
-//    // XXX: is this event right for new groups?
-//    MainSession.FireEvent('/roster/group', x, TExodusItem(nil));
-//    x.Free();
-//
+    // Add a roster grp.
+    go := promptNewGroup();
+    if (go = nil) then exit;
+    if (go.Data <> nil) then exit;
+    
+    with frmRosterWindow do begin
+        RenderGroup(go);
+        treeRoster.AlphaSort(true);
+    end;
+    x := TXMLTag.Create('group');
+    x.setAttribute('name', go.FullName);
+
+    // XXX: is this event right for new groups?
+    MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
+    x.Free();
+
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.MessageHistory2Click(Sender: TObject);
 begin
     // show a history dialog
-    //frmRosterWindow.popHistoryClick(Sender);
+    frmRosterWindow.popHistoryClick(Sender);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.Properties2Click(Sender: TObject);
 begin
     // Show a properties dialog
-    //frmRosterWindow.popPropertiesClick(Sender);
+    frmRosterWindow.popPropertiesClick(Sender);
 end;
 
 {---------------------------------------}
@@ -2871,50 +2936,49 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuChatClick(Sender: TObject);
-//var
-//    n: TTreeNode;
-//    ritem: TJabberRosterItem;
-//    jid: WideString;
-//    tjid: TJabberID;
+var
+    n: TTreeNode;
+    ritem: TJabberRosterItem;
+    jid: WideString;
+    tjid: TJabberID;
 begin
     // Start a chat w/ a specific JID
-//    jid := '';
-//    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
-//        n := frmRosterWindow.treeRoster.Selected;
-//        if (TObject(n.Data) is TJabberRosterItem) then begin
-//            ritem := TJabberRosterItem(n.Data);
-//            if ritem <> nil then
-//            begin
-//                jid := ritem.jid.getDisplayJID();
-//            end;
-//        end;
-//    end;
-//
-//    if InputQueryW(_(sStartChat), _(sEnterJID), jid) then
-//    begin
-//        tjid := TJabberID.Create(jid, false);
-//        jid := tjid.jid();
-//        StartChat(jid, tjid.resource, true);
-//        tjid.Free();
-//    end;
+    jid := '';
+    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
+        n := frmRosterWindow.treeRoster.Selected;
+        if (TObject(n.Data) is TJabberRosterItem) then begin
+            ritem := TJabberRosterItem(n.Data);
+            if ritem <> nil then
+            begin
+                jid := ritem.jid.getDisplayJID();
+            end;
+        end;
+    end;
+
+    if InputQueryW(_(sStartChat), _(sEnterJID), jid) then
+    begin
+        tjid := TJabberID.Create(jid, false);
+        jid := tjid.jid();
+        tjid.Free();
+        StartChat(jid, '', true);
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuPeople_Group_AddNewRosterClick(Sender: TObject);
 begin
-    //frmRosterWindow.popAddGroup.Click();
+    frmRosterWindow.popAddGroup.Click();
 end;
 
 procedure TfrmExodus.mnuPeople_Contacts_BlockContactClick(Sender: TObject);
 begin
-    //frmRosterWindow.popBlock.Click();
+    frmRosterWindow.popBlock.Click();
 end;
 
 procedure TfrmExodus.mnuBookmarkClick(Sender: TObject);
 begin
     // Add a new bookmark to our list..
- { TODO : Roster refactor }
-    //ShowBookmark('');
+    ShowBookmark('');
 end;
 
 {---------------------------------------}
@@ -2922,12 +2986,6 @@ procedure TfrmExodus.presCustomClick(Sender: TObject);
 begin
     // Custom presence
     ShowCustomPresence();
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.trayShowActivityWindowClick(Sender: TObject);
-begin
-    mnuWindows_View_ShowActivityWindowClick(Sender);
 end;
 
 {---------------------------------------}
@@ -2947,10 +3005,10 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
-    StopFlash(Self); 
+    if (frmRosterWindow <> nil) then
+        frmRosterWindow.treeRoster.Invalidate();
     StopTrayAlert();
 end;
-
 
 
 {---------------------------------------}
@@ -2968,19 +3026,18 @@ begin
 end;
 
 {---------------------------------------}
-// JJF TODO: remove these calls, show server version/time somewhere else (about box?)
 procedure TfrmExodus.mnuVersionClick(Sender: TObject);
 begin
     // get either version of time request from the jabber server
     if Sender = mnuVersion then
-        jabberSendCTCP(MainSession.Server, XMLNS_VERSION, Self.CTCPCallback)
+        jabberSendCTCP(MainSession.Server, XMLNS_VERSION)
     else if Sender = mnuTime then
-        jabberSendCTCP(MainSession.Server, XMLNS_TIME, Self.CTCPCallback);
+        jabberSendCTCP(MainSession.Server, XMLNS_TIME);
 end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
 begin
-    GetLoginWindow().mnuModifyProfileClick(Sender);
+    frmRosterWindow.ModifyProfile1.Click();
 end;
 
 {---------------------------------------}
@@ -3037,158 +3094,143 @@ end;
 procedure TfrmExodus.AcceptFiles( var msg : TWMDropFiles );
 const
   cnMaxFileNameLen = 255;
-//var
-//    i,
-//    nCount     : integer;
-//    acFileName : array [0..cnMaxFileNameLen] of char;
-//    p, orig_p  : TPoint;
-//    Node       : TTreeNode;
-//    ri         : TJabberRosterItem;
-//    f          : TForm;
-//    j          : TJabberID;
-//    pageIndex  : integer;
+var
+    i,
+    nCount     : integer;
+    acFileName : array [0..cnMaxFileNameLen] of char;
+    p, orig_p  : TPoint;
+    Node       : TTreeNode;
+    ri         : TJabberRosterItem;
+    f          : TForm;
+    j          : TJabberID;
+    pageIndex  : integer;
 begin
-   { TODO : Roster refactor }
-//    // Accept some files being dropped on this form
-//    // If we are expaned, and not showing the roster tab,
-//    // and the current tab has a chat window, then
-//    // call the chat window's AcceptFiles() method.
-//{    if ((Jabber1.GetDockState() <> dsForbidden) and
-//        (Tabs.ActivePage <> tbsRoster)) then begin
-//        f := getTabForm(Tabs.ActivePage);
-//        if (f is TfrmChat) then begin
-//            TfrmChat(f).AcceptFiles(msg);
-//        end;
-//        exit;
-//    end;
-//}
-//    // figure out which node was the drop site.
-//    if (DragQueryPoint(msg.Drop, p) = false) then exit;
-//    orig_p := p;
-//    //First check if file is dragged to the chat window
-//    //Convert dropping point to tab coordinates
-//    p := tabs.ParentToClient(p, Self);
-//    if (PtInRect(tabs.ClientRect, p)) then begin
-//      //File is draged to the tab area (active or not active)
-//      pageIndex := Tabs.IndexOfTabAt(p.X, p.Y);
-//      if ((pageIndex >= 0) and (pageIndex <= Tabs.PageCount)) then begin
-//        f := getTabForm(Tabs.Pages[pageIndex]);
-//        if (f is TfrmChat) then begin
-//           TfrmChat(f).AcceptFiles(msg);
-//        end;
-//        exit;
-//      end;
-//
-//      //File has been dragged to active page
-//      if (PtInRect(tabs.ActivePage.ClientRect, p)) then begin
-//         f := getTabForm(Tabs.ActivePage);
-//         if (f is TfrmChat) then begin
-//            TfrmChat(f).AcceptFiles(msg);
-//         end;
-//         exit;
-//      end;
-//    end;
-//
-//    p := orig_p;
-//    // Translate to screen coordinates, then back to client coordinates
-//    // for the roster window.  This would have been easier if RosterWindow
-//    // had worked as the target of DragAcceptFiles.
-//    p := ClientToScreen(p);
-//    p := frmRosterWindow.treeRoster.ScreenToClient(p);
-//    Node := frmRosterWindow.treeRoster.GetNodeAt(p.X, p.Y);
-//    if ((Node = nil) or (Node.Level = 0)) then exit;
-//
-//    // get the roster item attached to this node.
-//    if (Node.Data = nil) then
-//        exit
-//    else if (TObject(Node.Data) is TJabberRosteritem) then begin
-//        ri := TJabberRosterItem(Node.Data);
-//        if (not ri.IsContact) then exit;
-//        if (not ri.IsNative) then exit;
-//
-//        j := ri.jid;
-//
-//        // find out how many files we're accepting
-//        nCount := DragQueryFile( msg.Drop,
-//                                 $FFFFFFFF,
-//                                 acFileName,
-//                                 cnMaxFileNameLen );
-//
-//        // query Windows one at a time for the file name
-//        for i := 0 to nCount-1 do begin
-//            DragQueryFile( msg.Drop, i,
-//                           acFileName, cnMaxFileNameLen );
-//            FileSend(j.full, acFileName);
-//        end;
-//
-//        // let Windows know that we're done
-//        DragFinish( msg.Drop );
-//    end;
-end;
+    // Accept some files being dropped on this form
+    // If we are expaned, and not showing the roster tab,
+    // and the current tab has a chat window, then
+    // call the chat window's AcceptFiles() method.
+{    if ((Jabber1.GetDockState() <> dsForbidden) and
+        (Tabs.ActivePage <> tbsRoster)) then begin
+        f := getTabForm(Tabs.ActivePage);
+        if (f is TfrmChat) then begin
+            TfrmChat(f).AcceptFiles(msg);
+        end;
+        exit;
+    end;
+}
+    // figure out which node was the drop site.
+    if (DragQueryPoint(msg.Drop, p) = false) then exit;
+    orig_p := p;
+    //First check if file is dragged to the chat window
+    //Convert dropping point to tab coordinates
+    p := tabs.ParentToClient(p, Self);
+    if (PtInRect(tabs.ClientRect, p)) then begin
+      //File is draged to the tab area (active or not active)
+      pageIndex := Tabs.IndexOfTabAt(p.X, p.Y);
+      if ((pageIndex >= 0) and (pageIndex <= Tabs.PageCount)) then begin
+        f := getTabForm(Tabs.Pages[pageIndex]);
+        if (f is TfrmChat) then begin
+           TfrmChat(f).AcceptFiles(msg);
+        end;
+        exit;
+      end;
 
+      //File has been dragged to active page
+      if (PtInRect(tabs.ActivePage.ClientRect, p)) then begin
+         f := getTabForm(Tabs.ActivePage);
+         if (f is TfrmChat) then begin
+            TfrmChat(f).AcceptFiles(msg);
+         end;
+         exit;
+      end;
+    end;
+
+    p := orig_p;
+    // Translate to screen coordinates, then back to client coordinates
+    // for the roster window.  This would have been easier if RosterWindow
+    // had worked as the target of DragAcceptFiles.
+    p := ClientToScreen(p);
+    p := frmRosterWindow.treeRoster.ScreenToClient(p);
+    Node := frmRosterWindow.treeRoster.GetNodeAt(p.X, p.Y);
+    if ((Node = nil) or (Node.Level = 0)) then exit;
+
+    // get the roster item attached to this node.
+    if (Node.Data = nil) then
+        exit
+    else if (TObject(Node.Data) is TJabberRosteritem) then begin
+        ri := TJabberRosterItem(Node.Data);
+        if (not ri.IsContact) then exit;
+        if (not ri.IsNative) then exit;
+        
+        j := ri.jid;
+
+        // find out how many files we're accepting
+        nCount := DragQueryFile( msg.Drop,
+                                 $FFFFFFFF,
+                                 acFileName,
+                                 cnMaxFileNameLen );
+
+        // query Windows one at a time for the file name
+        for i := 0 to nCount-1 do begin
+            DragQueryFile( msg.Drop, i,
+                           acFileName, cnMaxFileNameLen );
+            FileSend(j.full, acFileName);
+        end;
+
+        // let Windows know that we're done
+        DragFinish( msg.Drop );
+    end;
+end;
 
 {---------------------------------------}
 procedure TfrmExodus.FormDestroy(Sender: TObject);
-var
-   Value: PWideChar;
 begin
-    //TODO:  save dimensions?
     if (not _cleanupComplete) then
         cleanup();
-
-    try
-        _hiddenIEMsgList.Free();
-        _dockWindow.Free();
-    except
-    end;
-    if (_mnuRegisterUD <> nil) then
-    begin
-        if (_mnuRegisterUD.Tag <> 0) then
-        begin
-            Value :=  Pointer(_mnuRegisterUD.Tag);
-            StrDisposeW(Value);
-        end;
-    end;
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.mnuRegisterUDClick(Sender: TObject);
+procedure TfrmExodus.mnuRegisterServiceClick(Sender: TObject);
 var
-    EntityJID: PWideChar;
+    tmps: WideString;
 begin
-    EntityJID := Pointer(_mnuRegisterUD.Tag);
-    StartServiceReg(EntityJID);
+    // kick off a service registration..
+    tmps := '';
+    if (InputQueryW(_(sRegService), _(sEnterSvcJID), tmps) = false) then
+        exit;
+    StartServiceReg(tmps);
 end;
 
 
+
+{---------------------------------------}
 procedure TfrmExodus.mnuMessageClick(Sender: TObject);
-//var
-//    jid: WideString;
-//    n: TTreeNode;
-//    ritem: TJabberRosterItem;
-//    tjid: TJabberID;
+var
+    jid: WideString;
+    n: TTreeNode;
+    ritem: TJabberRosterItem;
+    tjid: TJabberID;
 begin
-   { TODO : Roster refactor }
-//    // Message someone
-//    jid := '';
-//    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
-//        n := frmRosterWindow.treeRoster.Selected;
-//        if (TObject(n.Data) is TJabberRosterItem) then begin
-//            ritem := TJabberRosterItem(n.Data);
-//            if ritem <> nil then
-//            begin
-//                jid := ritem.jid.getDisplayJID()
-//            end;
-//        end;
-//    end;
-//
-//    if InputQueryW(_(sSendMessage), _(sEnterJID), jid) then
-//    begin
-//        tjid := TJabberID.Create(jid, false);
-//        jid := tjid.jid();
-//        tjid.Free();
-//        StartMsg(jid);
-//    end;
+    // Message someone
+    jid := '';
+    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
+        n := frmRosterWindow.treeRoster.Selected;
+        if (TObject(n.Data) is TJabberRosterItem) then begin
+            ritem := TJabberRosterItem(n.Data);
+            if ritem <> nil then
+            begin
+                jid := ritem.jid.getDisplayJID()
+            end;
+        end;
+    end;
+
+    if InputQueryW(_(sSendMessage), _(sEnterJID), jid) then
+    begin
+        tjid := TJabberID.Create(jid, false);
+        jid := tjid.jid();
+        tjid.Free();
+        StartMsg(jid);
+    end;
 end;
 
 procedure TfrmExodus.mnuWindows_MinimizetoSystemTrayClick(Sender: TObject);
@@ -3197,14 +3239,6 @@ begin
     _hidden := true;
 end;
 
-
-procedure TfrmExodus.mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
-begin
-    inherited;
-    if (_dockwindow = nil) then exit;
-
-    getDockManager().ShowDockManagerWindow(true, true);
-end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
@@ -3402,6 +3436,31 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmExodus.trayMessageClick(Sender: TObject);
+var
+    fsel: TfrmSelContact;
+    jid : string;
+begin
+    // Send a msg via the tray menu popup
+    fsel := TfrmSelContact.Create(Application);
+    fsel.frameTreeRoster1.DrawRoster(true, false);
+    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    if (fsel.ShowModal = mrOK) then begin
+        jid := fsel.GetSelectedJID();
+        if (jid = '') then exit;
+
+        // do the send
+        if (MainSession.Prefs.getBool(P_CHAT)) then
+            StartChat(jid, '', true)
+        else
+            StartMsg(jid);
+
+    end;
+    fSel.Free();
+end;
+
+{---------------------------------------}
 procedure TfrmExodus.DefaultHandler(var msg);
 var
     m : TMessage;
@@ -3441,12 +3500,12 @@ end;
 
 procedure TfrmExodus.mnuPeople_Group_DeleteGroupClick(Sender: TObject);
 begin
-    //frmRosterWindow.popGrpRemove.Click();
+    frmRosterWindow.popGrpRemove.Click();
 end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_DeleteProfileClick(Sender: TObject);
 begin
-    GetLoginWindow().mnuDeleteProfileClick(Sender);
+    frmRosterWindow.DeleteProfile1.Click();
 end;
 
 
@@ -3478,10 +3537,19 @@ begin
                 DoConnect();
             end
             else begin
-                getLoginWindow().UpdateReconnect(_reconnect_interval - _reconnect_cur);
+                frmRosterWindow.updateReconnect(_reconnect_interval - _reconnect_cur);
             end;
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
+begin
+    if (isMsgQueueShowing) then
+      hideMsgQueue()
+    else
+      showMsgQueue();
 end;
 
 {---------------------------------------}
@@ -3496,8 +3564,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
-//    Notify.StopFlash(Self);
-    StopTrayAlert();
+    checkFlash();
+    StopTrayAlert();        
 end;
 
 {---------------------------------------}
@@ -3511,7 +3579,6 @@ begin
 end;
 
 {---------------------------------------}
-
 procedure TfrmExodus.PostModal();
 begin
     // make on top if applicable.
@@ -3529,6 +3596,12 @@ begin
     end;
 end;
 
+
+procedure TfrmExodus.StatusClick(Sender: TObject);
+begin
+    frmRosterWindow.presDNDClick(Sender);
+end;
+
 {---------------------------------------}
 procedure TfrmExodus.timTrayAlertTimer(Sender: TObject);
 var
@@ -3536,14 +3609,14 @@ var
 begin
      _tray_notify := not _tray_notify;
      if (_tray_notify) then begin
-        iconNum := 0;//_tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
+        iconNum := _tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
         if (iconNum > RosterImages.RI_XAATTN_INDEX) then
             iconNum := RosterImages.RI_XAATTN_INDEX;
     end
      else
          iconNum := _tray_icon_idx;
 
-    ImageList1.GetIcon(iconNum, _tray_icon);
+    ImageList2.GetIcon(iconNum, _tray_icon);
     _tray.hIcon := _tray_icon.Handle;
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
 end;
@@ -3557,9 +3630,8 @@ end;
 {---------------------------------------}
 procedure StopTrayAlert();
 begin
-    //events might get this called pretty early
-    if (frmExodus = nil) or (frmExodus.timTrayAlert = nil) then exit;
-    
+    if (frmExodus = nil) then exit;
+
     if (frmExodus.timTrayAlert.Enabled) then begin
         frmExodus.timTrayAlert.Enabled := false;
         frmExodus._tray_notify := false;
@@ -3594,6 +3666,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.TrackWindowsMsg(windows_msg: integer);
 var
     idx: integer;
@@ -3791,45 +3864,34 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuFindClick(Sender: TObject);
 begin
-    //frmRosterWindow.StartFind();
+    frmRosterWindow.StartFind();
 end;
 
 procedure TfrmExodus.mnuOptions_FontClick(Sender: TObject);
 begin
-    Prefs.StartPrefs(pref_display);
+    Prefs.StartPrefs(pref_fonts);
 end;
 
 procedure TfrmExodus.mnuPeople_ConferenceClick(Sender: TObject);
 begin
   //invite to room should only be available if rooms are open.
+   Self.mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
 end;
 
 procedure TfrmExodus.mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
-var
-    items: IExodusItemList;
-    jids: TWidestringList;
-    idx: Integer;
-    tabCtrl: IExodusTabController;
 begin
-    //TODO:  do it with the items...
-    tabCtrl := GetRosterWindow().TabController;
-    jids := TWidestringList.Create();
-    if (tabCtrl.ActiveTab <> -1) then begin
-         items := tabCtrl.Tab[tabCtrl.ActiveTab].GetSelectedItems();
-         for idx := 0 to items.Count - 1 do begin
-             if (items.Item[idx].Type_ <> 'contact') then continue;
-             jids.Add(items.Item[idx].UID);
-         end;
-    end;
-
-    ShowInvite('', jids);
+    frmRosterWindow.popGrpInvite.Click();
 end;
 
+procedure TfrmExodus.mnuWindows_LayoutClick(Sender: TObject);
+begin
+    StartPrefs(pref_layout);
+end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuFindAgainClick(Sender: TObject);
 begin
-    //frmRosterWindow.FindAgain();
+    frmRosterWindow.FindAgain();
 end;
 
 {---------------------------------------}
@@ -3867,73 +3929,17 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuPeople_Contacts_RenameContactClick(Sender: TObject);
 begin
-    //frmRosterWindow.popRenameClick(Sender);
+    frmRosterWindow.popRenameClick(Sender);
 end;
 
 procedure TfrmExodus.mnuPeople_Group_RenameGroupClick(Sender: TObject);
 begin
-    //frmRosterWindow.popGrpRename.Click();
+    frmRosterWindow.popGrpRename.Click();
 end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
 begin
-    GetLoginWindow().mnuRenameProfileClick(Sender);
-end;
-
-procedure TfrmExodus.mnuFileRegistrationClick(Sender: TObject);
-begin
-  inherited;
-  //Check if there is entity with UserDirectory services
-  _chkUserDirectory();
-end;
-
-
-{---------------------------------------}
-procedure TfrmExodus._chkUserDirectory();
-var
-    tmps: WideString;
-    Value: PWideChar;
-    Services: TWideStringList;
-    Idx, i: Integer;
-    Entity: TJabberEntity;
-begin
-    //Resiter User Directory menu item already exists, don't need to do anything.
-    if (_mnuRegisterUD <> nil) then exit;
-    //Check if enttity with given features exists.
-    Entity := nil;
-    //Need to get tmps from pref file.
-
-    //tmps := 'users.wrk171.corp.jabber.com';
-    tmps := MainSession.Prefs.getString('brand_user_directory') + WideChar('.') + MainSession.Server;
-    Services := TWideStringList.Create();
-    jEntityCache.getByFeature(XMLNS_REGISTER, Services);
-    Idx :=  Services.IndexOf(tmps);
-    if (Idx <> -1) then
-       //Found entity
-       Entity := jEntityCache.getByJid(Services[Idx])
-    else
-    begin
-        //Look for brandable string in the list
-        for i := 0 to Services.Count - 1 do
-        begin
-            Entity := jEntityCache.getByJid(Services[i]);
-            if (Entity = nil) then continue;
-            if (Entity.Name = USER_DIRECTORY_NAME) then
-                break
-            else
-                Entity := nil;
-        end;
-    end;
-    //If entity is not nill, craete a menu item.
-    if (Entity <> nil) then
-    begin
-        _mnuRegisterUD := TTntMenuItem.Create(Self);
-        _mnuRegisterUD.Caption := Entity.Name;
-        _mnuRegisterUD.OnClick := mnuRegisterUDClick;
-        Value := StrNewW(PWideChar(Entity.Jid.Jid));
-        _mnuRegisterUD.Tag := Integer(Value);
-        mnuFile_Registration.Add(_mnuRegisterUD);
-    end;
+    frmRosterWindow.RenameProfile1.Click();
 end;
 
 procedure TfrmExodus.ResolverStatus(ASender: TObject;
@@ -3947,7 +3953,7 @@ end;
 procedure TfrmExodus.mnuPluginOptsClick(Sender: TObject);
 begin
     // Show the prefs/plugins page.
-    ManagePluginsDlg.showManagePluginDlg(Self);
+    StartPrefs(pref_plugins);
 end;
 
 {---------------------------------------}
@@ -3968,13 +3974,9 @@ begin
         TAutoOpenEventManager.onAutoOpenEvent('disconnected');
         CloseAllRooms();
         CloseAllChats();
-        if (not isDebugShowing()) then begin
-            getDockManager().ShowDockManagerWindow(false, false);
-        end;
+        closeMsgQueue();
         MainSession.Disconnect();
     end;
-
-    ShowLogin();
 end;
 
 procedure TfrmExodus.mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
@@ -4154,9 +4156,7 @@ begin
             if((mon.BoundsRect.Left = wSize.Left) and
                (mon.BoundsRect.Right = wSize.Right) and
                (mon.BoundsRect.Top = wSize.Top) and
-               (mon.BoundsRect.Bottom = wSize.Bottom) and
-               (MainSession.Prefs.getBool('auto_away')) and
-               (MainSession.Prefs.getBool('away_full_screen'))) then begin
+               (mon.BoundsRect.Bottom = wSize.Bottom)) then begin
                result := DT_FULLSCREEN;
                exit;
             end;
@@ -4164,9 +4164,7 @@ begin
         result := DT_OPEN;
         exit;
     end;
-    if ((name = 'Screen-saver') and
-        (MainSession.Prefs.getBool('auto_away')) and
-        (MainSession.Prefs.getBool('away_screen_saver'))) then begin
+    if name = 'Screen-saver' then begin
         result := DT_SCREENSAVER;
         exit;
     end;
@@ -4308,11 +4306,10 @@ begin
     // set us to away
     DebugMsg(_(sSetAutoAway));
     Application.ProcessMessages;
-{** JJF msgqueue refactor
     if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = false) then begin
       MainSession.Pause();
     end;
-**}
+
     if ((MainSession.Show = 'away') or
         (MainSession.Show = 'xa') or
         (MainSession.Show = 'dnd')) then begin
@@ -4381,11 +4378,9 @@ begin
     if (_valid_aa) then begin
         timAutoAway.Enabled := true;
     end;
-{** JJF msgqueue refactor
     if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = false) then begin
       MainSession.Play();
     end;
-**}    
 end;
 
 {*******************************************************************************
@@ -4415,7 +4410,237 @@ begin
     end;
 end;
 
+
+
+
+
+procedure TfrmExodus.focusActiveTab();
+var
+    f: TForm;
+begin
+    // Don't show any notification images on the current tab
+    if (Tabs.ActivePage = nil) then exit;
+    if (not Tabs.Visible or not Tabs.Enabled) then exit;
+    if (not Self.Visible or not Self.Enabled) then exit;
+
+    f := getTabForm(Tabs.ActivePage);
+    if (f <> nil) then
+        if (f.InheritsFrom(TfrmDockable)) then
+            TfrmDockable(f).gotActivate()
+        else
+            f.SetFocus();
+end;
+
+
+{
+    Get the currently top docked form.
+
+    May return nil if topmost docked form is not TfrmDockable(????) or
+    nothing is docked.
+}
+function TfrmExodus.getTopDocked() : TfrmDockable;
+var
+    top : TForm;
+begin
+    Result := nil;
+    try
+        top := getTabForm(Self.Tabs.ActivePage);
+        if ((top is TfrmDockable) and (TfrmDockable(top).Docked)) then
+            Result := TfrmDockable(top);
+    finally
+    end;
+end;
+
+procedure TfrmExodus.SelectNext(goforward: boolean; visibleOnly:boolean=false);
+begin
+    Tabs.SelectNextPage(goforward, visibleonly);
+end;
+
+
+
+{
+    Get the current docksite for the main window.
+
+    Pretty much the window itself but this absctraction
+    should allow us to have a free floting dock manager
+}
+function TfrmExodus.GetDockSite() : TWinControl;
+begin
+    if (Self.DockSite) then
+        Result := Self
+    else
+        Result := nil;
+{
+    if (pnlDock.visible and Tabs.DockSite) then
+        Result := Tabs
+    else if (Self.DockSite) then
+        Result := Self
+    else
+        Result := nil;
+        }
+end;
+
+function TfrmExodus.getTabSheet(frm : TfrmDockable) : TTntTabSheet;
+var
+    i : integer;
+    tf : TForm;
+begin
+    //walk currently docked sheets and try to find a match
+    Result := nil;
+    for i := 0 to Tabs.PageCount - 1 do begin
+        tf := getTabForm(Tabs.Pages[i]);
+        if (tf = frm) then begin
+            Result := TTntTabSheet(Tabs.Pages[i]);
+            exit;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TfrmExodus.getTabForm(tab: TTabSheet): TForm;
+begin
+    // Get an associated form for a specific tabsheet
+    Result := nil;
+    if ((tab <> nil) and (tab.ControlCount = 1)) then begin
+        if (tab.Controls[0] is TForm) then begin
+            Result := TForm(tab.Controls[0]);
+            exit;
+        end;
+    end;
+end;
+
 {************************** component bound events ****************************}
+{---------------------------------------}
+{
+    Event fired from Tabs when a user right clicks on a tab
+}
+procedure TfrmExodus.TabsMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+    v, i, tab: integer;
+    R: TRect;
+    cp: TTabSheet;
+begin
+    // select a tab automatically if we have a right click.
+    if Button = mbRight then begin
+        {
+        pgm: EEK! this is really gross because the pagecontrol sucks.
+        Make sure the tab is visible before fetching it's bounding rect,
+        and checking the hit test.
+
+        BUT, the pageindex we need is the "raw" tabindex. Apparently,
+        the pagecontrol just makes tabs invisible when something gets
+        undocked, or somthing equally insane.
+
+        JJF: I believe tabs become invisible if they are not viewable,
+            scrolled off the single row of tabs if mutiLine is false.
+        }
+        tab := -1;
+        v := 0;
+        for i := 0 to Tabs.PageCount - 1 do begin
+            if (Tabs.Pages[i].TabVisible) then begin
+                SendMessage(Tabs.Handle, TCM_GETITEMRECT, v, lParam(@R));
+                if PtInRect(R, Point(x, y)) then begin
+                    tab := i;
+                    break;
+                end;
+                inc(v);
+            end;
+        end;
+
+        if (tab = -1) then exit;
+        cp := Tabs.Pages[tab];
+        if (cp <> Tabs.ActivePage) then
+            Tabs.ActivePage := cp;
+    end;
+end;
+
+{---------------------------------------}
+{
+    Event fired when a tab selection change occurs. May be fired by user selection
+    or by changig the activepage property
+
+    Sets focus to the new tab
+}
+procedure TfrmExodus.TabsChange(Sender: TObject);
+begin
+//    outputdebugmsg('TfrmExodus.Tabs.OnChange');
+    outputdebugmsg('TfrmExodus.TabsChange');
+    focusActiveTab();
+end;
+
+procedure TfrmExodus.TabsContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+    //a hack. Tabs.OnChange doesn't seem to fire when right clicking tab.
+    inherited;
+    outputdebugmsg('TfrmExodus.TabsContextPopup');
+    focusActiveTab();
+end;
+
+{---------------------------------------}
+{
+    Event fired from Tabs when a Source is dragged over a tab.
+
+    Fires when Source is dragged over the actual tab part of a docked
+    form. Fires OnDockedDragOver event in TfrmDockable
+}
+procedure TfrmExodus.TabsDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+var
+    form: TForm;
+    dest_tab: integer;
+begin
+    inherited;
+    // drag if the source is the roster,
+    // and the target is a conf room tab
+    Accept := false;
+    dest_tab := Tabs.IndexOfTabAt(X,Y);
+    if (dest_tab > -1) then begin
+        form := getTabForm(Tabs.Pages[dest_tab]);
+        if (form <> nil) then
+            TfrmDockable(form).OnDockedDragOver(Sender, Source, X, Y, State, Accept);
+    end;
+end;
+
+{---------------------------------------}
+{
+    Event fired from Tabs when a Source is dropped on a tab.
+
+    Fires when Source is dropped on the actual tab part of a docked
+    form. Fires OnDockedDragDrop event in TfrmDockable
+}
+procedure TfrmExodus.TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
+var
+    dest_tab: integer;
+    form: TForm;
+begin
+    inherited;
+    // dropping something on a tab.
+    dest_tab := Tabs.IndexOfTabAt(X,Y);
+    if (dest_tab > -1) then begin
+        form := getTabForm(Tabs.Pages[dest_tab]);
+        if (form <> nil) then
+            TfrmDockable(form).OnDockedDragDrop(Sender, Source, X, Y);
+    end;
+end;
+
+{---------------------------------------}
+{
+    Event fired when user drags a TfrmDockable off of Tabs.
+}
+procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
+  NewTarget: TWinControl; var Allow: Boolean);
+begin
+outputdebugmsg('TfrmExodus.TabsUnDock');
+    // check to see if the tab is a frmDockable
+    Allow := true;
+    if ((Client is TfrmDockable) and TfrmDockable(Client).Docked)then begin
+        CloseDocked(TfrmDockable(Client));
+        TfrmDockable(Client).Docked := false;
+        TfrmDockable(Client).OnFloat();
+    end;
+end;
 
 {
     Event fired when programaticvally undocking
@@ -4443,7 +4668,142 @@ outputdebugmsg('TfrmExodus.TabsUnDockNoLayoutChange');
 end;
 
 
+{---------------------------------------}
+{
+    Event fired when the user has dropped a TfrmDockable on to Tabs.
+
+    This event also fires when ManualDock is invoked with Tabs as the
+    dock target. Because this is fired as a result of user action or
+    manualdock, assume the layout is correct (that Tabs is shown etc).
+}
+procedure TfrmExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
+  Y: Integer);
+begin
+outputdebugmsg('TfrmExodus.TabsDockDrop');
+    // We got a new form dropped on us.
+    if (Source.Control is TfrmDockable) then begin
+        updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
+        TfrmDockable(Source.Control).Docked := true;
+        TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
+        //msg queue is always first tab
+        if (Source.Control is TfrmMsgQueue) then begin
+            TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]).PageIndex := 0;
+        end;
+        TfrmDockable(Source.Control).OnDocked();
+        _docked_forms.Add(TfrmDockable(Source.Control));
+    end;
+end;
+
+{---------------------------------------}
+{
+    Event fired when a TfrmDockable has been dropped onto frmExodus.
+}
+procedure TfrmExodus.FormDockDrop(Sender: TObject; Source: TDragDockObject;
+  X, Y: Integer);
+begin
+outputdebugmsg('TfrmExodus.FormDockDrop');
+    if (Source.Control is TfrmDockable) then begin
+        // We got a new form dropped on us.
+        OpenDocked(TfrmDockable(Source.Control));
+    end;
+end;
+
+{tab context menus}
+
+procedure TfrmExodus.popCloseTabClick(Sender: TObject);
+var
+    f: TForm;
+begin
+outputdebugmsg('TfrmExodus.popCloseTabClick');
+    // Close the window docked to this tab..
+    f := getTabForm(Tabs.ActivePage);
+    if (f <> nil) then
+        f.Close();
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.popFloatTabClick(Sender: TObject);
+var
+    f: TForm;
+begin
+outputdebugmsg('TfrmExodus.popFloatTabClick');
+    // Undock this window
+    f := getTabForm(Tabs.ActivePage);
+    if ((f <> nil) and (f is TfrmDockable)) then
+        TfrmDockable(f).FloatForm();
+end;
+
 {**************************** state change requests ***************************}
+{
+    Bring the given docked form to the front of the tab list
+
+    If form is currently docked, make it the active tab.
+    Sets focus to the new tab
+}
+procedure TfrmExodus.BringDockedToTop(form: TfrmDockable);
+var
+    tsheet: TTntTabSheet;
+begin
+    if (Self.Tabs.PageCount > 0) then begin
+        tsheet := GetTabSheet(form);
+        if (tsheet <> nil) then begin
+            Self.Tabs.ActivePage := tsheet;
+            if (Self.Visible) then //focus if we can
+                form.gotActivate();
+        end;
+    end;
+end;
+
+{---------------------------------------}
+
+
+{
+    Cleanup the TTabSheet associated with frm.
+}
+procedure TfrmExodus.CloseDocked(frm: TfrmDockable);
+var
+    idx: integer;
+begin
+outputdebugmsg('TfrmExodus.CloseDocked');
+    frm.Docked := false;
+//    frm.Visible := false;
+    if ((_nextNotifyButton <> nil) and (_nextNotifyButton.Parent = frm)) then begin
+        frm.removeDockbarButton(_nextNotifyButton);
+    end;
+
+    updateLayoutDockChange(frm, true, _docked_forms.Count = 1);
+    idx := _docked_forms.IndexOf(frm);
+    if (idx >= 0) then
+        _docked_forms.Delete(idx);
+end;
+
+function TfrmExodus.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
+begin
+outputdebugmsg('TfrmExodus.OpenDocked');
+//    updateLayoutDockChange(frm, true, tabs.PageCount = 0);
+    frm.ManualDock(Tabs); //fires TabsDockDrop event
+    Result := GetTabSheet(frm);
+    frm.Visible := true;
+end;
+
+procedure TfrmExodus.FloatDocked(frm : TfrmDockable);
+begin
+outputdebugmsg('TfrmExodus.FloatDocked');
+    frm.ManualFloat(frm.FloatPos);
+end;
+
+
+procedure TfrmExodus.UpdateDocked(frm: TfrmDockable);
+var
+    tsheet: TTntTabSheet;
+begin
+    tsheet := GetTabSheet(frm);
+    if (tsheet <> nil) then
+        tsheet.ImageIndex := frm.ImageIndex;
+    checkFlash();
+    updateNextNotifyButton();
+end;
+
 {************************************ layout **********************************}
 {---------------------------------------}
 {
@@ -4453,15 +4813,126 @@ end;
     Docking was not allowed but the user now chooses to allow docking.
 }
 procedure TfrmExodus.updateLayoutPrefChange();
+var
+    dockAllowed: boolean;
 begin
-    if (frmRoster = nil) then exit; //nop, not initialized yet
+    if (RosterWindow.frmRosterWindow = nil) then exit; //nop, not initialized yet
     // make sure the roster is docked in the appropriate place.
+    dockAllowed := (Jabber1.getAllowedDockState() <> adsForbidden);
 
-    layoutRosterOnly();
-    //undockAllForms();
-    Self.DockSite := false;
+    if ((not dockAllowed) or (Tabs.PageCount = 0)) then begin
+       layoutRosterOnly();
+       undockAllForms();
+       Self.DockSite := dockAllowed;
+    end
+    else
+        layoutDock();
+
 end;
 
+{
+    Update UI after some dock event has occurred.
+
+    HideDock if last tab was undocked, ShowNormalDock if moving from
+    no tabs to at least one tab, handle embedded roster state changes.
+
+    Since it can be difficult to know exactly when to perform a
+    change in the DockState (in some instances this method may be called
+    before the TPageControl has had a chance to cleanup an tab), a
+    flag is passed to force a state change.
+
+    @param frm the form that was just docked/undocked
+    @param docking  is the form beign docked or undocked?
+    @toggleDockState moving from (dsDockOnly or dsRosterDock) to dsRosterOnly or vice versa
+}
+procedure TfrmExodus.updateLayoutDockChange(frm: TfrmDockable; docking: boolean; FirstOrLastDock: boolean);
+
+var
+    oldState : TDockStates;
+    newState : TDockStates;
+begin
+    oldState := DockState;
+    //figure out what state we are moving to...
+    if (docking) then begin
+       if (FirstOrLastDock) then begin
+         newState := dsRosterOnly;
+       end
+       else begin
+         newState := dsDock;
+       end
+    end
+    else
+      newState := dsRosterOnly;
+
+    if (newState <> oldState) then begin
+        _noMoveCheck := true;
+          if (newState = dsDock) then
+            layoutDock()
+          else
+            layoutRosterOnly();
+        _noMoveCheck := false;
+    end;
+end;
+
+{
+    Adjust layout so roster panel and dock panel are shown
+}
+procedure TfrmExodus.layoutDock();
+var
+  mon: TMonitor;
+  ratioRoster: real;
+begin
+    if (DockState <> dsDock) then begin
+        _enforceConstraints := false;
+        saveRosterDockWidths();
+        _noMoveCheck := true;
+        //this is a mess. To get splitter working with the correct control
+        //we need to hide/de-align/set their relative positions/size them and show them
+        pnlRoster.align := alNone;
+        splitRoster.align := alNone;
+        Tabs.align := alNone;
+
+        splitRoster.Visible := false; //hide this first or will expand and throw widths off
+        pnlRoster.Visible := false;
+        Tabs.Visible := false;
+
+        //Obtain the width of the monitor
+        //If we exceed the width of the monitor,
+        //recalculate widths for roster based on the same ratio
+        mon := Screen.MonitorFromWindow(Self.Handle, mdNearest);
+        if (MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH) >= mon.Width) then begin
+          ratioRoster := (MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3)/(MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH));
+          Self.ClientWidth  := mon.Width;
+          pnlRoster.Width := Trunc(Self.ClientWidth * ratioRoster);
+        end
+        else begin
+            Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
+            pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+        end;
+
+        pnlRoster.Left := 0;
+        pnlRoster.Align := alLeft;
+        pnlRoster.Visible := true;
+        splitRoster.Left := pnlRoster.BoundsRect.Right + 1;
+        splitRoster.Align := alLeft;
+        splitRoster.Visible := true;
+        Tabs.Left := pnlRoster.BoundsRect.Right + 4;
+        Tabs.Align := alClient;
+        Tabs.Visible := true;
+
+        _noMoveCheck := false;
+        _currDockState := dsDock;
+        Self.DockSite := false;
+        Tabs.DockSite := true;
+
+         if (MainSession.Active) then
+            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_docked')
+         else
+            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_docked');
+
+         _enforceConstraints := true;
+    end;
+end;
 
 {
     Adjust layout so only roster panel is shown
@@ -4469,143 +4940,95 @@ end;
 procedure TfrmExodus.layoutRosterOnly();
 begin
     //if tabs were being shown, save tab size
-    _enforceConstraints := false;
-    _noMoveCheck := true;
-    Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
-    _noMoveCheck := false;
-    Self.DockSite := false;
+    saveRosterDockWidths();
+    if (DockState <> dsRosterOnly) then begin
+        _enforceConstraints := false;
+        Tabs.Visible := false;
+        pnlRoster.Align := alClient;
+        splitRoster.Visible := false;
+        _noMoveCheck := true;
+        Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+        _noMoveCheck := false;
+        _currDockState := dsRosterOnly;
+        Self.DockSite := true;
+        Tabs.DockSite := false;
 
-    if (MainSession.Active) then
-        frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width')
-    else
-        frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width');
+         if (MainSession.Active) then
+            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_undocked')
+         else
+            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_undocked');
 
-    _enforceConstraints := true;
-end;
-
-procedure TfrmExodus.clickChangeStatus(Sender: TObject);
-var
-    cp : TPoint;
-begin
-    // popup the menu and to change our status
-    if MainSession.Active then begin
-        GetCursorPos(cp);
-        popPresence.Popup(cp.x, cp.y);
+         _enforceConstraints := true;
     end;
 end;
-procedure TfrmExodus.clickEditStatus(Sender: TObject);
+
+{
+    Save the current roster and dock panel widths.
+
+    Depending on current state...
+}
+procedure TfrmExodus.saveRosterDockWidths();
 begin
-    //prepare for display madness
-    pnlStatus.Visible := false;
-    lblStatus.Align := alNone;
-    imgDown.Align := alNone;
-    txtStatus.Align := alNone;
-
-    //hide read-only stuff
-    lblStatus.Visible := false;
-    imgDown.Visible := false;
-
-    //display read-write stuff
-    txtStatus.Text := MainSession.Status;
-    txtStatus.Visible := true;
-    txtStatus.Align := alClient;
-    pnlStatus.Align := alClient;
-
-    pnlStatus.Visible := true;
-
-    txtStatus.SetFocus;
-end;
-procedure TfrmExodus.txtStatusExit(Sender: TObject);
-begin
-    inherited;
-
-    //prepare for display madness
-    pnlStatus.Visible := false;
-    lblStatus.Align := alNone;
-    imgDown.Align := alNone;
-    txtStatus.Align := alNone;
-
-    txtStatus.Visible := false;
-
-    imgDown.Align := alLeft;
-    lblStatus.Align := alLeft;
-
-    pnlStatus.Align := alClient;
-    imgDown.Visible := true;
-    lblStatus.Visible := true;
-    pnlStatus.Visible := true;
+    if (DockState = dsRosterOnly) then
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width)
+    else if (DockState = dsDock) then begin
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
+        MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, Tabs.Width);
+    end;
 end;
 
-procedure TfrmExodus.txtStatusKeyPress(Sender: TObject; var Key: Char);
+{
+    Undock all docked forms.
+
+    Prevents tab change, onundock events from firing. Does not update
+    layout.
+}
+procedure TfrmExodus.undockAllForms();
 var
-    pres: TJabberCustomPres;
-    val: Widestring;
-    status, show: Widestring;
-    priority: Integer;
+    tf: TfrmDockable;
+    ts: TTabSheet;
+    idx: integer;
 begin
-    //something to do
-    if Key = #13 then begin
-        //TODO:  save and change status
-        val := Trim(txtStatus.Text);
-        if (val <> '') then begin
-            //custom status
-            pres := MainSession.prefs.getPresence(val);
-            if pres = nil then begin
-                //no existing presence...create it!
-                pres := TJabberCustomPres.Create;
-                pres.title := val;
-                pres.Status := val;
-                pres.Show := MainSession.Show;
-                pres.Priority := MainSession.Priority;
+    ts := Tabs.FindNextPage(nil, true, false);
+    if (ts <> nil) then begin
+        //stop layout update events
+        tabs.OnUnDock := nil;
+        tabs.OnChange := nil;
+        while (ts <> nil) do begin
+            tf := TfrmDockable(GetTabForm(ts));
+            if (tf <> nil) then begin
+                tf.ManualFloat(tf.FloatPos);
+                tf.Docked := false;
+                idx := _docked_forms.IndexOf(tf);
+                if (idx >= 0) then
+                    _docked_forms.Delete(idx);
 
-                MainSession.Prefs.setPresence(pres);
-                SessionCallback('/session/prefs', nil);
+                tf.OnFloat();
             end;
-
-            status := pres.Status;
-            show := pres.Show;
-            priority := pres.Priority;
-        end
-        else begin
-            //default status
-            status := '';
-            show := MainSession.Show;
-            priority := MainSession.Priority;
+            ts := Tabs.FindNextPage(nil, true, false);
         end;
-
-        MainSession.setPresence(show, status, priority);
-    end else if Key <> #27 then begin
-        inherited;
-        exit;
+        //enable layout update events
+        tabs.OnUnDock := Self.TabsUnDock;
+        tabs.OnChange := Self.TabsChange;
     end;
-
-    txtStatusExit(Sender);
-    Key := #0;
 end;
-
 
 procedure TfrmExodus.OnNotify(frm: TForm; notifyEvents: integer);
 begin
+    //if dockmanager is being notified directly or the given form is docked
     //handle bring to front and flash
-    if (frm = Self) then begin
-        if ((notifyEvents and notify_front) <> 0) then
+    if ((frm = nil) or (frm = Self) or
+        ((frm is TfrmDockable) and (TfrmDockable(frm).Docked))) then begin
+        if ((notifyEvents and notify_front) > 0) then
             bringToFront()
-        else if ((notifyEvents and notify_flash) <> 0) then
+        else if ((notifyEvents and notify_flash) > 0) then
             Self.Flash();
     end;
-end;
+    //tray notifications are always directed and dockmanager
+    if (((notifyEvents and notify_tray) > 0) and ((notifyEvents and notify_front) = 0))then
+        StartTrayAlert();
 
-procedure TfrmExodus.imgAdClick(Sender: TObject);
-var
-    url: Widestring;
-begin
-    inherited;
-
-    url := imgAd.Hint;
-
-    if url <> '' then begin
-        ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
-    end;
+    updateNextNotifyButton();
 end;
 
 function TfrmExodus.isActive(): boolean;
@@ -4636,200 +5059,104 @@ begin
     mnuOptions_Notifications_NewConversation.Checked := (MainSession.Prefs.getInt('notify_newchat') > 0);
 end;
 
-
-procedure TfrmExodus.PeopleClick(Sender: TObject);
+function TfrmExodus.getNextDockedNotifying(start: TTabSheet): TfrmDockable;
 var
-    tabCtrl: IExodusTabController;
-    tab: IExodusTab;
-    actMap: IExodusActionMap;
-    typedActs: IExodusTypedActions;
-    items: IExodusItemList;
-
-    procedure SetupMenuItem(mi: TTntMenuItem; name: Widestring);
-    var
-        act: IExodusAction;
-        newAct: TActionHelper;
-    begin
-        if (typedActs = nil) then
-            act := nil
-        else
-            act := typedActs.GetActionNamed(name);
-
-        TActionHelper(Pointer(mi.Tag)).Free();
-        mi.Enabled := (act <> nil);
-        if (mi.Enabled) then begin
-            newAct := TActionHelper.Create(typedActs, name);
-            mi.OnClick := newAct.click;
-            mi.Tag := Integer(Pointer(newAct));
-        end
-        else begin
-            mi.OnClick := nil;
-            mi.Tag := 0;
+    nextPage: TTabSheet;
+begin
+    nextPage := start;
+    Result := nil;
+    if (start <> nil) then begin
+        while (true) do begin
+            nextPage := Self.Tabs.FindNextPage(nextPage, true, false);
+            if (nextPage = start) then exit; //no next
+            if ((nextPage.ControlCount = 1) and
+                 nextPage.Controls[0].InheritsFrom(TfrmDockable) and
+                 TfrmDockable(nextPage.Controls[0]).isNotifying) then begin
+                 Result := TfrmDockable(nextPage.Controls[0]);
+                 exit;
+            end;
         end;
     end;
-begin
-  tabCtrl := GetRosterWindow().TabController;
-  if (tabCtrl.ActiveTab = -1) then
-    items := TExodusItemList.Create()
-  else begin
-    tab := tabCtrl.Tab[tabCtrl.ActiveTab];
-    items := tab.GetSelectedItems();
-  end;
-
-  actMap := GetActionController().buildActions(items);
-
-  //Enable/Disable contact menus...
-  if (items.Count = 1) and (items.Item[0].Type_ = 'contact') then
-    typedActs := actMap.GetActionsFor('')
-  else
-    typedActs := actMap.GetActionsFor('contact');
-  SetupMenuItem(mnuPeople_Contacts_BlockContact, '{000-exodus.googlecode.com}-080-block-contact');
-  SetupMenuItem(mnuPeople_Contacts_ViewHistory, '{000-exodus.googlecode.com}-040-view-history');
-  SetupMenuItem(mnuPeople_Contacts_ContactProperties, '{000-exodus.googlecode.com}-100-properties');
-  SetupMenuItem(mnuPeople_Contacts_RenameContact, '{000-exodus.googlecode.com}-150-rename');
-  SetupMenuItem(mnuPeople_Contacts_DeleteContact, '{000-exodus.googlecode.com}-190-delete');
-
-  //Enable/Disable room menus...
-  if (items.Count = 1) and (items.Item[0].Type_ = 'room') then
-    typedActs := actMap.GetActionsFor('')
-  else
-    typedActs := actMap.GetActionsFor('room');
-  mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
-
-  //Enable/Disable group menus...
-  if (items.Count > 0) and (items.Item[0].Type_ = 'group') then
-    typedActs := actMap.GetActionsFor('')
-  else
-    typedActs := actMap.GetActionsFor('group');
-  SetupMenuItem(mnuPeople_Group_RenameGroup, '{000-exodus.googlecode.com}-150-rename');
-  SetupMenuItem(mnuPeople_Group_DeleteGroup, '{000-exodus.googlecode.com}-190-delete');
-
-  //Enable/Disable 'create' menu items...
-  typedActs := getActionController().actionsForType('{create}');
-  SetupMenuItem(mnuPeople_Contacts_AddContact, '{000-exodus.googlecode.com}-000-add-contact');
-  SetupMenuItem(mnuPeople_Group_AddNewRoster, '{000-exodus.googlecode.com}-090-add-group');
 end;
 
-procedure TfrmExodus.pnlStatusLabelMouseEnter(Sender: TObject);
+procedure TfrmExodus.updateNextNotifyButton();
+var
+    f: TfrmDockable;
 begin
-  inherited;
-
-  pnlStatusLabel.BevelKind := bkFlat;
-end;
-
-procedure TfrmExodus.pnlStatusLabelMouseLeave(Sender: TObject);
-begin
-  inherited;
-
-  pnlStatusLabel.BevelKind := bkNone;
-end;
-
-procedure TfrmExodus.popChangeView(Sender: TObject);
-begin
-    if (Sender = popShowAll) and (not popShowAll.Checked) then begin
-        MainSession.prefs.setBool('roster_only_online', false);
-        if MainSession.Active then begin
-            MainSession.FireEvent('/session/prefs', nil);
+    if ((getNextDockedNotifying(Tabs.ActivePage) <> nil)) then begin
+        f := Self.getTopDocked();
+        if (f <> nil) then begin
+            if (_nextNotifyButton = nil) then begin
+                _nextNotifyButton := TDockbarButton.create();
+                _nextNotifyButton.OnClick := Self.OnNextNotifyClick;
+            end;
+            f.addDockbarButton(_nextNotifyButton);
+            _nextNotifyButton.ImageIndex := RosterImages.RosterTreeImages.Find(RI_ATTN_KEY);
+            _nextNotifyButton.Hint := _('Bring the next notified tab to front');
         end;
     end
-    else if (Sender = popShowOnline) and (not popShowOnline.Checked) then begin
-        MainSession.prefs.setBool('roster_only_online', true);
-        if MainSession.Active then begin
-            MainSession.FireEvent('/session/prefs', nil);
-        end;
+    else if (_nextNotifyButton <> nil) then begin
+        _nextNotifyButton.Free();
+        _nextNotifyButton := nil;
     end;
 end;
 
-procedure TfrmExodus.popCreatePopup(Sender: TObject);
-var
-    typedActs: IExodusTypedActions;
-    idx: Integer;
-    act: IExodusAction;
-    root, mi: TTntMenuItem;
+procedure TfrmExodus.checkFlash();
 begin
-  inherited;
+    if (timFlasher.Enabled and
+       (not MainSession.Prefs.getBool('notify_docked_flasher') or
+       (getNextDockedNotifying(Tabs.ActivePage) = nil))) then
+        timFlasher.Enabled := false;
+end;
 
-  root := TTntMenuItem(popCreate.Items);
-
-  //Clear previous...
-  if root.Tag <> 0 then begin
-      typedActs := IExodusTypedActions(Pointer(root.tag));
-      typedActs._Release;
-  end;
-
-  //Fill in the results...
-  typedActs := GetActionController().actionsForType('{create}');
-
-  root.Clear();
-  if (typedActs = nil) or (typedActs.ActionCount = 0) then
-    exit;
-  
-  root.Tag := Integer(Pointer(typedActs));
-  typedActs._AddRef;
-
-  for idx := 0 to typedActs.ActionCount - 1 do begin
-    //Insert spacer if more than three, and we're at the end
-    {
-    if (idx >= 3) and (idx = typedActs.ActionCount - 1) then begin
-        mi := TTntMenuItem.Create(popCreate);
-        mi.Caption := _('-');
-
-        root.Add(mi);
-    end;
-    }
-
-    act := typedActs.Action[idx];
-
-    mi := TTntMenuItem.Create(popCreate);
-    mi.Caption := act.Caption;
-    mi.ImageIndex := act.ImageIndex;
-    mi.Tag := Integer(Pointer(act));
-    mi.OnClick := clickCreatePopupItem;
-    //TODO:  setup submenus?
-
-    root.Add(mi);
-  end
+procedure TfrmExodus.OnNextNotifyClick();
+var
+    f: TfrmDockable;
+begin
+    f := getNextDockedNotifying(Tabs.ActivePage);
+    if (f <> nil) then
+        BringDockedToTop(f);
 end;
 
 //Reset menu items for contacts and groups based on the roster selection
 procedure TfrmExodus.ResetMenuItems(Node: TTnTTreeNode);
 begin
-//   if (Node = nil) then begin
-//     mnuPeople_Group_RenameGroup.Enabled := false;
-//     mnuPeople_Group_DeleteGroup.Enabled := false;
-//     mnuPeople_Contacts_RenameContact.Enabled := false;
-//     mnuPeople_Contacts_DeleteContact.Enabled := false;
-//     mnuPeople_Contacts_BlockContact.Enabled := false;
-//     mnuPeople_Contacts_ContactProperties.Enabled := false;
-//     mnuPeople_Contacts_SendFile.Enabled := false;
-//     mnuPeople_Contacts_SendFile.Enabled := false;
-//     mnuPeople_Contacts_SendMessage.Enabled := false;
-//     mnuPeople_Contacts_ViewHistory.Enabled := false;
-//   end
-//   else if (frmRosterWindow.getNodeType(Node) = node_grp) then begin
-//     mnuPeople_Group_RenameGroup.Enabled := true;
-//     mnuPeople_Group_DeleteGroup.Enabled := true;
-//     mnuPeople_Contacts_RenameContact.Enabled := false;
-//     mnuPeople_Contacts_DeleteContact.Enabled := false;
-//     mnuPeople_Contacts_BlockContact.Enabled := false;
-//     mnuPeople_Contacts_ContactProperties.Enabled := false;
-//     mnuPeople_Contacts_SendFile.Enabled := false;
-//     mnuPeople_Contacts_SendMessage.Enabled := false;
-//     mnuPeople_Contacts_ViewHistory.Enabled := false;
-//   end
-//   else if (frmRosterWindow.getNodeType(Node) = node_ritem) then begin
-//     mnuPeople_Group_RenameGroup.Enabled := false;
-//     mnuPeople_Group_DeleteGroup.Enabled := false;
-//     mnuPeople_Contacts_RenameContact.Enabled := true;
-//     mnuPeople_Contacts_DeleteContact.Enabled := true;
-//     mnuPeople_Contacts_BlockContact.Enabled := true;
-//     mnuPeople_Contacts_ContactProperties.Enabled := true;
-//     mnuPeople_Contacts_SendFile.Enabled := true;
-//     mnuPeople_Contacts_SendMessage.Enabled := true;
-//     mnuPeople_Contacts_ViewHistory.Enabled := true;
-//   end;
-//   //invite to room should only be available if rooms are open.
-//   Self.mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
+   if (Node = nil) then begin
+     mnuPeople_Group_RenameGroup.Enabled := false;
+     mnuPeople_Group_DeleteGroup.Enabled := false;
+     mnuPeople_Contacts_RenameContact.Enabled := false;
+     mnuPeople_Contacts_DeleteContact.Enabled := false;
+     mnuPeople_Contacts_BlockContact.Enabled := false;
+     mnuPeople_Contacts_ContactProperties.Enabled := false;
+     mnuPeople_Contacts_SendFile.Enabled := false;
+     mnuPeople_Contacts_SendFile.Enabled := false;
+     mnuPeople_Contacts_SendMessage.Enabled := false;
+     mnuPeople_Contacts_ViewHistory.Enabled := false;
+   end
+   else if (frmRosterWindow.getNodeType(Node) = node_grp) then begin
+     mnuPeople_Group_RenameGroup.Enabled := true;
+     mnuPeople_Group_DeleteGroup.Enabled := true;
+     mnuPeople_Contacts_RenameContact.Enabled := false;
+     mnuPeople_Contacts_DeleteContact.Enabled := false;
+     mnuPeople_Contacts_BlockContact.Enabled := false;
+     mnuPeople_Contacts_ContactProperties.Enabled := false;
+     mnuPeople_Contacts_SendFile.Enabled := false;
+     mnuPeople_Contacts_SendMessage.Enabled := false;
+     mnuPeople_Contacts_ViewHistory.Enabled := false;
+   end
+   else if (frmRosterWindow.getNodeType(Node) = node_ritem) then begin
+     mnuPeople_Group_RenameGroup.Enabled := false;
+     mnuPeople_Group_DeleteGroup.Enabled := false;
+     mnuPeople_Contacts_RenameContact.Enabled := true;
+     mnuPeople_Contacts_DeleteContact.Enabled := true;
+     mnuPeople_Contacts_BlockContact.Enabled := true;
+     mnuPeople_Contacts_ContactProperties.Enabled := true;
+     mnuPeople_Contacts_SendFile.Enabled := true;
+     mnuPeople_Contacts_SendMessage.Enabled := true;
+     mnuPeople_Contacts_ViewHistory.Enabled := true;
+   end;
+   //invite to room should only be available if rooms are open.
+   Self.mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
 end;
 
 procedure TfrmExodus.RemoveMenuShortCut(value: integer);
@@ -4857,216 +5184,6 @@ begin
   CallHelp := false;
   Result := true;
 end;
-
-procedure TfrmExodus.glueWindow(doGlue: boolean);
-begin
-    _dockWindowGlued := doGlue;
-end;
-
-procedure TfrmExodus.OnDisplayNameChange(jid, dn: Widestring);
-begin
-    UpdateDisplayName();
-end;
-
-procedure TfrmExodus.WMMoving(var Msg: TWMMoving);
-begin
-    if (_dockWindowGlued) then begin
-        if (_dockWindow <> nil) then begin
-            _dockWindow.moveGlued();
-        end;
-    end;
-
-    inherited;
-end;
-
-procedure TfrmExodus.WMMove(var Msg: TWMMove);
-var
-    gedge: TGlueEdge;
-begin
-    if (not _dockWindowGlued) then begin
-        if (_dockWindow <> nil) then begin
-            gedge := withinGlueSnapRange(_dockWindow, self, _glueRange);
-            if (gedge <> geNone) then begin
-                //_dockWindowGlued := true;
-                // Set the edge on the dock window.
-                // Edge is opposite of gedge
-                case gedge of
-                    geNone: begin
-                        _dockWindow.glueEdge := geNone;
-                    end;
-                    geTop: begin
-                        _dockWindow.glueEdge := geBottom;
-                        Self.Left := _dockWindow.Left;
-                        Self.Top := _dockWindow.Top + _dockWindow.Height;
-                    end;
-                    geRight: begin
-                        _dockWindow.glueEdge := geLeft;
-                        Self.Top := _dockWindow.Top;
-                        Self.Left := _dockWindow.Left - Self.Width;
-                    end;
-                    geLeft: begin
-                        _dockWindow.glueEdge := geRight;
-                        Self.Top := _dockWindow.Top;
-                        Self.Left := _dockWindow.Left + _dockWindow.Width;
-                    end;
-                    geBottom: begin
-                        _dockWindow.glueEdge := geTop;
-                        Self.Left := _dockWindow.Left;
-                        Self.Top := _dockWindow.Top - Self.Height;
-                    end;
-                end;
-            end;
-        end;
-    end;
-
-    inherited;
-end;
-
-procedure TfrmExodus.WMExitSizeMove(var Message: TMessage);
-var
-    gedge: TGlueEdge;
-begin
-    if (_dockWindow <> nil) then begin
-        gedge := withinGlueSnapRange(_dockWindow, self, _glueRange);
-        if (gedge <> geNone) then begin
-            _dockWindowGlued := true;
-        end;
-    end;
-
-    inherited;
-end;
-
-
-procedure TfrmExodus.doHide();
-begin
-    _hidden := true;
-    Self.Visible := false;
-    PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-end;
-
-procedure TfrmExodus.ShowLogin();
-begin
-    if tabRoster.Visible then with tabRoster do begin
-        Visible := false;
-        SendToBack();
-    end;
-
-    with tabLogin do begin
-        if not Visible then Visible := true;
-        BringToFront();
-    end;
-end;
-procedure TfrmExodus.ShowRoster();
-begin
-    if tabLogin.Visible then with tabLogin do begin
-        Visible := false;
-        SendToBack();
-    end;
-
-    with tabRoster do begin
-        if not Visible then Visible := true;
-        BringToFront();
-    end;
-end;
-
-procedure TfrmExodus.UpdatePresenceDisplay;
-var
-    show: WideString;
-    stat: WideString;
-    cap:  WideString;
-    idx:  Integer;
-    txtWidth, maxWidth: Integer;
-begin
-    show := MainSession.Show;
-    stat := MainSession.Status;
-    idx  := 0;
-
-    if (show = '') then begin
-        idx := RosterTreeImages.Find('available');
-        cap := _(sRosterAvail);
-    end
-    else if (MainSession.Show = 'away') then begin
-        idx := RosterTreeImages.Find('away');
-        cap := _(sRosterAway);
-    end
-    else if (MainSession.Show = 'dnd') then begin
-        idx := RosterTreeImages.Find('dnd');
-        cap := _(sRosterDND);
-    end
-    else if (MainSession.Show = 'chat') then begin
-        idx := RosterTreeImages.Find('chat');
-        cap := _(sRosterChat);
-    end
-    else if (MainSession.Show = 'xa') then begin
-        idx := RosterTreeImages.Find('xa');
-        cap := _(sRosterXA);
-    end
-    else if (MainSession.Show = 'offline') then begin
-        idx := RosterTreeImages.Find('offline');
-        cap := _(sRosterOffline);
-        stat := '';
-    end;
-
-    if (stat <> '') then
-        cap := cap + ' (' + stat + ')';
-
-    txtWidth := WideCanvasTextWidth(lblStatus.Canvas, cap);
-    maxWidth := pnlStatus.ClientWidth -
-            (imgDown.Width + imgDown.Margins.Left + imgDown.Margins.Right) -
-            (lblStatus.Margins.Left + lblStatus.Margins.Right);
-    lblStatus.Hint := cap;
-    lblStatus.Caption := cap;
-    lblStatus.Width := Min(txtWidth, maxWidth);
-    setTrayIcon(idx);
-    ImageList1.GetIcon(idx, imgPresence.Picture.Icon);
-end;
-procedure TfrmExodus.UpdateDisplayName;
-var
-    jid: TJabberID;
-begin
-    jid := MainSession.Profile.getJabberID();
-
-    lblDisplayName.Caption := TDisplayNameEventListener.GetDisplayName(jid.jid);
-    lblDisplayName.Hint := jid.getDisplayFull();
-end;
-
-procedure TfrmExodus.clickCreatePopupItem(Sender: TObject);
-var
-    typedActs: IExodusTypedActions;
-    act: IExodusAction;
-begin
-    typedActs := IExodusTypedActions(Pointer(popCreate.Items.tag));
-    act := IExodusAction(Pointer(TTntMenuItem(Sender).Tag));
-
-    typedActs.execute(act.Name);
-end;
-
-function TfrmExodus.IsShortcut(var Message: TWMKey): Boolean;
-begin
-    if (GetForegroundWindow <> Handle) then
-    begin
-        Result := false
-    end
-    else
-    begin
-        Result := inherited IsShortCut(Message)
-    end;
-end;
-
-function TfrmExodus.AppKeyDownHook(var Msg: TMessage): Boolean;
-begin
-    // Prevent Alt and F10 from accessing main menu unless this form has focus
-    case Msg.Msg of
-    Cm_AppSysCommand:
-        Result := (msg.WParam = SC_KEYMENU) and (GetForegroundWindow <> Handle);
-    else
-        Result := false;
-    end;
-end;
-
-
-
-
 
 
 initialization

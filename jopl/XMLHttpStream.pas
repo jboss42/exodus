@@ -61,13 +61,12 @@ type
         _thread:    THttpThread;
     protected
         procedure MsgHandler(var msg: TJabberMsg); message WM_JABBER;
-        procedure SendXML(xml: Widestring); override;
     public
         constructor Create(root: string); override;
         destructor Destroy; override;
 
         procedure Connect(profile: TJabberProfile); override;
-
+        procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
         function  isSSLCapable(): boolean; override;
         procedure EnableSSL(); override;
@@ -172,10 +171,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLHttpStream.SendXML(xml: Widestring);
+procedure TXMLHttpStream.Send(xml: Widestring);
 begin
     if (_thread <> nil) then begin
-        FireOnStreamData(true, xml);
+        DoDataCallbacks(true, xml);
         _thread.Send(xml);
     end;
 end;
@@ -186,7 +185,7 @@ var
 end_tag: string;
 begin
 end_tag := '</' + Self._root_tag + '>';
-    FireOnStreamData(true, end_tag);
+    DoDataCallbacks(true, end_tag);
     _thread.Disconnect(end_tag);
     _thread.doMessageSync(WM_DISCONNECTED);
 
@@ -207,35 +206,33 @@ begin
             if _thread = nil then exit;
 
             tag := _thread.GetTag;
-            if tag <> nil then
-            begin
-                fireOnPacketReceived(tag);
-                tag.Free();
+            if tag <> nil then begin
+                DoCallbacks('xml', tag);
             end;
-          end;
+        end;
 
         WM_SOCKET: begin
             // We are getting something on the socket
             tmps := _thread.Data;
             if tmps <> '' then
-                FireOnStreamData(false, tmps);
+                DoDataCallbacks(false, tmps);
         end;
         WM_CONNECTED: begin
             // Socket is connected
             _active := true;
-            FireOnStreamEvent('connected', nil);
+            DoCallbacks('connected', nil);
         end;
 
         WM_DISCONNECTED: begin
             // Socket is disconnected
             _active := false;
-            FireOnStreamEvent('disconnected', nil);
+            DoCallbacks('disconnected', nil);
         end;
         WM_COMMERROR: begin
             // There was a COMM ERROR
             _active := false;
-            FireOnStreamEvent('commerror', nil);
-            FireOnStreamEvent('disconnected', nil);
+            DoCallbacks('commerror', nil);
+            DoCallbacks('disconnected', nil);
         end;
     end;
 end;

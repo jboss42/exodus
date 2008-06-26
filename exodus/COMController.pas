@@ -25,8 +25,8 @@ interface
 
 uses
     ExtCtrls, ChatController,
-    Presence, XMLParser, XMLTag, Unicode, Menus,
-    Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl, COMExodusItem;
+    Presence, NodeItem, XMLParser, XMLTag, Unicode, Menus,
+    Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusController = class(TAutoObject, IExodusController)
@@ -138,26 +138,7 @@ type
       safecall;
     procedure RemoveStringlistValue(const key, value: WideString); safecall;
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
-    function Get_TabController: IExodusTabController; safecall;
-    function Get_ActionController: IExodusActionController; safecall;
-    function Get_ItemController: IExodusItemController; safecall;
-    function NewAXWindow(const ActiveX_GUID, ActiveXWindow_Caption: WideString;
-      BringToFront: WordBool): IExodusAXWindow; safecall;
-    function Get_DataStore: IExodusDataStore; safecall;
-    function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
-    function GetPrefAsXML(const key: WideString): WideString; safecall;
-    procedure SetPrefAsXML(const xml: WideString); safecall;
-    function SelectItem(const ItemType, Title: WideString;
-      IncludeAnyOption: WordBool): WideString; safecall;
-    function SelectRoom(const Title: WideString; IncludeJoinedRoomList,
-      IncludeAnyOption: WordBool): WideString; safecall;
-    procedure ShowToastWithEvent(const message, event, eventXML: WideString;
-      ImageIndex: Integer); safecall;
-    function Get_MainToolBarImages: IExodusRosterImages; safecall;
-    function Get_EnableFilesDragAndDrop: WordBool; safecall;
-    procedure Set_EnableFilesDragAndDrop(Value: WordBool); safecall;
 
-    function Get_PacketDispatcher: IExodusPacketDispatcher; safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -165,7 +146,6 @@ type
     _msg_menus: TWidestringList;
     _nextid: longint;
     _parser: TXMLTagParser;
-    _caps_exts: TWidestringList;
     // XXX: _cookie: integer;
 
     _contact_logger: IExodusLogger;
@@ -219,7 +199,7 @@ type
         constructor Create(xpath: Widestring; obj: IExodusListener); overload;
 
         destructor Destroy; override;
-        procedure RosterCallback(event: string; ritem: IExodusItem);
+        procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
         procedure PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
         procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
         procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
@@ -252,26 +232,6 @@ type
         listener : IExodusMenuListener;
     end;
 
-    TLegacyCapsInfo = class
-    private
-        _ext: Widestring;
-        _feats: TWidestringList;
-
-        function _getFeatureCount(): Integer;
-        function _getFeature(idx: Integer): Widestring;
-    public
-        constructor Create(ext: Widestring);
-        destructor Destroy(); override;
-
-        function Add(feat: Widestring): Boolean;
-        function Remove(feat: Widestring): Boolean;
-        procedure Clear();
-
-        property Extent: Widestring read _ext;
-        property FeatureCount: Integer read _getFeatureCount;
-        property Features[Index: Integer]: Widestring read _getFeature;
-    end;
-
 
 // Forward declares for plugin utils
 function CheckPluginDll(dll : WideString; var progID: Widestring; var doc: Widestring): boolean;
@@ -281,6 +241,7 @@ procedure InitPlugins();
 procedure UnloadPlugins();
 procedure ConfigurePlugin(com_name: string);
 function IsPluginConfigurable(com_name: string): boolean;
+procedure ReloadPlugins(sl: TWidestringlist);
 
 var
     plugs: TStringList;
@@ -288,23 +249,19 @@ var
 implementation
 
 uses
-    DockContainer, Profile, CapsCache,
+    DockContainer, Profile,
     ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
-    Chat, JabberID,
-//    MsgRecv,
-    Room, Browser, Jud,
+    Chat, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
-    Jabber1, Session, RemoveContact, ContactController, RosterAdd, RosterForm, PluginAuth, PrefController,
-    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ,
-    ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXWindow,
-    ExActionCtrl, SelectItem, SelectItemRoom, SelectItemAny, SelectItemAnyRoom, ActivityWindow;
+    Jabber1, Session, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
+    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ;
 
 const
-    sPluginErrCreate = 'Plug-in could not be created. (%s)';
-    sPluginErrNoIntf = 'Plug-in class does not support IExodusPlugin. (%s)';
-    sPluginErrInit   = 'Plug-in class could not be initialized. (%s)';
-    sPluginRemove    = 'Remove this plug-in from the list of plug-ins to be loaded at startup?';
+    sPluginErrCreate = 'Plugin could not be created. (%s)';
+    sPluginErrNoIntf = 'Plugin class does not support IExodusPlugin. (%s)';
+    sPluginErrInit   = 'Plugin class could not be initialized. (%s)';
+    sPluginRemove    = 'Remove this plugin from the list of plugins to be loaded at startup?';
     sPluginErrNoLib  = 'A library containing (%s) could not be found.';
     sPluginErrNoReg  = 'The library containing (%s) could not be registered.';
     sPluginNotCOM    = 'The library (%s) does not support COM';
@@ -689,11 +646,18 @@ procedure ConfigurePlugin(com_name: string);
 var
     idx: integer;
     p: TPlugin;
+    errorStr: WideString;
 begin
     //
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
-        // Plugin not found as enabled.
+        LoadPlugin(com_name, errorStr);
+        idx := plugs.IndexOf(com_name);
+    end;
+
+    if (idx < 0) then begin
+        MessageDlgW(errorStr + #13#10#13#10 + _('Plugin could not be initialized or configured.'),
+            mtError, [mbOK], 0);
         exit;
     end;
 
@@ -709,11 +673,20 @@ function IsPluginConfigurable(com_name: string): boolean;
 var
     idx: integer;
     p: TPlugin;
+    errorStr: WideString;
     com2: IExodusPlugin2;
 begin
+    //
+    Result := false;
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
-        Result := false;
+        LoadPlugin(com_name, errorStr);
+        idx := plugs.IndexOf(com_name);
+    end;
+
+    if (idx < 0) then begin
+        MessageDlgW(errorStr + #13#10#13#10 + _('Plugin could not be initialized or configured.'),
+            mtError, [mbOK], 0);
         exit;
     end;
 
@@ -730,6 +703,42 @@ begin
       Result := com2.Configurable
     else
       Result := false;
+end;
+
+{---------------------------------------}
+procedure ReloadPlugins(sl: TWidestringlist);
+var
+    i, idx: integer;
+    loaded: TStringlist;
+    p: TPlugin;
+    errorStr: WideString;
+begin
+    // load all plugins listed, if they are not already loaded.
+    loaded := TStringlist.Create();
+    for i := 0 to sl.Count -1  do begin
+        idx := plugs.IndexOf(sl[i]);
+        if (idx < 0) then begin
+            if (not LoadPlugin(sl[i], errorStr)) then
+                MessageDlgW(errorStr, mtError, [mbOK], 0);
+        end;
+        loaded.Add(sl[i]);
+    end;
+
+    // unload any plugins not in the loaded list
+    for i := plugs.Count - 1 downto 0 do begin
+        try
+            idx := loaded.IndexOf(plugs[i]);
+            if (idx < 0) then begin
+                // unload the plugin
+                p := TPlugin(plugs.Objects[i]);
+                plugs.Delete(i);
+                p.com.Shutdown;
+            end;
+        except
+            DebugMessage('COM Exception in ReloadPlugins');
+        end;
+    end;
+    loaded.Free();
 end;
 
 {---------------------------------------}
@@ -754,7 +763,6 @@ begin
             pp := TPlugin(plugs.Objects[i]);
             plugs.Delete(i);
             pp.com.Shutdown;
-            pp.Free;
           except
             DebugMessage('COM Exception in TExodusChat.UnloadPlugins');
             continue;
@@ -797,18 +805,14 @@ begin
     _xpath := xpath;
 
     // check for special signals
-//    if (LeftStr(xpath, Length('/roster')) = '/roster') then
-//        id := MainSession.RegisterCallback(Self.RosterCallback, xpath)
-//    else if (LeftStr(xpath, Length('/presence')) = '/presence') then
- { TODO : Roster refactor }
-    if (LeftStr(xpath, Length('/presence')) = '/presence') then
+    if (LeftStr(xpath, Length('/roster')) = '/roster') then
+        id := MainSession.RegisterCallback(Self.RosterCallback, xpath)
+    else if (LeftStr(xpath, Length('/presence')) = '/presence') then
         id := MainSession.RegisterCallback(Self.PresenceCallback)
     else if (LeftStr(xpath, Length('/data')) = '/data') then
         id := MainSession.RegisterCallback(Self.DataCallback)
     else if (LeftStr(xpath, Length('/chat')) = '/chat') then
         id := MainSession.RegisterCallback(Self.ChatCallback)
-    else if (LeftStr(xpath, Length('/item')) = '/item') then
-        id := MainSession.RegisterCallback(Self.RosterCallback, xpath)
     else
         id := MainSession.RegisterCallback(Self.Callback, xpath);
 
@@ -864,17 +868,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPluginProxy.RosterCallback(event: string; ritem: IExodusItem);
-var
-   Tag: TXMLTag;
+procedure TPluginProxy.RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
 begin
-   Tag := nil;
-    //Callback(event, tag);
-   if (ritem <> nil) then
-      Tag := TXMLTag.Create('uid', ritem.UID);
-   Callback(event, Tag);
-   if (Tag <> nil) then   
-      Tag.Destroy;
+    Callback(event, tag);
 end;
 
 {---------------------------------------}
@@ -1005,8 +1001,7 @@ begin
     _msg_menus := TWidestringlist.Create();
     _nextid := 0;
     _parser := TXMLTagParser.Create();
-    _caps_exts := TWidestringList.Create();
-
+    
     (*
     // XXX: Joe: figure out this OLE stuff please so it doesn't core on exit
 
@@ -1215,24 +1210,21 @@ end;
 
 {---------------------------------------}
 function TExodusController.isRosterJID(const jid: WideString): WordBool;
-var
-    item: IExodusItem;
 begin
-    item := MainSession.ItemController.GetItem(jid);
-    Result := (item <> nil) and (item.Type_ = 'contact');
+    Result := (MainSession.Roster.Find(jid) <> nil);
 end;
 
 {---------------------------------------}
 function TExodusController.isSubscribed(const jid: WideString): WordBool;
 var
-    item: IExodusItem;
-    value: Widestring;
+    ritem: TJabberRosterItem;
 begin
     Result := false;
-    item := MainSession.ItemController.GetItem(jid);
-    if (item <> nil) and (item.Type_ = 'contact') then begin
-        value := item.value['Subscription'];
-        Result := (value = 'to') or (value = 'both');
+    ritem := MainSession.Roster.Find(jid);
+    if (ritem <> nil) then begin
+        if (ritem.subscription = 'to') or
+        (ritem.subscription = 'both') then
+            Result := true;
     end;
 end;
 
@@ -1442,10 +1434,7 @@ end;
 
 function TExodusController.Get_IsPaused: WordBool;
 begin
-{** JJF msgqueue refactor
     Result := MainSession.IsPaused;
-**}
-    Result := false;    
 end;
 
 function TExodusController.Get_Port: Integer;
@@ -1570,12 +1559,8 @@ end;
 
 {---------------------------------------}
 procedure TExodusController.StartInstantMsg(const JabberID: WideString);
-var
-    tjid: TJabberID;
 begin
-    tjid := TJabberID.Create(JabberID);
-    startChat(tjid.jid, tjid.resource, '');
-    tjid.free();
+    startMsg(JabberID);
 end;
 
 {---------------------------------------}
@@ -1654,15 +1639,15 @@ end;
 {---------------------------------------}
 function TExodusController.Get_Roster: IExodusRoster;
 begin
-    //ExCOMRoster.ObjAddRef();
-    Result := COMRoster;
+    ExCOMRoster.ObjAddRef();
+    Result := ExCOMRoster;
 end;
 
 {---------------------------------------}
 function TExodusController.Get_PPDB: IExodusPPDB;
 begin
-    //ExCOMPPDB.ObjAddRef();
-    Result := COMPPDB;
+    ExCOMPPDB.ObjAddRef();
+    Result := ExCOMPPDB;
 end;
 
 {---------------------------------------}
@@ -1704,21 +1689,21 @@ end;
 {---------------------------------------}
 function TExodusController.AddContactMenu(const caption: WideString;
   const menuListener: IExodusMenuListener): WideString;
-//var
-//    id: Widestring;
-//    mi: TMenuItem;
+var
+    id: Widestring;
+    mi: TMenuItem;
 begin
     // add a new TMenuItem to the Plugins menu
-//    mi := TMenuItem.Create(frmRosterWindow);
-//    frmRosterWindow.popRoster.Items.Add(mi);
-//    mi.Caption := caption;
-//    mi.OnClick := frmRosterWindow.pluginClick;
-//    id := 'ct_menu_' + IntToStr(_roster_menus.Count);
-//    mi.Name := id;
-//    //add menu listener as menu items tag
-//    mi.Tag := Integer(menuListener);
-//    _roster_menus.AddObject(id, mi);
-//    Result := id;
+    mi := TMenuItem.Create(frmRosterWindow);
+    frmRosterWindow.popRoster.Items.Add(mi);
+    mi.Caption := caption;
+    mi.OnClick := frmRosterWindow.pluginClick;
+    id := 'ct_menu_' + IntToStr(_roster_menus.Count);
+    mi.Name := id;
+    //add menu listener as menu items tag
+    mi.Tag := Integer(menuListener);
+    _roster_menus.AddObject(id, mi);
+    Result := id;
 end;
 
 {---------------------------------------}
@@ -1736,42 +1721,39 @@ end;
 
 {---------------------------------------}
 function TExodusController.GetActiveContact: WideString;
-//var
-//    ritem: TJabberRosterItem;
-//begin
-//    ritem := frmRosterWindow.CurRosterItem;
-//    if (ritem <> nil) then
-//        Result := ritem.jid.full
-//    else
-//        Result := '';
-//end;
+var
+    ritem: TJabberRosterItem;
 begin
-
+    ritem := frmRosterWindow.CurRosterItem;
+    if (ritem <> nil) then
+        Result := ritem.jid.full
+    else
+        Result := '';
 end;
 
 {---------------------------------------}
 function TExodusController.GetActiveGroup: WideString;
 begin
-    //Result := frmRosterWindow.CurGroup;
+    Result := frmRosterWindow.CurGroup;
 end;
 
 {---------------------------------------}
 function TExodusController.GetActiveContacts(Online: WordBool): OleVariant;
-//var
-//    items: IExodusItemList;
-//    idx: Integer;
-//    va : Variant;
+var
+    clist: TList;
+    i: integer;
+    ritem: TJabberRosterItem;
+    va : Variant;
 begin
-    { TODO : Roster refactor }
-//    clist := frmRosterWindow.getSelectedContacts(Online);
-//    va := VarArrayCreate([0,clist.Count], varOleStr);
-//
-//    for i := 0 to clist.count - 1 do begin
-//        ritem := TJabberRosterItem(clist[i]);
-//        VarArrayPut(va, ritem.jid.full, i);
-//    end;
-//    clist.Free();
-//    result := va;
+    clist := frmRosterWindow.getSelectedContacts(Online);
+    va := VarArrayCreate([0,clist.Count], varOleStr);
+
+    for i := 0 to clist.count - 1 do begin
+        ritem := TJabberRosterItem(clist[i]);
+        VarArrayPut(va, ritem.jid.full, i);
+    end;
+    clist.Free();
+    result := va;
 end;
 
 {---------------------------------------}
@@ -1857,20 +1839,20 @@ end;
 {---------------------------------------}
 function TExodusController.AddGroupMenu(const caption: WideString;
   const menuListener: IExodusMenuListener): WideString;
-//var
-//    id: Widestring;
-//    mi: TMenuItem;
+var
+    id: Widestring;
+    mi: TMenuItem;
 begin
     // add a new TMenuItem to the Plugins menu
-//    mi := TMenuItem.Create(frmRosterWindow);
-//    frmRosterWindow.popGroup.Items.Add(mi);
-//    mi.Caption := caption;
-//    mi.OnClick := frmRosterWindow.pluginClick;
-//    id := 'group_menu_' + IntToStr(_roster_menus.Count);
-//    mi.Name := id;
-//    mi.Tag := Integer(menuListener);
-//    _roster_menus.AddObject(id, mi);
-//    Result := id;
+    mi := TMenuItem.Create(frmRosterWindow);
+    frmRosterWindow.popGroup.Items.Add(mi);
+    mi.Caption := caption;
+    mi.OnClick := frmRosterWindow.pluginClick;
+    id := 'group_menu_' + IntToStr(_roster_menus.Count);
+    mi.Name := id;
+    mi.Tag := Integer(menuListener);
+    _roster_menus.AddObject(id, mi);
+    Result := id;
 end;
 
 {---------------------------------------}
@@ -1908,47 +1890,28 @@ end;
 {---------------------------------------}
 procedure TExodusController.RegisterCapExtension(const ext,
   feature: WideString);
-var
-    idx: Integer;
-    caps: TLegacyCapsInfo;
 begin
-    idx := _caps_exts.IndexOf(ext);
-    if (idx <> -1) then
-        caps := TLegacyCapsInfo(_caps_exts.Objects[idx])
-    else begin
-        caps := TLegacyCapsInfo.Create(ext);
-        _caps_exts.AddObject(ext, caps);
-    end;
-
-    caps.Add(feature);
+    MainSession.AddExtension(ext, feature);
 end;
 
 {---------------------------------------}
 procedure TExodusController.UnregisterCapExtension(const ext: WideString);
-var
-    idx: Integer;
-    caps: TLegacyCapsInfo;
 begin
-    idx := _caps_exts.IndexOf(ext);
-    if (idx <> -1) then begin
-        caps := TLegacyCapsInfo(_caps_exts.Objects[idx]);
-        caps.Free();
-        _caps_exts.Delete(idx);
-    end;
+    MainSession.RemoveExtension(ext);
 end;
 
 {---------------------------------------}
 function TExodusController.Get_RosterImages: IExodusRosterImages;
 begin
-    //ExCOMRosterImages.ObjAddRef();
-    Result := COMRosterImages;
+    ExCOMRosterImages.ObjAddRef();
+    Result := ExCOMRosterImages;
 end;
 
 {---------------------------------------}
 function TExodusController.Get_EntityCache: IExodusEntityCache;
 begin
-    //ExCOMEntityCache.ObjAddRef();
-    Result := COMEntityCache;
+    ExCOMEntityCache.ObjAddRef();
+    Result := ExCOMEntityCache;
 end;
 
 {---------------------------------------}
@@ -1988,9 +1951,8 @@ procedure TExodusController.FireEvent(const Event, XML, Arg: WideString);
 var
     jid: TJabberID;
     x: TXMLTag;
-//    ri: TJabberRosterItem;
+    ri: TJabberRosterItem;
     p: TJabberPres;
-    Item: IExodusItem;
 begin
     _parser.Clear();
     _parser.ParseString(XML, '');
@@ -2000,21 +1962,13 @@ begin
         x := nil;
     _parser.Clear();
 
-//    if (LeftStr(Event, Length('/roster')) = '/roster') then begin
-//            { TODO : Roster refactor }
-//        ri := nil;
-//        if (Arg <> '') then begin
-//            ri := MainSession.roster.Find(Arg);
-//            x := TXmlTag.Create(ri.Tag); // copy the ri tag so it is good for freeing below
-//        end;
-        //MainSession.FireEvent(Event, x, ri);
-//    end
-    if (LeftStr(Event, Length('/item')) = '/item') then begin
-        Item := nil;
+    if (LeftStr(Event, Length('/roster')) = '/roster') then begin
+        ri := nil;
         if (Arg <> '') then begin
-            Item := MainSession.ItemController.GetItem(Arg);
+            ri := MainSession.roster.Find(Arg);
+            x := TXmlTag.Create(ri.Tag); // copy the ri tag so it is good for freeing below
         end;
-        MainSession.FireEvent(Event, Item);
+        MainSession.FireEvent(Event, x, ri);
     end
     else if (LeftStr(Event, Length('/presence')) = '/presence') then begin
         p := nil;
@@ -2046,8 +2000,8 @@ end;
 {---------------------------------------}
 function TExodusController.Get_Toolbar: IExodusToolbar;
 begin
-    //ExCOMToolbar.ObjAddRef();
-    Result := COMToolbar;
+    ExCOMToolbar.ObjAddRef();
+    Result := ExCOMToolbar;
 end;
 
 {---------------------------------------}
@@ -2136,194 +2090,8 @@ end;
 
 function TExodusController.Get_BookmarkManager: IExodusBookmarkManager;
 begin
-    Result := COMBookmarkManager;
-end;
-
-function TExodusController.Get_TabController: IExodusTabController;
-begin
-    Result := GetRosterWindow().TabController;
-end;
-
-function TExodusController.Get_ActionController: IExodusActionController;
-begin
-    Result := GetActionController();
-end;
-
-function TExodusController.Get_ItemController: IExodusItemController;
-begin
-    Result := MainSession.ItemController;
-end;
-
-// IExodusController2
-function TExodusController.NewAXWindow(const ActiveX_GUID,
-  ActiveXWindow_Caption: WideString; BringToFront: WordBool): IExodusAXWindow;
-safecall;
-var
-    frm: TfrmActiveXDockable;
-begin
-    try
-        Result := nil;
-        frm := StartActiveX(ActiveX_GUID, ActiveXWindow_Caption, true, BringToFront);
-        if (frm <> nil) then begin
-            Result := TExodusAXWindow.Create(frm);
-        end;
-    except
-    end;
-end;
-
-function TExodusController.Get_DataStore: IExodusDataStore;
-begin
-    Result := DataStore;
-end;
-
-function TExodusController.Get_HistorySearchManager: IExodusHistorySearchManager;
-begin
-    Result := HistorySearchManager;
-end;
-
-
-function TExodusController.GetPrefAsXML(const key: WideString): WideString;
-var
-    tag: TXMLTag;
-begin
-    Result := '';
-    tag := MainSession.Prefs.getXMLPref(key);
-    if (tag <> nil) then begin
-        Result := tag.XML();
-    end;
-end;
-
-procedure TExodusController.SetPrefAsXML(const xml: WideString);
-var
-    tag: TXMLTag;
-    parser: TXMLTagParser;
-begin
-    parser := TXMLTagParser.Create();
-    try
-        parser.ParseString(xml, '');
-        tag := parser.popTag;
-        if (tag <> nil) then begin
-            MainSession.Prefs.setXMLPref(tag);
-        end;
-        tag.free();
-    except
-
-    end;
-    parser.free();
-end;
-
-function TExodusController.SelectItem(const ItemType, Title: WideString;
-  IncludeAnyOption: WordBool): WideString;
-begin
-    if (IncludeAnyOption) then begin
-        Result := SelectUIDByTypeAny(ItemType, Title);
-    end
-    else begin
-        Result := SelectUIDByType(ItemType, Title);
-    end;
-end;
-
-function TExodusController.SelectRoom(const Title: WideString;
-  IncludeJoinedRoomList, IncludeAnyOption: WordBool): WideString;
-begin
-    if (IncludeJoinedRoomList) then begin
-        if (IncludeAnyOption) then begin
-            Result := SelectUIDByTypeAnyRoom(Title);
-        end
-        else begin
-            Result := SelectUIDByTypeRoom(Title);
-        end;
-    end
-    else begin
-        if (IncludeAnyOption) then begin
-            Result := SelectUIDByTypeAny('room', Title);
-        end
-        else begin
-            Result := SelectUIDByType('room', Title);
-        end;
-    end;
-end;
-
-procedure TExodusController.ShowToastWithEvent(const message, event,
-  eventXML: WideString; ImageIndex: Integer);
-begin
-    ShowRiserWindow(message, imageIndex, event, eventXML);
-end;
-
-function TExodusController.Get_MainToolBarImages: IExodusRosterImages;
-begin
-    Result := COMToolBarImages;
-end;
-
-
-function TExodusController.Get_EnableFilesDragAndDrop: WordBool;
-begin
-    Result := GetActivityWindow().FilesDragAndDrop;
-end;
-
-procedure TExodusController.Set_EnableFilesDragAndDrop(Value: WordBool);
-begin
-    GetActivityWindow().FilesDragAndDrop := Value;
-end;
-
-function TExodusController.Get_PacketDispatcher: IExodusPacketDispatcher;
-begin
-    Result := COMExPacketDispatcher;
-end;
-
-constructor TLegacyCapsInfo.Create(ext: WideString);
-begin
-    _ext := ext;
-    _feats := TWidestringList.Create();
-end;
-
-destructor TLegacyCapsInfo.Destroy();
-begin
-    Clear();
-    _feats.Free();
-
-    inherited;
-end;
-
-function TLegacyCapsInfo._getFeatureCount(): Integer;
-begin
-    Result := _feats.Count;
-end;
-function TLegacyCapsInfo._getFeature(idx: Integer): Widestring;
-begin
-    if (idx > -1) and (idx < _feats.Count) then
-        result := _feats[idx]
-    else
-        Result := '';
-end;
-
-function TLegacyCapsInfo.Add(feat: WideString): Boolean;
-begin
-    Result := (feat <> '') and (_feats.IndexOf(feat) = -1);
-    if (result) then  begin
-        _feats.Add(feat);
-        jSelfCaps.AddFeature(feat);
-    end;
-end;
-function TLegacyCapsInfo.Remove(feat: Widestring): Boolean;
-var
-    idx: Integer;
-begin
-    idx := _feats.IndexOf(feat);
-    Result := (feat <> '') and (idx <> -1);
-    if Result then begin
-        _feats.Delete(idx);
-        jSelfCaps.RemoveFeature(feat);
-    end;
-end;
-procedure TLegacyCapsInfo.Clear();
-var
-    idx: Integer;
-begin
-    for idx := _feats.Count - 1 downto 0 do begin
-        jSelfCaps.RemoveFeature(_feats[idx]);
-        _feats.Delete(idx);
-    end;
+    ExCOMBookmarkManager.ObjAddRef();
+    Result := ExCOMBookmarkManager;
 end;
 
 

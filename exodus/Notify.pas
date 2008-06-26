@@ -22,17 +22,25 @@ unit Notify;
 interface
 
 uses
-    XMLTag, Presence, Forms, AppEvnts;
+    XMLTag,
+    JabberID,
+    Presence,
+    Dockable,
+    Windows, Forms, Contnrs, SysUtils, classes;
+
 type
-    TPresNotifier = class
+    TNotifyController = class
     private
+        _session: TObject;
         _presCallback: longint;
+    published
+        procedure Callback (event: string; tag: TXMLTag);
+        procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
     public
         constructor Create;
         destructor Destroy; override;
-
-        procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
-    end;
+        procedure SetSession(js: TObject);
+end;
 
 const
     // image index for tab notification.
@@ -42,224 +50,270 @@ procedure DoNotify(win: TForm; notify: integer; msg: Widestring; icon: integer;
     sound_name: string); overload;
 procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer); overload;
 
-procedure StartFlash(win: TForm);
-procedure StopFlash(win: TForm);
-
 implementation
 uses
-    Windows, MMSystem,
-    Sysutils, 
-    Exodus_TLB, COMExodusItem,
-    JabberConst, JabberID, Dockable, RosterImages,StateForm, DisplayName,
-    ExUtils, GnuGetText, Jabber1, PrefController, RiserWindow, Debug, Session;
+    RosterImages,
+    RosterWindow,
+    StateForm,
+    DisplayName,
+    BaseChat, JabberUtils, ExUtils,  ExEvents, GnuGetText,
+    Jabber1, PrefController, RiserWindow,
+    Room, NodeItem, Roster, MMSystem, Debug, Session;
 
 const
     sNotifyOnline = ' is now online.';
     sNotifyOffline = ' is now offline.';
-
-    IE_PROP_IMAGEPREFIX = 'ImagePrefix';
     
-    SOUND_OPTIONS = SND_FILENAME or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT;
-
 {---------------------------------------}
-constructor TPresNotifier.Create();
+constructor TNotifyController.Create;
 begin
-    inherited;
-    _presCallback := MainSession.RegisterCallback(PresCallback);
-end;
-
-{---------------------------------------}
-destructor TPresNotifier.Destroy;
-begin
-    MainSession.UnRegisterCallback(_presCallback);
+    //
     inherited;
 end;
 
 {---------------------------------------}
-procedure TPresNotifier.PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
+destructor TNotifyController.Destroy;
+begin
+    inherited Destroy;
+end;
+
+{---------------------------------------}
+procedure TNotifyController.SetSession(js: TObject);
+begin
+    // Store a reference to the session object
+    _session := js;
+    with TJabberSession(_session) do begin
+        _presCallback := RegisterCallback(PresCallback);
+    end;
+end;
+
+{---------------------------------------}
+procedure TNotifyController.PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
+begin
+    // getting a pres event
+    Callback(event, tag);
+end;
+
+{---------------------------------------}
+procedure TNotifyController.Callback(event: string; tag: TXMLTag);
 var
-    ImageIndex: integer;
-    nick, notifyMessage, notifyType: Widestring;
-    tjid: TJabberID;
-    Item: IExodusItem;
+    idx: integer;
+    sess: TJabberSession;
+    nick, j, from, notifyMessage: Widestring;
+    ritem: TJabberRosterItem;
+    tmp_jid: TJabberID;
+    f: TForm;
 begin
-    //bail if we have not yet received a roster
-    
-    //bail if the event is one we are notifying about
-    if ((event <> '/presence/online') and
-        (event <> '/presence/offline')) then
+    notifyMessage := '';
+    // we are getting some event to do notification on
+
+    // DebugMsg('Notify Callback: ' + BoolToStr(MainSession.IsPaused, true));
+    if MainSession.IsPaused then begin
+        MainSession.QueueEvent(event, tag, Self.Callback);
         exit;
+    end;
 
-    tjid := TJabberID.Create(tag.GetAttribute('from'));
+    sess := TJabberSession(_session);
+    from := tag.GetAttribute('from');
+    tmp_jid := TJabberID.Create(from);
+    f := nil;
+    idx := -1;
     try
-        //bail if blocked
-        if (MainSession.IsBlocked(tjid.jid)) then exit;
+        j := tmp_jid.jid;
+        if (sess.IsBlocked(j)) then exit;
+        // don't display notifications for rooms, here.
+        if (IsRoom(j)) then exit;
+        // someone is coming online for the first time..
+        if (event = '/presence/online') then begin
+            ritem := MainSession.roster.Find(tmp_jid.getDisplayJID());
+            if (ritem <> nil) then begin
+                idx := ritem.getPresenceImage('available');
+                if ((ritem = MainSession.roster.ActiveItem) and
+                    (MainSession.Roster.ActiveItem.IsContact) and
+                    (MainSession.Roster.ActiveItem.IsNative) and
+                    (frmrosterWindow.treeRoster.SelectionCount < 2)) then begin
+                    frmExodus.btnSendFile.Enabled := true;
+                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := true;
+                end;
+            end
+            else
+                idx := RosterTreeImages.Find('available');
+            //Presence notifications should be routed to the parent form of the
+            //roster. may be mainform or roster is embedded in a tab
+            f := GetRosterWindow();
+            if (f <> nil) then
+                f := TfrmRosterWindow(f).GetDockParent();
+            if (f <> nil) and (not f.inheritsFrom(TfrmDockable)) then
+                f := nil; //route to mainform
+            notifyMessage := sNotifyOnline;
+        end
 
-        Item := MainSession.ItemController.GetItem(tjid.jid);
-        //bail if not in roster or not a contact
-        if (Item = nil) or (Item.Type_ <> EI_TYPE_CONTACT) then exit;
+        // someone is going offline
+        else if (event = '/presence/offline') then begin
+            ritem := sess.roster.Find(j);
+            if (ritem <> nil) then begin
+                idx := ritem.getPresenceImage('offline');
+                if (ritem = MainSession.roster.ActiveItem) then begin
+                    frmExodus.btnSendFile.Enabled := false;
+                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := false;
+                end;
+            end
+            else
+                idx := RosterTreeImages.Find('offline');
 
-        nick := DisplayName.getDisplayNameCache().getDisplayName(tjid);
+            f := GetRosterWindow();
+            if (f <> nil) then
+                f := TfrmRosterWindow(f).GetDockParent();
+            if (f <> nil) and (not f.inheritsFrom(TfrmDockable)) then
+                f := nil; //route to mainform
+            notifyMessage := sNotifyOffline;
+        end
+
+        // don't display normal presence changes
+        else if ((event = '/presence/available') or (event = '/presence/error')
+            or (event = '/presence/unavailable') ) then
+            // do nothing
+
+        // unkown.
+        else
+            DebugMessage('Unknown notify event: ' + event);
+
+        if (notifyMessage <> '') then begin
+            nick := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
+            if (notifyMessage = sNotifyOnline) then
+              DoNotify(f, 'notify_online', nick + _(notifyMessage), idx)
+            else
+              DoNotify(f, 'notify_offline', nick + _(notifyMessage), idx);            
+        end;
     finally
-        tjid.Free();
-    end;
-
-    // someone is coming online for the first time..
-    if (event = '/presence/online') then
-    begin
-        ImageIndex := GetPresenceImage('available', Item.value[IE_PROP_IMAGEPREFIX]);
-        notifyMessage := sNotifyOnline;
-        notifyType := 'notify_online';
-    end
-    else begin// someone is going offline
-        ImageIndex := GetPresenceImage('offline', Item.value[IE_PROP_IMAGEPREFIX]);
-        notifyMessage := sNotifyOffline;
-        notifyType := 'notify_offline';
-    end;
-    //notify to the roster window (mainform)
-    DoNotify(Application.MainForm, notifyType, nick + _(notifyMessage), ImageIndex);
-end;
-
-
-procedure StartFlash(win: TForm);
-var
-    fi: TFlashWInfo;
-    tf: TCustomForm;
-begin
-    //get the topmost parent form of win
-    tf := Forms.GetParentForm(win, true);
-    if (tf = nil) then
-        tf := win;
-
-    if (not tf.Showing) then
-    begin
-        tf.WindowState := wsMinimized;
-        tf.Visible := true;
-        ShowWindow(tf.Handle, SW_SHOWMINNOACTIVE);
-    end;
-    //check flasher pref to see if tf should be flashed once or flashed until focused
-    if (not MainSession.Prefs.getBool('notify_flasher')) then
-        FlashWindow(tf.Handle, false)
-    else begin
-        fi.hwnd:= tf.Handle;
-        fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
-        fi.dwTimeout := 0;
-        fi.cbSize:=SizeOf(fi);
-        FlashWindowEx(fi);
-    end;
-end;
-
-procedure StopFlash(win: TForm);
-var
-    fi: TFlashWInfo;
-    tf: TCustomForm;
-begin
-    tf := Forms.GetParentForm(win, true);
-    if (tf = nil) then
-        tf := win;
-
-    fi.hwnd:= tf.Handle;
-    fi.dwFlags := FLASHW_STOP;
-    fi.dwTimeout := 0;
-    fi.cbSize:=SizeOf(fi);
-    FlashWindowEx(fi);
-end;
-
-procedure HandleNotifications(win: TForm;
-                              notify: integer;
-                              msg: Widestring;
-                              icon: integer;
-                              prefKey: string);
-var
-    sndFN: string;
-begin
-    if ((notify and notify_toast) <> 0) then
-        ShowRiserWindow(win, msg, icon);
-
-    if ((notify and notify_front) <> 0) then
-    begin
-        //make sure window is visible
-        if (not win.Showing) then
-        begin
-            win.Visible := true;
-            ShowWindow(win.handle, SW_SHOW)
-        end;
-        ForceForegroundWindow(win.Handle);
-    end
-    else begin //tray and flash alert only if not bringtofront
-        if ((notify and notify_tray) <> 0) then
-            StartTrayAlert();
-
-        if ((notify and notify_flash) <> 0) then
-            StartFlash(win);
-    end;
-
-    if ((notify and notify_sound) <> 0) and
-        (MainSession.prefs.getBool('notify_sounds')) then
-    begin
-        sndFN := MainSession.Prefs.GetSoundFile(prefKey);
-        if (sndFN <> '') then
-            PlaySound(pchar(sndFN), 0, SOUND_OPTIONS);
+        tmp_jid.Free();
     end;
 end;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-procedure DoNotify(win: TForm;
-                   notify: integer;
-                   msg: Widestring;
-                   icon: integer;
-                   sound_name: string);
-var
-    tn: integer;
+procedure DoNotify(win: TForm; notify: integer; msg: Widestring; icon: integer;
+    sound_name: string);
 begin
-    //map nil windows back to the main window
-    if (win = nil) then
-        win := Application.MainForm;
-        
-    //if we have no notifications, we are done
-    if (notify = 0) then exit;
+    //bail if paused
+    if (MainSession.IsPaused) then exit;
 
-    //check active prefs if app is active and we are not bring to front
-    if (((notify and notify_front) = 0) and Application.Active) then
-    begin
-        //notify active app, we are active app -> notify
-        //notify active app, we are not active app -> notify
-        //do not notify active app, we are not active app -> notify
-        //do not notify active app, we are active app -> bail (no notify)
-        if (not MainSession.prefs.getBool('notify_active')) then exit;
-
-        //notify active window, we are active window -> notify
-        //notify active window, we are not active window -> notify
-        //don't notify active window, we aren't active window -> notify
-        //don't notify active window, we are active window -> bail (no notify)
-        if (not MainSession.prefs.getBool('notify_active_win')) then begin
-            if (GetForegroundWindow() = win.handle) then
-                exit;
-
-            if ((GetDockManager().isActive) and
-               (GetDockManager().GetTopDocked() = win) and
-               (GetForegroundWindow() = GetDockManager().getHWND())) then
-                exit;
+    //If "bring to front" notification selected, skip the following section
+    // and perform notification code following this section
+    if ((notify and notify_front) = 0) then begin
+        //check "notify if app active" and "notify if window active" prefs.
+        if (Application.Active) then begin
+            if (not MainSession.prefs.getBool('notify_active')) then begin
+                // We Don't want to be notified when active (contact offline/online msgs)
+                if (not MainSession.prefs.getBool('notify_active_win')) then begin
+                    // We never want to get notified when app active
+                    exit;
+                end
+                else begin
+                    // We DO want to get notified when in active window  (chat activity, not contact offline/online)
+                    // Make sure we have the active window
+                    if (win = nil) then exit;
+                    if (GetForegroundWindow() <> win.handle) then exit;
+                    //if dock manager is active and win is top docked, it is active
+                    if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
+                end;
+            end
+            else begin
+                // We DO want to be notified when active (contact offline/online msgs)
+                if (not MainSession.prefs.getBool('notify_active_win')) then begin
+                    // We Don't want to be notified when in active window. (chat activity, not contact offline/online)
+                    // Make sure we are in active window
+                    if (win <> nil) then begin
+                        if (GetForegroundWindow() = win.handle) then exit;
+                        //if dock manager is active and win is top docked, it is active
+                        if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
+                    end;
+                end;
+            end;
         end;
     end;
 
-    //pass off bring to front and flash to better handlers if we can
-    tn := notify - ((notify and notify_front) or (notify and notify_flash));
-    //but dockmanager should handle docked
-    if (win is TfrmDockable) or (win.Handle = GetDockManager().getHWND) then
-    begin
-        if (win is TfrmDockable) then
-            TfrmDockable(win).OnNotify(notify);
-        GetDockManager().OnNotify(win, notify);
-    end
-    //let stateform have a shot at notifying...
-    else if (win is TfrmState) then
+    if ((notify and notify_toast) > 0) then
+        ShowRiserWindow(win, msg, icon); // Show toast
+
+    if (win is TfrmState) then
         TfrmState(win).OnNotify(notify)
-    else tn := notify;  //include front and flash if not handled elsewhere
+    else if (win <> nil) then begin  //handle flash and front ourselves
+        if ((notify and notify_flash) > 0) then
+            FlashWindow(win.Handle, true);
+        if ((notify and notify_front) > 0) then begin
+            if ((not win.Visible) or (win.WindowState = wsMinimized))then begin
+            win.WindowState := wsNormal;
+            win.Visible := true;
+        end;
+        ShowWindow(win.Handle, SW_SHOWNORMAL);
+        ForceForegroundWindow(win.Handle);
+        end;
+    end;
+    GetDockManager().OnNotify(win, notify);
 
-    HandleNotifications(win, tn, msg, icon, sound_name);
+{    if ((notify and notify_flash) > 0) then begin
+        // flash or show img
+        if (w = frmExodus) then begin
+            // The window is the main window
+//JJF Fix this!            if frmExodus.Tabs.ActivePage <> frmExodus.tbsRoster then
+//                frmExodus.tbsRoster.ImageIndex := tab_notify;
+            if ((active_win <> frmExodus.Handle) and (not Application.Active)) then
+                frmExodus.Flash();
+        end
+        else
+            if d.Docked then begin
+                if (frmExodus.getTopDocked() <> d) then begin
+                    d.TabSheet.ImageIndex := tab_notify;
+                    frmExodus.Tabs.Repaint();
+                end;
+                if ((active_win <> frmExodus.Handle) and (not Application.Active)) then
+                    frmExodus.Flash();
+            end
+            else if (w is TfrmBaseChat) then
+                TfrmBaseChat(w).Flash()
+            else begin
+                FlashWindow(w.Handle, true);
+                FlashWindow(w.Handle, true);
+            end;
+        end
+        else begin
+            // it's something else
+            FlashWindow(w.Handle, true);
+            FlashWindow(w.Handle, true);
+        end;
+    end;
+
+    if ((notify and notify_front) > 0) then begin
+        // pop the window to the front
+        if (w is TfrmDockable) then begin
+            d := TfrmDockable(w);
+            if (d.Docked) then begin
+                frmExodus.doRestore();
+                frmExodus.BringDockedToTop(d);
+                //invoke the onchange event so tab is updated correctly
+                frmExodus.Tabs.onChange(nil);
+                w := frmExodus;
+            end;
+        end
+        else if (w = frmExodus) then
+            frmExodus.doRestore()
+        else if ((not w.Visible) or (w.WindowState = wsMinimized))then begin
+            w.WindowState := wsNormal;
+            w.Visible := true;
+        end;
+        ShowWindow(w.Handle, SW_SHOWNORMAL);
+        ForceForegroundWindow(w.Handle);
+    end;
+}
+
+    // NOTE:    sound keys in registry MUST be no more then 31 chars
+    //          due to Windows limitations.  Thus the first param to
+    //          PlaySound() is hard coded to exodus_
+    if (MainSession.prefs.getBool('notify_sounds')) then
+        PlaySound(pchar('exodus_' + sound_name), 0,
+                  SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
 end;
 
 

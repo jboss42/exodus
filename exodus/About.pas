@@ -24,10 +24,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, jpeg, ExtCtrls, StdCtrls, buttonFrame, ComCtrls, ExRichEdit,
-  RichEdit2, ExForm, TntForms, ExFrame;
+  RichEdit2;
 
 type
-  TfrmAbout = class(TExForm)
+  TfrmAbout = class(TForm)
     Panel1: TPanel;
     Image1: TImage;
     frameButtons1: TframeButtons;
@@ -57,12 +57,13 @@ uses
     JabberUtils, ExUtils,  GnuGetText, ShellAPI, XMLUtils, Session, Unicode;
 
 const
-    sAbout1 = 'Exodus is the creation of Peter Millard.  Checkout the website at http://exodus.googlecode.com for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.';
-    sAbout2 = 'TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si.';
-    sAbout3 = 'SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de';
-    sAbout4 = 'Unicode library is Copyright (c) 1999, 2000 Mike Lischke (public@lischke-online.de) and Portions Copyright (c) 1999, 2000 Azret Botash (az).';
-    sAbout5 = 'RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>';
-    sAbout6 = 'PNG Delphi is Copyright (c) 2006, Gustavo Huffenbacher Daud. http://pngdelphi.sourceforge.net';
+    sAbout1 = 'Exodus is the creation of Peter Millard.  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.';
+    sAbout2 = 'Preference Icons used with permission from collections of "Iconaholic Design".  http://www.iconaholic.com/';
+    sAbout3 = 'TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si.';
+    sAbout4 = 'SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de';
+    sAbout5 = 'Unicode library is Copyright (c) 1999, 2000 Mike Lischke (public@lischke-online.de) and Portions Copyright (c) 1999, 2000 Azret Botash (az).';
+    sAbout6 = 'RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>';
+    sAbout7 = 'PNG Delphi is Copyright (c) 2006, Gustavo Huffenbacher Daud. http://pngdelphi.sourceforge.net';
 
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin
@@ -97,6 +98,8 @@ begin
     InfoBox.WideLines.Add(_(sAbout5));
     InfoBox.WideLines.Add('');
     InfoBox.WideLines.Add(_(sAbout6));
+    InfoBox.WideLines.Add('');
+    InfoBox.WideLines.Add(_(sAbout7));
     InfoBox.WideLines.Add('');
 
     additional := TWideStringList.Create();

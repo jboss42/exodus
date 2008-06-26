@@ -1,40 +1,21 @@
 unit COMToolbarButton;
-{
-    Copyright 2001, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-}
 
 {$WARN SYMBOL_PLATFORM OFF}
 
 interface
 
 uses
-  ComCtrls, ComObj, ActiveX, Exodus_TLB, ExodusImageList, StdVcl;
+  ComCtrls, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusToolbarButton = class(TAutoObject, IExodusToolbarButton, IExodusToolbarButton2)
   private
     _button: TToolButton;
     _menu_listener: IExodusMenuListener;
-    _imgList: TExodusImageList;
+
   public
-    constructor Create(btn: TToolButton; imgList: TExodusImageList = nil);
-    destructor Destroy(); override;
+    constructor Create(btn: TToolButton);
+
   protected
     function Get_ImageID: WideString; safecall;
     function Get_Tooltip: WideString; safecall;
@@ -48,47 +29,26 @@ type
     procedure Set_MenuListener(const Value: IExodusMenuListener); safecall;
     function Get_Name: Widestring; safecall;
 
-    procedure SetImageList(images: TExodusImageList);
-  public
+  published
     procedure OnClick(Sender: TObject);
-  end;
 
+  end;
 
 implementation
 
 uses
     RosterImages, ComServ, Debug;
 
-constructor TExodusToolbarButton.Create(btn: TToolButton; imgList: TExodusImageList);
+constructor TExodusToolbarButton.Create(btn: TToolButton);
 begin
     _button := btn;
     if (not Assigned(_button.OnClick)) then
         _button.OnClick := Self.OnClick;
-
-    if (imgList <> nil) then
-        SetImageList(imgList)
-    else
-        SetImageList(RosterTreeImages);
-end;
-
-destructor TExodusToolbarButton.Destroy();
-begin
-    _menu_listener := nil;
-    //TODO JJF button may not be valid here, may have already been freed by parent
-    //toolbar. Even so, if we assigned an onlcick handler to the button
-    //we should clear it now.
-    _button := nil;
-    inherited;
-end;
-
-procedure TExodusToolbarButton.SetImageList(images: TExodusImageList);
-begin
-    _imgList := images;
 end;
 
 function TExodusToolbarButton.Get_ImageID: WideString;
 begin
-    Result := _imgList.GetID(_button.ImageIndex);
+    Result := RosterTreeImages.GetID(_button.ImageIndex);
 end;
 
 function TExodusToolbarButton.Get_Tooltip: WideString;
@@ -105,7 +65,7 @@ procedure TExodusToolbarButton.Set_ImageID(const Value: WideString);
 var
     idx: integer;
 begin
-    idx := _imgList.Find(Value);
+    idx := RosterTreeImages.Find(Value);
     if (idx >= 0) then
         _button.ImageIndex := idx;
 end;

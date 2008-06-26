@@ -207,32 +207,7 @@ const
     RI_CHATBAR_COLORS_INDEX : Integer = 84;
     RI_OBSERVER_KEY         : Widestring = 'observer';
     RI_OBSERVER_INDEX       : Integer = 85;
-    RI_ARROWDOWN_KEY        : Widestring = 'arrow_down';
-    RI_ARROWDOWN_INDEX      : Integer = 86;
-    RI_ARROWUP_KEY          : Widestring = 'arrow_up';
-    RI_ARROWUP_INDEX        : Integer = 87;
-    RI_SHOWAW_KEY           : Widestring = 'show_activity_window';
-    RI_SHOWAW_INDEX         : Integer = 88;
-    RI_SHOWROSTER_KEY       : Widestring = 'show_roster';
-    RI_SHOWROSTER_INDEX     : Integer = 89;
-    RI_TEMP_CONFERENCE_KEY  : WideString = 'temp_conference';
-    RI_TEMP_CONFERENCE_INDEX: Integer = 90;
-    RI_FOLDER_OPEN_KEY      : Widestring = 'folder_open';
-    RI_FOLDER_OPEN_INDEX    : Integer = 91;
-    RI_FOLDER_CLOSED_KEY    : Widestring = 'folder_closed';
-    RI_FOLDER_CLOSED_INDEX  : Integer = 92;
-    RI_CONTACTS_TAB_KEY     : Widestring = 'contacts_tab';
-    RI_CONTACTS_TAB_INDEX   : Integer = 93;
-    RI_ROOMS_TAB_KEY        : Widestring = 'rooms_tab';
-    RI_ROOMS_TAB_INDEX      : Integer = 94;
-    RI_MAIN_TAB_KEY         : Widestring = 'main_tab';
-    RI_MAIN_TAB_INDEX       : Integer = 95;
-    RI_VIEW_HISTORY_KEY     : Widestring = 'view_history';
-    RI_VIEW_HISTORY_INDEX   : Integer = 96;
-
 {$ENDIF}
-
-function GetPresenceImage(Show: Widestring; Prefix:WideString): integer;
 
 var
     RosterTreeImages: TRosterImages;
@@ -331,43 +306,8 @@ begin
     _ids.Insert(RI_CLOSETAB_INDEX, RI_CLOSETAB_KEY);
     _ids.Insert(RI_CHATBAR_COLORS_INDEX, RI_CHATBAR_COLORS_KEY);
     _ids.Insert(RI_OBSERVER_INDEX, RI_OBSERVER_KEY);
-    _ids.Insert(RI_ARROWDOWN_INDEX, RI_ARROWDOWN_KEY);
-    _ids.Insert(RI_ARROWUP_INDEX, RI_ARROWUP_KEY);
-    _ids.Insert(RI_SHOWAW_INDEX, RI_SHOWAW_KEY);
-    _ids.Insert(RI_SHOWROSTER_INDEX, RI_SHOWROSTER_KEY);
-    _ids.Insert(RI_TEMP_CONFERENCE_INDEX, RI_TEMP_CONFERENCE_KEY);
-    _ids.Insert(RI_FOLDER_OPEN_INDEX, RI_FOLDER_OPEN_KEY);
-    _ids.Insert(RI_FOLDER_CLOSED_INDEX, RI_FOLDER_CLOSED_KEY);    
-    _ids.Insert(RI_CONTACTS_TAB_INDEX, RI_CONTACTS_TAB_KEY);
-    _ids.Insert(RI_ROOMS_TAB_INDEX, RI_ROOMS_TAB_KEY);
-    _ids.Insert(RI_MAIN_TAB_INDEX, RI_MAIN_TAB_KEY);
-    _ids.Insert(RI_VIEW_HISTORY_INDEX, RI_VIEW_HISTORY_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
-end;
-
-function GetPresenceImage(Show: Widestring; Prefix:WideString): integer;
-begin
-    if (Show = 'offline') then
-        Result := RosterTreeImages.Find(Prefix + 'offline')
-    else if (Show = 'away') then
-        Result := RosterTreeImages.Find(Prefix + 'away')
-    else if (Show = 'xa') then
-        Result := RosterTreeImages.Find(Prefix + 'xa')
-    else if (Show = 'dnd') then
-        Result := RosterTreeImages.Find(Prefix + 'dnd')
-    else if (Show = 'chat') then
-        Result := RosterTreeImages.Find(Prefix + 'chat')
-    else if (Show = 'pending') then
-        Result := RosterTreeImages.Find(Prefix + 'pending')
-    else if (Show = 'online_blocked') then
-        Result := RosterTreeImages.Find(Prefix + 'online_blocked')
-    else if (Show = 'offline_blocked') then
-        Result := RosterTreeImages.Find(Prefix + 'offline_blocked')
-    else if (Show = 'observer') then
-        Result := RosterTreeImages.Find(Prefix + 'observer')
-    else
-        Result := RosterTreeImages.Find(Prefix + 'available');
 end;
 
 initialization

@@ -23,10 +23,10 @@ interface
 uses
     XMLTag, Unicode,  
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, ExtCtrls, TntStdCtrls, ExFrame;
+    StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
-  TframeTopLabel = class(TExFrame)
+  TframeTopLabel = class(TFrame)
     Panel1: TPanel;
     lbl: TTntLabel;
     txtData: TTntEdit;

@@ -1,14 +1,21 @@
-inherited frmState: TfrmState
+object frmState: TfrmState
+  Left = 0
+  Top = 0
   Caption = 'frmState'
-  ClientHeight = 163
-  ClientWidth = 198
+  ClientHeight = 167
+  ClientWidth = 203
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   Position = poDefault
   ScreenSnap = True
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  ExplicitWidth = 206
-  ExplicitHeight = 197
   PixelsPerInch = 96
   TextHeight = 13
 end

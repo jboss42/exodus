@@ -46,7 +46,6 @@ implementation
     if (force_show_error) then
         ShowKeywordError := true;
 
-    Result := nil;
     kw_list := TWideStringList.Create();
 
     try

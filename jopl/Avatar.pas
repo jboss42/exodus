@@ -255,7 +255,6 @@ begin
         exit;
     end;
 
-    Result := '';
     m := TMemoryStream.Create();
     if (_pic <> nil) then
         _pic.SaveToStream(m)
@@ -433,7 +432,7 @@ begin
     tmpjid := TJabberID.Create(jid);
     assert(_iq = nil);
     assert(jid <> '');
-    _iq := TJabberIQ.Create(session, session.generateID(), fetchCallback, MainSession.Prefs.getInt('vcard_iq_timeout'));
+    _iq := TJabberIQ.Create(session, session.generateID(), fetchCallback);
     _iq.iqType := 'get';
     Pending := true;
 
@@ -795,12 +794,7 @@ begin
     root := TXMLTag.Create('cache');
     for i := 0 to _cache.Count - 1 do begin
         a := TAvatar(_cache.Objects[i]);
-        name := a.getHash();
-        if (name = '') then begin
-            Continue;
-        end;
-
-        name := path + '\' + name;
+        name := path + '\' + a.getHash();
         a.SaveToFile(name);
         t := root.AddTag('item');
         t.setAttribute('name', name);

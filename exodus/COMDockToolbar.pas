@@ -66,7 +66,6 @@ var
 begin
     btn := TToolButton.Create(frmExodus);
     btn.Parent := _toolbar;
-    btn.ShowHint := true;
 
     idx := RosterTreeImages.Find(ImageID);
     if (idx >= 0) then
@@ -122,14 +121,14 @@ end;
 {---------------------------------------}
 function TExodusDockToolbar.addControl(const ClassId: WideString): IExodusToolbarControl;
 var
-  AXControl: TAXControl;
+  MyControl: TMyControl;
   ParentControl: TWinControl;
 begin
   ParentControl := frmExodus.Toolbar;
 
-  AXControl := TAXControl.Create(ParentControl, StringToGuid(ClassId));
-  AXControl.Parent := ParentControl;
-  Result := TExodusToolbarControl.Create(AXControl);
+  MyControl := TMyControl.Create(ParentControl, StringToGuid(ClassId));
+  MyControl.Parent := ParentControl;
+  Result := TExodusToolbarControl.Create(MyControl);
 
   frmExodus.Toolbar.Bands.Items[frmExodus.Toolbar.Bands.Count-1].Text := ClassId;
   frmExodus.Toolbar.ShowText := false;

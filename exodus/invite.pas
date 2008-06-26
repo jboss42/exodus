@@ -22,22 +22,13 @@ unit Invite;
 interface
 
 uses
-    Unicode, XMLTag, Windows, Messages, SysUtils, Variants, Classes,
-    Graphics, Controls, Forms,
+    Unicode, XMLTag, SelContact,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids,
-  TntStdCtrls, TntComCtrls, JabberID, ExForm, TntForms, ExFrame,
-  ExActions, ExActionCtrl, Exodus_TLB;
+  TntStdCtrls, TntComCtrls, JabberID;
 
 type
-  TInviteToRoomAction = class(TExBaseAction)
-  private
-    constructor Create;
-  public
-    function Get_Enabled: WordBool; override;
-    procedure execute(const items: IExodusItemList); override;
-  end;
-  
-  TfrmInvite = class(TExForm)
+  TfrmInvite = class(TForm)
     frameButtons1: TframeButtons;
     pnlMain: TPanel;
     lstJIDS: TTntListView;
@@ -60,12 +51,14 @@ type
     procedure btnRemoveClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnAddClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure cboRoomChange(Sender: TObject);
     procedure lstJIDSChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure lstJIDSDeletion(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
+    _selector: TfrmSelContact;
 
   public
     { Public declarations }
@@ -75,16 +68,19 @@ type
 var
   frmInvite: TfrmInvite;
 
-procedure ShowInvite(room_jid: WideString; jids: TWideStringList = nil); overload;
+procedure showConfInvite(tag: TXMLTag);
+procedure showRecvInvite(tag: TXMLTag);
+procedure ShowInvite(room_jid: WideString; items: TList); overload;
+procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
-    JabberUtils, ExUtils,  GnuGetText, Jabber1, PrefController,
-    JabberConst, InputPassword, DisplayName,
-    Session, Room, RosterForm, ContactController, SelectItem, RosterImages;
+    ExEvents, JabberUtils, ExUtils,  GnuGetText, Jabber1, PrefController,
+    JabberConst, InputPassword,
+    Session, Room, RosterWindow, NodeItem, Roster;
 
 const
     sConfRoom = 'Conference Room:';
@@ -92,6 +88,50 @@ const
     sInvalidRoomJID = 'The Conference Room Address you entered is invalid. It must be valid Jabber ID.';
 
 {$R *.dfm}
+
+{---------------------------------------}
+procedure showConfInvite(tag: TXMLTag);
+begin
+    // if this also has a muc-invite, then just bail.
+    if (tag.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite') = nil) then
+        showRecvInvite(tag);
+end;
+
+{---------------------------------------}
+procedure showRecvInvite(tag: TXMLTag);
+var
+    e: TJabberEvent;
+    from: Widestring;
+begin
+    // factory for GUI
+    // kick and ban get here.. because of status codes
+
+    // check to see if we're already in the room.
+    e := CreateJabberEvent(tag);
+    from := tag.getAttribute('from');
+    if (room_list.IndexOf(from) <  0) then begin
+        if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin
+            // auto-join the room
+            StartRoom(from, '', '', True, False, True);
+            e.Free();
+        end
+        else //msg queue now own event, don't free
+            RenderEvent(e);
+    end;
+end;
+
+{---------------------------------------}
+procedure ShowInvite(room_jid: WideString; items: TList);
+var
+    jids: TWideStringlist;
+    i: integer;
+begin
+    jids := TWideStringList.Create();
+    for i := 0 to items.Count - 1 do
+        jids.add(TJabberRosterItem(items[i]).jid.jid);
+    ShowInvite(room_jid, jids);
+    jids.Free();
+end;
 
 {---------------------------------------}
 procedure ShowInvite(room_jid: WideString; jids: TWideStringList);
@@ -127,61 +167,40 @@ end;
 {---------------------------------------}
 procedure TfrmInvite.AddRecip(jid: WideString);
 var
-    idx: integer;
-    entered: TTntListItems;
-    entry: TListItem;
-    item: IExodusItem;
-    cap: Widestring;
+    i: integer;
+    cap: WideString;
+    ritem: TJabberRosterItem;
+    n: TListItem;
 begin
-    item := MainSession.ItemController.GetItem(jid);
-    
-    //TODO:  validate JID supports MUC??
-
-    //Validate not already present
-    entered := lstJIDS.Items;
-    for idx := 0 to entered.Count - 1 do begin
-        if (entered[idx].SubItems[0] = jid) then exit;
-    end;
-
-    if (item <> nil) then
-        cap := item.Text
+    ritem := MainSession.roster.Find(jid);
+    if ritem <> nil then
+        cap := ritem.Text
     else
         cap := jid;
 
-    entry := entered.Add();
-    entry.Caption := cap;
-    entry.SubItems.Add(jid);
+    // make sure this JID supports MUC
+    if ((ritem <> nil) and
+        (ritem.tag <> nil) and
+        (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
 
-  { TODO : Roster refactor }
-//    ritem := MainSession.roster.Find(jid);
-//    if ritem <> nil then
-//        cap := ritem.Text
-//    else
-//        cap := jid;
-//
-//    // make sure this JID supports MUC
-//    if ((ritem <> nil) and
-//        (ritem.tag <> nil) and
-//        (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
-//
-//        // if this person can not do offline msgs, and they are offline, bail
-//        { TODO : if (not ritem.CanMUC) then begin }
-//        if (not ritem.IsNative) then begin
-//            MessageDlgW(_('This contact can not join chat rooms.'), mtError,
-//                [mbOK], 0);
-//            exit;
-//        end;
-//    end;
-//    // make sure we don't already have an item w/ this caption
-//    for i := 0 to lstJIDS.Items.Count - 1 do
-//        if (lstJIDS.Items[i].SubItems[0] = jid) then exit;
-//
-//    n := lstJIDS.Items.Add();
-//    n.Caption := cap;
-//    if ritem <> nil then
-//        n.SubItems.Add(ritem.Jid.getDisplayFull())
-//    else
-//        n.SubItems.Add(jid);
+        // if this person can not do offline msgs, and they are offline, bail
+        { TODO : if (not ritem.CanMUC) then begin }
+        if (not ritem.IsNative) then begin
+            MessageDlgW(_('This contact can not join chat rooms.'), mtError,
+                [mbOK], 0);
+            exit;
+        end;
+    end;
+    // make sure we don't already have an item w/ this caption
+    for i := 0 to lstJIDS.Items.Count - 1 do
+        if (lstJIDS.Items[i].SubItems[0] = jid) then exit;
+
+    n := lstJIDS.Items.Add();
+    n.Caption := cap;
+    if ritem <> nil then
+        n.SubItems.Add(ritem.Jid.getDisplayFull())
+    else
+        n.SubItems.Add(jid);
 end;
 
 {---------------------------------------}
@@ -271,6 +290,7 @@ begin
     AssignTntStrings(tmp, cboRoom.Items);
     tmp.Free();
     pnlMain.Align := alClient;
+    _selector := TfrmSelContact.Create(nil);
 end;
 
 {---------------------------------------}
@@ -279,7 +299,8 @@ procedure TfrmInvite.lstJIDSDragOver(Sender, Source: TObject; X,
 begin
     // accept roster items from the main roster as well
     // as the string grid on this form
-    Accept := (Source = frmRoster.RosterTree);
+    Accept := (Source = frmRosterWindow.treeRoster) or
+        (Source = _selector.frameTreeRoster1.treeRoster);
 end;
 
 {---------------------------------------}
@@ -304,31 +325,31 @@ end;
 
 procedure TfrmInvite.lstJIDSDragDrop(Sender, Source: TObject; X,
   Y: Integer);
-//var
-//    tree: TTreeView;
-//    r, n: TTreeNode;
-//    i,j: integer;
+var
+    tree: TTreeView;
+    r, n: TTreeNode;
+    i,j: integer;
 begin
     // dropping from main roster window
-    { TODO : Roster refactor }
-//    tree := TTreeView(Source);
-//
-//    with tree do begin
-//        for i := 0 to SelectionCount - 1 do begin
-//            n := Selections[i];
-//            if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then
-//                // We have a roster item
-//                Self.AddRecip(TJabberRosterItem(n.Data).jid.jid)
-//            else if (n.Level = 0) then begin
-//                // we prolly have a grp
-//                for j := 0 to n.Count - 1 do begin
-//                    r := n.Item[j];
-//                    if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
-//                        Self.AddRecip(TJabberRosterItem(r.Data).jid.jid);
-//                end;
-//            end;
-//        end;
-//    end;
+
+    tree := TTreeView(Source);
+
+    with tree do begin
+        for i := 0 to SelectionCount - 1 do begin
+            n := Selections[i];
+            if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then
+                // We have a roster item
+                Self.AddRecip(TJabberRosterItem(n.Data).jid.jid)
+            else if (n.Level = 0) then begin
+                // we prolly have a grp
+                for j := 0 to n.Count - 1 do begin
+                    r := n.Item[j];
+                    if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
+                        Self.AddRecip(TJabberRosterItem(r.Data).jid.jid);
+                end;
+            end;
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -360,68 +381,16 @@ end;
 
 {---------------------------------------}
 procedure TfrmInvite.btnAddClick(Sender: TObject);
-var
-    selected: Widestring;
 begin
     // Add a JID
-    selected := SelectUIDByType('contact');
-    if (selected <> '') then
-        AddRecip(selected);
-end;
-
-{
-    TInviteToRoomAction implementation
-}
-constructor TInviteToRoomAction.Create;
-begin
-    inherited Create('{000-exodus.googlecode.com}-050-invite-to-room');
-
-    Caption := _('Invite to Conference...');
-end;
-
-function TInviteToRoomAction.Get_Enabled: WordBool;
-begin
-    Result := (Room.room_list.Count > 0);
-end;
-procedure TInviteToRoomAction.execute(const items: IExodusItemList);
-var
-    idx: Integer;
-    item: IExodusItem;
-    jids: TWidestringList;
-    rjid: Widestring;
-begin
-    jids := TWidestringList.Create;
-    rjid := '';
-
-    for idx := 0 to items.Count - 1 do begin
-        item := items.Item[idx];
-        if (item.Type_ = 'room') and (rjid = '') then rjid := item.UID;
-        if (item.Type_ <> 'contact') then continue;
-        
-        jids.Add(item.UID);
+    if (_selector.ShowModal = mrOK) then begin
+        self.AddRecip(_selector.GetSelectedJID());
     end;
-    ShowInvite(rjid, jids);
-
-    jids.Free;
 end;
 
-
-procedure RegisterActions();
-var
-    actctrl: IExodusActionController;
-    act: IExodusAction;
+procedure TfrmInvite.FormDestroy(Sender: TObject);
 begin
-
-    actctrl := GetActionController();
-
-    act := TInviteToRoomAction.Create;
-    actctrl.registerAction('contact', act);
-
-    actctrl.registerAction('room', act);
-    actctrl.addEnableFilter('room', act.Name, 'selection=single');
+    _selector.Free();
 end;
-
-initialization
-    RegisterActions();
 
 end.

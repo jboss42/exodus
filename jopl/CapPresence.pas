@@ -37,15 +37,24 @@ type
 implementation
 
 uses
-    CapsCache, Session, PrefController, JabberConst, XMLUtils;
+    Session, PrefController, JabberConst, XMLUtils;
 
 {---------------------------------------}
 constructor TCapPresence.Create;
+var
+    c : TXMLTag;
+    ext : WideString;
 begin
     inherited;
     // Add in client capabilities if we have them enabled.
     if (MainSession.Prefs.getBool('client_caps')) then begin
-        jSelfCaps.AddToPresence(Self);
+        c := AddTag('c');
+        c.setAttribute('xmlns', XMLNS_CLIENTCAPS);
+        c.setAttribute('node', MainSession.Prefs.getString('client_caps_uri'));
+        c.setAttribute('ver', GetAppVersion());
+        ext := MainSession.GetExtStr();
+        if (ext <> '') then
+            c.setAttribute('ext', ext);
     end;
 end;
 

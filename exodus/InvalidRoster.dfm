@@ -4,6 +4,7 @@ inherited frmInvalidRoster: TfrmInvalidRoster
   Caption = 'Invalid Contact List Items'
   ClientHeight = 237
   ClientWidth = 314
+  OnClose = FormClose
   ExplicitWidth = 322
   ExplicitHeight = 271
   PixelsPerInch = 96
@@ -11,10 +12,8 @@ inherited frmInvalidRoster: TfrmInvalidRoster
   inherited pnlDockTop: TPanel
     Width = 314
     TabOrder = 2
-    ExplicitWidth = 314
     inherited tbDockBar: TToolBar
       Left = 265
-      ExplicitLeft = 265
     end
   end
   inline frameButtons1: TframeButtons
@@ -23,14 +22,6 @@ inherited frmInvalidRoster: TfrmInvalidRoster
     Width = 314
     Height = 32
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 0
     TabStop = True
     ExplicitTop = 205
@@ -65,9 +56,9 @@ inherited frmInvalidRoster: TfrmInvalidRoster
   end
   object ListView1: TTntListView
     Left = 0
-    Top = 33
+    Top = 32
     Width = 314
-    Height = 172
+    Height = 173
     Align = alClient
     Checkboxes = True
     Columns = <

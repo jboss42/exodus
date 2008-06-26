@@ -26,18 +26,15 @@ uses
     Unicode, PrefPanel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ComCtrls,
-    TntComCtrls, ModifyHotkeys, TntForms, ExFrame, ExBrandPanel;
+    TntComCtrls, ModifyHotkeys;
 
 type
   TfrmPrefHotkeys = class(TfrmPrefPanel)
-    pnlContainer: TExBrandPanel;
     TntLabel1: TTntLabel;
+    btnRemoveHotkeys: TTntButton;
+    btnAddHotkeys: TTntButton;
     lstHotkeys: TTntListView;
     btnModifyHotkeys: TTntButton;
-    btnAddHotkeys: TTntButton;
-    btnRemoveHotkeys: TTntButton;
-    btnClearAll: TTntButton;
-    procedure btnClearAllClick(Sender: TObject);
     procedure btnRemoveHotkeysClick(Sender: TObject);
     procedure lstHotkeysSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
@@ -70,7 +67,6 @@ const
     sBadLocale = ' is set to use a language which is not available on your system. Resetting language to default.';
     sNewLocale1 = 'You must exit ';
     sNewLocale2 = ' and restart it before your new locale settings will take affect.';
-    sAddHotkey = 'Add Hotkey';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -81,7 +77,7 @@ implementation
 uses
     LocalUtils, JabberUtils, ExUtils,  GnuGetText,
     AutoUpdate, FileCtrl,
-    PathSelector, PrefController, PrefFile, Registry, Session, StrUtils,
+    PathSelector, PrefController, Registry, Session, StrUtils,
     Menus, Jabber1;
 
 {---------------------------------------}
@@ -91,9 +87,10 @@ var
     i: Integer;
     item: TTntListItem;
 begin
+
     dlg := TfrmModifyHotkeys.Create(Self.Owner);
     dlg.Position := poOwnerFormCenter;
-    dlg.Caption := _(sAddHotkey);
+
     for i := 1 to 12 do begin
         if (not _used_hotkeys[i]) then begin
             case i of
@@ -118,17 +115,17 @@ begin
     btnModifyHotkeys.Enabled := false;
     btnRemoveHotkeys.Enabled := false;
     lstHotkeys.ClearSelection;
-
     if (dlg.ShowModal() = mrCancel) then
         exit;
 
     item := lstHotkeys.Items.Add();
     item.Caption := dlg.cbhotkey.Text;
     item.SubItems.Add(dlg.txtHotkeyMessage.Text);
-    
+
     _set_usedkeys(item.Caption, true);
 
     lstHotkeys.AlphaSort();
+
     //see if we have too many hotkeys to allow for more.
     btnAddHotkeys.Enabled := false;
     for i := 1 to 12 do begin
@@ -142,10 +139,8 @@ procedure TfrmPrefHotkeys.btnModifyHotkeysClick(Sender: TObject);
 var
     dlg: TfrmModifyHotkeys;
     i: Integer;
-    item: TTntListItem;
 begin
     dlg := TfrmModifyHotkeys.Create(Self);
-    dlg.Position := poOwnerFormCenter;
 
     for i := 1 to 12 do begin
         if (not _used_hotkeys[i]) then begin
@@ -178,17 +173,15 @@ begin
 
     btnModifyHotkeys.Enabled := false;
     btnRemoveHotkeys.Enabled := false;
-    item := lstHotkeys.Selected;
-    
-    lstHotkeys.ClearSelection;
-
-    if (dlg.ShowModal() = mrCancel) then
+    if (dlg.ShowModal() = mrCancel) then begin
+        lstHotkeys.ClearSelection;
         exit;
+    end;
 
-    _set_usedkeys(item.Caption, false);
-    item.Caption := dlg.cbhotkey.Text;
-    item.Subitems.Strings[0] := dlg.txtHotkeyMessage.Text;
-    _set_usedkeys(item.Caption, true);
+    _set_usedkeys(lstHotkeys.Selected.Caption, false);
+    lstHotkeys.Selected.Caption := dlg.cbhotkey.Text;
+    lstHotkeys.Selected.Subitems.Strings[0] := dlg.txtHotkeyMessage.Text;
+    _set_usedkeys(lstHotkeys.Selected.Caption, true);
 
     lstHotkeys.AlphaSort();
 end;
@@ -198,24 +191,7 @@ begin
     btnAddHotkeys.Enabled := true;
     _set_usedkeys(lstHotkeys.Selected.Caption, false);
     lstHotkeys.Selected.Delete();
-    btnRemoveHotkeys.Enabled := false;
-    btnModifyHotkeys.Enabled := false;
 end;
-
-procedure TfrmPrefHotkeys.btnClearAllClick(Sender: TObject);
-var
-    i: integer;
-begin
-    inherited;
-    for i := lstHotKeys.Items.Count - 1 downto 0 do begin
-        _set_usedkeys(lstHotkeys.items[i].Caption, false);
-        lstHotkeys.items[i].Delete();
-    end;
-    btnAddHotkeys.Enabled := true;
-    btnRemoveHotkeys.Enabled := false;
-    btnModifyHotkeys.Enabled := false;
-end;
-
 
 procedure TfrmPrefHotkeys.FormDestroy(Sender: TObject);
 begin
@@ -234,7 +210,6 @@ procedure TfrmPrefHotkeys.LoadPrefs();
 var
     i: integer;
     item: TTntListItem;
-    s1, s2: TPrefState;
 begin
     if (_hotkeys_keys = nil) then
         _hotkeys_keys := TWidestringlist.Create();
@@ -250,34 +225,21 @@ begin
     MainSession.Prefs.fillStringlist('hotkeys_keys', _hotkeys_keys);
     MainSession.Prefs.fillStringlist('hotkeys_text', _hotkeys_text);
 
-    if (_hotkeys_keys.Count = _hotkeys_text.Count) then begin
-        for i := 0 to _hotkeys_keys.count - 1 do begin
-            item := lstHotkeys.Items.Add();
-            item.Caption := _hotkeys_keys.Strings[i];
-            item.SubItems.Add(_hotkeys_text.Strings[i]);
-            _set_usedkeys(_hotkeys_keys.Strings[i], true);
-        end;
+    for i := 0 to _hotkeys_keys.count - 1 do begin
+        item := lstHotkeys.Items.Add();
+        item.Caption := _hotkeys_keys.Strings[i];
+        item.SubItems.Add(_hotkeys_text.Strings[i]);
+        _set_usedkeys(_hotkeys_keys.Strings[i], true);
+    end;
 
-        _set_AvailableHotkeys;
+    _set_AvailableHotkeys;
 
-        btnAddHotkeys.Enabled := false;
-        for i := 1 to 12 do begin
-            if (not _used_hotkeys[i]) then begin
-                btnAddHotkeys.Enabled := true;
-                break;
-            end;
+    btnAddHotkeys.Enabled := false;
+    for i := 1 to 12 do begin
+        if (not _used_hotkeys[i]) then begin
+            btnAddHotkeys.Enabled := true;
         end;
     end;
-    btnRemoveHotkeys.Enabled := false;
-    btnModifyHotkeys.Enabled := false;
-    
-    pnlContainer.CaptureChildStates(); //capture disabled states on mod/remove
-    // Finally check state and set controls accordingly
-    // If either keys or text are RO or INV, don't allow anything to be set/removed
-    s1 := getPrefState('hotkeys_keys');
-    s2 := getPrefState('hotkeys_text');
-    pnlContainer.Enabled := ((s1 <> psReadOnly) and (s2 <> psReadOnly));
-    pnlContainer.Visible := ((s1 <> psInvisible) and (s2 <> psInvisible));
 end;
 
 procedure TfrmPrefHotkeys.lstHotkeysSelectItem(Sender: TObject; Item: TListItem;

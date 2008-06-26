@@ -26,10 +26,10 @@ uses
     XMLParser,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
-    Buttons, TntStdCtrls, TntMenus, ToolWin, DebugManager;
+    Buttons, TntStdCtrls, TntMenus, ToolWin;
 
 type
-  TfrmDebug = class(TfrmDockable, IDebugLogger)
+  TfrmDebug = class(TfrmDockable)
     Panel2: TPanel;
     Splitter1: TSplitter;
     PopupMenu1: TTntPopupMenu;
@@ -63,13 +63,12 @@ type
     procedure MsgDebugKeyPress(Sender: TObject; var Key: Char);
     procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure Panel2Resize(Sender: TObject);
   private
     { Private declarations }
+    _cb: integer;
     _scb: integer;
 
-    procedure _activityListDump();
-
+    procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
   protected
     procedure SessionCallback(event: string; tag: TXMLTag);
   published
@@ -77,11 +76,6 @@ type
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
   public
     procedure AddWideText(txt: WideString; txt_color: TColor);
-
-    // IDebugLogger
-    procedure DebugStatement(msg: Widestring; dt: TDateTime);
-    procedure DataSent(xml: TXMLTag; data: Widestring; dt: TDateTime);
-    procedure DataRecv(xml: TXMLTag; data: Widestring; dt: TDateTime);
   end;
 
 procedure ShowDebugForm(bringToFront: boolean=true);
@@ -91,7 +85,7 @@ procedure DebugMessage(txt: Widestring);
 function isDebugShowing(): boolean;
 
 const
-    DEBUG_LIMIT = 8192;
+    DEBUG_LIMIT = 500;
 
 
 {---------------------------------------}
@@ -104,14 +98,7 @@ uses
     WideStrUtils,
     RosterImages,
     DisplayName,
-    MsgDisplay,
-    GnuGetText,
-    Signals,
-    Session,
-    JabberUtils,
-    ExUtils,
-    Jabber1,
-    ActivityWindow;
+    MsgDisplay, GnuGetText, Signals, Session, JabberUtils, ExUtils,  Jabber1;
 
 
 var
@@ -125,7 +112,7 @@ begin
     if ( frmDebug = nil ) then
         frmDebug := TfrmDebug.Create(Application);
     frmDebug.ShowDefault(bringToFront);
-    frmExodus.mnuFile_ShowDebugXML.Checked := true;
+    frmExodus.mnuWindows_View_ShowDebugXML.Checked := true;
 end;
 
 {---------------------------------------}
@@ -164,35 +151,29 @@ begin
     // make sure the output is showing..
     inherited;
 
-    setUID('dbgwindow');
-
-    dbgManager.AddDebugger('dbgwindow', Self);
-
     ImageIndex := RosterTreeImages.Find('filter');
 
     lblJID.Left := lblLabel.Left + lblLabel.Width + 5;
     lblJID.Font.Color := clBlue;
     lblJID.Font.Style := [fsUnderline];
 
+    _cb := MainSession.RegisterCallback(DataCallback);
     _scb := MainSession.RegisterCallback(SessionCallback, '/session');
 
     if MainSession.Active then begin
         lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayName(MainSession.Profile.getJabberID()) + ' <' + MainSession.Profile.getJabberID().getDisplayFull() + '>';
     end
-    else begin
+    else
         lblJID.Caption := _('Disconnected');
-    end;
-
-    _windowType := 'debug';
 end;
 
 function TfrmDebug.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 begin
-    Result := nil;
     if (event = 'shutdown') then begin
         Result := TXMLtag.Create(Self.ClassName);
         useProfile := false;
     end
+    else Result := inherited GetAutoOpenInfo(event, useProfile);
 end;
 
 {---------------------------------------}
@@ -255,6 +236,32 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmDebug.DataCallback(event: string; tag: TXMLTag; data: Widestring);
+var
+    l, d: integer;
+    tstr : WideString;
+begin
+    if (frmDebug = nil) then exit;
+    if (not frmDebug.Visible) then exit;
+
+    if (MsgDebug.Lines.Count >= DEBUG_LIMIT) then begin
+        d := (MsgDebug.Lines.Count - DEBUG_LIMIT) + 1;
+        for l := 1 to d do
+            MsgDebug.Lines.Delete(0);
+    end;
+    tstr := getObfuscatedData(event, tag, data);
+    if (event = '/data/send') then begin
+        if (Trim(tstr) <> '') then
+            AddWideText('SENT: ' + tstr, clBlue);
+    end
+    else if (event = '/data/debug') then begin
+        AddWideText(tstr, clRed);
+    end
+    else
+        AddWideText('RECV: ' + tstr, clGreen);
+end;
+
+{---------------------------------------}
 procedure TfrmDebug.chkDebugWrapClick(Sender: TObject);
 begin
 end;
@@ -282,7 +289,7 @@ begin
     if (cmd[1] = '/') then begin
         // we are giving some kind of interactive debugger cmd
         if (cmd ='/help') then
-            DebugMessage('/dispcount'#13#10'/dispdump'#13#10'/args'#13#10'/aldump')
+            DebugMessage('/dispcount'#13#10'/dispdump'#13#10'/args')
         else if (cmd = '/args') then begin
             for i := 0 to ParamCount do
                 DebugMessage(ParamStr(i))
@@ -307,138 +314,10 @@ begin
                     DebugMessage(''#13#10);
                 end;
             end;
-        end
-        else if (cmd = '/aldump') then begin
-            _activityListDump();
         end;
     end
     else
         MainSession.Stream.Send(cmd);
-end;
-
-{---------------------------------------}
-procedure TfrmDebug._activityListDump();
-var
-    aw: TfrmActivityWindow;
-    i: integer;
-begin
-    aw := GetActivityWindow();
-    if (aw <> nil) then begin
-        DebugMessage('Activity list item count:  ' + IntToStr(aw.itemCount));
-        DebugMessage('Activity list items----------------');
-        for i := 0 to aw.itemCount -1 do
-        begin
-            DebugMessage('Activity window item tab info:');
-
-            if (aw.findItem(i).awItem <> nil) then
-            begin
-                try
-                    with aw.findItem(i).awItem do
-                    begin
-                        DebugMessage('    Name:  ' + name);
-                        DebugMessage('    Unread message count:  ' + IntToStr(count));
-                        DebugMessage('    ImgIndex:  ' + IntToStr(imgIndex));
-                        if (active) then begin
-                            DebugMessage('    Is active:  true');
-                        end
-                        else begin
-                            DebugMessage('    Is active:  false');
-                        end;
-
-                        if (priority) then begin
-                            DebugMessage('    Is priority:  true');
-                        end
-                        else begin
-                            DebugMessage('    Is priority:  false');
-                        end;
-
-                        if (newWindowHighlight) then begin
-                            DebugMessage('    Is new window highlight:  true');
-                        end
-                        else begin
-                            DebugMessage('    Is new window highlight:  false');
-                        end;
-
-                        if (newMessageHighlight) then begin
-                            DebugMessage('    Is new message highlight:  true');
-                        end
-                        else begin
-                            DebugMessage('    Is new message highlight:  false');
-                        end;
-                    end;
-                except
-                    DebugMessage('ACTIVITY WINDOW TAB ITEM ACCESS EXCEPTION');
-                end;
-            end
-            else begin
-                DebugMessage('FAILED TO GET HOLD OF ACTIVITY WINDOW TAB ITEM');
-            end;
-
-            DebugMessage('Docked window item form info:');
-
-            if (aw.findItem(i).frm <> nil) then
-            begin
-                try
-                    with aw.findItem(i).frm do
-                    begin
-                        if (Docked) then
-                        begin
-                            DebugMessage('    Is Docked:  true');
-                        end
-                        else begin
-                            DebugMessage('    Is Docked:  false');
-                        end;
-
-                        DebugMessage('    Form ImgIndex:  ' + IntToStr(ImageIndex));
-                        DebugMessage(Format('    Float pos: top(%d), left(%d), Right(%d), Bottom(%d)', [FloatPos.Top, FloatPos.Left, FloatPos.Right, FloatPos.Bottom]));
-                        DebugMessage('    UID:  ' + UID);
-                        DebugMessage('    Unread message count:  ' + IntToStr(UnreadMsgCount));
-
-                        if (PriorityFlag) then
-                        begin
-                            DebugMessage('    Priority Flag:  true');
-                        end
-                        else begin
-                            DebugMessage('    Prioirty Flag:  false');
-                        end;
-
-                        if (Activating) then
-                        begin
-                            DebugMessage('    Activating Flag:  true');
-                        end
-                        else begin
-                            DebugMessage('    Activating Flag:  false');
-                        end;
-
-                        try
-                            DebugMessage('    LastActivity:  ' + DateTimeToStr(LastActivity));
-                        except
-                            DebugMessage('    LastActivity:  ???');
-                        end;
-
-                        DebugMessage('    Window type:  ' + WindowType);
-
-                        if (Activating) then
-                        begin
-                            DebugMessage('    Persist Unread Messages:  true');
-                        end
-                        else begin
-                            DebugMessage('    Persist Unread Messages:  false');
-                        end;
-                    end;
-                except
-                    DebugMessage('ACTIVITY WINDOW ITEM FORM ACCESS EXCEPTION');
-                end;
-            end
-            else begin
-                DebugMessage('FAILED TO GET HANDLE TO FORM');
-            end;
-            DebugMessage('-----------------------------------');
-        end;
-    end
-    else begin
-        DebugMessage('Failed to get handle to activity window for dump.');
-    end;
 end;
 
 {---------------------------------------}
@@ -464,18 +343,17 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    dbgManager.RemoveDebugger('dbgwindow');
-
     Action := caFree;
 
-    if (MainSession <> nil) then begin
+    if ((MainSession <> nil) and (_cb <> -1)) then begin
         MainSession.UnregisterCallback(_scb);
+        MainSession.UnregisterCallback(_cb);
     end;
 
     frmDebug := nil;
 
     inherited;
-    frmExodus.mnuFile_ShowDebugXML.Checked := false;
+    frmExodus.mnuWindows_View_ShowDebugXML.Checked := false;
 
 end;
 
@@ -567,43 +445,8 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDebug.Panel2Resize(Sender: TObject);
-var
-    oldHeight: real;
-    msgratio: real;
-    memoratio: real;
-    real_a: real;
-    real_b: real;
-begin
-    // This code exists to try and prevent losing a part of the window due to resize
-    // when (un)docking.
-    inherited;
-    if ((MsgDebug.Height + Splitter1.Height + MemoSend.Height) > Panel2.Height) then begin
-        // All combined, everything is bigger then the room we have, so resize
-        oldHeight := MsgDebug.Height + MemoSend.Height;
-        real_a := MsgDebug.Height;
-        real_b := MemoSend.Height;
-        if (oldHeight > 0) then
-        begin
-            msgratio := real_a / oldHeight;
-            memoratio := real_b / oldHeight;
-        end
-        else begin
-            msgratio := 1;
-            memoratio := 1;
-        end;
-
-        // Now that we have ratios, make sure that nothing would be too small;
-        MsgDebug.Height := Trunc(msgratio * (Panel2.Height - Splitter1.Height));
-        MemoSend.Height := Trunc(memoratio * (Panel2.Height - Splitter1.Height));
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmDebug.MemoSendKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
-var
-    prefstag: TXMLTag;
 begin
   inherited;
     if (Key = 0) then exit;
@@ -618,61 +461,8 @@ begin
     else if ((Key = VK_RETURN) and (Shift = [ssCtrl])) then begin
         Key := 0;
         btnSendRawClick(Self);
-    end
-
-    // magic debug key sequence Ctrl-Shift-P to dump the Prefs XML to debug.
-    else if ((chr(Key) = 'P') and  (Shift = [ssCtrl, ssShift])) then begin
-        prefstag := nil;
-        MainSession.Prefs.getRoot('', prefstag);
-        if (prefstag <> nil) then begin
-            DebugMsg(prefstag.XML);
-        end;
-        prefstag.Free();
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.DebugStatement(msg: Widestring; dt: TDateTime);
-begin
-    AddWideText(msg, clRed);
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.DataSent(xml: TXMLTag; data: Widestring; dt: TDateTime);
-var
-    tstr: Widestring;
-    l, d: integer;
-begin
-    if (frmDebug = nil) then exit;
-    if (not frmDebug.Visible) then exit;
-
-    if (MsgDebug.Lines.Count >= DEBUG_LIMIT) then begin
-        d := (MsgDebug.Lines.Count - DEBUG_LIMIT) + 1;
-        for l := 1 to d do
-            MsgDebug.Lines.Delete(0);
     end;
 
-    tstr := getObfuscatedData('/data/send', xml, data);
-    AddWideText('SENT: ' + tstr, clBlue);
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.DataRecv(xml: TXMLTag; data: Widestring; dt: TDateTime);
-var
-    tstr: Widestring;
-    l, d: integer;
-begin
-    if (frmDebug = nil) then exit;
-    if (not frmDebug.Visible) then exit;
-
-    if (MsgDebug.Lines.Count >= DEBUG_LIMIT) then begin
-        d := (MsgDebug.Lines.Count - DEBUG_LIMIT) + 1;
-        for l := 1 to d do
-            MsgDebug.Lines.Delete(0);
-    end;
-
-    tstr := getObfuscatedData('/data/recv', xml, data);
-    AddWideText('RECV: ' + tstr, clGreen);
 end;
 
 initialization

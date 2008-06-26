@@ -1,52 +1,31 @@
-inherited frmPrefPanel: TfrmPrefPanel
+object frmPrefPanel: TfrmPrefPanel
   Left = 408
   Top = 423
   BorderStyle = bsNone
   BorderWidth = 6
   Caption = 'frmPrefPanel'
-  ClientHeight = 427
-  ClientWidth = 382
+  ClientHeight = 301
+  ClientWidth = 270
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   OnCreate = FormCreate
-  ExplicitWidth = 365
-  ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
   object pnlHeader: TTntPanel
-    AlignWithMargins = True
     Left = 0
-    Top = 2
-    Width = 382
-    Height = 18
-    Margins.Left = 0
-    Margins.Top = 2
-    Margins.Right = 0
+    Top = 0
+    Width = 270
+    Height = 26
     Align = alTop
-    Alignment = taLeftJustify
-    BevelOuter = bvNone
-    Color = 14460499
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWhite
-    Font.Height = -12
-    Font.Name = 'Tahoma'
-    Font.Style = []
+    BevelOuter = bvLowered
+    Caption = 'pnlHeader'
+    Color = clHighlight
     ParentBackground = False
-    ParentFont = False
     TabOrder = 0
-    object lblHeader: TTntLabel
-      AlignWithMargins = True
-      Left = 7
-      Top = 1
-      Width = 4
-      Height = 14
-      Margins.Left = 6
-      Margins.Top = 1
-      Align = alLeft
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWhite
-      Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
   end
 end

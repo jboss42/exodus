@@ -24,19 +24,11 @@ interface
 
 uses
     Exodus_TLB,
-    Session, ChatController, Chat, Room,
-    Unicode, XMLTag,
+    Session, ChatController, Chat, Room, MsgRecv, Unicode, XMLTag,
     Windows, Classes, ComObj, ActiveX, StdVcl;
 
-{
-    JJF I'm a little unsure what to do here for the IM/broadcast refactor. It
-    will still be neccessary for plugins to have events fired when a brodcast
-    (normal) message is received, but not sure this is the place to do it.
-
-    All code changed prefereced with "JJF TODO msgqueue refactor"
-}
 type
-  TExodusChat = class(TAutoObject, IExodusChat, IExodusChat2, IExodusChat3)
+  TExodusChat = class(TAutoObject, IExodusChat, IExodusChat2)
   protected
     function Get_jid: WideString; safecall;
     function AddContextMenu(const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
@@ -59,18 +51,8 @@ type
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const Value: WideString); safecall;
     procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
-
-    // IExodusChat2
     function Get_DockToolbar: IExodusDockToolbar; safecall;
     function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
-
-    // IExodusChat3
-    procedure Close; safecall;
-    procedure BringToFront; safecall;
-    procedure Dock; safecall;
-    procedure Float; safecall;
-    function  AddRosterMenu (const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
-    procedure RemoveRosterMenu(const MenuID: WideString); safecall;
 
     { Protected declarations }
 
@@ -78,7 +60,7 @@ type
     constructor Create();
     destructor Destroy(); override;
 
-//JJF TODO msgqueue refactor    procedure setIM(im: TfrmMsgRecv);
+    procedure setIM(im: TfrmMsgRecv);
     procedure setRoom(room: TfrmRoom);
     procedure setChatSession(chat_session: TChatController);
     function  fireMsgKeyUp(key: Word; shift: TShiftState): boolean;
@@ -87,15 +69,12 @@ type
     function  fireAfterMsg(var body: WideString): Widestring;
     function  fireBeforeRecvMsg(body, xml: Widestring): boolean;
     procedure fireAfterRecvMsg(body: Widestring);
-    procedure fireMenuClick(Sender: TObject; xml: WideString = '');
+    procedure fireMenuClick(Sender: TObject);
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
-    procedure fireSentMessageXML(tag: TXMLTag);
-    function  fireChatEvent(Event: Widestring; oleVar: OleVariant ): boolean;
-    procedure fireMenuShow(xml: WideString = '');
 
   private
-    //JJF TODO msgqueue refactor _im: TfrmMsgRecv;
+    _im: TfrmMsgRecv;
     _room: TfrmRoom;
     _chat: TChatController;
     _plugs: TList;
@@ -113,7 +92,7 @@ implementation
 
 uses
     COMExControls, ChatWin, Controls, BaseMsgList, RTFMsgList, Forms,
-    ComServ, Menus, SysUtils, Debug, BaseChat;
+    ComServ, Menus, SysUtils, Debug;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -159,18 +138,18 @@ begin
 
     inherited Destroy();
 end;
-{ JJF TODO msgqueue refactor
+
 procedure TExodusChat.setIM(im: TfrmMsgRecv);
 begin
     _im := im;
     _room := nil;
     _chat := nil;
 end;
-}
+
 {---------------------------------------}
 procedure TExodusChat.setChatSession(chat_session: TChatController);
 begin
-//JJF TODO msgqueue refactor    _im   := nil;
+    _im   := nil;
     _room := nil;
     _chat := chat_session;
 end;
@@ -178,7 +157,7 @@ end;
 {---------------------------------------}
 procedure TExodusChat.setRoom(room: TfrmRoom);
 begin
-//JJF TODO msgqueue refactor  _im   := nil;
+  _im   := nil;
   _chat := nil;
   _room := room;
 end;
@@ -272,85 +251,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusChat.fireSentMessageXML(tag: TXMLTag);
-var
-    i: integer;
-    chatplugin2: IExodusChatPlugin2;
-begin
-    for i := 0 to _plugs.Count - 1 do begin
-        try
-            chatplugin2 := TChatPlugin(_plugs[i]).com as IExodusChatPlugin2;
-            try
-                if (chatplugin2 <> nil) then
-                begin
-                    chatplugin2.OnSentMessageXML(tag.xml());
-                end;
-            except
-                // Problem sending XML msg to chat plugin
-                DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
-            end;
-        except
-            // Not a IExodusChat2 plugin - eat error
-        end;
-    end;
-end;
-
-
-{---------------------------------------}
-function TExodusChat.fireChatEvent(Event: Widestring; oleVar: OleVariant ): boolean;
-var
-    i: integer;
-    chatplugin2: IExodusChatPlugin2;
-begin
-    Result := false;
-    for i := 0 to _plugs.Count - 1 do begin
-        try
-            chatplugin2 := TChatPlugin(_plugs[i]).com as IExodusChatPlugin2;
-            try
-                if (chatplugin2 <> nil) then
-                begin
-                    Result := chatplugin2.OnChatEvent(Event, oleVar);
-                    if (Result) then break;
-                end;
-            except
-                // Problem sending XML msg to chat plugin
-                DebugMessage('COM Exception in TExodusChat.fireDragAndDrop');
-            end;
-        except
-            // Not a IExodusChat2 plugin - eat error
-        end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.fireMenuShow(xml: WideString = '');
-var
-    i: integer;
-    Listener : IExodusMenuListener2;
-    Enabled: WordBool;
-begin
-    Enabled := true;
-
-    for i := 0 to _menu_items.Count - 1 do
-    begin
-        Listener := nil;
-        try
-            //fire event on one menu listener2
-            Listener := IUnknown(TMenuItem(_menu_items.Objects[i]).Tag) as IExodusMenuListener2;
-        except
-            DebugMessage('COM Exception in TExodusChat.fireMenuShow');
-        end;
-        if (Listener <> nil) then
-        begin
-               Listener.OnMenuItemShow(_menu_items[i], xml, Enabled);
-               TMenuItem(_menu_items.Objects[i]).Enabled := Enabled;
-               if (not Enabled) then
-                   break;
-        end;
-    end;
-end;
-
-{---------------------------------------}
 function TExodusChat.fireBeforeRecvMsg(body, xml: Widestring): boolean;
 var
     i: integer;
@@ -409,7 +309,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusChat.fireMenuClick(Sender: TObject; xml: WideString = '');
+procedure TExodusChat.fireMenuClick(Sender: TObject);
 var
     idx : Integer;
 {$IFDEF OLD_MENU_EVENTS}
@@ -432,7 +332,7 @@ begin
         //fire event on one menu listener
         mListener := IExodusMenuListener(TMenuItem(_menu_items.Objects[idx]).Tag);
         if (mListener <> nil) then
-            mListener.OnMenuItemClick(_menu_items[idx], xml);
+            mListener.OnMenuItemClick(_menu_items[idx], '');
 {$ENDIF}
     end;
 end;
@@ -441,8 +341,8 @@ end;
 function TExodusChat.Get_jid: WideString;
 begin
     Result := '';
-    if (_chat <> nil) then Result := _chat.BareJID
-//JJF TODO msgqueue refactor    else if (_im <> nil) then Result := _im.JID
+    if (_chat <> nil) then Result := _chat.JID
+    else if (_im <> nil) then Result := _im.JID
     else if (_room <> nil) then Result := _room.getJid;
 end;
 
@@ -457,7 +357,7 @@ begin
     inc(_nextid);
     idx := _nextid;
     id := 'plugin_' + IntToStr(idx);
-
+    
     if (_room <> nil) then begin
         mi := TMenuItem.Create(_room);
         mi.Name := id;
@@ -474,7 +374,6 @@ begin
         mi.Tag := Integer(menuListener);
         TfrmChat(_chat.window).popContact.Items.Add(mi);
     end
-    {JJF TODO msgqueue refactor
     else if (_im <> nil) then begin
         mi := TMenuItem.Create(_im);
         mi.Name := id;
@@ -483,7 +382,6 @@ begin
         mi.Tag := Integer(menuListener);
         _im.popContact.Items.Add(mi);
     end
-    }
     else
         exit;
 
@@ -515,7 +413,6 @@ begin
         mi.Tag := Integer(menuListener);
         TfrmChat(_chat.window).popOut.Items.Add(mi);
     end
-    {JJF TODO msgqueue refactor
     else if (_im <> nil) then begin
         mi := TMenuItem.Create(_im);
         mi.Name := id;
@@ -524,7 +421,6 @@ begin
         mi.Tag := Integer(menuListener);
         _im.popClipboard.Items.Add(mi);
     end
-    }
     else
         exit;
 
@@ -561,10 +457,9 @@ begin
         Result := TfrmChat(_chat.window).MsgOut.Text
     else if (_room <> nil) then
         Result := _room.MsgOut.Text
-{JJF TODO msgqueue refactor
     else if (_im <> nil) then
         Result := _im.MsgOut.Text;
-}
+
 end;
 
 {---------------------------------------}
@@ -627,10 +522,8 @@ begin
             Result := TfrmChat(_chat.window).MsgOut.Handle
         else if (_room <> nil) then
             Result := _room.MsgOut.Handle
-{JJF TODO msgqueue refactor
         else if (_im <> nil) then
             Result := _im.MsgOut.Handle
-}
         else exit;
     end;
     HWND_MsgOutput: begin
@@ -642,10 +535,8 @@ begin
                Result := TfRTFMsgList(_room.MsgList).MsgList.Handle
             else
                Result := -1
-{JJF TODO msgqueue refactor
         else if (_im <> nil) then
             Result := _im.txtMsg.Handle
-}
         else exit;
     end;
     Ptr_MsgInput: begin
@@ -657,12 +548,10 @@ begin
             p := @(_room.MsgOut);
             Result := integer(p);
         end
-{JJF TODO msgqueue refactor
         else if (_im <> nil) then begin
             p := @(_im.MsgOut);
             Result := integer(p);
         end;
-}
     end;
     Ptr_MsgOutput: begin
         if (_chat <> nil) then begin
@@ -682,12 +571,10 @@ begin
             else
                 Result := -1;
         end
-{JJF TODO msgqueue refactor
         else if (_im <> nil) then begin
             p := @(_im.txtMsg);
             Result := integer(p);
         end;
-}
     end;
     end;
 
@@ -701,10 +588,8 @@ begin
         TfrmChat(_chat.window).MsgOut.WideLines.Add(Value)
     else if (_room <> nil) then
         _room.MsgOut.WideLines.Add(Value)
-{JJF TODO msgqueue refactor
     else if (_im <> nil) then
         _im.txtMsg.WideLines.Add(Value);
-}        
 end;
 
 {---------------------------------------}
@@ -791,12 +676,10 @@ begin
     try
         if (_chat <> nil) then
             c := TComponent(_chat.Window)
-        else // JJF TODO msgqueue refactor if (_room <> nil) then
-            c := _room;
-{JJF TODO msgqueue refactor
+        else if (_room <> nil) then
+            c := _room
         else //if (_im <> nil) then
             c := _im;
-}            
         //see if the control we want is actually the form
         if SameText(c.Name, Name) then
             Result := getCOMControl(c)
@@ -847,110 +730,6 @@ begin
     else if (_room <> nil) then
         Result := _room
         .MsgOutToolbar;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.Close;
-begin
-    if ((_chat <> nil) and (_chat.window <> nil))then
-    begin
-        TfrmChat(_chat.window).Close();
-    end
-    else if (_room <> nil) then
-    begin
-        _room.Close();
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.BringToFront;
-begin
-    if ((_chat <> nil) and (_chat.window <> nil)) then
-    begin
-        TfrmChat(_chat.window).ShowDefault();
-    end
-    else if (_room <> nil) then
-    begin
-        _room.ShowDefault();
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.Dock;
-begin
-    if ((_chat <> nil) and (_chat.window <> nil)) then
-    begin
-        if (not TfrmChat(_chat.window).Docked) then
-        begin
-            TfrmChat(_chat.window).DockForm();
-        end;
-    end
-    else if (_room <> nil) then
-    begin
-        if (not _room.Docked) then
-        begin
-            _room.DockForm();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.Float;
-begin
-    if ((_chat <> nil) and (_chat.window <> nil)) then
-    begin
-        if (TfrmChat(_chat.window).Docked) then
-        begin
-            TfrmChat(_chat.window).FloatForm();
-        end;
-    end
-    else if (_room <> nil) then
-    begin
-        if (_room.Docked) then
-        begin
-            _room.FloatForm();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-function  TExodusChat.AddRosterMenu (const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
-var
-    id: Widestring;
-    mi: TMenuItem;
-    idx: Integer;
-begin
-    // add a new TMenuItem to the Plugins menu
-    inc(_nextid);
-    idx := _nextid;
-
-    id := 'plugin_' + IntToStr(idx);
-    if (_room <> nil) then begin
-        mi := TMenuItem.Create(_room);
-        mi.Name := id;
-        mi.OnClick := _room.popupMenuClick;
-        mi.Caption := caption;
-        mi.Tag := Integer(menuListener);
-        _room.popRoomRoster.Items.Add(mi);
-    end;
-    _menu_items.AddObject(id, mi);
-    Result := id;
-end;
-
-
-{---------------------------------------}
-procedure TExodusChat.RemoveRosterMenu(const MenuID: WideString);
-var
-    idx: integer;
-    mi: TMenuItem;
-begin
-    // remove this menu item.
-    idx := _menu_items.indexOf(MenuID);
-    if (idx < 0) then exit;
-    mi := TMenuItem(_menu_items.Objects[idx]);
-    _menu_items.Delete(idx);
-    mi.Tag := 0;
-    mi.Free();
 end;
 
 initialization

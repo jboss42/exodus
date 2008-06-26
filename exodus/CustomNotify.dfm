@@ -1,11 +1,17 @@
-inherited frmCustomNotify: TfrmCustomNotify
+object frmCustomNotify: TfrmCustomNotify
   Left = 240
   Top = 208
   BorderWidth = 4
   Caption = 'Custom Notification Options'
   ClientHeight = 265
   ClientWidth = 318
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
   OnShow = FormShow
@@ -35,17 +41,9 @@ inherited frmCustomNotify: TfrmCustomNotify
     Width = 318
     Height = 30
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 2
     TabStop = True
-    ExplicitTop = 235
+    ExplicitTop = 226
     ExplicitWidth = 318
     ExplicitHeight = 30
     inherited Panel2: TPanel
@@ -65,8 +63,7 @@ inherited frmCustomNotify: TfrmCustomNotify
         Top = 1
         Height = 29
         ExplicitLeft = 158
-        ExplicitTop = 1
-        ExplicitHeight = 29
+        ExplicitHeight = 25
       end
     end
   end

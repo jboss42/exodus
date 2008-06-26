@@ -28,7 +28,6 @@ type
   protected
     { Protected declarations }
     procedure CreateWindowHandle(const Params: TCreateParams); override;
-    procedure SetEnabled(enabled: boolean); override;
 
     procedure editNumKeyPress(Sender: TObject; var Key: Char);
     procedure editNumExit(Sender: TObject);
@@ -40,16 +39,12 @@ type
     function  GetValue() : Widestring;
     procedure SetMax(max : Integer);
     procedure SetMin(min : Integer);
-
   private
-
     procedure InitializeControls();
 
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
-
-    procedure SetFocus(); override;
 
   published
     { Published declarations }
@@ -68,7 +63,7 @@ uses SysUtils, Windows, Dialogs, Forms, CommCtrl, StdCtrls, GnuGetText, Messages
 Math;
 procedure Register;
 begin
-   RegisterComponents('Exodus Components', [TExNumericEdit]);
+   RegisterComponents('Win32', [TExNumericEdit]);
 end;
 
 procedure TExUpDown.CreateWindowHandle(const Params: TCreateParams);
@@ -85,10 +80,10 @@ end;
 constructor TExNumericEdit.Create(AOwner: TComponent);
 begin
     inherited Create(AOwner);
-
+    
     Left := 0;
     Top := 0;
-    TabStop := false;
+    TabOrder := 0;
     Caption := '';
 
     //Supress out bevel of the panel
@@ -100,6 +95,7 @@ begin
     editNum.Parent := Self;
     editNum.OnKeyPress := Self.editNumKeyPress;
     editNum.OnExit := Self.editNumExit;
+
     //Initialize range and value
     _min := 0;
     _max := 1000000;
@@ -107,20 +103,8 @@ begin
     //Create association between spin and edit controls
     spnNum.Associate := editNum;
     _onChange := nil;
+
 end;    {Create}
-
-procedure TExNumericEdit.SetEnabled(enabled: boolean);
-begin
-    inherited;
-    editNum.Enabled := enabled;
-    spnNum.Enabled := enabled;
-end;
-
-procedure TExNumericEdit.SetFocus();
-begin
-    inherited;
-    editNUm.SetFocus();
-end;
 
 procedure TExNumericEdit.InitializeControls();
 const
@@ -132,7 +116,6 @@ begin
     Left := 0;
     Top := 0;
     Width := Self.Width - spnNum.Width;
-    TabStop := true;
     TabOrder := 0;
     Text := IntToStr(_value);
     //Set all anchors for proper resizing at design
@@ -144,7 +127,7 @@ begin
     //Width := Trunc(Self.Width*factor);
     Left := editNum.Width;
     Top := 0;
-    TabStop := false;
+    TabOrder := 1;
     Position := _value;
     Max := _max;
     Min := _min;
@@ -163,6 +146,7 @@ procedure TExNumericEdit.CreateWindowHandle(const Params: TCreateParams);
 var
  p: TCreateParams;
 begin
+    TabOrder := 0;
     Caption := '';
 
     InitializeControls();

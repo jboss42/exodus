@@ -20,12 +20,12 @@ unit Room;
 interface
 
 uses
-    Unicode, XMLTag, RegExpr, DropTarget,
+    Unicode, XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
     JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg,
-    AppEvnts, IQ, Exodus_TLB, ExActions;
+    AppEvnts, IQ;
 
 type
   TMemberNode = TTntListItem;
@@ -46,7 +46,6 @@ type
     blockShow: Widestring;
     role: WideString;
     affil: WideString;
-    hideUnavailable: Boolean;
     destructor Destroy(); override;
   published
     property real_jid: WideString read getRealJID write setRealJID;
@@ -63,6 +62,7 @@ type
     popClose: TTntMenuItem;
     mnuOnTop: TTntMenuItem;
     mnuWordwrap: TTntMenuItem;
+    NotificationOptions1: TTntMenuItem;
     N1: TTntMenuItem;
     popAdmin: TTntMenuItem;
     S1: TTntMenuItem;
@@ -80,6 +80,7 @@ type
     popRosterBlock: TTntMenuItem;
     popRosterSendJID: TTntMenuItem;
     popRosterChat: TTntMenuItem;
+    popRosterMsg: TTntMenuItem;
     popDestroy: TTntMenuItem;
     popConfigure: TTntMenuItem;
     N5: TTntMenuItem;
@@ -102,7 +103,6 @@ type
     pnlSubj: TPanel;
     lblSubject: TTntLabel;
     SpeedButton1: TSpeedButton;
-    popRoomProperties: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -128,7 +128,9 @@ type
     procedure popDestroyClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
+    procedure NotificationOptions1Click(Sender: TObject);
     procedure S1Click(Sender: TObject);
+    procedure popRosterMsgClick(Sender: TObject);
     procedure popRosterSendJIDClick(Sender: TObject);
     procedure lstRosterData(Sender: TObject; Item: TListItem);
     procedure popRegisterClick(Sender: TObject);
@@ -144,19 +146,17 @@ type
     procedure Print1Click(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure btnViewHistoryClick(Sender: TObject);
-    procedure popRoomPropertiesClick(Sender: TObject);
 
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
     _roster: TWideStringlist;   // roster for this room
+    _rlist: TList;              // Data storage for the virtual listview
     _isMUC: boolean;            // Is this room JEP-45
     _mcallback: integer;        // Message Callback
     _ecallback: integer;        // Error msg callback
     _pcallback: integer;        // Presence Callback
     _scallback: integer;        // Session callback
-    _affilChangeCallback: Integer; //affiliation change
     _dcallback: integer;
     _keywords: TRegExpr;        // list of keywords to monitor for
     _hint_text: Widestring;     // Current hint for nickname
@@ -176,7 +176,6 @@ type
     _insertTab: boolean;        // Should tab or ctrl + I insert a tab?
 
     _my_membership_role: WideString; // My membership to the room.
-    _my_affiliation: WideString; // My afiliation to the room.    
 
     // Stuff for nick completions
     _nick_prefix: Widestring;
@@ -185,12 +184,6 @@ type
     _nick_start: integer;
 
     _notify: array[0..2] of integer;
-
-    _session_callback: integer;
-    _dropSupport: TExDropTarget;
-    procedure _DragUpdate(Source: TExDropTarget; X, Y: Integer; var Action: TExDropActionType);
-    procedure _DragExecute(Source: TExDropTarget; X, Y: Integer);
-    procedure _DragEnd(Source: TExDropTarget);
 
     function  checkCommand(txt: Widestring): boolean;
     function _countPossibleNicks(tmps: Widestring): integer;
@@ -212,14 +205,7 @@ type
     procedure changeNick(new_nick: WideString);
     procedure setupKeywords();
     procedure _EnableSubjectButton();
-    function FindDuplicateRealJid(nick: Widestring; jid: Widestring): Integer;
-    function GetRoomRosterHiddenCount(index: Integer): Integer;
-    function GetRoomRosterVisibleCount(): Integer;
-    procedure ToggleDuplicateMember(rm: TRoomMember;  tag: TXMLTag);
-    procedure _checkForAdhoc();
-    function _getSelectedMembers() : TXMLTag;
   protected
-    btnViewHistory: TToolButton;
     {
         Get the window state associated with this window.
 
@@ -228,7 +214,6 @@ type
         chat windows might save based on munged profile&jid).
     }
     function GetWindowStateKey() : WideString;override;
-    function GetChatController(): TObject; override;
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -249,16 +234,13 @@ type
     useRegisteredNick: boolean;
     COMController: TObject;
 
-    procedure OnSessionCallback(event: string; tag: TXMLTag);
-    procedure AffilChangeCallback(event: string; tag: TXMLTag);
     procedure SendMsg; override;
     procedure pluginMenuClick(Sender: TObject); override;
-    procedure popupMenuClick(Sender: TObject);
 
     procedure ShowMsg(tag: TXMLTag);
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
 
-    function addRoomUser(jid, nick: Widestring; tag: TXMLTag = nil): TRoomMember;
+    function addRoomUser(jid, nick: Widestring): TRoomMember;
     procedure removeRoomUser(jid: Widestring);
     function GetNick(rjid: Widestring): Widestring;
 
@@ -278,7 +260,7 @@ type
         is fired after all other docking events are complete.
     }
     procedure OnDocked();override;
-    function GetRoomRosterOnlineCount(): Integer;
+
     {
         Event fired when a float (undock) is complete.
 
@@ -286,37 +268,6 @@ type
         is fired after all other floating events are complete.
     }
     procedure OnFloat();override;
-
-    property MyAffiliation: WideString read _my_affiliation;   
-    property MyRole: WideString read _my_membership_role;
-    property Subject: Widestring read _subject;
-  end;
-
-  TJoinRoomAction = class(TExBaseAction)
-  private
-    constructor Create;
-
-  public
-    procedure execute(const items: IExodusItemList); override;
-  end;
-
-  TAutojoinAction = class(TExBaseAction)
-  private
-    _value: Widestring;
-
-    constructor Create(flag: Boolean);
-
-  public
-    procedure execute(const items: IExodusItemList); override;
-    property Value: Widestring read _value;
-  end;
-
-  TRoomPropertiesAction = class(TExBaseAction)
-  private
-    constructor Create;
-
-  public
-    procedure execute(const items: IExodusItemList); override;
   end;
 
 var
@@ -346,7 +297,6 @@ const
     sUnblock = 'UnBlock';
     sUnknownFileType = 'Unknown file type';
     sReconnected = 'Reconnected.';
-    sConnected = 'Connected.';
 
 
     sDestroyRoom = 'Destroy Conferene Room';
@@ -428,6 +378,7 @@ function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 procedure CloseAllRooms();
 
+
 {---------------------------------------}
 function ItemCompare(Item1, Item2: Pointer): integer;
 
@@ -438,15 +389,8 @@ implementation
 uses
     Browser,
     CapPresence,
-    ChatWin,
-    CustomNotify,
-    ExSession,
-    ExActionCtrl,
-    ExTreeView,
-    JabberUtils,
-    ExUtils,
-    Entity,
-    EntityCache,
+    ChatWin, COMChatController, CustomNotify,
+    ExSession, JabberUtils, ExUtils, Entity, EntityCache,  
     GnuGetText,
     InputPassword,
     Invite,
@@ -454,20 +398,20 @@ uses
     JabberConst,
     JoinRoom,
     MsgDisplay,
+    MsgRecv,
+    NodeItem,
     Notify,
     PrefController,
     Presence,
     Profile,
-    PrtRichEdit,
-    RTFMsgList,
-    BaseMsgList,
+    PrtRichEdit, RTFMsgList, BaseMsgList,
     RegForm,
     RichEdit,
     RiserWindow,
     RoomAdminList,
-    ContactController,
-    RosterImages,
-    RosterForm,
+    Roster,
+    RosterImages, 
+    RosterWindow,
     Session,
     ShellAPI,
     Signals,
@@ -475,18 +419,10 @@ uses
     xData,
     XMLNode,
     XMLUtils,
-    IEMsgList,
-    KeyWords,
-    Dockable,
-    ExodusDockManager,
-    DockWindow,
-    HistorySearch,
-    BookmarkForm,
-    DisplayName,
-    COMChatController,
-    RoomProperties;
+    KeyWords;
 
 {$R *.DFM}
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -504,14 +440,6 @@ begin
     try
         // Make sure we have TC..
         if (not MainSession.Prefs.getBool('brand_muc')) then exit;
-
-        // Make sure activity window is showing.
-        // This is a work around for a weird issue where
-        // sometimes, if the activity window hasn't been shown
-        // yet, then the room being joined will not be (no presence sent).
-        // The EntityCallback never triggers.
-        getDockManager().ShowDockManagerWindow(true, bring_to_front);
-
         // is there already a room window?
         i := room_list.IndexOf(rjid);
         if (i >= 0) then
@@ -540,9 +468,8 @@ begin
 
             if (send_presence) then
                 f.sendStartPresence();
-            //JJF todo add a displayname listener for dn changes
-            f.Caption := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid); //use display name if possible tmp_jid.userDisplay; //no display name here for room names
-            f.Hint := tmp_jid.jid;
+
+            f.Caption := tmp_jid.userDisplay; //no display name here for room names
 
             // setup prefs
             with f do begin
@@ -566,16 +493,6 @@ begin
 
         Result := f;
     except
-        on e: Exception do
-        begin
-            if (Pos('Out of system resources', e.Message) > 0) then
-            begin
-                MainSession.FireEvent('/session/close-all-windows', nil);
-                MainSession.FireEvent('/session/error-out-of-system-resources', nil);
-            end;
-
-            Result := nil;
-        end;
     end;
 end;
 
@@ -592,14 +509,11 @@ end;
 
 function TfrmRoom.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 var
-    bm: IExodusItem;
+ bm: TXMLTag;                                 
 begin
     //don't auto-open rooms we have bookmoarked for join on login
-    //bm := MainSession.Bookmarks.FindBookmark(getJID);
-    bm := Session.MainSession.ItemController.GetItem(getJID);
-    //if no boookmark or bookmark will not auto open this room any, store auto open info
-    //move this logic to the auto open factory?
-    if ((event = 'disconnected') and ((bm = nil) or (bm.value['autojoin'] <> 'true'))) then begin
+    bm := MainSession.Bookmarks.FindBookmark(getJID);
+    if ((event = 'disconnected') and ((bm = nil) or (bm.GetAttribute('autojoin') <> 'true'))) then begin
         //check to see if this room is bokmarked and join on startup
         Result := TXMLTag.Create(Self.classname);
         Result.setAttribute('j', getJID);
@@ -608,7 +522,8 @@ begin
             Result.setAttribute('p', _passwd);
         if (_sent_initial_presence) then
             Result.setAttribute('sp', 't');
-        Result.setAttribute('dc', 't'); //if config is needed, just open
+//        if (_default_config) then
+            Result.setAttribute('dc', 't'); //if config is needed, just open
         if (useRegisteredNick) then
             Result.setAttribute('rn', 't');
         useProfile := true;
@@ -619,19 +534,7 @@ end;
 function TfrmRoom.GetWindowStateKey() : WideString;
 begin
     //todo jjf remove profile from this state key once prefs are profile aware
-    Result := inherited GetWindowStateKey() + '-' +
-              MungeXMLName(MainSession.Profile.Name) + '-' +
-              MungeXMLName(Self.jid);
-end;
-
-function TfrmRoom.GetChatController(): TObject;
-begin
-    Result := ComController;
-end;
-{---------------------------------------}
-procedure TfrmRoom.AffilChangeCallback(event: string; tag: TXMLTag);
-begin
-    ShowMsg(tag)
+    Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self.jid);
 end;
 
 {---------------------------------------}
@@ -666,26 +569,12 @@ var
     etag: TXMLTag;
     e: TJabberEntity;
     skip_notification: Boolean;
-    msgDelayTag: TXMLTag;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
 
     if (Msg.isXdata) then exit;
     if (Msg.Time < _disconTime) then exit;
-
-    // Check to see if we need to increment the
-    // unread msg count
-    msgDelayTag := GetDelayTag(Msg.Tag);
-    if ((msgDelayTag = nil) and
-        (not Msg.IsMe) and
-        (Msg.FromJID <> self.jid)) then begin
-        // We don't want to update counts on delayed (history) msgs
-        // or on msgs from "me"
-        // or on msgs that are "system messages"
-        updateMsgCount(Msg);
-        updateLastActivity(Msg.Time);
-    end;
 
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
@@ -737,7 +626,7 @@ begin
                 e := jEntityCache.getByJid(Self.jid, '');
                 // e can be null, not doing this check can cause crashes
                 if ( e <> nil ) then
-                    e.refresh(MainSession);
+                	e.refresh(MainSession);
             end;
         end;
 
@@ -751,38 +640,30 @@ begin
         Msg.IsMe := (Msg.Nick = MyNick);
         server := false;
     end;
-{** JJF msgqueue refactor
-
     skip_notification := MainSession.Prefs.getBool('queue_not_avail') and
                          ((MainSession.Show = 'away') or
                           (MainSession.Show = 'xa') or
                           (MainSession.Show = 'dnd'));
-**}
-    skip_notification := false;                          
     if (skip_notification = false) then begin
       // this check is needed only to prevent extraneous regexing.
-        if (not server)
-{** JJF msgqueue refactor
-        and (not MainSession.IsPaused)
-**}
-        then begin
-            // check for keywords
-            if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
-                DoNotify(Self, _notify[NOTIFY_KEYWORD],
-                         _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
-                         RosterTreeImages.Find('conference'), 'notify_keyword');
-                Msg.highlight := true;
-            end
-            else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (msgDelayTag = nil) then
-              if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
-                DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
-                         GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
-                         RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
-              else
-                DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
-                         _(sNotifyActivity) + Self.Caption,
-                         RosterTreeImages.Find('conference'), 'notify_roomactivity');
-        end;
+      if ((not server) and (not MainSession.IsPaused)) then begin
+        // check for keywords
+        if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
+            DoNotify(Self, _notify[NOTIFY_KEYWORD],
+                     _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
+                     RosterTreeImages.Find('conference'), 'notify_keyword');
+            Msg.highlight := true;
+        end
+        else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (Msg.Tag.QueryXPTag(XP_MSGDELAY) = nil) then
+          if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
+            DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
+                     GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
+                     RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
+          else
+            DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
+                     _(sNotifyActivity) + Self.Caption,
+                     RosterTreeImages.Find('conference'), 'notify_roomactivity');
+      end;
     end;
 
     if (Msg.Subject <> '') then begin
@@ -811,13 +692,8 @@ begin
         Msg.isMe := False;
         LogMessage(Msg);
 
-        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) and (MsgOut.Enabled) then begin
-            try
-                MsgOut.SetFocus();
-            except
-                // To handle Cannot focus exception
-            end;
-        end;
+        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) and (MsgOut.Enabled) then
+            MsgOut.SetFocus();
     end;
 
 
@@ -830,7 +706,6 @@ var
     add_xml: Widestring;
     msg: TJabberMessage;
     mtag: TXMLTag;
-    temptag: TXMLTag;
 begin
     //
     msg := TJabberMessage.Create(jid, 'groupchat', body, Subject, priority);
@@ -853,14 +728,7 @@ begin
     if (xml <> '') then
         mtag.AddInsertedXML(xml);
 
-    temptag := TXMLTag.Create(mtag);
-    MainSession.SendTag(mtag); // Tag gets "cleared"
-    if (comcontroller <> nil) then
-    begin
-        TExodusChat(ComController).fireSentMessageXML(temptag);
-    end;
-    temptag.Free();
-
+    MainSession.SendTag(mtag);
     msg.Free();
 end;
 
@@ -878,12 +746,14 @@ begin
     txt := getInputText(MsgOut);
 
     // plugin madness
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     if (ComController <> nil) then
       allowed := TExodusChat(ComController).fireBeforeMsg(txt)
     else
       allowed := true;
 
     if ((allowed = false) or (txt = '')) then exit;
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     if (txt[1] = '/') then begin
         if (checkCommand(txt)) then
@@ -922,8 +792,8 @@ var
     r, i: integer;
 begin
     r := 0;
-    for i := 0 to _roster.Count - 1 do begin
-        m := TRoomMember(_roster.Objects[i]);
+    for i := 0 to _rlist.Count - 1 do begin
+        m := TRoomMember(_rlist[i]);
         if (Pos(tmps, m.Nick) = 0) then inc(r);
     end;
     Result := r;
@@ -1194,20 +1064,21 @@ begin
     if (event = '/session/disconnected') then begin
         // post a msg to the window and disable the text input box.
         MsgOut.Visible := false;
-        MsgList.DisplayPresence('', _('You have been disconnected.'), '', 0);
+        MsgList.DisplayPresence(_('You have been disconnected.'), '');
 
         MainSession.UnRegisterCallback(_mcallback);
         MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_dcallback);
-        MainSession.UnRegisterCallback(_affilChangeCallback);
+
         _mcallback := -1;
         _ecallback := -1;
         _pcallback := -1;
         _dcallback := -1;
-        _affilChangeCallback := -1;
 
         _roster.Clear();
+        ClearListObjects(_rlist);
+        _rlist.Clear();
         lstRoster.Items.Count := 0;
         lstRoster.Invalidate();
 
@@ -1222,10 +1093,7 @@ begin
         if ((_mcallback = -1) or
             (_pending_start)) then begin
             MsgOut.Visible := true;
-            if (_pending_start) then
-                MsgList.DisplayPresence('', sConnected, '', 0)
-            else
-                MsgList.DisplayPresence('', sReconnected, '', 0);
+            MsgList.DisplayPresence(sReconnected, '');
             SetJID(Self.jid);             // re-register callbacks
             sendStartPresence();
         end else begin
@@ -1432,8 +1300,7 @@ begin
                     reason := reason + ''#13#10 + _(sReason) + ' ' + drtag.Data;
                 end;
 
-                MessageDlgW(reason, mtInformation, [mbOK], 0,
-                            TJabberID.removeJEP106(from_base));
+                MessageDlgW(reason, mtInformation, [mbOK], 0, TJabberID.removeJEP106(from_base));
                 tmp_jid.Free();
                 _pending_destroy := false;
             end;
@@ -1471,7 +1338,7 @@ begin
                     if (scode = '301') then tmp2 := _(sStatus_301)
                     else if (scode = '307') then tmp2 := _(sStatus_307)
                     else if (scode = '322') then tmp2 := _(sStatus_322);
-
+                         
                     mtag := newRoomMessage(WideFormat(tmp2, [member.Nick, tmp1]));
                     ShowMsg(mtag);
                 end;
@@ -1481,33 +1348,17 @@ begin
                 ShowMsg(mtag);
             end;
 
-            if (xtag <> nil) then begin
-                 t := xtag.GetFirstTag('item');
-                 if (t <> nil) then begin
-                      member.role := t.GetAttribute('role');
-                      member.affil := t.GetAttribute('affiliation');
-                      ToggleDuplicateMember(member, tag);
-                      //If no affiliation exists for the nick, remove it.
-                      if (member.affil = 'none') then
-                          removeRoomUser(from)
-                      else begin
-                          //member or higher, went offline, render new presence status
-                          RenderMember(member, tag);
-                          lstRoster.Items.Count := GetRoomRosterVisibleCount();
-                          lstRoster.Invalidate();
-                      end;
-                 end;
+            if (scode <> '303') then begin
+                _roster.Delete(i);
+                i := _rlist.IndexOf(member);
+                if (i >= 0) then begin
+                    _rlist.Delete(i);
+                    _rlist.Sort(ItemCompare);
+                    lstRoster.Items.Count := _rlist.Count;
+                    lstRoster.Invalidate();
+                end;
+                member.Free;
             end;
-        end
-        else begin
-           // Add unavailable members or higher to the roster
-           itag := tag.QueryXPTag(xp_muc_item);
-           if (itag <> nil) then begin
-              if (itag.GetAttribute('affiliation') <> 'none') then begin
-                  tmp_jid := TJabberID.Create(from);
-                  AddRoomUser(from, tmp_jid.resource, tag);
-              end;
-           end;
         end;
     end
     else begin
@@ -1516,7 +1367,7 @@ begin
 
         if (i < 0) then begin
             // this is a new member
-            member := AddRoomUser(from, tmp_jid.resource, tag);
+            member := AddRoomUser(from, tmp_jid.resource);
 
             // show new user message
             if (xtag <> nil) then begin
@@ -1575,8 +1426,15 @@ begin
 
         // check for role=none to fixup bugs in some mu-c servers.
         if (member.role = 'none') then begin
-            if (i >= 0) then
-              RemoveRoomUser(from);
+            _roster.Delete(i);
+            i := _rlist.IndexOf(member);
+            if (i >= 0) then begin
+                _rlist.Delete(i);
+                _rlist.Sort(ItemCompare);
+                lstRoster.Items.Count := _rlist.Count;
+                lstRoster.Invalidate();
+            end;
+            member.Free;
             exit;
         end;
 
@@ -1595,7 +1453,7 @@ begin
 
             //hold onto my role
             _my_membership_role := member.role;
-            _my_affiliation := member.affil;
+
             // check to see what my role is
             _send_unavailable := true;
 
@@ -1624,9 +1482,6 @@ begin
 
             // Am I the owner, thus no registration option
             popRegister.Enabled := (member.affil <> MUC_OWNER);
-
-            // Make sure we have the correct icon showing (adhoc/persistent)
-            _checkForAdhoc();
         end;
         RenderMember(member, tag);
     end;
@@ -1636,30 +1491,21 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRoom.addRoomUser(jid, nick: Widestring; tag: TXMLTag = nil): TRoomMember;
+function TfrmRoom.addRoomUser(jid, nick: Widestring): TRoomMember;
 var
     member: TRoomMember;
-    itag: TXMLTag;
 begin
     //
     member := TRoomMember.Create;
     member.JID := jid;
     member.Nick := nick;
-    member.hideUnavailable := false;
-    if (tag <> nil) then begin
-        itag := tag.QueryXPTag(xp_muc_item);
-        if (itag <> nil) then begin
-            member.role := itag.GetAttribute('role');
-            member.affil := itag.GetAttribute('affiliation');
-            member.real_jid := itag.GetAttribute('jid');
-        end;
-    end;
+
     _roster.AddObject(jid, member);
     _roster.Sort;
-    ToggleDuplicateMember(member, tag);
 
-    RenderMember(member, tag);
-    lstRoster.Items.Count := GetRoomRosterVisibleCount();
+    _rlist.Add(member);
+    _rlist.Sort(ItemCompare);
+    lstRoster.Items.Count := _rlist.Count;
     lstRoster.Invalidate();
 
     Result := member;
@@ -1669,15 +1515,19 @@ end;
 procedure TfrmRoom.removeRoomUser(jid: Widestring);
 var
     i: integer;
+    member: TRoomMember;
 begin
     //
     i := _roster.IndexOf(jid);
     if (i = -1) then exit;
 
+    member := TRoomMember(_roster.Objects[i]);
     _roster.Delete(i);
-    _roster.Sort;
+    i := _rlist.IndexOf(member);
     if (i >= 0) then begin
-        lstRoster.Items.Count := GetRoomRosterVisibleCount();
+        _rlist.Delete(i);
+        _rlist.Sort(ItemCompare);
+        lstRoster.Items.Count := _rlist.Count;
         lstRoster.Invalidate();
     end;
 end;
@@ -1796,9 +1646,6 @@ begin
         else begin
             member.show := p.Show;
         end;
-        if (tag.getAttribute('type') = 'unavailable') then
-           member.show := 'offline';
-
         member.status := p.Status;
         p.Free();
     end;
@@ -1806,10 +1653,10 @@ begin
     if (member.show = '') then
         member.show := 'Available';
 
-    i := _roster.IndexOf(member.jid);
+    i := _rlist.IndexOf(member);
     if (i >= 0) then
         lstRoster.UpdateItems(i, i);
-
+    lstRoster.Invalidate();
 end;
 
 {---------------------------------------}
@@ -1827,9 +1674,9 @@ begin
     _pcallback := -1;
     _scallback := -1;
     _dcallback := -1;
-    _affilChangeCallback := -1;
     _roster := TWideStringList.Create;
     _roster.CaseSensitive := true;
+    _rlist := TList.Create;
     _isMUC := false;
     _nick_prefix := '';
     _nick_idx := 0;
@@ -1845,7 +1692,7 @@ begin
     _passwd_from_join_room := true;
     _insertTab := true;
 
-    ImageIndex := RosterImages.RI_TEMP_CONFERENCE_INDEX;
+    ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
 
     _notify[NOTIFY_ROOM_ACTIVITY] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[NOTIFY_KEYWORD] := MainSession.Prefs.getInt('notify_keyword');
@@ -1875,38 +1722,17 @@ begin
     MsgList.setDragOver(OnDockedDragOver);
     MsgList.setDragDrop(OnDockedDragDrop);
 
-    with MainSession.Prefs do begin
-        if (getBool('brand_prevent_change_nick')) then
-            popNick.Enabled := False;
+    if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+        popNick.Enabled := False;
 
-        if (not getBool('brand_print')) then begin
-            Print1.Visible := false;
-        end
-        else begin
-            Print1.Visible := true;
-        end;
-
-        // Button Created here instead of in dfm because the inherited buttons mixed with
-        // this button create ordering issues (this button wants to always be at the right
-        // and we want it to the left).
-        if (getBool('brand_history_search') and getBool('brand_log_groupchat_messages')) then begin
-            btnViewHistory := TToolButton.Create(tbDockBar);
-            btnViewHistory.ImageIndex := RosterImages.RosterTreeImages.Find(RI_VIEW_HISTORY_KEY);
-            btnViewHistory.OnClick := btnViewHistoryClick;
-            btnViewHistory.Parent := tbDockBar;
-            btnViewHistory.ShowHint := true;
-            btnViewHistory.Hint := _('View History');
-        end;
-
-        popRosterBrowse.Visible := getBool('brand_browser');
+    if (not MainSession.Prefs.getBool('brand_print')) then begin
+        Print1.Visible := false;
+    end
+    else begin
+        Print1.Visible := true;
     end;
 
-
-
-
-    _session_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
-    _windowType := 'adhoc_room';
-
+    popRosterBrowse.Visible := MainSession.Prefs.getBool('brand_browser');
 end;
 
 {---------------------------------------}
@@ -1920,7 +1746,6 @@ end;
 procedure TfrmRoom.SetJID(sjid: Widestring);
 var
     j: TJabberID;
-    Item: IExodusItem;
 begin
     // setup our callbacks
     if (_mcallback = -1) then begin
@@ -1928,21 +1753,13 @@ begin
         _ecallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="error"][@from="' + sjid + '"]');
         _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + sjid + '*"]');
         _dcallback := MainSession.RegisterCallback(EntityCallback, '/session/entity/info');
-        _affilChangeCallback := MainSession.RegisterCallback(AffilChangeCallback, '/packet/message[@from="' + sjid + '"]/x[@xmlns="' + XMLNS_MUCUSER + '"]/status[@code="101"]');
         if (_scallback = -1) then
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
     end;
     Self.jid := sjid;
 
     j := TJabberID.Create(sjid);
-    setUID(j.getDisplayFull());
-    MsgList.setTitle(j.removeJEP106(j.user));
-    Item := MainSession.ItemController.GetItem(jid);
-    if (Item <> nil) then
-    begin
-        Item.Active := true;
-        MainSession.FireEvent('/item/update', Item)
-    end;
+    MsgList.setTitle(j.user);
     j.Free();
 end;
 
@@ -1973,7 +1790,6 @@ var
 begin
     if (Key = 0) then exit;
     TExodusChat(ComController).fireMsgKeyDown(Key, Shift);
-
     // Send the msg if they hit return
 
     if (chr(Key) = #09) then begin
@@ -2090,26 +1906,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.btnViewHistoryClick(Sender: TObject);
-begin
-    inherited;
-
-    StartShowHistoryWithJID(jid, true);
-end;
-
-{---------------------------------------}
 procedure TfrmRoom.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-    Item: IExodusItem;
 begin
     inherited;
     Action := caFree;
-    Item := MainSession.ItemController.GetItem(jid);
-    if (Item <> nil) then
-    begin
-        Item.Active := false;
-        MainSession.FireEvent('/item/update', Item)
-    end;
 end;
 
 {---------------------------------------}
@@ -2193,18 +1993,15 @@ procedure TfrmRoom.popBookmarkClick(Sender: TObject);
 var
     bm_name: WideString;
     tmp_jid: TJabberID;
-    groups: TWideStringList;
 begin
   inherited;
     // bookmark this room..
     tmp_jid := TJabberID.Create(Self.jid);
-    bm_name := tmp_jid.userDisplay;
-    groups := TWideStringList.Create();
-    if (ShowAddBookmark(bm_name, groups)) then
-    begin
-        MainSession.rooms.AddRoom(Self.jid, bm_name, myNick, false, false, groups);
+    bm_name := tmp_jid.getDisplayJID();
+
+    if (inputQueryW(_(sRoomBMPrompt), _(sRoomNewBookmark), bm_name)) then begin
+        MainSession.Bookmarks.AddBookmark(Self.jid, bm_name, myNick, false, false);
     end;
-    groups.Free();
 end;
 
 {---------------------------------------}
@@ -2292,7 +2089,7 @@ begin
     if (lstRoster.Selected = nil) then
         rm := nil
     else begin
-        rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+        rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
         if (rm <> nil) then begin
            if (rm.show = _(sBlocked)) then begin
               //unblock
@@ -2309,6 +2106,7 @@ begin
     end;
 
     e := (rm <> nil);
+    popRosterMsg.Enabled := e;
     popRosterChat.Enabled := e;
     popRosterSendJID.Enabled := e;
     popRosterblock.Enabled := e;
@@ -2318,20 +2116,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.popRoomPropertiesClick(Sender: TObject);
-begin
-    inherited;
-    ShowRoomProperties(jid);
-end;
-
 procedure TfrmRoom.popRoomRosterPopup(Sender: TObject);
 var
     e: boolean;
     rm: TRoomMember;
-    JidsTag: TXMLTag;
 begin
     e := (lstRoster.Selected <> nil);
 
+    popRosterMsg.Enabled := e;
     popRosterChat.Enabled := e;
     popRosterSendJID.Enabled := e;
     popRosterblock.Enabled := e;
@@ -2347,7 +2139,7 @@ begin
     
     if (not e) then exit;
 
-    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
         if (rm.show = _(sBlocked)) then
             popRosterBlock.Caption := _(sUnblock)
@@ -2363,6 +2155,7 @@ begin
 
         // If we have clicked on our own Nick, dis-allow various menu options.
         if (rm.Nick = myNick) then begin
+            popRosterMsg.Enabled := false;
             popRosterChat.Enabled := false;
             popRosterSendJID.Enabled := false;
             popRosterblock.Enabled := false;
@@ -2383,9 +2176,6 @@ begin
             popVoice.Enabled := popModerator.Enabled;
         end;
     end;
-    JidsTag := _getSelectedMembers();
-    TExodusChat(COMController).fireMenuShow(JidsTag.xml);
-    JidsTag.Free;
     inherited;
 end;
 
@@ -2414,7 +2204,7 @@ begin
     // Chat w/ this person..
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm = nil) or (WideLowerCase(rm.Nick) = WideLowerCase(mynick)) then exit;
     
     tmp_jid := TJabberID.Create(rm.jid);
@@ -2432,7 +2222,7 @@ var
     m: TRoomMember;
 begin
   inherited;
-    m := TRoomMember(Item.Data);
+    m := TRoomMember(_rlist[Item.Index]);
     if (m = nil) then
         InfoTip := ''
     else begin
@@ -2444,11 +2234,7 @@ begin
 
         if (_isMUC) then begin
             if ((m.role <> '') or (m.affil <> '')) then begin
-                tmps := tmps + ''#13#10 + _('Role: ');
-                if (m.role = MUC_VISITOR) then
-                    tmps := tmps + 'observer'
-                else
-                    tmps := tmps + m.role;
+                tmps := tmps + ''#13#10 + _('Role: ') + m.role;
                 tmps := tmps + ''#13#10 + _('Affiliation: ') + m.affil;
             end;
             if (m.real_jid <> '') then
@@ -2534,7 +2320,7 @@ begin
     for i := 0 to lstRoster.Items.Count - 1 do begin
         if lstRoster.Items[i].Selected then begin
             with tag.AddTag('item') do begin
-                rm := TRoomMember(lstRoster.Items[i].Data);
+                rm := TRoomMember(_rlist[i]);
                 setAttribute('nick', rm.Nick);
                 if (NewRole <> '') then
                     setAttribute('role', NewRole);
@@ -2565,7 +2351,7 @@ begin
     // voice by changing roles
     for i := 0 to lstRoster.Items.Count - 1 do begin
         if (lstRoster.Items[i].Selected) then begin
-            cur_member := TRoomMember(lstRoster.Items[i].Data);
+            cur_member := TRoomMember(_rlist[i]);
             new_role := '';
             if (cur_member.role = MUC_PART) then
                 new_role := MUC_VISITOR
@@ -2615,17 +2401,17 @@ begin
   inherited;
     // edit a list
     if (Sender = popVoiceList) then
-        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice), _roster)
+        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice), _rlist)
     else if (Sender = popBanList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan), _roster)
+        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan), _rlist)
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember), _roster)
+        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember), _rlist)
     else if (Sender = popModeratorList) then
-        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator), _roster)
+        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator), _rlist)
     else if (Sender = popAdminList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin), _roster)
+        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin), _rlist)
     else if (Sender = popOwnerList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner), _roster);
+        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner), _rlist);
 end;
 
 {---------------------------------------}
@@ -2679,12 +2465,10 @@ begin
     // Unregister callbacks and send unavail pres.
     if (MainSession <> nil) then begin
         MainSession.UnRegisterCallback(_mcallback);
-        MainSession.UnRegisterCallback(_affilChangeCallback);
         MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_scallback);
         MainSession.UnRegisterCallback(_dcallback);
-        MainSession.UnRegisterCallback(_session_callback);
 
         if (MainSession.Invisible) then
             MainSession.removeAvailJid(jid);
@@ -2696,7 +2480,9 @@ begin
 
     _keywords.Free;
     ClearStringListObjects(_roster);
+    _rlist.Clear();
     _roster.Free();
+    _rlist.Free();
 
     i := room_list.IndexOf(jid);
     if (i >= 0) then
@@ -2720,42 +2506,51 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRoom.NotificationOptions1Click(Sender: TObject);
+var
+    f: TfrmCustomNotify;
+begin
+    // change notification options..
+    f := TfrmCustomNotify.Create(Application);
+
+    f.addItem('Room activity');
+    f.addItem('Keywords');
+    f.addItem('Priority room activity');
+    f.setVal(0, _notify[NOTIFY_ROOM_ACTIVITY], MainSession.Prefs.getInt('notify_roomactivity'));
+    f.setVal(1, _notify[NOTIFY_KEYWORD], MainSession.Prefs.getInt('notify_keyword'));
+    f.setVal(2, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY], MainSession.Prefs.getInt('notify_priority_roomactivity'));
+
+    if (f.ShowModal) = mrOK then begin
+        _notify[NOTIFY_ROOM_ACTIVITY] := f.getVal(0);
+        _notify[NOTIFY_KEYWORD] := f.getVal(1);
+        _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] := f.getVal(2);
+
+        if ((_notify[NOTIFY_KEYWORD] <> 0) and (_keywords = nil)) then
+            setupKeywords();
+    end;
+
+    f.Free();
+end;
+
+{---------------------------------------}
 procedure TfrmRoom.S1Click(Sender: TObject);
 var
     fn: widestring;
     filetype: integer;
 begin
-    dlgSave.FileName := MungeFileName(self.jid);
-
-    case _msglist_type of
-        RTF_MSGLIST  : dlgSave.Filter := 'RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt'; // RTF
-        HTML_MSGLIST : dlgSave.Filter := 'HTML (*.htm)|*.htm'; // HTML
-    end;
-
+    dlgSave.FileName := MungeName(self.jid);
     if (not dlgSave.Execute()) then exit;
     fn := dlgSave.FileName;
     filetype := dlgSave.FilterIndex;
-
-    case _msglist_type of
-        RTF_MSGLIST  :
-            begin
-                if (filetype = 1) then begin
-                    // .rtf file
-                    if (LowerCase(RightStr(fn, 3)) <> '.rtf') then
-                        fn := fn + '.rtf';
-                end
-                else if (filetype = 2) then begin
-                    // .txt file
-                    if (LowerCase(RightStr(fn, 3)) <> '.txt') then
-                        fn := fn + '.txt';
-                end;
-            end;
-        HTML_MSGLIST :
-            begin
-                // .htm file
-                if (LowerCase(RightStr(fn, 3)) <> '.htm') then
-                    fn := fn + '.htm';
-            end;
+    if (filetype = 1) then begin
+        // .rtf file
+        if (LowerCase(RightStr(fn, 3)) <> '.rtf') then
+            fn := fn + '.rtf';
+    end
+    else if (filetype = 2) then begin
+        // .txt file
+        if (LowerCase(RightStr(fn, 3)) <> '.txt') then
+            fn := fn + '.txt';
     end;
     MsgList.Save(fn);
 end;
@@ -2763,36 +2558,28 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.pluginMenuClick(Sender: TObject);
 begin
-    TExodusChat(COMController).fireMenuClick(Sender, '');
+    TExodusChat(COMController).fireMenuClick(Sender);
 end;
 
 {---------------------------------------}
-function TfrmRoom._getSelectedMembers() : TXMLTag;
+procedure TfrmRoom.popRosterMsgClick(Sender: TObject);
 var
-   rm: TRoomMember;
-   Item: TListItem;
+    rm: TRoomMember;
+    tmp_jid: TJabberID;
 begin
-   if (lstRoster.SelCount < 1) then exit;
-   Result := TXMLTag.Create('jids');
+  inherited;
+    // start chat w/ room participant
+    // Chat w/ this person..
+    if (lstRoster.Selected = nil) then exit;
 
-   Item := lstRoster.Selected;
-   while (Item <> nil) do
-   begin
-       rm := TRoomMember(Item.Data);
-       Result.AddBasicTag('jid', rm.real_jid);
-       Item := lstRoster.GetNextItem(Item, sdAll, [isSelected]);
-   end;
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    if (rm <> nil) then begin
+        tmp_jid := TJabberID.Create(rm.jid);
+        StartMsg(tmp_jid.full);
+        tmp_jid.Free();
+    end;
 end;
 
-{---------------------------------------}
-procedure TfrmRoom.popupMenuClick(Sender: TObject);
-var
-   JidsTag: TXMLTag;
-begin
-    JidsTag := _getSelectedMembers();
-    TExodusChat(COMController).fireMenuClick(Sender, JidsTag.xml);
-    JidsTag.Free();
-end;
 {---------------------------------------}
 procedure TfrmRoom.popRosterSendJIDClick(Sender: TObject);
 var
@@ -2805,7 +2592,7 @@ begin
     // Send my JID to this user
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
         msg := TXMLTag.Create('message');
         msg.setAttribute('id', MainSession.generateID());
@@ -2825,26 +2612,16 @@ end;
 procedure TfrmRoom.lstRosterData(Sender: TObject; Item: TListItem);
 var
     rm: TRoomMember;
-    hiddenMembersCount, idx: Integer;
 begin
   inherited;
     // get the data for this person..
-    hiddenMembersCount := GetRoomRosterHiddenCount(Item.Index);
-    idx := Item.Index + hiddenMembersCount;
-    if ((idx < 0) or (idx > _roster.Count - 1)) then
-        exit;
-        
-    rm := TRoomMember(_roster.Objects[idx]);
-
+    rm := TRoomMember(_rlist[Item.Index]);
     TTntListItem(Item).Caption := rm.Nick;
-    Item.Data := rm;
-
     if (rm.show = _(sBlocked)) then item.ImageIndex := RosterTreeImages.Find('online_blocked')
     else if rm.show = 'away' then Item.ImageIndex := RosterTreeImages.Find('away')
     else if rm.show = 'xa' then Item.ImageIndex := RosterTreeImages.Find('xa')
     else if rm.show = 'dnd' then Item.ImageIndex := RosterTreeImages.Find('dnd')
     else if rm.show = 'chat' then Item.ImageIndex := RosterTreeImages.Find('chat')
-    else if rm.show = 'offline' then Item.ImageIndex := RosterTreeImages.Find('offline')
     else Item.ImageIndex := RosterTreeImages.Find('available');
 
 end;
@@ -2875,8 +2652,6 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
 begin
-    _checkForAdhoc();
-
     if (_pending_start = false) then begin
         // Not starting so we don't want to send start presence.
         // We probably have new disco info (like change of room config).
@@ -2956,13 +2731,9 @@ begin
     if (not Self.Visible) then exit;
     if (Ord(key) < 32) then exit;
 
-    if (MsgOut.Visible) and (MsgOut.Enabled) and (not MsgOut.ReadOnly) then begin
-        try
-            MsgOut.SetFocus();
-            MsgOut.WideSelText := Key;
-        except
-            // To handle Cannot focus exception
-        end;
+    if (MsgOut.Visible) and (MsgOut.Enabled) then begin
+        MsgOut.SetFocus();
+        MsgOut.WideSelText := Key;
     end;
 end;
 
@@ -2982,7 +2753,7 @@ begin
     DefaultDraw := true;
     if (not _isMUC) then exit;
 
-    rm := TRoomMember(Item.Data);
+    rm := TRoomMember(_rlist[Item.Index]);
     moderator := (rm.role = 'moderator');
     visitor := (rm.role = 'visitor');
 
@@ -3014,7 +2785,7 @@ begin
             Font.Style := [];
 
         // draw the image
-        frmExodus.ImageList1.Draw(lstRoster.Canvas,
+        frmExodus.Imagelist2.Draw(lstRoster.Canvas,
             nRect.Left, nRect.Top, Item.ImageIndex);
 
         // draw the text
@@ -3052,16 +2823,15 @@ var
     rm: TRoomMember;
     dgrp: Widestring;
 begin
-    inherited;
-
+  inherited;
     // subscribe to this person
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
         dgrp := MainSession.Prefs.getString('roster_default');
-        MainSession.roster.AddItem(j.jid, rm.nick, dgrp, true);
+        MainSession.Roster.AddItem(j.jid, rm.nick, dgrp, true);
         j.Free();
     end;
 end;
@@ -3076,7 +2846,7 @@ begin
     // lookup the vcard.
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
         ShowProfile(j.jid);
@@ -3093,7 +2863,7 @@ begin
   inherited;
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
         ShowBrowser(j.jid);
@@ -3121,7 +2891,6 @@ var
     cap: Widestring;
     ml: TfBaseMsgList;
     msglist: TfRTFMsgList;
-    htmlmsglist: TfIEMsgList;
 begin
   inherited;
     ml := getMsgList();
@@ -3136,86 +2905,46 @@ begin
 
             PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
-    end
-    else if (ml is TfIEMsgList) then begin
-        htmlmsglist := TfIEMsgList(ml);
-        htmlmsglist.print(true);
     end;
-end;
-
-procedure TfrmRoom._DragUpdate(Source: TExDropTarget; X: Integer; Y: Integer; var Action: TExDropActionType);
-var
-    itemCtrl: IExodusItemController;
-    jids: TWidestringList;
-
-    procedure BuildInviteList(items: IExodusItemList);
-    var
-        item: IExodusItem;
-        idx: Integer;
-    begin
-        if (items = nil) or (items.Count = 0) then exit;
-
-        for idx := 0 to items.Count - 1 do begin
-            item := items.Item[idx];
-            if (item.Type_ = 'group') then
-                BuildInviteList(itemCtrl.GetGroupItems(item.UID))
-            else if (item.Type_ = 'contact') then
-                 jids.Add(item.UID);
-        end;
-    end;
-begin
-    itemCtrl := MainSession.ItemController;
-    jids := TWidestringList(Source.Data);
-    if (jids = nil) then begin
-        jids := TWidestringList.Create();
-        BuildInviteList(Source.DragItems);
-        Source.Data := jids;
-    end;
-
-    if (jids.Count <> 0) then
-        Action := datMove
-    else
-        Action := datNone;
-end;
-procedure TfrmRoom._DragEnd(Source: TExDropTarget);
-var
-    jids: TWidestringList;
-begin
-    jids := TWidestringList(Source.Data);
-    jids.Free();
-end;
-procedure TfrmRoom._DragExecute(Source: TExDropTarget; X: Integer; Y: Integer);
-var
-    jids: TWidestringList;
-begin
-    jids := TWidestringList(Source.Data);
-    if (jids <> nil) and (jids.Count <> 0) then
-        ShowInvite(Self.jid, jids);
 end;
 
 procedure TfrmRoom.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);
 begin
-    case State of
-        dsDragLeave: begin
-            Self.DragCursor := crDrag;
-            exit;
-        end;
-        dsDragEnter: begin
-            _dropSupport.Free();
-            _dropSupport := OpenDropTarget(Source, _DragUpdate, _DragExecute, _DragEnd);
-        end;
-    end;
-
-    Accept := (_dropSupport <> nil) and _dropSupport.Update(X, Y);
+    inherited;
+    Accept := (Source = frmRosterWindow.treeRoster);
 end;
 
 procedure TfrmRoom.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
+var
+    n: TTreeNode;
+    ritem: TJabberRosterItem;
+    i: integer;
+    jids: TList;
+    o: TObject;
 begin
-    inherited;
-
+  inherited;
     // drag drop
-    if (_dropSupport <> nil) then _dropSupport.Execute(X, Y);
+    if (Source = frmRosterWindow.treeRoster) then begin
+        // We want to invite someone into this TC room
+        jids := TList.Create();
+        with frmRosterWindow.treeRoster do begin
+            for i := 0 to SelectionCount - 1 do begin
+                n := Selections[i];
+                o := TObject(n.Data);
+                assert(o <> nil);
+
+                if (o is TJabberRosterItem) then begin
+                    ritem := TJabberRosterItem(n.Data);
+                    jids.Add(ritem);
+                end
+                else if (o is TJabberGroup) then begin
+                    TJabberGroup(o).getRosterItems(jids, true);
+                end;
+            end;
+        end;
+        ShowInvite(Self.jid, jids);
+    end;
 end;
 
 {
@@ -3230,7 +2959,9 @@ begin
     mnuOnTop.Enabled := false;
     _scrollBottom();
     Self.Refresh();
+    //SIG-SIG-SIG
     TExodusChat(ComController).fireNewWindow(Self.Handle);
+    //SIG-SIG-SIG
 end;
 
 {
@@ -3245,7 +2976,9 @@ begin
     mnuOnTop.Enabled := true;
     _scrollBottom();
     Self.Refresh();
+    //SIG-SIG-SIG
     TExodusChat(ComController).fireNewWindow(Self.Handle);
+    //SIG-SIG-SIG
 end;
 
 function TRoomMember.getRealJID(): WideString;
@@ -3325,245 +3058,6 @@ begin
       _real_jid.Free();
 end;
 
-{---------------------------------------}
-//This function matches room member by real jid (different nicks) and returns
-//positive index if it fins one.
-function TfrmRoom.FindDuplicateRealJid(nick: Widestring; jid: Widestring): Integer;
-var
-    i: integer;
-    tmp1, tmp2: TJabberID;
-    realjid, tmpjid: WideString;
-begin
-     Result := -1;
-     if (jid = '') then exit;
-     tmp1 := TJabberID.Create(jid);
-     tmpjid := tmp1.jid;
-     for i := 0 to _roster.Count - 1 do begin
-          tmp2 := TJabberID.Create(TRoomMember(_roster.Objects[i]).real_jid);
-          realjid := tmp2.jid;
-          if (realjid = tmpjid) then begin
-              if (TRoomMember(_roster.Objects[i]).Nick = nick) then
-                 continue
-              else begin
-                 Result := i;
-                 break;
-              end;
-          end;
-     end;
-     tmp1.Free();
-end;
-{---------------------------------------}
-//This function returns hidden member count
-//found before given index.
-function TfrmRoom.GetRoomRosterHiddenCount(index: Integer): Integer;
-var
-   i, max: integer;
-begin
-    Result := 0;
-    max := index;
-    if (index > _roster.Count - 1) then
-        max := _roster.Count - 1;
-    
-    for i := 0 to max do begin
-        if (TRoomMember(_roster.Objects[i]).hideUnavailable) then
-            Inc(Result);
-    end;
-end;
-{---------------------------------------}
-//This function returns total number of visible members.
-function TfrmRoom.GetRoomRosterVisibleCount(): Integer;
-var
-   i: integer;
-begin
-    Result := 0;
-    for i := 0 to _roster.Count - 1 do begin
-        if (not TRoomMember(_roster.Objects[i]).hideUnavailable) then
-            Inc(Result);
-    end;
-end;
-
-{---------------------------------------}
-//This function returns total number of visible members.
-function TfrmRoom.GetRoomRosterOnlineCount(): Integer;
-var
-   i: integer;
-begin
-    Result := 0;
-    for i := 0 to _roster.Count - 1 do begin
-        if (TRoomMember(_roster.Objects[i]).show <> 'offline') then
-            Inc(Result);
-    end;
-end;
-
-{---------------------------------------}
-//This function toggles visibility of the duplicate member entry (by real jid).
-//Duplicate occurance happen when registred members use non-registred nicks
-//to enter the room.
-//When temp nick enters, registred nick needs to be hidden.
-//When temp nick leaves, registred nick needs to be shown.
-//When registred nick enteres after temp nick, we need to check for the
-//presence of temp nick for the given real jid.
-procedure TfrmRoom.ToggleDuplicateMember(rm: TRoomMember; tag: TXMLTag);
-var
-  i: Integer;
-begin
-   //First check if there is another nick for real jid
-   i := FindDuplicateRealJid(rm.nick, rm.real_jid);
-   if (i < 0) then
-       exit;
-
-   //Temp nick for the member or higher went offline,
-   //we need to make registered nick visible
-   if (rm.role = 'none') then begin
-       TRoomMember(_roster.Objects[i]).hideUnavailable := false;
-       rm.hideUnavailable := true;
-   end
-   else begin
-       TRoomMember(_roster.Objects[i]).hideUnavailable := true;
-       rm.hideUnavailable := false;
-   end;
-
-end;
-
-procedure TfrmRoom.OnSessionCallback(event: string; tag: TXMLTag);
-begin
-    if (event = '/session/prefs') then begin
-        lstRoster.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-    end;
-end;
-
-procedure TfrmRoom._checkForAdhoc();
-var
-    e: TJabberEntity;
-begin
-    e := jEntityCache.getByJid(self.jid);
-    if (e <> nil) then begin
-        if ((e.hasFeature('muc_persistent')) or
-            (e.hasFeature('persistent'))) then begin
-            // This is a Persistent room
-            Self.ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
-            _windowType := 'perm_room';
-        end
-        else begin
-            // This is a temp room
-            Self.ImageIndex := RosterImages.RI_TEMP_CONFERENCE_INDEX;
-            _windowType := 'adhoc_room';
-        end;
-    end;
-end;
-
-
-constructor TJoinRoomAction.Create;
-begin
-    inherited Create('{000-exodus.googlecode.com}-000-join-room');
-
-    Set_Caption(_('Join'));
-    Set_Enabled(true);
-end;
-
-procedure TJoinRoomAction.execute(const items: IExodusItemList);
-var
-    idx: Integer;
-    item: IExodusItem;
-    nick, pass: Widestring;
-    useReg: Boolean;
-begin
-    for idx := 0 to items.Count - 1 do begin
-        item := items.Item[idx];
-
-        nick := item.value['nick'];
-        pass := item.value['password'];
-
-        if (item.value['reg_nick'] = 'true') then
-            useReg := true
-        else
-            useReg := false;
-
-        StartRoom(item.UID, nick, pass, true, false, useReg);
-    end;
-end;
-
-constructor TAutojoinAction.Create(flag: Boolean);
-var
-    rname: Widestring;
-    cap: Widestring;
-begin
-    if flag then begin
-        _value := 'true';
-        rname := 'join-on-startup';
-        cap := _('Join on Startup');
-    end else begin
-        _value := 'false';
-        rname := 'unjoin-on-startup';
-        cap := _('Don''t join on startup');
-    end;
-
-    inherited Create('{000-exodus.googlecode.com}-010-' + rname);
-
-    Set_Caption(cap);
-    Set_Enabled(true);
-end;
-
-procedure TAutojoinAction.execute(const items: IExodusItemList);
-var
-    idx: Integer;
-    item: IExodusItem;
-begin
-    for idx := 0 to items.Count - 1 do begin
-        item := items.Item[idx];
-
-        item.value['autojoin'] := _value;
-    end;
-
-    MainSession.rooms.SaveRooms();
-end;
-
-constructor TRoomPropertiesAction.Create;
-begin
-    inherited Create('{000-exodus.googlecode.com}-100-properties');
-
-    Set_Caption(_('Properties...'));
-    Set_Enabled(true);
-end;
-
-procedure TRoomPropertiesAction.execute(const items: IExodusItemList);
-var
-    i: integer;
-begin
-    // 'selection=single' property should limit this to 1 contact in the list
-    for i := 0 to items.Count - 1 do
-    begin
-        ShowRoomProperties(items.Item[i].UID);
-    end;
-end;
-
-
-procedure RegisterActions();
-var
-    actCtrl: IExodusActionController;
-    act: IExodusAction;
-begin
-    actCtrl := GetActionController();
-
-    //setup join action
-    act := TJoinRoomAction.Create() as IExodusAction;
-    actCtrl.registerAction('room', act);
-
-    //setup autojoin action
-    act := TAutojoinAction.Create(true) as IExodusAction;
-    actCtrl.registerAction('room', act);
-    actCtrl.addDisableFilter('room', act.Name, 'autojoin=true');
-
-    act := TAutojoinAction.Create(false) as IExodusAction;
-    actCtrl.registerAction('room', act);
-    actCtrl.addEnableFilter('room', act.Name, 'autojoin=true');
-
-    //setup room properties action
-    act := TRoomPropertiesAction.Create() as IExodusAction;
-    actCtrl.registerAction('room', act);
-    actCtrl.addEnableFilter('room', act.Name, 'selection=single');
-end;
-
 initialization
     // list for all of the current rooms
     room_list := TWideStringlist.Create();
@@ -3576,15 +3070,11 @@ initialization
     xp_muc_destroy_reason := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/destroy/reason');
 
     Classes.RegisterClass(TfrmRoom); //auto-open RTII
-
-    RegisterActions();
-
 finalization
     xp_muc_reason.Free();
     xp_muc_item.Free();
     xp_muc_status.Free();
     xp_muc_presence.Free();
-    
     room_list.Free();
 
 end.

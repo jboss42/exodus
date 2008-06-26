@@ -46,6 +46,9 @@ type
     mJoinConf: TTntMenuItem;
     mRegister: TTntMenuItem;
     mSearch: TTntMenuItem;
+    mLast: TTntMenuItem;
+    mTime: TTntMenuItem;
+    mVersion: TTntMenuItem;
     mVCard: TTntMenuItem;
     N1: TTntMenuItem;
     mBookmark: TTntMenuItem;
@@ -68,6 +71,7 @@ type
     Splitter1: TSplitter;
     lblFeatures: TTntLabel;
     lsFeatures: TTntListBox;
+    mGetInfo: TMenuItem;
     vwInfo: TTntListView;
     pnlTop: TTntPanel;
     CoolBar1: TCoolBar;
@@ -81,7 +85,6 @@ type
     ToolButton3: TToolButton;
     btnNode: TToolButton;
     btnInfo: TToolButton;
-    mGetInfo: TTntMenuItem;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -164,7 +167,7 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 implementation
 uses
     EntityCache, GnuGetText, CommandWizard, DiscoIdentity,
-    JabberConst, JoinRoom, Room, ContactController, JabberID, 
+    JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
     JabberUtils, ExUtils,  Session, JUD, Profile, RegForm, Jabber1,
     RosterImages;
 
@@ -341,7 +344,6 @@ begin
     _ecb := MainSession.RegisterCallback(EntityCallback, '/session/entity');
 
     ImageIndex := RosterImages.RI_BROWSER_INDEX;
-    _windowType := 'browser';
 end;
 
 {---------------------------------------}
@@ -479,6 +481,9 @@ begin
     mBookmark.Enabled := enabled;
 
     mVCard.Enabled := enabled;
+    mVersion.Enabled := enabled;
+    mTime.Enabled := enabled;
+    mLast.Enabled := enabled;
     mSearch.Enabled := enabled;
     mRegister.Enabled := enabled;
     mJoinConf.Enabled := enabled;
@@ -501,6 +506,9 @@ begin
 
     b := TJabberEntity(_blist[Item.Index]);
 
+    mVersion.Enabled := b.hasFeature(XMLNS_VERSION);
+    mTime.Enabled := b.hasFeature(XMLNS_TIME);
+    mLast.Enabled := b.hasFeature(XMLNS_LAST);
     mSearch.Enabled := b.hasFeature(FEAT_SEARCH);
     mRegister.Enabled := b.hasFeature(FEAT_REGISTER);
     mRunCommand.Enabled := b.hasFeature(XMLNS_COMMANDS);
@@ -541,8 +549,8 @@ var
 begin
     itm := vwBrowse.Selected;
     if itm = nil then exit;
-     { TODO : Roster refactor }
-    //ShowBookmark(itm.SubItems[0], itm.Caption);
+
+    ShowBookmark(itm.SubItems[0], itm.Caption);
 end;
 
 {---------------------------------------}
@@ -556,7 +564,13 @@ begin
     if itm = nil then exit;
 
     jid := itm.SubItems[0];
-    ShowProfile(itm.SubItems[0])
+    if Sender = mVCard then
+        ShowProfile(itm.SubItems[0])
+    else begin
+        if Sender = mVersion then jabberSendCTCP(jid, XMLNS_VERSION);
+        if Sender = mTime then jabberSendCTCP(jid, XMLNS_TIME);
+        if Sender = mLast then jabberSendCTCP(jid, XMLNS_LAST);
+    end;
 end;
 
 {---------------------------------------}

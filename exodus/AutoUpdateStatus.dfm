@@ -1,4 +1,4 @@
-inherited frmAutoUpdateStatus: TfrmAutoUpdateStatus
+object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   Left = 236
   Top = 562
   BorderIcons = [biSystemMenu]
@@ -7,13 +7,18 @@ inherited frmAutoUpdateStatus: TfrmAutoUpdateStatus
   Caption = 'Auto Update'
   ClientHeight = 108
   ClientWidth = 291
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
   FormStyle = fsStayOnTop
+  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  ExplicitWidth = 307
-  ExplicitHeight = 150
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -65,7 +70,6 @@ inherited frmAutoUpdateStatus: TfrmAutoUpdateStatus
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 1
-    ParentColor = True
     TabOrder = 1
     object Bevel1: TBevel
       Left = 1
@@ -82,7 +86,6 @@ inherited frmAutoUpdateStatus: TfrmAutoUpdateStatus
       Height = 31
       Align = alRight
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 0
       object btnOK: TTntButton
         Left = 10
@@ -117,6 +120,7 @@ inherited frmAutoUpdateStatus: TfrmAutoUpdateStatus
   end
   object HttpClient: TIdHTTP
     MaxLineAction = maException
+    ReadTimeout = 0
     OnWork = HttpClientWork
     OnWorkBegin = HttpClientWorkBegin
     AllowCookies = True

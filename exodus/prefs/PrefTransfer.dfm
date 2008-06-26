@@ -2,22 +2,24 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   Left = 243
   Top = 168
   Caption = 'frmPrefTransfer'
-  ClientHeight = 551
+  ClientHeight = 343
+  ClientWidth = 318
   OldCreateOrder = True
-  ExplicitHeight = 563
+  ExplicitWidth = 330
+  ExplicitHeight = 355
   PixelsPerInch = 96
   TextHeight = 13
   object lblXferPath: TTntLabel [0]
     Left = 0
     Top = 35
-    Width = 157
+    Width = 149
     Height = 13
     Caption = 'File transfer download directory:'
   end
   object lblXferDefault: TTntLabel [1]
     Left = 0
     Top = 320
-    Width = 193
+    Width = 184
     Height = 13
     Cursor = crHandPoint
     Caption = 'Reset all file transfer options to defaults'
@@ -26,16 +28,16 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   object lblXferMethod: TTntLabel [2]
     Left = 0
     Top = 83
-    Width = 132
+    Width = 129
     Height = 13
     Caption = 'Send file using this method:'
   end
   inherited pnlHeader: TTntPanel
+    Width = 318
     Caption = 'File Transfers'
     TabOrder = 6
-    inherited lblHeader: TTntLabel
-      Height = 12
-    end
+    ExplicitTop = 3
+    ExplicitWidth = 318
   end
   object grpWebDav: TGroupBox
     Left = 8
@@ -54,7 +56,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     object lblDavPort: TTntLabel
       Left = 8
       Top = 56
-      Width = 24
+      Width = 22
       Height = 13
       Caption = 'Port:'
     end
@@ -68,28 +70,28 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     object lblDavPath2: TTntLabel
       Left = 85
       Top = 99
-      Width = 132
+      Width = 131
       Height = 13
       Caption = 'Example: /~foo/public_html'
     end
     object lblDavUsername: TTntLabel
       Left = 8
       Top = 128
-      Width = 52
+      Width = 51
       Height = 13
       Caption = 'Username:'
     end
     object lblDavPassword: TTntLabel
       Left = 8
       Top = 152
-      Width = 50
+      Width = 49
       Height = 13
       Caption = 'Password:'
     end
     object lblDavHost2: TTntLabel
       Left = 85
       Top = 35
-      Width = 155
+      Width = 150
       Height = 13
       Caption = 'Example: http://dav.server.com'
     end
@@ -156,7 +158,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     object lblXferPort: TTntLabel
       Left = 9
       Top = 12
-      Width = 166
+      Width = 160
       Height = 13
       Caption = 'Port to use for HTTP file transfers:'
     end
@@ -208,7 +210,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     object lbl65Proxy: TTntLabel
       Left = 8
       Top = 16
-      Width = 190
+      Width = 183
       Height = 13
       Caption = 'Jabber Address of File Transfer Server:'
     end
@@ -218,155 +220,6 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       Width = 257
       Height = 21
       TabOrder = 0
-    end
-  end
-  object gbProxy: TExGroupBox
-    AlignWithMargins = True
-    Left = 0
-    Top = 338
-    Width = 315
-    Height = 209
-    Margins.Left = 0
-    AutoSize = True
-    BevelOuter = bvNone
-    Caption = 'Proxy type:'
-    ParentColor = True
-    TabOrder = 7
-    AutoHide = True
-    object rbIE: TTntRadioButton
-      AlignWithMargins = True
-      Left = 0
-      Top = 21
-      Width = 312
-      Height = 14
-      Margins.Left = 0
-      Align = alTop
-      Caption = 'Use IE settings'
-      TabOrder = 1
-      OnClick = rbIEClick
-    end
-    object rbNone: TTntRadioButton
-      AlignWithMargins = True
-      Left = 0
-      Top = 41
-      Width = 312
-      Height = 14
-      Margins.Left = 0
-      Align = alTop
-      Caption = 'No HTTP proxy'
-      TabOrder = 2
-    end
-    object rbCustom: TTntRadioButton
-      AlignWithMargins = True
-      Left = 0
-      Top = 61
-      Width = 312
-      Height = 13
-      Margins.Left = 0
-      Align = alTop
-      Caption = 'Custom proxy'
-      TabOrder = 3
-    end
-    object pnlProxyInfo: TExBrandPanel
-      AlignWithMargins = True
-      Left = 6
-      Top = 86
-      Width = 306
-      Height = 48
-      Margins.Left = 6
-      Margins.Top = 9
-      Align = alTop
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 4
-      AutoHide = True
-      object lblProxyHost: TTntLabel
-        Left = 0
-        Top = 2
-        Width = 56
-        Height = 13
-        Caption = 'Proxy host:'
-        Transparent = False
-      end
-      object lblProxyPort: TTntLabel
-        Left = 0
-        Top = 27
-        Width = 55
-        Height = 13
-        Caption = 'Proxy port:'
-        Transparent = True
-      end
-      object txtProxyHost: TTntEdit
-        Left = 57
-        Top = 0
-        Width = 149
-        Height = 21
-        TabOrder = 0
-      end
-      object txtProxyPort: TTntEdit
-        Left = 59
-        Top = 24
-        Width = 43
-        Height = 21
-        TabOrder = 1
-      end
-    end
-    object pnlAuthInfo: TExBrandPanel
-      AlignWithMargins = True
-      Left = 0
-      Top = 146
-      Width = 312
-      Height = 69
-      Margins.Left = 0
-      Margins.Top = 9
-      Align = alTop
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 5
-      AutoHide = True
-      object lblProxyUsername: TTntLabel
-        Left = 22
-        Top = 23
-        Width = 55
-        Height = 13
-        Caption = 'User name:'
-        Transparent = False
-      end
-      object lblProxyPassword: TTntLabel
-        Left = 22
-        Top = 47
-        Width = 50
-        Height = 13
-        Caption = 'Password:'
-        Transparent = False
-      end
-      object chkProxyAuth: TTntCheckBox
-        Left = 5
-        Top = 0
-        Width = 174
-        Height = 17
-        Caption = 'Authentication requested'
-        Enabled = False
-        TabOrder = 0
-        OnClick = chkProxyAuthClick
-      end
-      object txtProxyUsername: TTntEdit
-        Left = 81
-        Top = 20
-        Width = 130
-        Height = 21
-        TabOrder = 1
-      end
-      object txtProxyPassword: TTntEdit
-        Left = 81
-        Top = 45
-        Width = 130
-        Height = 21
-        PasswordChar = '*'
-        TabOrder = 2
-      end
     end
   end
 end

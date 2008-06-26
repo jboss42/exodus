@@ -23,13 +23,12 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, TntExtCtrls, ExForm, StdCtrls, TntStdCtrls;
+  Dialogs, ExtCtrls, TntExtCtrls;
 
 type
-  TfrmPrefPanel = class(TExForm)
+  TfrmPrefPanel = class(TForm)
     pnlHeader: TTntPanel;
-    lblHeader: TTntLabel;
-    procedure FormCreate(Sender: TObject); virtual;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     procedure loadPrefsOwner(owner: TWinControl);
@@ -48,11 +47,9 @@ implementation
 {$R *.dfm}
 
 uses
-    Menus, ComCtrls, TntComCtrls,
+    Menus, StdCtrls, ComCtrls, TntComCtrls, TntStdCtrls,
     Session, PrefFile, PrefController, GnuGetText, JabberUtils, ExUtils,  XMLUtils,
-    ExNumericEdit,
-    ExbrandPanel,
-    ExCheckGroupBox;
+    ExNumericEdit;
 
 procedure TfrmPrefPanel.LoadPrefs();
 begin
@@ -76,10 +73,10 @@ begin
         c := owner.Controls[i];
         p := MainSession.Prefs.getPref(c.name);
 
-        if (p = '') or (c.InheritsFrom(TExBrandPanel))then begin
+        if (p = '') then begin
             if (c.inheritsFrom(TWinControl)) then
                 loadPrefsOwner(TWinControl(c));
-            if (p = '') then continue;
+            continue;
         end;
 
         s := getPrefState(p);
@@ -88,8 +85,6 @@ begin
         // Do stuff based on the controls type
         if (c.inheritsFrom(TTntCheckBox)) then
             TCheckBox(c).Checked := SafeBool(sval)
-        else if (c.InheritsFrom(TExCheckGroupBox)) then
-            TExCheckGroupBox(c).Checked := SafeBool(sval)
         else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
             TUpDown(c).Position := SafeInt(sval)
         else if (c.inheritsFrom(TExNumericEdit)) then
@@ -116,10 +111,8 @@ begin
         else if ((c.InheritsFrom(TTntButton)) or
                  (c.InheritsFrom(TButton))) then
             // do nothing
-        else begin
-            exit;
-//            assert(false);
-        end;
+        else
+            assert(false);
 
         // Make sure to set state for this control
         if (s = psReadOnly) then begin
@@ -145,11 +138,10 @@ begin
         p := MainSession.Prefs.getPref(c.name);
 
         // only update if this the primary control, and we have a pref
-        //this might be a "checkable" group box so drill down and check children
-        if (p = '') or (c.InheritsFrom(TExBrandPanel))then begin
+        if (p = '') then begin
             if (c.inheritsFrom(TWinControl)) then
                 savePrefsOwner(TWinControl(c));
-            if (p = '') then continue;
+            continue;
         end;
 
         if (AnsiCompareText(c.name, MainSession.Prefs.getControl(p)) <> 0) then
@@ -161,8 +153,6 @@ begin
 
         if (c.inheritsFrom(TTntCheckBox)) then
             MainSession.Prefs.setBool(p, TCheckBox(c).Checked)
-        else if (c.InheritsFrom(TExCheckGroupBox)) then
-            MainSession.Prefs.setBool(p, TExCheckGroupBox(c).Checked)
         else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
             MainSession.Prefs.setInt(p, TUpDown(c).Position)
         else if (c.inheritsFrom(TExNumericEdit)) then

@@ -23,200 +23,113 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntComCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ExGroupBox,
-  Buttons, TntButtons, TntForms,
-  Unicode,
-  ExFrame, ExBrandPanel, ExNUmericEdit, ComCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefRoster = class(TfrmPrefPanel)
-    ExGroupBox1: TExBrandPanel;
-    pnlRosterPrefs: TExBrandPanel;
-    chkInlineStatus: TTntCheckBox;
-    chkUseProfileDN: TTntCheckBox;
-    chkHideBlocked: TTntCheckBox;
-    chkGroupCounts: TTntCheckBox;
-    pnlManageBtn: TExBrandPanel;
-    btnManageBlocked: TTntButton;
-    grpAdvanced: TExGroupBox;
-    gbDepricated: TExGroupBox;
-    chkSort: TTntCheckBox;
-    chkOfflineGrp: TTntCheckBox;
-    pnlMinStatus: TExBrandPanel;
-    lblFilter: TTntLabel;
-    cboVisible: TTntComboBox;
-    pnlGatewayGroup: TExBrandPanel;
-    lblGatewayGrp: TTntLabel;
-    txtGatewayGrp: TTntComboBox;
-    chkPresErrors: TTntCheckBox;
-    chkShowUnsubs: TTntCheckBox;
-    chkRosterUnicode: TTntCheckBox;
-    chkRosterAvatars: TTntCheckBox;
-    pnlDblClickAction: TExBrandPanel;
     lblDblClick: TTntLabel;
-    cboDblClick: TTntComboBox;
-    pnlGroupSeparator: TExBrandPanel;
-    lblGrpSeparator: TTntLabel;
-    txtGrpSeparator: TTntEdit;
-    pnlDefaultNIck: TExBrandPanel;
-    lblDefaultNick: TTntLabel;
-    txtDefaultNick: TTntEdit;
-    pnlStatusColor: TExBrandPanel;
-    lblStatusColor: TTntLabel;
-    cboStatusColor: TColorBox;
-    pnlDNFields: TExBrandPanel;
-    lblDNProfileMap: TTntLabel;
-    txtDNProfileMap: TTntEdit;
-    pnlDefaultGroup: TExBrandPanel;
-    lblDefaultGrp: TTntLabel;
-    txtDefaultGrp: TTntComboBox;
-    pnlAlpha: TExBrandPanel;
-    chkRosterAlpha: TTntCheckBox;
-    trkRosterAlpha: TTrackBar;
-    txtRosterAlpha: TExNumericEdit;
-    chkCollapsed: TTntCheckBox;
-    chkNestedGrps: TTntCheckBox;
+    chkShowUnsubs: TTntCheckBox;
+    chkHideBlocked: TTntCheckBox;
+    chkPresErrors: TTntCheckBox;
     chkShowPending: TTntCheckBox;
-    chkObservers: TTntCheckBox;
-    procedure TntFormDestroy(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure btnManageBlockedClick(Sender: TObject);
-    procedure txtRosterAlphaChange(Sender: TObject);
-    procedure trkRosterAlphaChange(Sender: TObject);
-    procedure chkRosterAlphaClick(Sender: TObject);
+    cboDblClick: TTntComboBox;
+    chkRosterUnicode: TTntCheckBox;
+    chkInlineStatus: TTntCheckBox;
+    cboInlineStatus: TColorBox;
+    chkNestedGrps: TTntCheckBox;
+    txtGrpSeperator: TTntEdit;
+    lblNestedGrpSeparator: TTntLabel;
+    chkRosterAvatars: TTntCheckBox;
+    chkUseProfileDN: TTntCheckBox;
+    txtDNProfileMap: TTntEdit;
+    lblDNProfileMap: TTntLabel;
+    procedure chkInlineStatusClick(Sender: TObject);
+    procedure chkNestedGrpsClick(Sender: TObject);
+    procedure chkUseProfileDNClick(Sender: TObject);
   private
-    _blockedContacts: TWideStringList;
+    { Private declarations }
   public
     { Public declarations }
     procedure LoadPrefs(); override;
     procedure SavePrefs(); override;
   end;
 
-//var
-//  frmPrefRoster: TfrmPrefRoster;
+var
+  frmPrefRoster: TfrmPrefRoster;
 
 implementation
-
 {$R *.dfm}
 
 uses
-    JabberUtils, ExUtils,  Session,
-    PrefFile, PrefController,
-    ManageBlockDlg, Exodus_TLB;
-
-procedure TfrmPrefRoster.btnManageBlockedClick(Sender: TObject);
-var
-    bdlg: TManageBlockDlg;
-begin
-    inherited;
-    bdlg := TManageBlockDlg.Create(Self);
-    bdlg.setBlockers(_blockedContacts);
-    if (bdlg.ShowModal = mrOK) then
-        bdlg.getBlockers(_blockedContacts);
-    bdlg.Free();
-end;
-
-procedure TfrmPrefRoster.chkRosterAlphaClick(Sender: TObject);
-begin
-  inherited;
-  trkRosterAlpha.Enabled := chkRosterAlpha.Checked;
-  txtRosterAlpha.Enabled := chkRosterAlpha.Checked;
-end;
-
-procedure TfrmPrefRoster.FormCreate(Sender: TObject);
-begin
-    _blockedContacts := TWideStringList.Create();
-    inherited;
-
-end;
+    JabberUtils, ExUtils,  Unicode, Session,
+    PrefFile, PrefController;
 
 procedure TfrmPrefRoster.LoadPrefs();
 var
-    gs: TWidestringList;
-    Items: IExodusItemList;
-    i: Integer;
+    s: TPrefState;
 begin
     inherited;
-    //blocked contacts
-    MainSession.prefs.fillStringlist('blockers', _blockedContacts);
+    cboInlineStatus.Enabled := chkInlineStatus.Checked;
+    if (MainSession.Prefs.getBool('branding_nested_subgroup') = false) then begin
+      txtGrpSeperator.Visible := false;
+      chkNestedGrps.Visible := false;
+      lblNestedGrpSeparator.Visible := false;
+      chkNestedGrps.Checked := false;
+    end
+    else
+      txtGrpSeperator.Enabled := chkNestedGrps.Checked;
 
-    // populate grp drop-downs.
-    gs := TWidestringList.Create();
+    Self.cboInlineStatus.Enabled := Self.chkInlineStatus.Checked;
+    Self.cboInlineStatus.Visible := Self.chkInlineStatus.Visible;
+    s := PrefController.getPrefState('displayname_profile_map');
+    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
+                                    (s <> psReadOnly) and
+                                    (s <> psInvisible);
+    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
+                                    (s <> psReadOnly) and
+                                    (s <> psInvisible);
+    Self.lblDNProfileMap.Visible := Self.chkUseProfileDN.Visible and
+                                    (s <> psInvisible);
+    Self.txtDNProfileMap.Visible := Self.chkUseProfileDN.Visible and
+                                    (s <> psInvisible);
 
-    Items := MainSession.ItemController.GetItemsByType('group');
-    for i := 0 to items.Count - 1 do
-        gs.Add(items.Item[i].UID);
-
-    gs.Sorted := true;
-    gs.Sort();
-
-    AssignTntStrings(gs, txtDefaultGrp.Items);
-
-
-  //populate gateway group cbo
-    if (gs.IndexOf(txtGatewayGrp.Text) = -1) then
-        gs.Add(txtGatewayGrp.Text);
-    gs.Sort();
-    AssignTntStrings(gs, txtGatewayGrp.Items);
-    gs.Free();
-
-    trkRosterAlpha.Visible := chkRosterAlpha.Visible;
-    txtRosterAlpha.Visible := chkRosterAlpha.Visible;
-    if (chkRosterAlpha.Visible) then
-      chkRosterAlphaClick(Self);
-
-    //disable/hide based on brand
-    if (not MainSession.Prefs.getBool('brand_allow_blocking_jids')) then begin
+    if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then
         chkHideBlocked.Enabled := false;
-        chkHideBlocked.visible := false;
-        btnManageBlocked.Visible := false;
-    end;
-        //hide nick panel if branded locked down or if pref is locked down
-    if (MainSession.Prefs.GetBool('brand_prevent_change_nick')) then begin
-        lblDefaultNick.Visible := false;
-        txtDefaultNick.Visible := false;
-    end;
 
-    if (not MainSession.Prefs.getBool('branding_nested_subgroup')) then begin
-        txtGrpSeparator.Visible := false;
-        chkNestedGrps.Visible := false;
-        lblGrpSeparator.Visible := false;
-
-        chkNestedGrps.Checked := false;
-    end;
-
-    ExGroupBox1.checkAutoHide();
 end;
 
 procedure TfrmPrefRoster.SavePrefs();
+begin
+    inherited;
+
+    // XXX: save nested group seperator per JEP-48
+end;
+
+procedure TfrmPrefRoster.chkInlineStatusClick(Sender: TObject);
+begin
+  inherited;
+    // toggle the color drop down on/off
+    cboInlineStatus.Enabled := chkInlineStatus.Checked;
+end;
+
+procedure TfrmPrefRoster.chkNestedGrpsClick(Sender: TObject);
+begin
+  inherited;
+    txtGrpSeperator.Enabled := chkNestedGrps.Checked;
+end;
+
+procedure TfrmPrefRoster.chkUseProfileDNClick(Sender: TObject);
 var
-   Idx: integer;
+    s: TPrefState;
 begin
-    inherited;
-        
-    MainSession.prefs.setStringlist('blockers', _blockedContacts);
-    // XXX: save nested group separator per JEP-48
-end;
-
-procedure TfrmPrefRoster.TntFormDestroy(Sender: TObject);
-begin
-    inherited;
-    _blockedContacts.Free();
-end;
-
-procedure TfrmPrefRoster.trkRosterAlphaChange(Sender: TObject);
-begin
-    inherited;
-    txtRosterAlpha.Text := IntToStr(trkRosterAlpha.Position);
-end;
-
-procedure TfrmPrefRoster.txtRosterAlphaChange(Sender: TObject);
-begin
-    inherited;
-    try
-        trkRosterAlpha.Position := StrToInt(txtRosterAlpha.Text);
-    except
-    end;
+  inherited;
+    s := PrefController.getPrefState('displayname_profile_map');
+    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
+                                    (s <> psReadOnly) and
+                                    (s <> psInvisible);
+    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
+                                    (s <> psReadOnly) and
+                                    (s <> psInvisible);
 end;
 
 end.

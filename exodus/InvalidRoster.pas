@@ -24,7 +24,7 @@ uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, ExtCtrls, Menus, TntComCtrls, TntMenus,
-  ToolWin, TntForms, ExFrame;
+  ToolWin;
 
 type
   TfrmInvalidRoster = class(TfrmDockable)
@@ -57,7 +57,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, ContactController;
+    Session, NodeItem, Roster;
 
 {---------------------------------------}
 function getInvalidRoster: TfrmInvalidRoster;
@@ -72,29 +72,28 @@ end;
 
 {---------------------------------------}
 procedure TfrmInvalidRoster.AddPacket(tag: TXMLTag);
-//var
-//    j: string;
-//    li: TListItem;
-//    e: TXMLTag;
-//    ritem: TJabberRosterItem;
+var
+    j: string;
+    li: TListItem;
+    e: TXMLTag;
+    ritem: TJabberRosterItem;
 begin
-  { TODO : Roster refactor }
     // add a new list view item
-//    j := tag.GetAttribute('from');
-//    if (_jids.IndexOf(j) >= 0) then exit;
-//
-//    ritem := MainSession.Roster.Find(j);
-//    if (ritem <> nil) then begin
-//        _jids.Add(j);
-//        li := ListView1.Items.Add();
-//        li.Caption := tag.GetAttribute('from');
-//        e := tag.GetFirstTag('error');
-//        li.SubItems.Add(ritem.Text);
-//        if (e <> nil) then
-//            li.SubItems.Add(e.Data);
-//        li.Checked := true;
-//        li.Data := ritem;
-//    end;
+    j := tag.GetAttribute('from');
+    if (_jids.IndexOf(j) >= 0) then exit;
+
+    ritem := MainSession.Roster.Find(j);
+    if (ritem <> nil) then begin
+        _jids.Add(j);
+        li := ListView1.Items.Add();
+        li.Caption := tag.GetAttribute('from');
+        e := tag.GetFirstTag('error');
+        li.SubItems.Add(ritem.Text);
+        if (e <> nil) then
+            li.SubItems.Add(e.Data);
+        li.Checked := true;
+        li.Data := ritem;
+    end;
 end;
 
 {---------------------------------------}
@@ -107,8 +106,6 @@ end;
 procedure TfrmInvalidRoster.FormCreate(Sender: TObject);
 begin
     _jids := TStringlist.Create;
-
-    _windowType := 'invalid_roster';
 
     inherited;
 end;
@@ -124,27 +121,26 @@ end;
 
 {---------------------------------------}
 procedure TfrmInvalidRoster.frameButtons1btnOKClick(Sender: TObject);
-//var
-//    li: TListItem;
-//    i: integer;
-//    ritem: TJabberRosterItem;
+var
+    li: TListItem;
+    i: integer;
+    ritem: TJabberRosterItem;
 begin
-{ TODO : Roster refactor }
-//    // remove all of the checked items
-//    for i := 0 to ListView1.Items.Count - 1 do begin
-//        li := ListView1.Items[i];
-//        if (li.Checked) then begin
-//            ritem := TJabberRosterItem(li.Data);
-//            if (ritem <> nil) then
-//                ritem.remove();
-//        end;
-//    end;
-//
-//    for i := ListView1.Items.Count - 1 downto 0 do begin
-//        li := ListView1.Items[i];
-//        if (li.Checked) then
-//            ListView1.Items.Delete(i);
-//    end;
+    // remove all of the checked items
+    for i := 0 to ListView1.Items.Count - 1 do begin
+        li := ListView1.Items[i];
+        if (li.Checked) then begin
+            ritem := TJabberRosterItem(li.Data);
+            if (ritem <> nil) then
+                ritem.remove();
+        end;
+    end;
+
+    for i := ListView1.Items.Count - 1 downto 0 do begin
+        li := ListView1.Items[i];
+        if (li.Checked) then
+            ListView1.Items.Delete(i);
+    end;
 end;
 
 {---------------------------------------}

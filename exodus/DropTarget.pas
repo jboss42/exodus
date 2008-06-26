@@ -1,128 +1,187 @@
 unit DropTarget;
-{
-    Copyright 2001, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-}
 
 {$WARN SYMBOL_PLATFORM OFF}
 
 interface
 
 uses
-    Windows, Classes, Controls, Exodus_TLB, Types;
+    Dialogs, 
+    Windows, Controls, ComObj, ActiveX, Exodus_TLB, StdVcl, Types;
 
 type
-  //Forward Declaration
-  TExDropTarget = class;
 
-  TExDropActionType = (datNone, datMove, datCopy);
-  TExDropUpdateEvent = procedure(Sender: TExDropTarget;
-        X, Y: Integer;
-        var action: TExDropActionType) of object;
-  TExDropExecuteEvent = procedure(Sender: TExDropTarget;
-        X, Y: Integer) of object;
-  TExDropEndEvent = procedure(Sender: TExDropTarget) of object;
+  TExDropEvent = procedure(pt: TPoint; text: Widestring) of object;
 
-  TExDropTarget = class
-  private
-    _act: TExDropActionType;
-    _items: IExodusItemList;
-    _data: Pointer;
-
-    _updateEvt: TExDropUpdateEvent;
-    _executeEvt: TExDropExecuteEvent;
-    _endEvt: TExDropEndEvent;
-
-    constructor Create(selected: IExodusItemList);
-    
+  TExDropTarget = class(TInterfacedObject, IDropTarget)
+  protected
+    { Protected declarations }
+    _control: TWinControl;
+    _ref: integer;
   public
-    destructor Destroy(); override;
 
-    function Update(X, Y: Integer): Boolean; virtual;
-    procedure Execute(X, Y: Integer);
+    DropEvent: TExDropEvent;
 
-    property DropAction: TExDropActionType read _act;
-    property DragItems: IExodusItemList read _items;
-    property Data: Pointer read _data write _data;
+    constructor Create;
+    destructor Destroy; override;
 
-    property OnUpdate: TExDropUpdateEvent read _updateEvt write _updateEvt;
-    property OnExecute: TExDropExecuteEvent read _executeEvt write _executeEvt;
-    property OnEnd: TExDropEndEvent read _endEvt write _endEvt;
+    // IDropTarget
+    function DragEnter (const DataObj: IDataObject; grfKeyState: Longint; pt: TPoint; var dwEffect: Longint): HResult; stdcall;
+    function DragOver (grfKeyState: Longint; pt: TPoint; var dwEffect: Longint): HResult; stdcall;
+    function DragLeave : HResult; stdcall;
+    function Drop (const DataObj: IDataObject; grfKeyState: Longint; pt: TPoint; var dwEffect: Longint): HResult; stdcall;
+
+    function start(control: TWinControl): HRESULT;
+    function stop(): HRESULT;
+
   end;
-
-function OpenDropTarget(Source: TObject;
-        updateEvt: TExDropUpdateEvent = nil;
-        executeEvt: TExDropExecuteEvent = nil;
-        endEvt: TExDropEndEvent = nil): TExDropTarget;
 
 implementation
 
-uses COMExodusItemList;
+uses SysUtils, ComServ, Classes;
 
-function OpenDropTarget(Source: TObject;
-        updateEvt: TExDropUpdateEvent;
-        executeEvt: TExDropExecuteEvent;
-        endEvt: TExDropEndEvent): TExDropTarget;
-var
-    itemSel: IExodusItemSelection;
-    selected: IExodusItemList;
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TExDropTarget.Create;
 begin
-    Result := nil;
-    if not Source.GetInterface(IID_IExodusItemSelection, itemSel) then exit;
-
-    selected := itemSel.GetSelectedItems();
-    if (selected = nil) or (selected.Count = 0) then exit;
-
-    Result := TExDropTarget.Create(selected);
-    if (Result <> nil) then begin
-        Result.OnUpdate := updateEvt;
-        Result.OnExecute := executeEvt;
-        Result.OnEnd := endEvt;
-    end;
-end;
-
-constructor TExDropTarget.Create(selected: IExodusItemList);
-var
-    idx: Integer;
-begin
-    _act := datNone;
-    _items := TExodusItemList.Create();
-    for idx := 0 to selected.Count - 1 do
-        _items.Add(selected.Item[idx]);
-end;
-destructor TExDropTarget.Destroy();
-begin
-    if Assigned(_endEvt) then _endEvt(Self);
-    _items := nil;
+    inherited Create();
     
-    inherited;
+    _ref := 0;
+    DropEvent := nil;
+
 end;
 
-function TExDropTarget.Update(X: Integer; Y: Integer): Boolean;
+{---------------------------------------}
+destructor TExDropTarget.Destroy;
 begin
-    if Assigned(_updateEvt) then _updateEvt(Self, X, Y, _act);
-
-    Result := (_act <> datNone);
+    inherited Destroy;
 end;
-procedure TExDropTarget.Execute(X: Integer; Y: Integer);
+
+{---------------------------------------}
+function TExDropTarget.start(control: TWinControl): HRESULT;
 begin
-    if (_act <> datNone) and Assigned(_executeEvt) then
-        _executeEvt(Self, X, Y);
+    Result := CoLockObjectExternal(Self, true, false);
+    if (Result = S_OK) then
+        Result := RegisterDragDrop(control.handle, Self);
+
+    if (Result = S_OK) then
+        _control := control
+    else
+        _control := nil;
+end;
+
+{---------------------------------------}
+function TExDropTarget.stop(): HRESULT;
+begin
+    if (_control <> nil) then begin
+        Result := CoLockObjectExternal(Self, false, false);
+        if ((Result = S_OK) and
+            (not (csDestroying in _control.ComponentState))) then
+            Result := RevokeDragDrop(_control.handle);
+        _control := nil;
+        end
+    else
+        Result := S_OK;
+    // Self._Release();
+end;
+
+{---------------------------------------}
+function TExDropTarget.DragEnter(const dataObj: IDataObject; grfKeyState: Longint;
+  pt: TPoint; var dwEffect: Longint): HResult;
+var
+    r: HResult;
+    fe: TFormatEtc;
+begin
+    //
+    with fe do begin
+        // cfFormat := CF_HDROP;
+        cfFormat := CF_UNICODETEXT;
+        ptd := nil;
+        dwAspect := DVASPECT_CONTENT;
+        lindex := -1;
+        tymed := TYMED_HGLOBAL;
+    end;
+
+    r := dataObj.QueryGetData(fe);
+    if (r = S_OK) then
+        dwEffect := DROPEFFECT_COPY
+    else
+        dwEffect := DROPEFFECT_NONE;
+
+    Result := r;
+end;
+
+{---------------------------------------}
+function TExDropTarget.DragOver(grfKeyState: Longint; pt: TPoint;
+  var dwEffect: Longint): HResult;
+begin
+    //
+    dwEffect := DROPEFFECT_COPY;
+    Result := S_OK;
+end;
+
+{---------------------------------------}
+function TExDropTarget.DragLeave: HResult;
+begin
+    //
+    Result := S_OK;
+end;
+
+{---------------------------------------}
+function TExDropTarget.Drop(const dataObj: IDataObject; grfKeyState: Longint; pt: TPoint;
+  var dwEffect: Longint): HResult;
+var
+    r: HRESULT;
+    fe: TFormatEtc;
+    med: TStgMedium;
+    p: PWideChar;
+    s: string;
+    sep: integer;
+begin
+    //
+    with fe do begin
+        // cfFormat := CF_HDROP;
+        cfFormat := CF_UNICODETEXT;
+        ptd := nil;
+        dwAspect := DVASPECT_CONTENT;
+        lindex := -1;
+        tymed := TYMED_HGLOBAL;
+    end;
+
+    r := dataObj.QueryGetData(fe);
+    if (r <> S_OK) then begin
+        dwEffect := DROPEFFECT_NONE;
+        Result := r;
+        exit;
+    end;
+
+    r := dataObj.GetData(fe, med);
+    if (r <> S_OK) then begin
+        dwEffect := DROPEFFECT_NONE;
+        Result := r;
+        exit;
+    end;
+
+    // get the UCS string out of the global mem storage
+    p := GlobalLock(med.hGlobal);
+    s := WideCharToString(p);
+    GlobalUnLock(med.hGlobal);
+    GlobalFree(med.hGlobal);
+    ReleaseStgMedium(med);
+    med.tymed := TYMED_NULL;
+
+    // URL's typically come across in this fashion:
+    // 'http://foo.com/'$0A'My HomePage title'
+    sep := Pos(Chr($A), s);
+    if (sep > 0) then begin
+        s := Copy(s, 1, sep - 1);
+    end;
+
+    if Assigned(DropEvent) then
+        DropEvent(pt, s);
+
+    dwEffect := DROPEFFECT_COPY;
+    Result := S_OK;
 end;
 
 end.

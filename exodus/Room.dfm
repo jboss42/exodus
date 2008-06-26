@@ -10,10 +10,10 @@ inherited frmRoom: TfrmRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 347
-    Width = 484
-    ExplicitTop = 352
-    ExplicitWidth = 492
+    Top = 383
+    Width = 492
+    ExplicitTop = 243
+    ExplicitWidth = 382
   end
   inherited pnlDockTop: TPanel
     Width = 492
@@ -27,18 +27,12 @@ inherited frmRoom: TfrmRoom
       Width = 440
       ExplicitWidth = 440
       object pnlSubj: TPanel
-        AlignWithMargins = True
-        Left = 4
+        Left = 0
         Top = 0
         Width = 352
-        Height = 33
-        Margins.Left = 4
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
+        Height = 32
         Align = alLeft
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 0
         object lblSubject: TTntLabel
           Left = 27
@@ -59,9 +53,9 @@ inherited frmRoom: TfrmRoom
         end
         object SpeedButton1: TSpeedButton
           Left = 1
-          Top = 7
+          Top = 6
           Width = 20
-          Height = 19
+          Height = 20
           Flat = True
           Glyph.Data = {
             F6000000424DF600000000000000760000002800000010000000100000000100
@@ -82,24 +76,24 @@ inherited frmRoom: TfrmRoom
   end
   inherited pnlMsgList: TPanel
     Width = 492
-    Height = 314
+    Height = 322
     TabOrder = 2
     ExplicitWidth = 492
-    ExplicitHeight = 314
+    ExplicitHeight = 322
     object Splitter2: TSplitter
       Left = 380
       Top = 4
-      Width = 4
-      Height = 306
+      Height = 314
       Align = alRight
       ResizeStyle = rsUpdate
-      ExplicitHeight = 311
+      ExplicitLeft = 270
+      ExplicitHeight = 212
     end
     object Panel6: TPanel
-      Left = 384
+      Left = 383
       Top = 4
-      Width = 104
-      Height = 306
+      Width = 105
+      Height = 314
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -108,8 +102,8 @@ inherited frmRoom: TfrmRoom
       object lstRoster: TTntListView
         Left = 1
         Top = 1
-        Width = 102
-        Height = 304
+        Width = 103
+        Height = 312
         Align = alClient
         Columns = <
           item
@@ -127,7 +121,7 @@ inherited frmRoom: TfrmRoom
         ShowColumnHeaders = False
         ShowWorkAreas = True
         ShowHint = True
-        SmallImages = frmExodus.ImageList1
+        SmallImages = frmExodus.ImageList2
         SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
@@ -142,27 +136,26 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    Top = 351
-    Width = 488
+    Top = 388
+    Width = 492
     TabOrder = 0
-    ExplicitTop = 351
-    ExplicitWidth = 488
+    ExplicitTop = 388
+    ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
-      Width = 484
+      Width = 488
     end
-    inherited tbMsgOutToolbar: TTntToolBar
-      Width = 484
-      ExplicitWidth = 484
-    end
+  end
+  inherited tbMsgOutToolbar: TTntToolBar
+    Top = 354
+    Width = 492
+    ExplicitTop = 354
+    ExplicitWidth = 492
   end
   inherited popMsgList: TTntPopupMenu
     AutoHotkeys = maManual
   end
   inherited popOut: TTntPopupMenu
     AutoHotkeys = maManual
-  end
-  inherited AppEvents: TApplicationEvents
-    Left = 112
   end
   object popRoom: TTntPopupMenu
     AutoHotkeys = maManual
@@ -252,6 +245,10 @@ inherited frmRoom: TfrmRoom
     object N1: TTntMenuItem
       Caption = '-'
     end
+    object NotificationOptions1: TTntMenuItem
+      Caption = 'Notification Options ...'
+      OnClick = NotificationOptions1Click
+    end
     object mnuWordwrap: TTntMenuItem
       Caption = 'Word Wrap Input'
       OnClick = mnuWordwrapClick
@@ -267,16 +264,16 @@ inherited frmRoom: TfrmRoom
     object N6: TTntMenuItem
       Caption = '-'
     end
-    object popRoomProperties: TTntMenuItem
-      Caption = 'Properties...'
-      OnClick = popRoomPropertiesClick
-    end
   end
   object popRoomRoster: TTntPopupMenu
     AutoHotkeys = maManual
     OnPopup = popRoomRosterPopup
     Left = 48
     Top = 152
+    object popRosterMsg: TTntMenuItem
+      Caption = 'Message'
+      OnClick = popRosterMsgClick
+    end
     object popRosterChat: TTntMenuItem
       Caption = 'Chat'
       OnClick = lstRosterDblClick

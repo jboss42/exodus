@@ -39,22 +39,13 @@ function MD5File(filename: Widestring): string; overload;
 function MD5File(stream: TStream): string; overload;
 function EncodeString(value: Widestring): Widestring;
 function DecodeString(value: Widestring): Widestring;
-function MungeFileName(str: Widestring): Widestring;
-function MungeXMLName(str: Widestring): Widestring;
+function MungeName(str: Widestring): Widestring;
 function SafeInt(str: Widestring): integer;
 function SafeBool(str: Widestring): boolean;
 function SafeBoolStr(value: boolean) : Widestring;
 
 function JabberToDateTime(datestr: Widestring): TDateTime;
-function XEP82DateTimeToDateTime(datestr: Widestring): TDateTime;
 function DateTimeToJabber(dt: TDateTime): Widestring;
-function DateTimeToXEP82Date(dt: TDateTime): Widestring;
-function DateTimeToXEP82DateTime(dt: TDateTime; dtIsUTC: boolean = false): Widestring;
-function DateTimeToXEP82Time(dt: TDateTime; dtIsUTC: boolean = false): Widestring;
-function GetTimeZoneOffset(): Widestring;
-function UTCNow(): TDateTime;
-//returns a reference to a delay tag found in tag, or nil if none exists
-function GetDelayTag(tag: TXMLTag): TXMLTag;
 
 function GetAppVersion: string;
 
@@ -67,9 +58,6 @@ function generateEventMsg(tag: TXMLTag; event: widestring): TXMLTag;
 
 procedure parseNameValues(list: TStringlist; str: Widestring);
 
-function StringToXMLTag(input: widestring): TXMLTag;
-
-function ErrorText(tag :TXMLTag): Widestring;
 
 {$ifdef VER150}
     {$define INDY9}
@@ -93,11 +81,8 @@ uses
     {$else}
     IdCoder3To4,
     {$endif}
-    SecHash,
-    JabberConst,
-    XMLParser,
-    StrUtils,
-    DateUtils;
+    SecHash;
+
 function XPLiteEscape(value: widestring): widestring;
 var
     r: WideString;
@@ -397,7 +382,7 @@ begin
 end;
 
 {---------------------------------------}
-function MungeFileName(str: Widestring): Widestring;
+function MungeName(str: Widestring): Widestring;
 var
     i: integer;
     c, fn: Widestring;
@@ -407,16 +392,8 @@ begin
     fn := '';
     for i := 0 to Length(str) - 1 do begin
         c := str[i + 1];
-        if ( (c='@') or
-             (c=':') or
-             (c='|') or
-             (c='<') or
-             (c='>') or
-             (c='\') or
-             (c='/') or
-             (c='*') or
-             (c=' ') or
-             (c=',')) then
+        if ( (c='@') or (c=':') or (c='|') or (c='<') or
+        (c='>') or (c='\') or (c='/') or (c='*') or (c=' ') or (c=',')) then
             fn := fn + '_'
         else if (c > Chr(122)) then
             fn := fn + '_'
@@ -424,37 +401,6 @@ begin
             fn := fn + c;
     end;
     Result := fn;
-end;
-
-{---------------------------------------}
-{ This function will take a string and translate it into a valid XML element name.
-  NOTE: It does NOT make 100% sure that the name is valid XML as it doesn't
-        check to see that the first char is a letter or - nor does it check
-        to make sure the first 3 chars are not XML or some variation.  It only
-        makes sure the chars are: a-z, A-Z, 0-9, -, _, .   All other chars
-        are changed to _.  }
-function MungeXMLName(str: Widestring): Widestring;
-var
-    i: integer;
-    name: Widestring;
-    c: Widechar;
-const
-    validchars : set of char = ['a'..'z', 'A'..'Z', '0'..'9', '-', '_', '.'];
-begin
-    // Munge some string into a filename
-    // Removes all chars which aren't allowed
-    name := '';
-    for i := 0 to Length(str) - 1 do begin
-        c := str[i + 1];
-        if (c in validchars) then
-        begin
-            name := name + c;
-        end
-        else begin
-            name := name + '_';
-        end;
-    end;
-    Result := name;
 end;
 
 {---------------------------------------}
@@ -535,7 +481,6 @@ var
     ys, ms, ds, ts: Widestring;
     yw, mw, dw: Word;
 begin
-    // Converts assumed UTC time to local.
     // translate date from 20000110T19:54:00 to proper format..
     ys := Copy(Datestr, 1, 4);
     ms := Copy(Datestr, 5, 2);
@@ -549,7 +494,7 @@ begin
 
         if (TryEncodeDate(yw, mw, dw, rdate)) then begin
             rdate := rdate + StrToTime(ts);
-            Result := rdate - TimeZoneBias(); // Convert to local time
+            Result := rdate - TimeZoneBias();
         end
         else
             Result := Now();
@@ -559,162 +504,12 @@ begin
 end;
 
 {---------------------------------------}
-function XEP82DateTimeToDateTime(datestr: Widestring): TDateTime;
-var
-    rdate: TDateTime;
-    ys, ms, ds, ts: Widestring;
-    yw, mw, dw: Word;
-    tzd: Widestring;
-    tzd_hs: Widestring;
-    tzd_ms: Widestring;
-    tzd_hw: word;
-    tzd_mw: word;
-begin
-    // Converts UTC or TZD time to Local Time
-    // translate date from 2008-06-11T10:10:23.102Z (2008-06-11T10:10:23.102-06:00) or to properformat
-    Result := Now();
-
-    datestr := Trim(datestr);
-    if (Length(datestr) = 0) then exit;
-
-    ys := Copy(datestr, 1, 4);
-    ms := Copy(datestr, 6, 2);
-    ds := Copy(datestr, 9, 2);
-    ts := Copy(datestr, 12, 8);
-
-    if (RightStr(datestr, 1) = 'Z') then
-    begin
-        // Is UTC
-        try
-            yw := StrToInt(ys);
-            mw := StrToInt(ms);
-            dw := StrToInt(ds);
-
-            if (TryEncodeDate(yw, mw, dw, rdate)) then begin
-                rdate := rdate + StrToTime(ts);
-                Result := rdate - TimeZoneBias(); // Convert to local time
-            end
-            else
-                Result := Now();
-        except
-            Result := Now;
-        end;
-    end
-    else begin
-        // Is not UTC so convert to UTC
-        tzd := Copy(datestr, Length(datestr) - 5, 6);
-        tzd_hs := Copy(tzd, 2, 2);
-        tzd_ms := Copy(tzd, 5, 2);
-
-        try
-            yw := StrToInt(ys);
-            mw := StrToInt(ms);
-            dw := StrToInt(ds);
-            tzd_hw := StrToInt(tzd_hs);
-            tzd_mw := StrToInt(tzd_ms);
-
-            if (TryEncodeDate(yw, mw, dw, rdate)) then
-            begin
-                rdate := rdate + StrToTime(ts);
-                // modify time for TZD offset.
-                if (LeftStr(tzd, 1) = '+') then
-                begin
-                    // Time is greater then UTC so subtract time
-                    rdate := IncHour(rdate, (-1 * tzd_hw));
-                    rdate := IncMinute(rdate, (-1 * tzd_mw));
-                end
-                else begin
-                    // Time is less then UTC so add time
-                    rdate := IncHour(rdate, tzd_hw);
-                    rdate := IncMinute(rdate, tzd_mw);
-                end;
-
-                // Now that we have UTC, change ot local
-                Result := rdate - TimeZoneBias();
-            end
-            else begin
-                Result := Now();
-            end;
-        except
-            Result := Now();
-        end;
-    end;
-
-end;
-
-{---------------------------------------}
 function DateTimeToJabber(dt: TDateTime): Widestring;
 begin
     // Format the current date/time into "Jabber" format
     Result := FormatDateTime('yyyymmdd', dt);
     Result := Result + 'T';
     Result := Result + FormatDateTime('hh:nn:ss', dt);
-end;
-
-{---------------------------------------}
-function DateTimeToXEP82Date(dt: TDateTime): Widestring;
-begin
-    Result := FormatDateTime('yyyy-mm-dd', dt);
-end;
-
-{---------------------------------------}
-function DateTimeToXEP82DateTime(dt: TDateTime; dtIsUTC: boolean): Widestring;
-begin
-    Result := DateTimeToXEP82Date(dt);
-    Result := Result + 'T';
-    Result := Result + DateTimeToXEP82Time(dt, dtIsUTC);
-end;
-
-{---------------------------------------}
-function DateTimeToXEP82Time(dt: TDateTime; dtIsUTC: boolean): Widestring;
-begin
-    // Convert Time
-    Result := FormatDateTime('hh:mm:ss.zzz', dt);
-
-    // Add on Offset info
-    if (dtIsUTC) then
-    begin
-        Result := Result + 'Z';
-    end
-    else begin
-        Result := Result + GetTimeZoneOffset();
-    end;
-end;
-
-{---------------------------------------}
-function GetTimeZoneOffset(): Widestring;
-var
-    UTCoffset: integer;
-    UTCoffsetHours, UTCoffsetMinutes: integer;
-    TZI: TTimeZoneInformation;
-begin
-    Result := '';
-
-    // Compute Timezone offset from GMT
-    case GetTimeZoneInformation(TZI) of
-        TIME_ZONE_ID_STANDARD: UTCOffset := (TZI.Bias + TZI.StandardBias);
-        TIME_ZONE_ID_DAYLIGHT: UTCOffset := (TZI.Bias + TZI.DaylightBias);
-        TIME_ZONE_ID_UNKNOWN: UTCOffset := TZI.Bias;
-    else
-        UTCOffset := 0;
-    end;
-    UTCoffsetHours := UTCoffset div 60; //TZI.Bias in minutes
-    UTCoffsetMinutes := UTCoffset mod 60; //TZI.Bias in minutes
-
-    if (UTCoffsetHours <= 0) then
-    begin
-        Result := Result + '+'
-    end
-    else begin
-        Result := Result + '-';
-    end;
-    Result := Result + Format('%.2d:%.2d',[abs(UTCoffsetHours), abs(UTCOffsetMinutes)]);
-end;
-
-{---------------------------------------}
-function UTCNow(): TDateTime;
-begin
-    Result := Now + TimeZoneBias();
 end;
 
 {---------------------------------------}
@@ -783,28 +578,6 @@ begin
     end;
 end;
 
-{---------------------------------------}
-function StringToXMLTag(input: widestring): TXMLTag;
-var
-    parser: TXMLTagParser;
-begin
-    Result := nil;
-    if (input = '') then exit;
-
-    parser := nil;
-    try
-        try
-            // Input MUST be valid XML
-            parser := TXMLTagParser.Create;
-            parser.ParseString(input, '');
-            Result := parser.popTag();
-        except
-
-        end;
-    finally
-        parser.Free();
-    end;
-end;
 
 {---------------------------------------}
 {$ifdef Win32}
@@ -859,34 +632,6 @@ begin
     result := '1.0';
 end;
 {$endif}
-
-function ErrorText(tag: TXMLTag): Widestring;
-var
-    child: TXMLTag;
-    ns: Widestring;
-begin
-    Result := '';
-    child := tag.GetFirstTag('text');
-    if (child <> nil) then begin
-        ns := child.Namespace();
-
-        if (ns = 'urn:ietf:params:xml:ns:xmpp-streams') then
-            Result := child.Data
-        else if (ns = 'urn:ietf:params:xml:ns:xmpp-streams') then
-            Result := child.Data;
-    end;
-
-    if Result = '' then
-        Result := tag.Data;
-end;
-
-//returns a reference to a delay tag found in tag, or nil if none exists
-function GetDelayTag(tag: TXMLTag): TXMLTag;
-begin
-    Result := tag.QueryXPTag(XP_MSGDELAY_203);
-    if (Result = nil) then
-        Result := tag.QueryXPTag(XP_MSGDELAY);
-end;
 
 
 end.

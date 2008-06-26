@@ -24,7 +24,7 @@ unit COMRosterItem;
 interface
 
 uses
-    ContactController, ComObj, ActiveX, Exodus_TLB, StdVcl;
+    NodeItem, Roster, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusRosterItem = class(TAutoObject, IExodusRosterItem)
@@ -68,12 +68,11 @@ type
     procedure Set_IsNative(Value: WordBool); safecall;
     { Protected declarations }
   private
-    //_ritem: TJabberRosterItem;
-    _item: IExodusItem;
+    _ritem: TJabberRosterItem;
     _menu_id: Widestring;
-
+    
   public
-    constructor Create(item: IExodusItem);
+    constructor Create(ritem: TJabberRosterItem);
   end;
 
 {---------------------------------------}
@@ -82,20 +81,20 @@ type
 implementation
 
 uses
-    TntMenus, Menus, ExSession, COMRoster, Session, JabberID, ComServ, DisplayName, XMLTag;
+    TntMenus, Menus, ExSession, COMRoster, Session, JabberID, ComServ;
 
 {---------------------------------------}
-constructor TExodusRosterItem.Create(item: IExodusItem);
+constructor TExodusRosterItem.Create(ritem: TJabberRosterItem);
 begin
     // this is just a wrapper for the roster item
-    _item := item;
+    _ritem := ritem;
     _menu_id := '';
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_JabberID: WideString;
 begin
-    Result := _item.UID;
+    Result := _ritem.jid.full();
 end;
 
 {---------------------------------------}
@@ -113,32 +112,32 @@ end;
 {---------------------------------------}
 function TExodusRosterItem.Get_Subscription: WideString;
 begin
-    Result := _item.value['Subscription'];
+    Result := _ritem.subscription;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.Set_Subscription(const Value: WideString);
 begin
-    _item.value['Subscription'] := Value;
+    _ritem.Tag.setAttribute('subscription', value);
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_Ask: WideString;
 begin
-    Result := _item.value['Ask'];
+    Result := _ritem.ask;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_GroupCount: Integer;
 begin
-    Result := _item.GroupCount;
+    Result := _ritem.GroupCount;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Group(Index: Integer): WideString;
 begin
-    if (index >= 0) and (index < _item.GroupCount) then
-        Result := _item.Group[index]
+    if ((index >= 0) and (Index < _ritem.GroupCount)) then
+        Result := _ritem.Group[Index]
     else
         Result := '';
 end;
@@ -146,212 +145,187 @@ end;
 {---------------------------------------}
 function TExodusRosterItem.Get_Nickname: WideString;
 begin
-    Result := _item.Text;
+    Result := _ritem.Text;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_RawNickname: WideString;
 begin
-    Result := _item.value['Name'];
+    Result := _ritem.Text;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.XML: WideString;
-var
-    tag: TXMLTag;
-    val: Widestring;
-    idx: Integer;
 begin
-    //Generate the following:
-    //  <item jid='user@host' subscription='mode' ask='mode' name='nickname'>
-    //      <group>Group 1</group>...
-    //  </item>
-    
-    tag := TXMLTag.Create();
-    tag.Name := 'item';
-    tag.setAttribute('jid', _item.UID);
-    
-    val := _item.value['Name'];
-    if (val <> '') then tag.setAttribute('name', val);
-    val := _item.value['Subscription'];
-    if (val <> '') then tag.setAttribute('subscription', val);
-    val := _item.value['Ask'];
-    if (val <> '') then tag.setAttribute('ask', val);
-
-    for idx := 0 to _item.GroupCount - 1 do begin
-        tag.AddBasicTag('group', _item.Group[idx]);
-    end;
-    
-    Result := tag.XML;
-    tag.Free();
+    Result := _ritem.Tag.xml();
 end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.Remove;
 begin
-   MainSession.ItemController.RemoveItem(_item.UID);
+    _ritem.remove();
 end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.Set_Nickname(const Value: WideString);
 begin
-    if (Value <> _item.value['Name']) then begin
-        _item.value['Name'] := Value;
-        getDisplayNameCache().UpdateDisplayName(_item);
-        MainSession.FireEvent('/item/update', _item);
-    end;
+    _ritem.Text := Value;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.Update;
 begin
-  //  _ritem.update();
+    _ritem.update();
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_ContextMenuID: WideString;
 begin
-    Result := '';
+    Result := _menu_id;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.Set_ContextMenuID(const Value: WideString);
+var
+    menu: TTntPopupMenu;
 begin
-    //not supported
+    menu := ExCOMRoster.findContextMenu(value);
+    if (menu <> nil) then begin
+        _menu_id := Value;
+        _ritem.CustomContext := menu;
+    end;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_Action: WideString;
 begin
-    Result := _item.value['defaultaction'];
-end;
-{---------------------------------------}
-procedure TExodusRosterItem.Set_Action(const Value: WideString);
-begin
-    //not supported
+    Result := _ritem.Action;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_ImageIndex: Integer;
 begin
-    Result := _item.ImageIndex;
-end;
-{---------------------------------------}
-procedure TExodusRosterItem.Set_ImageIndex(Value: Integer);
-begin
-    _item.ImageIndex := Value;
+    Result := _ritem.ImageIndex;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_InlineEdit: WordBool;
 begin
-    Result := false;
-end;
-{---------------------------------------}
-procedure TExodusRosterItem.Set_InlineEdit(Value: WordBool);
-begin
-   //not supported
+    Result := _ritem.InlineEdit;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_Status: WideString;
 begin
-   Result := '';
-end;
-{---------------------------------------}
-procedure TExodusRosterItem.Set_Status(const Value: WideString);
-begin
-   //???
+    Result := _ritem.Status;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_Tooltip: WideString;
 begin
-    Result := '';
+    Result := _ritem.Tooltip;
 end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_Action(const Value: WideString);
+begin
+    _ritem.Action := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_ImageIndex(Value: Integer);
+begin
+    _ritem.ImageIndex := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_InlineEdit(Value: WordBool);
+begin
+    _ritem.InlineEdit := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_Status(const Value: WideString);
+begin
+    _ritem.Status := Value;
+end;
+
 {---------------------------------------}
 procedure TExodusRosterItem.Set_Tooltip(const Value: WideString);
 begin
-   //Not supported
+    _ritem.Tooltip := Value;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.fireChange;
 begin
-    MainSession.FireEvent('/item/update', _item);
+    MainSession.FireEvent('/roster/item', _ritem.tag, _ritem);
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_IsContact: WordBool;
 begin
-    Result := true;
+    Result := _ritem.IsContact;
 end;
+
 {---------------------------------------}
 procedure TExodusRosterItem.Set_IsContact(Value: WordBool);
 begin
-   //Not supported
+    _ritem.IsContact := Value;
 end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.addGroup(const grp: WideString);
 begin
-    _item.AddGroup(grp);
+    _ritem.AddGroup(grp);
 end;
+
 {---------------------------------------}
 procedure TExodusRosterItem.removeGroup(const grp: WideString);
 begin
-    _item.RemoveGroup(grp);
+    _ritem.DelGroup(grp);
 end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.setCleanGroups;
 begin
-    //_ritem.SetCleanGroups();
+    _ritem.SetCleanGroups();
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_ImagePrefix: WideString;
 begin
-  //  Result := _ritem.ImagePrefix;
-  Result := _item.value['ImagePrefix'];
+    Result := _ritem.ImagePrefix;
 end;
+
 {---------------------------------------}
 procedure TExodusRosterItem.Set_ImagePrefix(const Value: WideString);
 begin
-    _item.value['ImagePrefix'];
+    _ritem.ImagePrefix := Value;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_CanOffline: WordBool;
 begin
-   Result := (_item.value['msgoffline'] = 'true');
-end;
-{---------------------------------------}
-procedure TExodusRosterItem.Set_CanOffline(Value: WordBool);
-begin
-    if Value then
-        _item.value['msgoffline'] := ''
-    else
-        _item.value['msgoffline'] := 'true';
+    Result := _ritem.CanOffline;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_IsNative: WordBool;
 begin
-    //Result := _ritem.IsNative;
-    Result := (_item.value['Network'] = 'xmpp');
+    Result := _ritem.IsNative;
 end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_CanOffline(Value: WordBool);
+begin
+    _ritem.CanOffline := Value;
+end;
+
 {---------------------------------------}
 procedure TExodusRosterItem.Set_IsNative(Value: WordBool);
-var
-    network: Widestring;
 begin
-    if Value then
-        network := ''
-    else
-        network := 'xmpp';
-        
-    _item.value['Network'] := network;
+    _ritem.IsNative := Value;
 end;
 
 end.

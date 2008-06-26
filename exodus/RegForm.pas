@@ -22,13 +22,10 @@ unit RegForm;
 interface
 
 uses
-    IQ, XMLTag, fLeftLabel,
-    Presence, Entity, Windows,
-    Messages, SysUtils, Variants,
-    Classes, Graphics, Controls,
-    Forms, Dialogs, DockWizard,
-    ComCtrls, ExtCtrls, StdCtrls,
-    TntStdCtrls, TntExtCtrls, ToolWin;
+    IQ, XMLTag, fLeftLabel, Presence, Entity,  
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, DockWizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls,
+    TntExtCtrls, ToolWin;
 
 type
     RegFormStage = (rsWelcome, rsForm, rsXData, rsRegister, rsFinish, rsDone);
@@ -106,12 +103,9 @@ procedure StartServiceReg(jid: Widestring);
 implementation
 {$R *.DFM}
 uses
-    EntityCache, fGeneric,
-    GnuGetText, Math, JabberConst,
-    Transports, S10n, 
-    Session, JabberUtils, ExUtils,
-    Jabber1, Room, PrefController,
-    RosterImages;
+    NodeItem, EntityCache, fGeneric, 
+    GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, JabberUtils, ExUtils, 
+    Jabber1, Room, PrefController;
 
 {---------------------------------------}
 procedure StartServiceReg(jid: Widestring);
@@ -146,11 +140,7 @@ begin
     cur_key := '';
     pres_cb := -1;
     entity := nil;
-    Image1.Picture.Icon.Handle := Application.Icon.Handle;
-
-    Self.ImageIndex := RosterImages.RI_PREFS_INDEX;
-
-    _windowType := 'registration';
+    Image1.Picture.Icon.Handle := Application.Icon.Handle;    
 end;
 
 {---------------------------------------}
@@ -379,8 +369,8 @@ end;
 {---------------------------------------}
 procedure TfrmRegister.PresCallback(event: string; tag: TXMLTag; pres: TJabberPres);
 var
-//    i: integer;
-//    ritem: TJabberRosterItem;
+    i: integer;
+    ritem: TJabberRosterItem;
     tmps: Widestring;
 begin
     // getting some pres packet
@@ -404,23 +394,22 @@ begin
                 tmps := entity.name;
             if (tmps = '') then
                 tmps := pres.fromJid.domain;
-    { TODO : Roster refactor }
-//            MainSession.roster.AddItem(pres.fromJID.full, tmps,
-//                MainSession.Prefs.getString('roster_transport_grp'), false);
+
+            MainSession.roster.AddItem(pres.fromJID.full, tmps,
+                MainSession.Prefs.getString('roster_transport_grp'), false);
         end
         else begin
-{ TODO : Roster refactor }        
             // ok registration, check all pendings and re-subscribe to them
-//            with MainSession do begin
-//                for i := 0 to roster.Count - 1 do begin
-//                    ritem := TJabberRosterItem(Roster.Objects[i]);
-//                    if ((ritem <> nil) and
-//                        (ritem.ask = 'subscribe') and
-//                        (ritem.jid.domain = self.jid)) then begin
-//                        SendSubscribe(ritem.jid.jid, MainSession);
-//                    end;
-//                end;
-//            end;
+            with MainSession do begin
+                for i := 0 to roster.Count - 1 do begin
+                    ritem := TJabberRosterItem(Roster.Objects[i]);
+                    if ((ritem <> nil) and
+                        (ritem.ask = 'subscribe') and
+                        (ritem.jid.domain = self.jid)) then begin
+                        SendSubscribe(ritem.jid.jid, MainSession);
+                    end;
+                end;
+            end;
         end;
     end;
 end;

@@ -25,7 +25,7 @@ uses
     Entity, EntityCache, JabberID, XMLTag,
     DisplayName,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, TntStdCtrls, TntForms, ExFrame, ExForm;
+    buttonFrame, StdCtrls, TntStdCtrls;
 
 const
     P_BRAND_NETWORKS= 'brand_networks';
@@ -51,7 +51,7 @@ type
         function isInNetwork() : boolean;
     end;
 
-  TfrmAdd = class(TExForm)
+  TfrmAdd = class(TForm)
     Label1: TTntLabel;
     txtJID: TTntEdit;
     Label2: TTntLabel;
@@ -79,7 +79,7 @@ type
     gw_ent: TJabberEntity;
     gw, sjid, snick, sgrp: Widestring;
     addInfo : TNetworkInfo;
-    dnListener: TDisplayNameEventListener;
+    dnListener: TDisplayNameListener;
     procedure doAdd;
 
     procedure setContact(contact: TJabberID = nil);
@@ -102,9 +102,8 @@ procedure ShowAddContact(contact: Widestring); overload;
 {---------------------------------------}
 implementation
 uses
-    InputPassword, ExSession, JabberUtils, ExUtils,  PrefController, 
-    GnuGetText, Jabber1, Presence, Session, Unicode, COMExodusItem,
-    Exodus_TLB;
+    InputPassword, ExSession, JabberUtils, ExUtils,  PrefController, NodeItem,
+    GnuGetText, Jabber1, Presence, Session, Unicode;
 
 const
     sNoDomain = 'The contact ID you entered does not follow the standard user@host convention. Do you want to continue?';
@@ -222,8 +221,7 @@ var
 begin
     if (contact <> nil) then begin
         txtJid.Text := contact.GetDisplayJID();
-        dnListener.UID := contact.jid; //listen for updates to this jid only
-        txtNickname.Text := TDisplayNameEventListener.getDisplayName(contact.jid, pendingNameChange);
+        txtNickname.Text := dnListener.getDisplayName(contact, pendingNameChange);
         if (pendingNameChange) then
             txtNickname.Font.Style := txtNickname.Font.Style + [fsUnderline]
         else
@@ -269,8 +267,7 @@ begin
             if MessageDlgW(_(sNoDomain), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         if (tmp_jid.resource <> '') then
             if MessageDlgW(_(sResourceSpec), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
-{ TODO : Roster refactor }
-        //MainSession.FireEvent('/roster/add/in-network/' + addInfo.name, IExodusItem(nil));
+        MainSession.FireEvent('/roster/add/in-network/' + addInfo.name, tmp_xml, TJabberRosterItem(nil));
         doAdd();
         tmp_jid.Free();
     end
@@ -284,8 +281,7 @@ begin
             self.Hide();
         end
         else begin
- { TODO : Roster refactor }       
-        //    MainSession.FireEvent('/roster/add/gateway/' + addInfo.name, nil);
+            MainSession.FireEvent('/roster/add/gateway/' + addInfo.name, tmp_xml, TJabberRosterItem(nil));
             doAdd();
         end;
     end;
@@ -307,14 +303,13 @@ end;
 
 {---------------------------------------}
 procedure TfrmAdd.lblAddGrpClick(Sender: TObject);
-//var
-//    go: TJabberGroup;
+var
+    go: TJabberGroup;
 begin
     // Add a new group to the list...
- { TODO : Roster refactor }   
-//    go := promptNewGroup();
-//    if (go <> nil) then
-//        MainSession.Roster.AssignGroups(cboGroup.Items);
+    go := promptNewGroup();
+    if (go <> nil) then
+        MainSession.Roster.AssignGroups(cboGroup.Items);
 end;
 
 {---------------------------------------}
@@ -322,25 +317,13 @@ procedure TfrmAdd.FormCreate(Sender: TObject);
 var
     i, nNetworks: Integer;
     tinfo : TNetworkInfo;
-
-    procedure populateGroups();
-    var
-        idx: Integer;
-        items: IExodusItemList;
-    begin
-        items := MainSession.ItemController.GetItemsByType('group');
-        for idx := 0 to items.Count - 1 do begin
-            cboGroup.Items.Add(items.Item[idx].UID);
-        end;
-    end;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-
-    populateGroups();
+    MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 
-    dnListener := TDisplayNameEventListener.Create();
+    dnListener := TDisplayNameListener.Create();
     dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
     
     txtGateway.Text := MainSession.Server;
@@ -405,8 +388,7 @@ begin
 
     // add the nickname if it's not there.
     if (txtNickname.Text = '') then begin
-        dnListener.UID := tmp_id.jid; //listen for changes to this jid only
-        txtNickname.Text := TDisplayNameEventListener.getDisplayName(tmp_id.jid, pendingNameChange);
+        txtNickname.Text := dnListener.getDisplayName(tmp_id, pendingNameChange);
         if (pendingNameChange) then
             txtNickname.Font.Style := txtNickname.Font.Style + [fsUnderline]
         else
@@ -441,7 +423,7 @@ begin
     // check to see if there is an agent for this type
     // of contact type
     if (AddInfo.isInNetwork()) then begin
-         MainSession.roster.AddItem(sjid, snick, sgrp, true);
+        MainSession.Roster.AddItem(sjid, snick, sgrp, true);
         Self.Close;
     end
     else begin
@@ -457,7 +439,6 @@ begin
             end;
             sjid := j + '@' + a.jid.full;
             ExRegController.MonitorJid(sjid, false);
-              { TODO : Roster refactor }
             MainSession.Roster.AddItem(sjid, snick, sgrp, true);
             Self.Close;
         end

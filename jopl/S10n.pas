@@ -71,10 +71,9 @@ uses
     {$endif}
     Presence,
     JabberID,
-    ContactController,
+    NodeItem, Roster,
     DisplayName,
-    PrefController,
-    Exodus_TLB;
+    PrefController;
 
 {---------------------------------------}
 Constructor TSubController.Create;
@@ -110,9 +109,9 @@ begin
 end;
 
 type
-    TAutoAddHandler = class(TDisplayNameEventListener)
+    TAutoAddHandler = class(TDisplayNameListener)
         jid: TJabberID;
-        procedure FireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
+        procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
         procedure addToRoster(newJID: TJabberID);
 
         destructor Destroy();override;
@@ -127,8 +126,7 @@ end;
 procedure TAutoAddHandler.fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 begin
     if (jid.jid = bareJID) then begin
- { TODO : Roster refactor }
-        //MainSession.Roster.AddItem(jid.jid, displayName, MainSession.Prefs.getString('roster_default'), true);
+        MainSession.Roster.AddItem(jid.jid, displayName, MainSession.Prefs.getString('roster_default'), true);
         Self.Free();
     end;
 end;
@@ -143,15 +141,11 @@ begin
     if (Self.ProfileEnabled) then
         dName := Self.getProfileDisplayName(newJID, changePending)
     else
-//TODO : DN add a mechanism to DN to force a profile DN lookup, regardless of roster name
-        dname := getDisplayName(newJID.jid, changePending);
+        dname := getDisplayName(newJID, changePending);
 
     if (not changePending) then begin
         //addnow, destroy ourself
-        MainSession.Roster.AddItem(
-                newjid.jid, dname,
-                MainSession.Prefs.getString('roster_default'),
-                true);
+        MainSession.Roster.AddItem(newjid.jid, dname, MainSession.Prefs.getString('roster_default'), true);
         Self.Free();
     end;
 end;
@@ -163,65 +157,52 @@ var
     incoming: integer;
     add_to_roster: boolean;
     prompt: boolean;
-    subscr, ask: Widestring;
-    item: IExodusItem;
+    ritem: TJabberRosterItem;
 begin
- { TODO : Roster refactor }
     // getting a s10n request
     j := TJabberID.Create(tag.GetAttribute('from'));
 
-//    // deal w/ transports
+    // deal w/ transports
     if (_transports.IndexOf(j.jid) >= 0) then
         SendSubscribed(j.full, MainSession)
 
     // deal w/ normal subscription requests
     else begin
-        with MainSession do begin
-
-        end;
         incoming := MainSession.Prefs.getInt(PrefController.P_SUB_AUTO);
         add_to_roster := MainSession.Prefs.getBool(PrefController.P_SUB_AUTO_ADD);
+        ritem := MainSession.roster.Find(j.jid);
 
-        item := MainSession.ItemController.GetItem(j.jid);
         prompt := false; // auto-accept all
         if (incoming = PrefController.s10n_ask) then // auto-accept from none
             prompt := true
         else if (incoming = PrefController.s10n_auto_roster) then begin // auto-accept from roster
-            if (item = nil) then
+            if (ritem = nil) then
                 prompt := true
             else begin
-                subscr := item.value['Subscription'];
-
-                if (subscr <> 'to') and (subscr <> 'both') then
-                  prompt := true;
+                if ((ritem.subscription <> 'to') and
+                    (ritem.subscription <> 'both')) then
+                    prompt := true;
             end;
         end
         else if (incoming = s10n_auto_deny_all) then begin // auto-deny all
             SendUnsubscribed(j.jid, MainSession);
             exit;
         end;
-//
+
         if (prompt) then
             MainSession.FireEvent('/session/gui/subscribe', tag)
         else begin
-            if (item <> nil) then begin
-                subscr := item.value['Subscription'];
-                ask := item.value['Ask'];
+            if ((ritem = nil) or (ritem.subscription = 'none') or
+                (ritem.subscription = '')) then begin
+
+                // if we didn't ask for this subscription,
+                // then we should subscribe back to them
+                // if add_to_roster
+                if (((ritem = nil) or (ritem.ask <> 'subscribe')) and add_to_roster) then
+                    TAutoAddHandler.Create().addToRoster(j);
             end;
-
-//            if ((ritem = nil) or (ritem.subscription = 'none') or
-//                (ritem.subscription = '')) then begin
-//
-//                // if we didn't ask for this subscription,
-//                // then we should subscribe back to them
-//                // if add_to_roster
-//                if (((ritem = nil) or (ritem.ask <> 'subscribe')) and add_to_roster) then
-//                    TAutoAddHandler.Create().addToRoster(j);
-//            end;
-            if ((subscr = '') or (ask <> 'subscribe') and add_to_roster) then
-                TAutoAddHandler.Create().addToRoster(j);
+             // we are in auto-approve mode, so approve it
             SendSubscribed(j.jid, MainSession);
-
         end;
     end;
     j.Free;
@@ -247,25 +228,13 @@ end;
 procedure TSubController.UnSubscribe(event: string; tag: TXMLTag);
 begin
     // someone is removing us
-    { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "unsubscribe",
-    the user SHOULD acknowledge receipt of that subscription state notification
-    through either "affirming" it by sending a presence stanza of type
-    "unsubscribed" to the contact or "denying" it by sending a presence stanza
-    of type "subscribed" to the contact; this step does not necessarily
-    affect the subscription state, but instead lets the user's server
-    know that it MUST no longer send notification of the subscription
-    state change to the user }
-
-    //TODO:  alert user??
-    SendUnSubscribed(tag.getAttribute('from'), MainSession);
 end;
 
 {---------------------------------------}
 procedure TSubController.UnSubscribed(event: string; tag: TXMLTag);
 var
     from: TJabberID;
-    item: IExodusItem;
-//    ritem: TJabberRosterItem;
+    ritem: TJabberRosterItem;
     tstr: WideString;
 begin
     { Todo:  Move this UI code out of jopl.  Perhaps throw a
@@ -274,27 +243,27 @@ begin
     // getting a s10n denial or someone is revoking us
     from := TJabberID.Create(tag.getAttribute('from'));
     tstr := DisplayName.getDisplayNameCache().getDisplayName(from) + ' (' + from.getDisplayJID + ')';
-    item := MainSession.ItemController.GetItem(from.jid);
-
-    if (item <> nil) then begin
-        if (item.value['Ask'] = 'subscribe') then begin
+    ritem := MainSession.roster.Find(from.jid);
+    if (ritem <> nil) then begin
+        if (ritem.ask = 'subscribe') then begin
             // we are got denied by this person
             MessageDlgW(WideFormat(sS10nDeny, [tstr]), mtInformation, [mbOK], 0);
+            ritem.remove();
         end
         else begin
             MessageDlgW(WideFormat(sS10nUnsub, [tstr]), mtInformation, [mbOK], 0);
         end;
-        MainSession.Roster.RemoveItem(item);
     end;
 
-    { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "unsubscribed",
+    { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "subscribed",
     the user SHOULD acknowledge receipt of that subscription state notification
     through either "affirming" it by sending a presence stanza of type
-    "unsubscribe" to the contact or "denying" it by sending a presence stanza
-    of type "subscribe" to the contact; this step does not necessarily
+    "subscribe" to the contact or "denying" it by sending a presence stanza
+    of type "unsubscribe" to the contact; this step does not necessarily
     affect the subscription state, but instead lets the user's server
     know that it MUST no longer send notification of the subscription
     state change to the user }
+
     SendUnSubscribe(from.full, MainSession);
 
     from.Free();

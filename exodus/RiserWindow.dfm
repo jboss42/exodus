@@ -1,14 +1,21 @@
-inherited frmRiser: TfrmRiser
+object frmRiser: TfrmRiser
   Left = 308
   Top = 212
   BorderIcons = []
   BorderStyle = bsNone
   ClientHeight = 45
   ClientWidth = 184
+  Color = clBtnFace
   TransparentColorValue = clWindow
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
+  OldCreateOrder = False
   OnClick = Panel2Click
   OnClose = FormClose
   OnCreate = FormCreate
@@ -65,8 +72,8 @@ inherited frmRiser: TfrmRiser
   object Label1: TTntLabel
     Left = 28
     Top = 4
-    Width = 81
-    Height = 26
+    Width = 98
+    Height = 13
     Alignment = taCenter
     Caption = 'something really long'
     Transparent = True

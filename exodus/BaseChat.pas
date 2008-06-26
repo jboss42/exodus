@@ -34,19 +34,7 @@ const
     sPref_Hotkeys_Keys = 'hotkeys_keys';
     sPref_Hotkeys_Text = 'hotkeys_text';
 
-    RTF_MSGLIST = 0;
-    HTML_MSGLIST = 1;
-
 type
-    TFileLinkClickInfo = record
-    {
-      This record contains inforamtion relevant to error
-      occured during file transfer.
-    }
-        Handled: Boolean;
-        ExtendedURL:  WideString;
-    end;
-
   TfrmBaseChat = class(TfrmDockable)
     pnlMsgList: TPanel;
     pnlInput: TPanel;
@@ -67,11 +55,11 @@ type
     ChatToolbarButtonBold: TTntToolButton;
     ChatToolbarButtonUnderline: TTntToolButton;
     ChatToolbarButtonItalics: TTntToolButton;
-    ChatToolbarButtonSeparator1: TTntToolButton;
+    ChatToolbarButtonSeperator1: TTntToolButton;
     ChatToolbarButtonCut: TTntToolButton;
     ChatToolbarButtonCopy: TTntToolButton;
     ChatToolbarButtonPaste: TTntToolButton;
-    ChatToolbarButtonSeparator2: TTntToolButton;
+    ChatToolbarButtonSeperator2: TTntToolButton;
     ChatToolbarButtonEmoticons: TTntToolButton;
     ChatToolbarButtonHotkeys: TTntToolButton;
     popHotkeys: TTntPopupMenu;
@@ -106,8 +94,6 @@ type
     procedure ChatToolbarButtonBoldClick(Sender: TObject);
     procedure ChatToolbarButtonUnderlineClick(Sender: TObject);
     procedure ChatToolbarButtonColorsClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure TntFormResize(Sender: TObject);
 
   private
     { Private declarations }
@@ -127,9 +113,8 @@ type
     _close_shift: TShiftState;
     _msgframe: TObject;
     _session_chat_toolbar_callback: integer;
-    _filelink_callback: integer;
-    _msglist_type: integer;
-    _fileLinkInfo: TFileLinkClickInfo;
+    _session_close_all_callback: integer;
+
     procedure _scrollBottom();
    {
         Set the left and top properties of the given form.
@@ -151,20 +136,12 @@ type
     procedure updateFromPrefs();
     procedure populatePriority();
     procedure SetPriorityNormal();
-    procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
-    function GetChatController(): TObject; virtual; abstract;
-    procedure ProcessNavigate(Sender: TObject;
-              const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
-              Headers: OleVariant; var Cancel: WordBool);
-    procedure OnFileLinkCallback(event: string; tag: TXMLTag);
-
   public
     { Public declarations }
     AutoScroll: boolean;
     MsgOutToolbar: TExodusMsgOutToolbar;
     DockToolbar: TExodusDockToolbar;
 
-    constructor Create(AOwner: TComponent);override;
     procedure SetEmoticon(e: TEmoticon);
     procedure SendMsg(); virtual;
     procedure HideEmoticons();
@@ -191,9 +168,7 @@ type
     procedure gotActivate();override;
 
     procedure OnColorSelect(selColor: TColor);
-
   end;
-
 
 var
   frmBaseChat: TfrmBaseChat;
@@ -208,14 +183,7 @@ uses
     Jabber1,
     ExUtils,
     JabberMsg,
-    IEMsgList,
-    TypInfo,
-    PrefFile,
-    PrefController,
-    RosterImages,
-    ActivityWindow,
-    Exodus_TLB,
-    COMChatController;
+    TypInfo;
 
 const
     PREF_RT_ENABLED = 'richtext_enabled';
@@ -226,14 +194,6 @@ const
     PREF_FONT_ITALIC = 'font_italic';
     PREF_FONT_UNDERLINE = 'font_underline';
     PREF_BACKGROUND_COLOR = 'color_bg';
-    PREF_ALT_BACKGROUND_COLOR = 'color_alt_bg';
-    PREF_DATE_BACKGROUND_COLOR = 'color_alt_bg';
-
-constructor TfrmBaseChat.Create(AOwner: TComponent);
-begin
-    inherited;
-    UnreadMsgCount := 0;
-end;
 
 {
     Set the left and top properties of the given form.
@@ -260,8 +220,10 @@ procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
 begin
   inherited;
     // Show the emoticons form
-    frmEmoticons.Left := ChatToolbarButtonEmoticons.ClientOrigin.X;
-    frmEmoticons.Top := ChatToolbarButtonEmoticons.ClientOrigin.Y  + 20;
+    if (Sender.InheritsFrom(TControl)) then begin
+        frmEmoticons.Left := TControl(Sender).ClientOrigin.X + 20;
+        frmEmoticons.Top := TControl(Sender).ClientOrigin.Y  + 20;
+    end;
 
     frmEmoticons.MakeFullyVisible();
     frmEmoticons.ChatWindow := Self;
@@ -299,14 +261,8 @@ procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
     begin
         MsgOut.WideText := m;
         MsgOut.SelStart := length(m);
-        if (MsgOut.Visible and MsgOut.Enabled) then begin
-            try
-                MsgOut.SetFocus();
-            except
-                // To handle Cannot focus exception
-            end;
-        end;
-
+        if (MsgOut.Visible and MsgOut.Enabled) then
+            MsgOut.SetFocus();
     end;
 
 begin
@@ -360,17 +316,13 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
                                      Shift: TShiftState);
-var
-    prefstag: TXMLTag;
 begin
     if (Key = 0) then exit;
-
     // handle Ctrl-Tab to switch tabs
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         GetDockManager().SelectNext(not (ssShift in Shift));
         Key := 0;
     end
-
     // handle close window/tab hotkeys
     else if ((Key = _close_key) and (Shift = _close_shift)) then
         Self.Close()
@@ -393,17 +345,6 @@ begin
     else if ((chr(Key) = 'H') and  (Shift = [ssCtrl, ssShift])) then begin
         DebugMsg(getMsgList.getHistory());
     end
-
-    // magic debug key sequence Ctrl-Shift-P to dump the Prefs XML to debug.
-    else if ((chr(Key) = 'P') and  (Shift = [ssCtrl, ssShift])) then begin
-        prefstag := nil;
-        MainSession.Prefs.getRoot('', prefstag);
-        if (prefstag <> nil) then begin
-            DebugMsg(prefstag.XML);
-        end;
-        prefstag.Free();
-    end
-
     //click toolbar buttons
     else if ((_rtEnabled) and
              ((Shift = [ssCtrl]) and ((chr(Key) = 'B') or (chr(Key) = 'U')))) then begin
@@ -417,7 +358,6 @@ begin
         end;
         Key := 0;
     end
-
     else if ((Shift = [ssCtrl]) and (chr(Key) = 'I') and _rtEnabled) then begin
         ChatToolbarButtonItalics.Down := not ChatToolbarButtonItalics.Down;
         ChatToolbarButtonItalics.click();
@@ -437,13 +377,8 @@ begin
     UpdateToolbarState();
     if (MainSession.Prefs.getBool('show_priority')) then
       SetPriorityNormal;
-    if (MsgOut.Visible and MsgOut.Enabled) then begin
-        try
-            MsgOut.SetFocus();
-        except
-            // To handle Cannot focus exception
-        end;
-    end;
+    if (MsgOut.Visible and MsgOut.Enabled) then
+        MsgOut.SetFocus;
 end;
 
 {---------------------------------------}
@@ -452,123 +387,73 @@ begin
     inherited;
     frmExodus.ActiveChat := Self;
 
-    if (MsgOut.Visible and MsgOut.Enabled) then begin
-        try
-            MsgOut.SetFocus();
-        except
-            // To handle Cannot focus exception
-        end;
-    end;
+    if (MsgOut.Visible and MsgOut.Enabled) then
+        MsgOut.SetFocus();
 end;
 
 procedure TfrmBaseChat.FormCreate(Sender: TObject);
 var
     ht: integer;
     sc: TShortcut;
-    prefstate1, prefstate2: TPrefState;
 begin
-    try
-        AutoScroll := true;
-        _rtEnabled := false;
-        _hotkey_menu_items := TWideStringList.Create();
-        _hotkeys_keys_stringlist := TWideStringList.Create();
-        _hotkeys_text_stringlist := TWideStringList.Create();
+    AutoScroll := true;
+    _rtEnabled := false;
+    _hotkey_menu_items := TWideStringList.Create();
+    _hotkeys_keys_stringlist := TWideStringList.Create();
+    _hotkeys_text_stringlist := TWideStringList.Create();
 
-        MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
-        MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
+    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
+    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
 
-        // Dont show hotkeys toolbar button if
-        //  - keys and text counts aren't equal
-        //  - either keys or text are flagged as invisible
-        //  - keys or text are readonly and there is nothing in list
-        prefstate1 := getPrefState('hotkeys_keys');
-        prefstate2 := getPrefState('hotkeys_text');
-        if ((_hotkeys_keys_stringlist.Count <> _hotkeys_text_stringlist.Count) or
-            (prefstate1 = psInvisible) or
-            (prefstate2 = psInvisible) or
-            (((prefstate1 = psReadOnly) or
-              (prefstate2 = psReadOnly)) and
-             (_hotkeys_keys_stringlist.Count = 0))) then begin
-            ChatToolbarButtonHotkeys.Visible := false;
-        end;
+    SetPriorityNormal;
 
-        SetPriorityNormal;
+    _msgHistory := TWideStringList.Create();
+    _pending := '';
+    _lastMsg := -1;
+    _esc := false;
 
-        _msgHistory := TWideStringList.Create();
-        _pending := '';
-        _lastMsg := -1;
-        _esc := false;
+    // Pick which frame to build
+    //ms := MainSession.prefs.getInt('msglist_type');
+    //if (ms = 0) then
+    _msgframe := TfRTFMsgList.Create(Self);
 
-        // Pick which frame to build
-        _msglist_type := MainSession.prefs.getInt('msglist_type');
-        case _msglist_type of
-            RTF_MSGLIST  :
-            begin
-               _msgframe := TfRTFMsgList.Create(Self);
-            end;
-            HTML_MSGLIST :
-            begin
-            _msgframe := TfIEMsgList.Create(Self);
-            TfIEMsgList(_msgframe).browser.OnBeforeNavigate2 := ProcessNavigate;
-            end
-            else begin
-                _msgframe := TfRTFMsgList.Create(Self);
-            end;
-        end;
-
-        with MsgList do begin
-            Name := 'msg_list_frame';
-            Parent := pnlMsgList;
-            Align := alClient;
-            Visible := true;
-            setContextMenu(popMsgList);
-            ready();
-        end;
-
-        inherited;
-
-        if (MainSession <> nil) then begin
-            ht := MainSession.Prefs.getInt('chat_textbox');
-            if (ht = 0) then
-            begin
-                ht := pnlInput.Height;
-                if (ht = 0) then
-                    ht := 25;
-                MainSession.prefs.setInt('chat_textbox', ht);
-            end;
-            pnlInput.Height := ht;
-            
-            _esc := MainSession.Prefs.getBool('esc_close');
-
-            sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
-            ShortCutToKey(sc, _close_key, _close_shift);
-        end;
-
-        _scroll := true;
-
-        tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
-
-        _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
-        _filelink_callback := MainSession.RegisterCallback(OnFileLinkCallback, '/session/filelink/click/response');
-
-        MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar);
-        MsgOutToolbar.ObjAddRef();
-
-        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar);
-        DockToolbar.ObjAddRef();
-
-        updateFromPrefs();
-        DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
-    except
+    with MsgList do begin
+        Name := 'msg_list_frame';
+        Parent := pnlMsgList;
+        Align := alClient;
+        Visible := true;
+        setContextMenu(popMsgList);
+        ready();
     end;
-end;
 
-{---------------------------------------}
-procedure TfrmBaseChat.OnFileLinkCallback(event: string; tag: TXMLTag);
-begin
-    if (event <> '/session/filelink/click/response') then exit;
-    if (_fileLinkInfo.ExtendedURL <> tag.Data) then exit;
-    _fileLinkInfo.Handled := true;
+    inherited;
+
+    if (MainSession <> nil) then begin
+        ht := MainSession.Prefs.getInt('chat_textbox');
+        if (ht <> 0) then
+            pnlInput.Height := ht
+        else
+            MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
+        _esc := MainSession.Prefs.getBool('esc_close');
+
+        sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
+        ShortCutToKey(sc, _close_key, _close_shift);
+    end;
+
+    _scroll := true;
+
+    tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
+
+    _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
+    _session_close_all_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/close-all-windows');
+
+    MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar);
+    MsgOutToolbar.ObjAddRef();
+
+    DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar);
+    DockToolbar.ObjAddRef();
+
+    updateFromPrefs();
 end;
 
 {---------------------------------------}
@@ -581,6 +466,10 @@ begin
         MainSession.Prefs.fillStringlist('hotkeys_keys', _hotkeys_keys_stringlist);
         MainSession.Prefs.fillStringlist('hotkeys_text', _hotkeys_text_stringlist);
         updateFromPrefs();
+    end
+    else if (event = '/session/close-all-windows') then begin
+        Self.Close();
+        Application.ProcessMessages();
     end;
 end;
 
@@ -592,7 +481,7 @@ begin
     _hotkeys_text_stringlist.Free();
 
     MainSession.UnRegisterCallback(_session_chat_toolbar_callback);
-    MainSession.UnRegisterCallback(_filelink_callback);
+    MainSession.UnRegisterCallback(_session_close_all_callback);
     if (frmExodus <> nil) then
         frmExodus.ActiveChat := nil;
     TfBaseMsgList(_msgframe).Free();
@@ -607,55 +496,12 @@ begin
     inherited;
 end;
 
-procedure TfrmBaseChat.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  inherited;
-
-end;
-
 {---------------------------------------}
 procedure TfrmBaseChat.Splitter1Moved(Sender: TObject);
 begin
   inherited;
     // save the new position to use on all new windows
     MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
-    Self.Invalidate();
-end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.TntFormResize(Sender: TObject);
-var
-    oldHeight: real;
-    msglistratio: real;
-    pnlinputratio: real;
-    real_a: real;
-    real_b: real;
-begin
-    // This code exists to try and prevent losing a part of the window due to resize
-    // when (un)docking.
-    inherited;
-    if (ClientHeight = 0) then exit;
-
-    if ((pnlMsgList.Height + Splitter1.Height + pnlInput.Height + pnlDockTop.Height) > ClientHeight) then begin
-        // All combined, everything is bigger then the room we have, so resize
-        oldHeight := pnlMsgList.Height + pnlInput.Height;
-        if (oldHeight <> 0) then
-        begin
-            real_a := pnlMsgList.Height;
-            real_b := pnlInput.Height;
-            msglistratio := real_a / oldHeight;
-            pnlinputratio := real_b / oldHeight;
-        end else
-        begin
-            msglistratio := 0.7;
-            pnlinputratio := 0.3;
-        end;
-
-        // Now that we have ratios, make sure that nothing would be too small;
-        pnlMsgList.Height := Trunc(msglistratio * (ClientHeight - Splitter1.Height - pnlDockTop.Height));
-        pnlInput.Height := Trunc(pnlinputratio * (ClientHeight - Splitter1.Height- pnlDockTop.Height));
-    end;
 end;
 
 {---------------------------------------}
@@ -741,8 +587,7 @@ begin
     MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
 
     // Should the button be displayed.
-    if ((_hotkeys_keys_stringlist.Count > 0) and
-        (_hotkeys_keys_stringlist.Count = _hotkeys_text_stringlist.Count)) then begin
+    if (_hotkeys_keys_stringlist.Count > 0) then begin
         // add strings to popup
         for i := _hotkeys_keys_stringlist.Count - 1 downto 0 do begin
             m := TTntMenuItem.Create(Self);
@@ -844,7 +689,6 @@ procedure TfrmBaseChat.OnDocked();
 begin
     inherited;
     MsgList.refresh();
-    DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
 end;
 
 {
@@ -857,7 +701,6 @@ procedure TfrmBaseChat.OnFloat();
 begin
     inherited;
     MsgList.refresh();
-    DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
 end;
 
 procedure TfrmBaseChat.OnHotkeysClick(Sender: TObject);
@@ -892,7 +735,7 @@ begin
         ChatToolbarButtonBold.visible := _rtEnabled;
         ChatToolbarButtonUnderline.visible := _rtEnabled;
         ChatToolbarButtonColors.visible := _rtEnabled;
-        ChatToolbarButtonSeparator1.visible := _rtEnabled;
+        ChatToolbarButtonSeperator1.visible := _rtEnabled;
         if (not _rtEnabled) then begin
             //drop all previous formatting since we are loosing rich text
             MsgOut.DefAttributes.Bold := false;
@@ -901,10 +744,9 @@ begin
         end;
     end;
     PopulatePriority();
-
+    AssignDefaultFont(Self.Font);
     MsgList.setupPrefs();
-
-    AssignDefaultFont(MsgOut.Font);
+    //msgout will pickup parent font by default, but we need to change bg color
     MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
 end;
 
@@ -943,57 +785,10 @@ begin
        end;
   end
 end;
-
 procedure TfrmBaseChat.OnColorSelect(selColor: TColor);
 begin
     MsgOut.SelAttributes.Color := selColor;
 end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.AcceptFiles( var msg : TWMDropFiles );
-const
-    cnMaxFileNameLen = 255;
-var
-    i,
-    nCount     : integer;
-    acFileName : array [0..cnMaxFileNameLen] of char;
-    FileDropTag: TXMLTag;
-    OleVariant: Variant;
-begin
-    nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
-    FileDropTag := TXMLTag.Create('file_drag_and_drop');
-    // query Windows one at a time for the file name
-    for i := 0 to nCount-1 do begin
-        DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
-        FileDropTag.AddBasicTag('filename', acFileName);
-    end;
-    OleVariant :=  FileDropTag.XML;
-    TExodusChat(GetChatController()).fireChatEvent('/file/dragdop', OleVariant);
-    FileDropTag.Free;
-    // let Windows know that you're done
-    DragFinish( msg.Drop );
-end;
-
-procedure TfrmBaseChat.ProcessNavigate(Sender: TObject; const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
-Headers: OleVariant; var Cancel: WordBool);
-var
-   Tag: TXMLTag;
-begin
-    _fileLinkInfo.ExtendedURL := UTF8Encode(URL);
-    _fileLinkInfo.Handled := false;
-
-    Tag := TXMLTag.Create('filelink', _fileLinkInfo.ExtendedURL);
-
-    MainSession.fireEvent('/session/filelink/click', Tag);
-    if ( _fileLinkInfo.Handled) then
-    begin
-        Cancel := true;
-        exit;
-    end;
-
-   TfIEMsgList(_msgframe).browserBeforeNavigate2(Sender, pDisp, URL, Flags,  TargetFrameName, PostData, Headers, Cancel);
-end;
-
 
 end.
 

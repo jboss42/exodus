@@ -37,12 +37,9 @@ type
       safecall;
     function Find(const id: WideString): Integer; safecall;
     procedure Remove(const id: WideString); safecall;
-    function GetImageById(const Id: WideString): WideString; safecall;
-    function GetImageByIndex(Idx: Integer): WideString; safecall;
 
   private
     _base64: TIdDecoderMime;
-    _Encoder: TIdEncoderMime;
     _bmp: TBitmap;
     _mem: TMemoryStream;
 
@@ -58,13 +55,12 @@ type
 implementation
 
 uses
-    RosterImages, ComServ, Variants, Types;
+    RosterImages, ComServ;
 
 {---------------------------------------}
 constructor TExodusRosterImages.Create();
 begin
     _base64 := TIdDecoderMime.Create(nil);
-    _Encoder := TIdEncoderMime.Create(nil);
     _bmp := TBitmap.Create();
     _mem := TMemoryStream.Create();
 end;
@@ -73,7 +69,6 @@ end;
 destructor TExodusRosterImages.Destroy();
 begin
     _base64.free();
-    _Encoder.Free();
     _bmp.free();
     _mem.free();
 end;
@@ -150,38 +145,6 @@ end;
 procedure TExodusRosterImages.Remove(const id: WideString);
 begin
     RosterTreeImages.RemoveImage(id);
-end;
-
-{---------------------------------------}
-function TExodusRosterImages.GetImageById(const Id: WideString): WideString;
-var
-  Idx: Integer;
-begin
-   Result := '';
-   Idx := RosterTreeImages.Find(Id);
-   if (Idx = -1) then
-      exit;
-   Result := GetImageByIndex(Idx);
-end;
-
-{---------------------------------------}
-function TExodusRosterImages.GetImageByIndex(Idx: Integer): WideString;
-var
-  Bitmap: TBitmap;
-begin
-   Result := '';
-   //First, save bitmap to stream.
-   Bitmap := TBitmap.Create();
-    //RosterTreeImages.ImageList.GetBitmap(Idx, _bmp);
-    RosterTreeImages.ImageList.GetBitmap(Idx, Bitmap);
-   _mem.Clear();
-   _mem.Position := 0;
-   //_bmp.SaveToStream(_mem);
-   Bitmap.SaveToStream(_mem);
-   _mem.Position := 0;
-   //Encode stream into binary string
-   Result := _Encoder.Encode(_mem);
-   Bitmap.Free();
 end;
 
 initialization

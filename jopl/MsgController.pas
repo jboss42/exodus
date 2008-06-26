@@ -25,7 +25,7 @@ uses
     Classes, XMLTag;
 
 type
-    TMsgController2 = class
+    TMsgController = class
         Data: TObject;
         
         procedure HandleMessage(tag: TXMLTag); virtual; abstract;

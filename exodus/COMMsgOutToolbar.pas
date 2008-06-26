@@ -62,7 +62,6 @@ begin
     old_left := _toolbar.Buttons[_toolbar.ButtonCount - 1].Left +
                     _toolbar.Buttons[_toolbar.ButtonCount - 1].Width;
     btn := TToolButton.Create(frmExodus);
-    btn.ShowHint := true;
     btn.Top := _toolbar.Buttons[_toolbar.ButtonCount - 1].Top;
     btn.Left := old_left + 1;
     _toolbar.Width := _toolbar.Width +
@@ -123,14 +122,14 @@ end;
 {---------------------------------------}
 function TExodusMsgOutToolbar.addControl(const ClassId: WideString): IExodusToolbarControl;
 var
-  AXControl: TAXControl;
+  MyControl: TMyControl;
   ParentControl: TWinControl;
 begin
   ParentControl := frmExodus.Toolbar;
 
-  AXControl := TAXControl.Create(ParentControl, StringToGuid(ClassId));
-  AXControl.Parent := ParentControl;
-  Result := TExodusToolbarControl.Create(AXControl);
+  MyControl := TMyControl.Create(ParentControl, StringToGuid(ClassId));
+  MyControl.Parent := ParentControl;
+  Result := TExodusToolbarControl.Create(MyControl);
 
   frmExodus.Toolbar.Bands.Items[frmExodus.Toolbar.Bands.Count-1].Text := ClassId;
   frmExodus.Toolbar.ShowText := false;

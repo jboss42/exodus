@@ -1,7 +1,10 @@
-inherited frameXData: TframeXData
+object frameXData: TframeXData
+  Left = 0
+  Top = 0
+  Width = 320
   Height = 132
+  TabOrder = 0
   OnResize = FrameResize
-  ExplicitHeight = 132
   object Panel1: TPanel
     Left = 0
     Top = 0
@@ -10,7 +13,6 @@ inherited frameXData: TframeXData
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 5
-    ParentColor = True
     TabOrder = 0
     object ScrollBox1: TScrollBox
       Left = 5

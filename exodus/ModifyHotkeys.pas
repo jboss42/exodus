@@ -23,10 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, TntStdCtrls, ExForm;
+  Dialogs, StdCtrls, TntStdCtrls;
 
 type
-  TfrmModifyHotkeys = class(TExForm)
+  TfrmModifyHotkeys = class(TForm)
     btnOK: TTntButton;
     btnCancel: TTntButton;
     txtHotkeyMessage: TTntEdit;
@@ -39,6 +39,9 @@ type
   public
     { Public declarations }
   end;
+
+var
+  frmModifyHotkeys: TfrmModifyHotkeys;
 
 implementation
 

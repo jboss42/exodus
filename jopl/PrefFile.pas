@@ -41,7 +41,6 @@ type
         _pos      : TXMLTag;
         _prof     : TXMLTag;
         _bms      : TXMLTag;
-        _groups   : TXMLTag;
         _ws       : TXMLTag;
 
         _filename : Widestring;
@@ -148,14 +147,12 @@ type
         function setRoot(rootTag: TXMLTag): boolean;
         procedure clearProfiles();
         procedure SaveBookmarks(tag: TXMLTag);
-        procedure SaveGroups(tag: TXMLTag);
 
         // read only props
         property Dirty : boolean read _dirty;
         property NeedDefaultPresence : boolean read _need_default_pres;
         property Profiles : TXMLTag read _prof;
         property Bookmarks : TXMLTag read _bms;
-        property Groups : TXMLTag read _groups;
 end;
 
 const
@@ -177,7 +174,6 @@ const
     PROF    = 'profiles';         // DO NOT LOCALIZE
     PREF    = 'prefs';            // DO NOT LOCALIZE
     BMS     = 'local-bookmarks';  // DO NOT LOCALIZE
-    GRPS    = 'local-groups';     // DO NOT LOCALIZE
     STATES  = 'states';
     AUTO_OPEN = 'auto-open'; 
 
@@ -234,12 +230,7 @@ end;
 {---------------------------------------}
 function TPrefFile.getRoot(rootName: WideString; var rootTag: TXMLTag): boolean;
 begin
-    if (rootName = '') then begin
-        rootTag := TXMLTag.create(_root);
-    end
-    else begin
-        rootTag := TXMLTag.create(_root.GetFirstTag(rootName));
-    end;
+    rootTag := TXMLTag.create(_root.GetFirstTag(rootName));
     Result := (rootTag <> nil);
 end;
 
@@ -287,7 +278,6 @@ begin
     _pos    := gettag(POS);
     _prof   := gettag(PROF);
     _bms    := gettag(BMS);
-    _groups := gettag(GRPS);
     _ws     := gettag(WINDOWSTATE);
 
     // If the format changes again, also check VER_NUM.
@@ -892,21 +882,6 @@ begin
     blist := tag.ChildTags();
     for i := 0 to blist.count - 1 do begin
         _bms.AddTag(TXMLTag.Create(blist[i]));
-    end;
-    Save();
-end;
-
-{---------------------------------------}
-procedure TPrefFile.SaveGroups(tag: TXMLTag);
-var
-    glist: TXMLTagList;
-    i: integer;
-begin
-    _dirty := true;
-    _groups.ClearTags();
-    glist := tag.ChildTags();
-    for i := 0 to glist.count - 1 do begin
-        _groups.AddTag(TXMLTag.Create(glist[i]));
     end;
     Save();
 end;

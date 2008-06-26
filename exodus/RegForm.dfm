@@ -3,6 +3,7 @@ inherited frmRegister: TfrmRegister
   Top = 361
   Caption = 'Service Registration'
   OldCreateOrder = True
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -17,8 +18,14 @@ inherited frmRegister: TfrmRegister
     end
   end
   inherited Tabs: TPageControl
-    ActivePage = TabSheet2
+    ActivePage = TabSheet4
+    ExplicitWidth = 494
+    ExplicitHeight = 324
     inherited TabSheet1: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 27
+      ExplicitWidth = 486
+      ExplicitHeight = 293
       object Label1: TTntLabel
         Left = 0
         Top = 0
@@ -81,17 +88,12 @@ inherited frmRegister: TfrmRegister
         Height = 32
         Align = alBottom
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 1
-        DesignSize = (
-          486
-          32)
         object btnDelete: TTntButton
-          Left = 325
-          Top = 5
+          Left = 243
+          Top = 3
           Width = 161
           Height = 25
-          Anchors = [akRight, akBottom]
           Caption = 'Delete My Registration'
           TabOrder = 0
           OnClick = btnDeleteClick
@@ -101,10 +103,6 @@ inherited frmRegister: TfrmRegister
     object TabSheet3: TTabSheet
       Caption = 'TabSheet3'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label2: TTntLabel
         Left = 0
         Top = 0
@@ -126,10 +124,6 @@ inherited frmRegister: TfrmRegister
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblOK: TTntLabel
         Left = 0
         Top = 0
@@ -174,12 +168,22 @@ inherited frmRegister: TfrmRegister
     end
   end
   inherited pnlDockTop: TPanel
+    ExplicitWidth = 494
+    inherited tbDockBar: TToolBar
+      ExplicitLeft = 445
+    end
     inherited Panel1: TPanel
+      ExplicitWidth = 442
       inherited lblWizardTitle: TTntLabel
         Anchors = [akLeft, akTop, akRight]
       end
       inherited lblWizardDetails: TTntLabel
+        Width = 75
+        Height = 13
         Anchors = [akLeft, akTop, akRight]
+        AutoSize = True
+        ExplicitWidth = 75
+        ExplicitHeight = 13
       end
       inherited Image1: TImage
         Picture.Data = {00}

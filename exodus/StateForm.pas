@@ -25,8 +25,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls,
   XMLTag,  //JOPL XML
-  TntForms, //Unicode form
-  ExForm, Menus, TntMenus;
+  TntForms; //Unicode form
 
 const
     WS_NORMAL = 0;
@@ -34,12 +33,7 @@ const
     WS_MAXIMIZED = 2;
     WS_TRAY = 3;
 
-    AOE_DISCONNECTED = 'disconnected';
-    AOE_SHUTDOWN = 'shutdown';
-    AOE_AUTHED = 'authed';
-    AOE_STARTUP = 'startup';
-
-    AUTO_OPEN_OVERRIDE = 'auto-open-override';
+    FLASH_TIMER_INTERVAL = 500;
 type
 
     {
@@ -120,7 +114,7 @@ type
     TStateFormPrefsHelper = class
     public
         {wrappers around TPrefController methods, these introduce profiles to prefs}
-        procedure setWindowState(pKey: widestring; windowState: TXMLTag);
+        procedure setWindowState(windowState: TXMLTag);
         function  getWindowState(pKey: WideString; var windowState: TXMLTag): boolean;
         procedure setAutoOpenEvent(event: WideString; aoWindows: TXMLTagList; Profile: WideString='');
         function  getAutoOpenEvent(event: Widestring; var aoWindows: TXMLTagList; Profile: WideString=''): boolean;
@@ -140,9 +134,8 @@ type
     The default implementation saves/restores position and window "state"
     (min/max/tray or restored).
   }
-  TfrmState = class(TExForm)
+  TfrmState = class(TTntForm)
     procedure WMWindowPosChange(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
-
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
@@ -156,17 +149,16 @@ type
      _origPos: TPos;      //position we last loaded/saved to prefs
      _windowState: TWindowState; //min max or normal
      _stateRestored: boolean;
-     _skipWindowPosEvents: integer; //referenced counted flag to save position on pos chnage
+     _skipWindowPosHandling: boolean;
      _isNotifying: boolean; //is this form handling some notify event (like flashing)?
-
-
-    procedure NormalizePos(); //make us fit
+     _flasher: TTimer;
+     
+    procedure NormalizePos(); //
     procedure CenterOnMainformMonitor(var pos: TPos);
 
-    procedure StopWindowPosEvents();
-    procedure StartWindowPosEvents();
-    function skipWindowPosEvents(): boolean;
+    procedure setNotifying(newNotifyingState: boolean);
 
+    procedure OnFlashTim(Sender: TObject);
   protected
      procedure CreateParams(var Params: TCreateParams); override;
 
@@ -229,13 +221,10 @@ type
     procedure PersistWindowState();virtual;
 
     {
-        Can this window persist its data? Can implies should.
-        subclasses can use this to override prefs for
-        specific windows (ie always saving unread messaged)
+        Event fired when the form should handle flash notification
     }
-    function CanPersist(): boolean;virtual;
+    procedure OnFlash();virtual;
 
-    procedure ClearIsRestored();
   public
     {
         Show the window in its default configuration.
@@ -260,7 +249,7 @@ type
         @param notifyEvents - bitmapped flag of events to execute
     }
     procedure OnNotify(notifyEvents: integer);virtual;
-
+  published
     {
         Use the given persisted information to open a form as if the
         user had done it.
@@ -306,15 +295,14 @@ type
         This flag will be true if the form is handling some received
         notification event. Is set to false when the form stops
         notifying. Typically when the form receives focus.
-        this can be used when some window manager needs to change its
-        state based on the notifying state of all the windows it manages.
-        This is the "Flash until all windows are seen" senario
     }
-    property IsNotifying: boolean read _isNotifying write _isNotifying;
+    property IsNotifying: boolean read _isNotifying write setNotifying;
+
   end;
 
 var
-  restoringDesktopFlag: boolean;
+  frmState: TfrmState;
+
 
 implementation
 
@@ -325,19 +313,17 @@ uses
     debug,
     room,
     ChatWin,
+    msgqueue,
+
     unicode,
     jabber1,
     types,
     Session,
-    Notify,
     GnuGetText,
     ExUtils,
-    XMLUtils,
-    Dockable;
+    XMLUtils;
 
 class procedure TAutoOpenEventManager.onAutoOpenEvent(event: Widestring);
-type
-    tsfMeta= class of TfrmState;
 var
     i: integer;
     wTag: TXMLTag;
@@ -346,49 +332,53 @@ var
     useProfile: boolean;
     discovered: TWideStringList;
     AClass: TPersistentClass;
-    tsf: tsfMeta;
     prefHelper: TStateFormPrefsHelper;
-    RestoreDesktop: boolean;
-    
+
     function toggleEvent(event: widestring): WideString;
     begin
-        if (event = AOE_DISCONNECTED) then
-            Result := AOE_AUTHED
-        else
-            Result := AOE_STARTUP
+        if (event = 'disconnected') then
+            Result := 'authed'
+        else //if (event = 'shutdown') then
+            Result := 'startup'
+    end;
+
+    //should eb able to use the RTII method below but it not working
+    procedure AutoOpenFactory(autoOpenInfo: TXMLTag);
+    var
+        cName: WideString;
+    begin
+        cName := autoOpenInfo.Name;
+        if (cname = 'TfrmDebug') then
+            TfrmDebug.AutoOpenFactory(autoOpenInfo)
+        else if (cName = 'TfrmRoom') then
+            TfrmRoom.AutoOpenFactory(autoOpenInfo)
+        else if (cName = 'TfrmChat') then
+            TfrmChat.AutoOpenFactory(autoOpenInfo)
+        else if (cName = 'TfrmMsgQueue') then
+            TfrmMsgQueue.AutoOpenFactory(autoOpenInfo);
     end;
 
     procedure OpenWindow(autoOpenInfo: TXMLTag);
     begin
-        if (RestoreDesktop or (autoOpenInfo.GetAttribute(AUTO_OPEN_OVERRIDE) = 'true')) then
-        begin
-            if (discovered.IndexOf(autoOpenInfo.Name) <> -1) then
-                AClass := TPersistentClass(discovered.Objects[discovered.IndexOf(autoOpenInfo.Name)])
-            else begin
-                AClass := getClass(autoOpenInfo.Name);
-                discovered.AddObject(autoOpenInfo.Name, TObject(AClass)); //could be nil but that's OK
-            end;
-            try
-                tsf := TsfMeta(AClass);
-                tsf.AutoOpenFactory(autoOpenInfo);
-            except
-                //couldn't cast/get class info, make it nil in discovered list
-                if (discovered.IndexOf(autoOpenInfo.Name) <> -1) then
-                    discovered.Objects[discovered.IndexOf(autoOpenInfo.Name)] := nil;
-            end;
+        if (discovered.IndexOf(autoOpenInfo.Name) <> -1) then
+            AClass := TPersistentClass(discovered.Objects[discovered.IndexOf(autoOpenInfo.Name)])
+        else begin
+            AClass := getClass(autoOpenInfo.Name);
+            discovered.AddObject(autoOpenInfo.Name, TObject(AClass)); //could be nil but that's OK
         end;
+        if ((AClass <> nil) and AClass.InheritsFrom(TfrmState)) then
+            AutoOpenFactory(autoOpenInfo);
+//            TfrmState(AClass).AutoOpenFactory(wTag);
     end;
 begin
     prefHelper := TStateFormPrefsHelper.create();
-
-    if ((event = AOE_DISCONNECTED) or (event = AOE_SHUTDOWN)) then begin
+    if ((event='disconnected') or (event='shutdown')) then begin
         defaultList := TXMLTagList.Create();
         profileList := TXMLTagList.Create();
 
         //walk open forms and get auto-open tags from them
         for i := 0 to Screen.FormCount - 1 do begin
-            if (Screen.Forms[i].InheritsFrom(TfrmState)) then
-            begin
+            if (Screen.Forms[i].InheritsFrom(TfrmState)) then begin
                 wTag := TfrmState(Screen.Forms[i]).GetAutoOpenInfo(event, useProfile);
                 if (wTag <> nil) then begin
                     if (useProfile) then
@@ -400,16 +390,9 @@ begin
         end;
         prefHelper.setAutoOpenEvent(toggleEvent(event), profileList, MainSession.Profile.Name);
         prefHelper.setAutoOpenEvent(toggleEvent(event), defaultList);
-
-        profileList.Free();
-        defaultList.Free();
     end
-    //call appropriate auto open factories
-    else if ((event = AOE_STARTUP) or (event = AOE_AUTHED)) then begin
-        RestoreDesktop := MainSession.Prefs.getBool('restore_desktop');
-        
+    else if (((event='startup') or (event='authed')) and MainSession.Prefs.getBool('restore_desktop')) then begin
         discovered := TWideStringList.create();
-        restoringDesktopFlag := true;
 
         if (prefHelper.getAutoOpenEvent(event, profileList, MainSession.Profile.Name)) then
             for i := 0 to profileList.Count - 1 do
@@ -418,47 +401,30 @@ begin
         if (prefHelper.getAutoOpenEvent(event, defaultList)) then
             for i := 0 to defaultList.Count - 1 do
                 OpenWindow(defaultList[i]);
-
-        restoringDesktopFlag := false;
-        discovered.Free();
     end;
 end;
 
  {wrappers around TPrefController methods, these introduce profiles to prefs}
-procedure TStateFormPrefsHelper.setWindowState(pKey: Widestring; windowState: TXMLTag);
+procedure TStateFormPrefsHelper.setWindowState(windowState: TXMLTag);
 var
     rootTag: TXMLTag;
     sTag: TXMLTag;
     wTag:TXMLTag;
 begin
     if (not mainSession.Prefs.getRoot('ws', roottag)) then
-    begin
-        if (windowState = nil) then exit; //nothing to do
         rootTag := TXMLtag.create('ws');
-    end;
-    try
-        sTag := rootTag.GetFirstTag('state');
-        if (stag = nil) then
-        begin
-            if (windowState = nil) then exit; //nothing to do
-            sTag := rootTag.AddTag('state');
-        end;
 
-        wTag := sTag.GetFirstTag(pKey);
-        if (wTag <> nil) then
-            sTag.RemoveTag(wTag);
+    sTag := rootTag.GetFirstTag('state');
+    if (stag = nil) then
+        sTag := rootTag.AddTag('state');
+    wTag := sTag.GetFirstTag(windowState.Name);
+    if (wTag <> nil) then
+        sTag.RemoveTag(wTag);
 
-        if (windowState <> nil) then
-        begin
-            sTag.AddTag(TXMLTag.create(windowState)); //addtag adds a reference
-            MainSession.Prefs.SetRoot(rootTag);
-        end;
-    finally
-        rootTag.Free();
-    end;
-
+    sTag.AddTag(TXMLTag.create(windowState)); //addtag adds a reference
+    MainSession.Prefs.SetRoot(rootTag);
+    rootTag.Free();
 end;
-
 
 function  TStateFormPrefsHelper.getWindowState(pKey: WideString; var windowState: TXMLTag): boolean;
 var
@@ -468,18 +434,23 @@ begin
     Result := false;
     windowState := nil;
     if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
-    try
-        // We now own memory for rootTag.
-        wsTag := rootTag.GetFirstTag('state');
-        if (wsTag = nil) then exit;
 
-        windowState := wsTag.GetFirstTag(pKey);
-        Result := (windowState <> nil);
-        if (Result) then
-            windowState := TXMLTag.Create(windowState); //dupe memory so we can free rootTag.
-    finally
+    // We now own memory for rootTag.
+    wsTag := rootTag.GetFirstTag('state');
+    if (wsTag = nil) then begin
         rootTag.Free;
+        exit;
     end;
+
+    windowState := wsTag.GetFirstTag(pKey);
+    if (windowState <> nil) then begin
+        Result := true;
+        windowState := TXMLTag.Create(windowState); //dupe memory so we can free rootTag.
+    end
+    else
+        Result := false;
+
+    rootTag.Free;
 end;
 
 procedure TStateFormPrefsHelper.SetAutoOpenEvent(event: WideString; aoWindows: TXMLTagList; Profile: WideString='');
@@ -491,26 +462,21 @@ var
     tstr: WideString;
 begin
     if (not mainSession.Prefs.getRoot('ws', roottag)) then exit;
-
     aoTag := rootTag.GetFirstTag('auto-open');
     if (aoTag = nil) then
         aoTag := rootTag.AddTag('auto-open');
-
     tstr := 'event-' + event;
     if (Profile <> '') then
-        tstr := tstr + '-' + XMLUtils.MungeXMLName(Profile);
-
+        tstr := tstr + '-' + XMLUtils.MungeName(Profile);
     //replace if tag already exists...
     eTag := aoTag.GetFirstTag(tstr);
     if (eTag <> nil) then
         aoTag.RemoveTag(eTag);
-
-    if (aoWindows <> nil) and (aoWindows.Count > 0) then begin
+    if (aoWindows.Count > 0) then begin
         eTag := aoTag.AddTag(tstr);
         for i := 0 to aoWindows.Count - 1 do
             eTag.AddTag(aoWindows[i]);
     end;
-
     MainSession.Prefs.setRoot(rootTag);
     rootTag.Free();
 end;
@@ -526,22 +492,22 @@ begin
     Result := false;
     aoWindows := nil;
     if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
-
     aoTag := rootTag.GetFirstTag('auto-open');
     if (aoTag = nil) then exit;
 
     tstr := 'event-' + event;
     if (Profile <> '') then
-        tstr := tstr + '-' + XMLUtils.MungeXMLName(Profile);
-
+        tstr := tstr + '-' + XMLUtils.MungeName(Profile);
     eTag := aoTag.GetFirstTag(tstr);
-    if (eTag = nil) or (eTag.ChildCount = 0) then exit;
-
+    if (eTag = nil) then exit;
     aoWindows := TXMLTagList.Create();
     for i := 0 to eTag.ChildCount - 1 do
         aoWindows.Add(TXMLTag.Create(eTag.ChildTags[i]));
-
-    Result := true;
+    Result := aoWindows.Count > 0;
+    if (not Result) then begin
+        aoWindows.Free();
+        aoWindows := nil;
+    end;
 end;
 
 {---------------------------------------}
@@ -557,20 +523,12 @@ begin
     useProfile := false;
 end;
 
-procedure TfrmState.StopWindowPosEvents();
+{---------------------------------------}
+procedure TfrmState.setNotifying(newNotifyingState: boolean);
 begin
-    inc(_skipWindowPosEvents);
-end;
-
-procedure TfrmState.StartWindowPosEvents();
-begin
-    if (_skipWindowPosEvents > 0) then
-        dec(_skipWindowPosEvents);
-end;
-
-function TfrmState.skipWindowPosEvents(): boolean;
-begin
-    Result := (_skipWindowPosEvents > 0);
+//perhaps update if state changed?
+//    if (_isNotifying <> newNotifyingState) then begin
+        _isNotifying := newNotifyingState;
 end;
 
 function toRect(pos: TPos): TRect;
@@ -619,37 +577,23 @@ begin
     inherited CreateParams(Params);
     with Params do begin
         ExStyle := ExStyle or WS_EX_APPWINDOW;
-        //if not dockable or floating (parent = mainform), make the parent the app
-        if (not (self is TfrmDockable)) or (WndParent = Application.Mainform.Handle) then
-            WndParent := Application.Handle;
     end;
 end;
 
 {---------------------------------------}
 procedure TfrmState.FormCreate(Sender: TObject);
 begin
-    inherited;
     _stateRestored := false;
-    _skipWindowPosEvents := 0;
-
     //get state info from prefs
     // do translation magic
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
+    _skipWindowPosHandling := false;
 
-    //initial conditions for position and size, may be changed later
-    //when restoring state.
-    _pos.Left := Self.ExplicitLeft;
-    _pos.Top := Self.ExplicitTop;
-    _pos.Width := Self.ExplicitWidth;
-    _pos.Height := Self.ExplicitHeight;
-
-    CenterOnMainformMonitor(_pos);
-
-    _origPos.Left := _pos.Left;
-    _origPos.width := _pos.width;
-    _origPos.Top := _pos.Top;
-    _origPos.height := _pos.height;
+    _flasher := TTimer.Create(Application);
+    _flasher.Enabled := false;
+    _flasher.Interval := FLASH_TIMER_INTERVAL;
+    _flasher.OnTimer := OnFlashTim;
 end;
 
 
@@ -694,30 +638,23 @@ begin
             _windowState := wsMaximized;
         end;
     end;
+OutputDebugMsg('wmssyscommande: new state: ' + wsToString(_windowState));
     inherited;
 end;
 
 {---------------------------------------}
 procedure TfrmState.WMActivate(var msg: TMessage);
 begin
-    try
-        inherited; //hmm, shouldthis go first?
-        if (not skipWindowPosEvents()) and (Msg.WParamLo <> WA_INACTIVE) then
-        begin
-            // we are getting activated, bring to front
-            StopWindowPosEvents();
-            SetWindowPos(Self.Handle,
-                         HWND_BOTTOM,
-                         Self.Left, Self.Top, Self.Width, Self.Height,
-                         HWND_TOP);
-            StartWindowPosEvents();
-
-            if (self.Visible) then
-                gotActivate();
-        end;
-    except
-        // Possible exception when dealing with an extreme amount of windows
+    if (not _skipWindowPosHandling and (Msg.WParamLo <> WA_INACTIVE)) then begin
+        // we are getting activated
+        _skipWindowPosHandling := true;
+        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
+            Self.Width, Self.Height, HWND_TOP);
+        _skipWindowPosHandling := false;
+        if (self.Visible) then
+            gotActivate();
     end;
+    inherited;
 end;
 
 {---------------------------------------}
@@ -725,25 +662,22 @@ procedure TfrmState.WMWindowPosChange(var msg: TWMWindowPosChanging);
 begin
     //only allow window to come to top if activating. Don't bring it
     //to front if resizing in code somewhere.
-    if (skipWindowPosEvents()) then
+    if (not _skipWindowPosHandling) then
         msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
 
     inherited;
-
+    
     //save state if not
     //  floating
     //  not creating the form
     //  in normal window state
-    if (not skipWindowPosEvents() and
-        Self.Floating and
-        (not (fsCreating in Self.FormState)) and
-        (_windowState = wsNormal)) then
-    begin
+    if (not _skipWindowPosHandling and Self.Floating and (not (fsCreating in Self.FormState)) and (_windowState = wsNormal)) then begin
         _pos.Left := Self.Left;
         _pos.width := Self.Width;
         _pos.Top := Self.Top;
         _pos.height := Self.Height;
         _persistPos := true;
+OutputDebugMsg('WMWindowPosChange: updated position to: l:' + IntToStr(_pos.left) + ', t:' + IntToStr(_pos.Top) + ', h:' + IntToStr(_pos.Height) + ', w:' + IntToStr(_pos.Width));
     end;
 end;
 
@@ -752,8 +686,7 @@ procedure TfrmState.WMDisplayChange(var msg: TMessage);
 begin
     //check to make sure this is a floating window, if docked let parent deal
     if (Self.Floating) then
-        Self.MakeFullyVisible();
-    inherited;
+        checkAndCenterForm(Self);
 end;
 
 
@@ -768,50 +701,36 @@ procedure TfrmState.RestoreWindowState();
 var
     stateTag: TXMLTag;
     prefHelper: TStateFormPrefsHelper;
-    key: WideString;
 begin
-    if (not _stateRestored) then
-    begin
-        prefHelper := TStateFormPrefsHelper.create();
-        key := GetWindowStateKey();
-        if (CanPersist() and
-           (prefHelper.getWindowState(key, stateTag))) then
-        begin
-            StopWindowPosEvents();
-            Self.OnRestoreWindowState(stateTag);
-            StartWindowPosEvents();
-
-            stateTag.Free();
-        end
-        else prefHelper.setWindowState(key, nil); //clear out any persisted state
-
+    prefHelper := TStateFormPrefsHelper.create();
+    if (not _stateRestored) then begin
+        if (not MainSession.Prefs.getBool('restore_window_state') or
+           (not prefHelper.getWindowState(GetWindowStateKey(), stateTag))) then begin
+            stateTag := TXMLTag.create(GetWindowStateKey());
+//            Self.DefaultMonitor := dmMainForm; //open on the main forms monitor 
+           end;
+        _skipWindowPosHandling := true;
+        Self.OnRestoreWindowState(stateTag);
+        _skipWindowPosHandling := false;
+OutputDebugMsg('Restored window state. key: ' + GetWindowStateKey() + ', state: ' + stateTag.XML);
+        stateTag.Free();
         _stateRestored := true;
-        prefHelper.free();
     end;
-end;
-
-procedure TfrmState.ClearIsRestored();
-begin
-    _stateRestored := false;
+    prefHelper.free();
 end;
 
 procedure TfrmState.PersistWindowState();
 var
     stateTag: TXMLTag;
     prefHelper: TStateFormPrefsHelper;
-    key: widestring;
 begin
-        prefHelper := TStateFormPrefsHelper.create();
-        key := getWindowStateKey();
-        if (CanPersist()) then
-        begin
-            stateTag := TXMLTag.Create(key);
-            Self.OnPersistWindowState(stateTag);
-            prefHelper.setWindowState(key, stateTag);
-            stateTag.Free();
-        end
-        else prefHelper.setWindowState(key, nil); //clear it out
-        prefHelper.free();
+    prefHelper := TStateFormPrefsHelper.create();
+    stateTag := TXMLTag.Create(getWindowStateKey());
+    Self.OnPersistWindowState(stateTag);
+    prefHelper.setWindowState(stateTag);
+OutputDebugMsg('Persisting window state. key: ' + GetWindowStateKey() + ', state: ' + stateTag.XML);
+    stateTag.Free();
+    prefHelper.free();
 end;
 
 {
@@ -822,37 +741,29 @@ end;
 }
 procedure TfrmState.ShowDefault(bringtofront:boolean; dockOverride: string);
 begin
-    try
-        if (Self.Handle = 0) then exit; //nothing to do, we are fubared
-
+    if (not Self.Visible) then begin
         RestoreWindowState();
-
-        if (not Self.Showing) then
-        begin
-            StopWindowPosEvents();
-
-            if (_windowState = wsMinimized) then
-                ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-            else if (_windowState = wsMaximized) then
-                ShowWindow(Handle, SW_MAXIMIZE)
-            //otherwise our floating positions should be set, just show the window
-            //in-situ.
-            else SetWindowPos(Self.Handle,
-                              HWND_BOTTOM,
-                              _pos.Left, _pos.Top, _pos.Width, _pos.Height,
-                              SWP_NOMOVE + SWP_NOSIZE + SWP_NOACTIVATE + SWP_NOZORDER + SWP_SHOWWINDOW + SWP_NOSENDCHANGING);
-            Self.Visible := true;
-            StartWindowPosEvents();
-        end
-        else if (Self.WindowState = wsMinimized) and (not bringtofront) then
+        _skipWindowPosHandling := true;
+        if (_windowState = wsMinimized) then
             ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+        else if (_windowState = wsMaximized) then
+            ShowWindow(Handle, SW_MAXIMIZE)
+        else if(bringtofront) then begin
+            ShowWindow(Handle, SW_SHOWNORMAL);
+            Self.BringToFront;
+        end
         else
-            ShowWindow(Handle, SW_SHOWNOACTIVATE);
-
-        if (bringtofront) then
-            ForceForegroundWindow(Self.Handle);
-    except
-        // Possible exception when dealing with an extreme amount of windows
+            SetWindowPos(Self.Handle, HWND_BOTTOM, 0,0,0,0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
+        Self.Visible := true;
+        _skipWindowPosHandling := false;
+    end
+    else if (frmExodus.isMinimized() and not bringtofront) then
+        ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+    else if(not bringtofront) then
+        ShowWindow(Handle, SW_SHOWNOACTIVATE)
+    else begin
+        ShowWindow(Handle, SW_SHOWNORMAL);
+        Self.BringToFront;
     end;
 end;
 
@@ -860,8 +771,11 @@ procedure TfrmState.gotActivate();
 begin
     //this is going to be a problem if tray should flash
     //until *all* notified windows become active
-     StopFlash(Self);
-     isNotifying := false;
+    StopTrayAlert();
+
+    _flasher.enabled := false;
+    isNotifying := false;
+    OutputDebugMsg(Self.ClassName +  '.gotActivate');
 end;
 
 {
@@ -873,7 +787,7 @@ end;
 }
 function TfrmState.GetWindowStateKey() : WideString;
 begin
-    Result := XMLUtils.MungeXMLName(Self.ClassName);
+    Result := XMLUtils.MungeName(Self.ClassName);
 end;
 
 {
@@ -890,40 +804,32 @@ end;
 procedure TfrmState.OnRestoreWindowState(windowState : TXMLTag);
 begin
     _persistPos := true;
-    //pos is already set
-    if (windowState.GetAttribute('pos_w') <> '') then
-    begin
+    //center on parent
+    if (windowState.GetAttribute('pos_w') <> '') then begin
         _pos.Left := SafeInt(windowState.getAttribute('pos_l'));
         _pos.Top := SafeInt(windowState.getAttribute('pos_t'));
-
         //if window is fixed size, don't try to overwrite
-        if (Self.BorderStyle = bsSizeable) then
-        begin
+        if (Self.BorderStyle = bsSizeable) then begin
             _pos.height := SafeInt(windowState.getAttribute('pos_h'));
             _pos.width := SafeInt(windowState.getAttribute('pos_w'));
+        end else begin
+            _pos.height := Self.ExplicitHeight;
+            _pos.width := Self.ExplicitWidth;
         end;
-        normalizePos();
-    end;
-
-    //check to make sure this all looks right, handling corrupted prefs
-    if (_pos.Height < 30) and (_pos.width < 30) then
-    begin
+    end
+    else begin
+        _pos.Left := 0;
+        _pos.Top := 0;
+        _pos.Width := Self.ExplicitWidth;
         _pos.Height := Self.ExplicitHeight;
-        _pos.width := Self.ExplicitWidth;
         CenterOnMainformMonitor(_pos);
     end;
-    //skipping windowposchange handling, _skipWindowPosHandling is true during this event
-    SetWindowPos(Self.Handle,
-                 HWND_BOTTOM,
-                 _pos.Left, _pos.Top, _pos.Width, _pos.Height,
-                 SWP_NOACTIVATE or SWP_NOOWNERZORDER + SWP_NOSENDCHANGING);
-
-    //finally cache our initial pos
     _origPos.Left := _pos.Left;
     _origPos.width := _pos.width;
     _origPos.Top := _pos.Top;
     _origPos.height := _pos.height;
-
+    normalizePos();
+    SetWindowPos(Self.Handle, HWND_BOTTOM, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOACTIVATE or SWP_NOOWNERZORDER);
     _windowState := sToWindowState(windowState.GetAttribute('ws'));
 end;
 
@@ -967,19 +873,16 @@ var
 begin
 
     // Netmeeting hack
-    {JJF I see this all over the place but don't know what the hack is, esp
-    since netmeeting is handled through a plugin
-    TODO JJF ask Joe H.
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
-    }
+
     //get screnn coords and see if we fit, adjust size/position as needed
     // Make it slightly bigger to acccomodate PtInRect
 
     Self.DefaultMonitor := dmDesktop;
     dtop := Screen.MonitorFromRect(toRect(_pos)).WorkareaRect;
-    inc(dtop.Bottom);
-    inc(dtop.Right);
+    inc(dtop.Bottom);// := dtop.Bottom + 1;
+    inc(dtop.Right);// := dtop.Right + 1;
 
     cp.X := _pos.left;
     cp.Y := _pos.Top;
@@ -989,7 +892,7 @@ begin
     cp.Y := _pos.Top + _pos.Height;
     ok := ok and PtInRect(dtop, cp);
 
-    if (not ok) then begin
+    if (ok = false) then begin
         //we had to move this window as it won't fit in our desktop.
         //don't save new coords.
         _persistPos := false;
@@ -999,8 +902,8 @@ end;
 
 procedure TfrmState.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-    inherited;
     PersistWindowState();
+    _flasher.Enabled := false;  //stop flashing
 end;
 
 function TfrmState.getPosition(): TRect;
@@ -1008,30 +911,30 @@ begin
     Result := Bounds(_pos.Left, _pos.Top, _pos.Width, _pos.Height);
 end;
 
+procedure TfrmState.OnFlash();
+begin
+    FlashWindow(Self.Handle, true)
+end;
+
+procedure TfrmState.OnFlashTim(Sender: TObject);
+begin
+    if (not Self.Active and isNotifying and MainSession.prefs.GetBool('notify_flasher')) then
+        onFlash()
+    else
+        _flasher.Enabled := false;  //stop flashing
+end;
+
 procedure TfrmState.OnNotify(notifyEvents: integer);
 begin
-    //don't handle docked
-    isNotifying := isNotifying or ((notifyEvents and PrefController.notify_flash) <> 0);
-    if (Self.Floating) then
-    begin
-        if ((notifyEvents and notify_front) <> 0) then
-            showDefault(true) //bring us to front
-        else if (isNotifying) then //notify only if not bringtofront
-        begin 
-            if (MainSession.prefs.GetBool('notify_flasher')) then
-                Notify.StartFlash(Self)
-            else
-                FlashWindow(Self.Handle, true);
-        end;
-    end;
+     if (Self.Floating and ((notifyEvents and notify_front) > 0)) then begin
+        ShowWindow(Self.Handle, SW_SHOWNORMAL);
+        Self.bringtofront();
+     end
+     else if ((notifyEvents and PrefController.notify_flash) > 0) then begin
+        isNotifying := true;
+        OnFlash(); //flash once
+        _flasher.Enabled := true; //OnFlash will handle rest
+     end;
 end;
-
-function TfrmState.CanPersist(): boolean;
-begin
-    Result := MainSession.Prefs.getBool('restore_window_state');
-end;
-
-initialization
-    restoringDesktopFlag := false;
 
 end.

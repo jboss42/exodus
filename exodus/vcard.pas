@@ -26,10 +26,10 @@ uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls,
-    TntComCtrls, ExtDlgs, ExForm, TntForms, ExFrame;
+    TntComCtrls, ExtDlgs;
 
 type
-  TfrmVCard = class(TExForm)
+  TfrmVCard = class(TForm)
     Splitter1: TSplitter;
     PageControl1: TTntPageControl;
     TabSheet1: TTntTabSheet;
@@ -182,7 +182,7 @@ begin
     _vcard := TXMLVCard.Create();
 
     tmps := MainSession.generateID();
-    iq := TJabberIQ.Create(MainSession, tmps, Callback, MainSession.Prefs.getInt('vcard_iq_timeout'));
+    iq := TJabberIQ.Create(MainSession, tmps, Callback);
     iq.qTag.Name := 'VCARD';
     iq.Namespace := 'vcard-temp';
     iq.iqType := 'get';

@@ -23,7 +23,6 @@
 **/
 
 /*
-    2007-11-02 - Modified install script to work with Gooogle code repository.
     2004-03-29 - Added MAP file to daily build installers.
     2004-02-11 - Lazarus Long <lazarus (dot) long (at) bigfoot (dot) com>
                 (all changes were made implying the usage of a stock 2.0 version
@@ -185,12 +184,11 @@ REAL STUFF STARTS HERE
 
 /* PLUGIN URLS */
 !define PLUGINS_DIR "plugins"
-!define GOOGLECODE_DOWNLOAD_DIR "files"
 !ifdef DAILY
      ; BRANDING: Change this PATH if different
     !define PLUGINS_DOWNLOAD_PATH "daily/${PLUGINS_DIR}"
 !else
-    !define PLUGINS_DOWNLOAD_PATH "${GOOGLECODE_DOWNLOAD_DIR}"
+    !define PLUGINS_DOWNLOAD_PATH "${PLUGINS_DIR}"
 !endif
 
 
@@ -202,9 +200,6 @@ REAL STUFF STARTS HERE
 !define LIBIDN "libidn"
 !define SSLEAY "ssleay32"
 !define LIBEAY "libeay32"
-!define SQLITE "sqlite3"
-!define ICUIN "icuin38"
-!define ICUUC "icuuc38"
 !define RICHED "riched20"
 !define VCL "..\redist\vcl100.bpl"
 !define RTL "..\redist\rtl100.bpl"
@@ -249,7 +244,7 @@ REAL STUFF STARTS HERE
 !ifdef STAGE
     !define HOME_URL "http://192.168.1.1/stage"
 !else
-    !define HOME_URL "http://exodus.googlecode.com"
+    !define HOME_URL "http://exodus.jabberstudio.org"
 !endif
 
 /*
@@ -444,9 +439,6 @@ Section Exodus SEC_Exodus
     File "${LIBEAY}${DLL_EXTENSION}";
     File "${VCL}"
     File "${RTL}"
-    File "${SQLITE}${DLL_EXTENSION}"
-    File "${ICUIN}${DLL_EXTENSION}"
-    File "${ICUUC}${DLL_EXTENSION}"
 
     ; Daily builds should include the MAP file to get detailed AV reports.
     !ifdef DAILY
@@ -845,9 +837,6 @@ Section "Uninstall"
     Delete /REBOOTOK "$INSTDIR\${BRANDING_FILE}${XML_EXTENSION}"
     Delete /REBOOTOK "$INSTDIR\${LIBEAY}${DLL_EXTENSION}"
     Delete /REBOOTOK "$INSTDIR\${SSLEAY}${DLL_EXTENSION}"
-    Delete /REBOOTOK "$INSTDIR\${SQLITE}${DLL_EXTENSION}"
-    Delete /REBOOTOK "$INSTDIR\${ICUIN}${DLL_EXTENSION}"
-    Delete /REBOOTOK "$INSTDIR\${ICUUC}${DLL_EXTENSION}"
 
     ; MUST REMOVE UNINSTALLER, too
     Delete /REBOOTOK "$INSTDIR\${PRODUCT_UNINSTALLER}${EXEC_EXTENSION}"

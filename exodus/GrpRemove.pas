@@ -22,10 +22,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls, TntStdCtrls, ExForm, TntForms, ExFrame;
+  Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
 
 type
-  TfrmGrpRemove = class(TExForm)
+  TfrmGrpRemove = class(TForm)
     frameButtons1: TframeButtons;
     optMove: TTntRadioButton;
     cboNewGroup: TTntComboBox;
@@ -57,7 +57,7 @@ implementation
 
 {$R *.dfm}
 uses
-    JabberUtils, ExUtils,  GnuGetText, JabberConst, ContactController, XMLTag, IQ, Session, S10n;
+    JabberUtils, ExUtils,  GnuGetText, JabberConst, NodeItem, Roster, XMLTag, IQ, Session, S10n;
 
 const
     sRemoveContacts = 'Remove %d contacts';
@@ -82,8 +82,7 @@ begin
         end
         else begin
             Caption := WideFormat(_(sRemoveGroup), [grp]);
-             { TODO : Roster refactor }
-            //MainSession.Roster.AssignGroups(cboNewGroup.Items);
+            MainSession.Roster.AssignGroups(cboNewGroup.Items);
             cboNewGroup.Items.Delete(cboNewGroup.Items.IndexOf(grp));
             cboNewGroup.ItemIndex := 0;
         end;
@@ -94,69 +93,68 @@ end;
 
 {---------------------------------------}
 procedure TfrmGrpRemove.frameButtons1btnOKClick(Sender: TObject);
-//var
-//    iq: TXMLTag;
-//    i, act: integer;
-//    cur_jid: Widestring;
-//    ri: TJabberRosterItem;
+var
+    iq: TXMLTag;
+    i, act: integer;
+    cur_jid: Widestring;
+    ri: TJabberRosterItem;
 begin
-   { TODO : Roster refactor }
-//    if ((cur_grp <> '') and (ct_list.Count = 0)) then
-//        ct_list := MainSession.roster.GetGroupItems(cur_grp, false);
+    if ((cur_grp <> '') and (ct_list.Count = 0)) then
+        ct_list := MainSession.roster.GetGroupItems(cur_grp, false);
 
-//    if (optNuke.Checked) then begin
-//        // Remove the people from my roster
-//
-//        act := 0;
-//        if (chkUnSub.Checked) and (chkUnsubed.Checked) then
-//            act := 1
-//        else if (chkUnSub.Checked) then
-//            act := 2
-//        else if (chkUnsubed.Checked) then
-//            act := 3;
-//
-//        for i := 0 to ct_list.Count - 1 do begin
-//            cur_jid := TJabberRosterItem(ct_list[i]).jid.jid;
-//            case act of
-//            0: begin
-//                ri := TJabberRosterItem(ct_list[i]);
-//                if (ri.IsInGroup(cur_grp)) then
-//                   ri.DelGroup(cur_grp);
-//                ri.update();
-//              end;
-//
-//            1: begin
-//                // send a subscription='remove'
-//                iq := TXMLTag.Create('iq');
-//                with iq do begin
-//                    setAttribute('type', 'set');
-//                    setAttribute('id', MainSession.generateID);
-//                    with AddTag('query') do begin
-//                        setAttribute('xmlns', XMLNS_ROSTER);
-//                        with AddTag('item') do begin
-//                            setAttribute('jid', cur_jid);
-//                            setAttribute('subscription', 'remove');
-//                        end;
-//                    end;
-//                end;
-//                MainSession.SendTag(iq);
-//            end;
-//            2: SendUnsubscribe(cur_jid, MainSession);
-//            3: SendUnsubscribed(cur_jid, MainSession);
-//        end;
-//        end;
-//    end
-//    else begin
-//        // Move all contacts in this group to the new group
-//        for i := 0 to ct_list.Count - 1 do begin
-//            ri := TJabberRosterItem(ct_list[i]);
-//            if (ri.IsInGroup(cur_grp)) then
-//                ri.DelGroup(cur_grp);
-//            ri.AddGroup(cboNewGroup.Text);
-//            ri.update();
-//        end;
-//    end;
-//    Self.Close;
+    if (optNuke.Checked) then begin
+        // Remove the people from my roster
+
+        act := 0;
+        if (chkUnSub.Checked) and (chkUnsubed.Checked) then
+            act := 1
+        else if (chkUnSub.Checked) then
+            act := 2
+        else if (chkUnsubed.Checked) then
+            act := 3;
+
+        for i := 0 to ct_list.Count - 1 do begin
+            cur_jid := TJabberRosterItem(ct_list[i]).jid.jid;
+            case act of
+            0: begin
+                ri := TJabberRosterItem(ct_list[i]);
+                if (ri.IsInGroup(cur_grp)) then
+                   ri.DelGroup(cur_grp);
+                ri.update();
+              end;
+
+            1: begin
+                // send a subscription='remove'
+                iq := TXMLTag.Create('iq');
+                with iq do begin
+                    setAttribute('type', 'set');
+                    setAttribute('id', MainSession.generateID);
+                    with AddTag('query') do begin
+                        setAttribute('xmlns', XMLNS_ROSTER);
+                        with AddTag('item') do begin
+                            setAttribute('jid', cur_jid);
+                            setAttribute('subscription', 'remove');
+                        end;
+                    end;
+                end;
+                MainSession.SendTag(iq);
+            end;
+            2: SendUnsubscribe(cur_jid, MainSession);
+            3: SendUnsubscribed(cur_jid, MainSession);
+        end;
+        end;
+    end
+    else begin
+        // Move all contacts in this group to the new group
+        for i := 0 to ct_list.Count - 1 do begin
+            ri := TJabberRosterItem(ct_list[i]);
+            if (ri.IsInGroup(cur_grp)) then
+                ri.DelGroup(cur_grp);
+            ri.AddGroup(cboNewGroup.Text);
+            ri.update();
+        end;
+    end;
+    Self.Close;
 end;
 
 procedure TfrmGrpRemove.optClick(Sender: TObject);

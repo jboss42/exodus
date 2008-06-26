@@ -24,36 +24,34 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls,
-  TntComCtrls, TntExtCtrls, ExNumericEdit, ExGroupBox, TntForms, ExFrame,
-  ExBrandPanel, Unicode;
+  TntComCtrls, TntExtCtrls, ExNumericEdit;
 
 type
   TfrmPrefPresence = class(TfrmPrefPanel)
-    ExBrandPanel1: TExBrandPanel;
-    chkClientCaps: TTntCheckBox;
-    chkRoomJoins: TTntCheckBox;
-    chkPresenceSync: TTntCheckBox;
-    ExGroupBox1: TExGroupBox;
-    rbAllPres: TTntRadioButton;
-    rbLastPres: TTntRadioButton;
-    rbNoPres: TTntRadioButton;
-    ExGroupBox2: TExGroupBox;
     lstCustomPres: TTntListBox;
+    pnlCustomPresButtons: TPanel;
     btnCustomPresAdd: TTntButton;
     btnCustomPresRemove: TTntButton;
     btnCustomPresClear: TTntButton;
+    Panel1: TPanel;
+    chkPresenceSync: TTntCheckBox;
+    lblPresTracking: TTntLabel;
+    cboPresTracking: TTntComboBox;
+    Label1: TTntLabel;
+    chkClientCaps: TTntCheckBox;
     btnDefaults: TTntButton;
-    pnlProperties: TExBrandPanel;
+    GroupBox1: TTntGroupBox;
     Label11: TTntLabel;
-    txtCPTitle: TTntEdit;
     Label12: TTntLabel;
-    txtCPStatus: TTntEdit;
     Label13: TTntLabel;
-    cboCPType: TTntComboBox;
     Label14: TTntLabel;
-    txtCPPriority: TExNumericEdit;
     lblHotkey: TTntLabel;
+    txtCPTitle: TTntEdit;
+    txtCPStatus: TTntEdit;
+    cboCPType: TTntComboBox;
+    txtCPPriority: TExNumericEdit;
     txtCPHotkey: THotKey;
+    chkRoomJoins: TTntCheckBox;
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);
@@ -66,7 +64,6 @@ type
     { Private declarations }
     _pres_list: TList;
     _no_pres_change: boolean;
-    _show_list: TWideStringList;
 
     procedure clearPresList();
   public
@@ -82,7 +79,7 @@ const
     sPrefsDfltPres = 'Untitled Presence';
     sPrefsClearPres = 'Clear all custom presence entries?';
     sPrefsDefaultPres = 'Restore default presence entries?';
-    sPrefsDupHotKey = 'Hotkey is already used for presence %s';
+    sPrefsDupHotKey = 'Hot key is already used for presence %s';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -90,54 +87,24 @@ const
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils;
+    GnuGetText, Unicode, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.LoadPrefs();
 var
-    i, pos: integer;
+    i: integer;
     ws: TWidestringlist;
     cp: TJabberCustomPres;
-
-    procedure BrandOption(value: Widestring; brand: boolean);
-    begin
-        if brand then begin
-            _show_list.Add(value);
-            Inc(pos);
-        end else begin
-            cboCPType.Items.Delete(pos);
-        end;
-    end;
 begin
     inherited;
 
     with MainSession.Prefs do begin
-        //jjf todo check state
-        i := GetInt('pres_tracking');
-        if (i = 2) then
-            rbNoPres.Checked := true
-        else if (i = 1) then
-            rbLastPres.Checked := true
-        else
-            rbAllPres.Checked := true;
-
         // Custom Presence options
         lstCustomPres.Items.Clear();
-        //Setup visible show list
-        pos := 0;
-        _show_list := TWideStringList.Create();
-        BrandOption('chat', getBool('show_presence_menu_chat'));
-        BrandOption('', getBool('show_presence_menu_available'));
-        BrandOption('away', getBool('show_presence_menu_away'));
-        BrandOption('xa', getBool('show_presence_menu_xa'));
-        BrandOption('dnd', getBool('show_presence_menu_dnd'));
-        
         ws := getAllPresence();
         _pres_list := TList.Create();
-
         for i := 0 to ws.Count - 1 do begin
             cp := TJabberCustomPres(ws.Objects[i]);
-            if _show_list.IndexOf(cp.Show) = -1 then continue;
             lstCustomPres.Items.Add(cp.title);
             _pres_list.Add(cp);
         end;
@@ -151,13 +118,6 @@ var
     cp: TJabberCustomPres;
 begin
     with MainSession.Prefs do begin
-        i := 0;
-        if (rbNoPres.Checked) then
-            i := 2
-        else if (rbLastPres.Checked) then
-            i := 1;
-        SetInt('pres_tracking', i);
-
         // Custom presence list
         RemoveAllPresence();
         for i := 0 to _pres_list.Count - 1 do begin
@@ -185,23 +145,21 @@ end;
 {---------------------------------------}
 procedure TfrmPrefPresence.FormDestroy(Sender: TObject);
 begin
-    inherited;
+  inherited;
     clearPresList();
     _pres_list.Free();
-    _show_list.Free();
 end;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.lstCustomPresClick(Sender: TObject);
 var
     e: boolean;
-    idx: integer;
 begin
     // show the props of this presence object
     _no_pres_change := true;
 
     e := ((lstCustomPres.Items.Count > 0) and (lstCustomPres.ItemIndex >= 0));
-    pnlProperties.Enabled := e;
+    GroupBox1.Enabled := e;
 
     if (not e) then begin
         txtCPTitle.Text := '';
@@ -209,14 +167,18 @@ begin
         txtCPPriority.Text := '0';
     end
     else with TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]) do begin
-        idx := _show_list.IndexOf(show);
-        if idx <> -1 then begin
-            cboCPType.ItemIndex := idx;
-            txtCPTitle.Text := title;
-            txtCPStatus.Text := status;
-            txtCPPriority.Text := IntToStr(priority);
-            txtCPHotkey.HotKey := TextToShortcut(hotkey);
-        end;
+
+        if (show = 'chat') then cboCPType.ItemIndex := 0
+        else if (show = 'away') then cboCPType.Itemindex := 2
+        else if (show = 'xa') then cboCPType.ItemIndex := 3
+        else if (show = 'dnd') then cboCPType.ItemIndex := 4
+        else
+            cboCPType.ItemIndex := 1;
+
+        txtCPTitle.Text := title;
+        txtCPStatus.Text := status;
+        txtCPPriority.Text := IntToStr(priority);
+        txtCPHotkey.HotKey := TextToShortcut(hotkey);
     end;
     _no_pres_change := false;
 end;
@@ -238,7 +200,13 @@ begin
         status := txtCPStatus.Text;
         priority := SafeInt(txtCPPriority.Text);
         hotkey := ShortCutToText(txtCPHotkey.HotKey);
-        show := _show_list[cboCPType.ItemIndex];
+        case cboCPType.ItemIndex of
+        0: show := 'chat';
+        1: show := '';
+        2: show := 'away';
+        3: show := 'xa';
+        4: show := 'dnd';
+        end;
         if (title <> lstCustomPres.Items[i]) then
             lstCustomPres.Items[i] := title;
         if (isDuplicateHotKey(hotkey, idx)) then begin

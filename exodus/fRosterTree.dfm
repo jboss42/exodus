@@ -1,8 +1,9 @@
-inherited frameTreeRoster: TframeTreeRoster
+object frameTreeRoster: TframeTreeRoster
+  Left = 0
+  Top = 0
   Width = 172
   Height = 272
-  ExplicitWidth = 172
-  ExplicitHeight = 272
+  TabOrder = 0
   object treeRoster: TTreeView
     Left = 0
     Top = 0

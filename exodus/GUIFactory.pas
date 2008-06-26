@@ -21,7 +21,7 @@ unit GUIFactory;
 
 interface
 uses
-    XMLTag, Unicode, Exodus_TLB,
+    XMLTag, Unicode,
     Forms, Classes, SysUtils;
 
 type
@@ -29,11 +29,9 @@ type
     private
         _js: TObject;
         _cb: integer;
-        _icb: integer;
         _blockers: TWidestringlist;
     published
         procedure SessionCallback(event: string; tag: TXMLTag);
-        procedure SessionItemCallback(event: string; item: IExodusItem);
     public
         constructor Create;
         destructor Destroy; override;
@@ -47,12 +45,11 @@ type
 implementation
 
 uses
-    RosterImages, PrefController,
-    Room,
+    RosterImages, PrefController, MsgRecv, Room, Bookmark,  
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
-    InvalidRoster, ChatWin, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
-    JabberID, Session, JabberMsg, windows, DisplayName,
-    ChatController, Presence, Stateform, COMExodusItem;
+    InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
+    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg, windows, EventQueue, DisplayName,
+    ChatController, Presence;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
@@ -80,58 +77,33 @@ begin
     _js := js;
     s := TJabberSession(js);
     _cb := s.RegisterCallback(SessionCallback, '/session');
-    _icb := s.RegisterCallback(SessionItemCallback, '/session');
-    
     _blockers.Clear();
     s.Prefs.fillStringlist('blockers', _blockers);
-end;
-
-procedure TGUIFactory.SessionItemCallback(event: string; item: IExodusItem);
-begin
-  if (event = '/session/gui/conference') then begin
-        getDockManager().ShowDockManagerWindow(true, false);
-
-        StartRoom(item.uid,
-                  item.value['nick'],
-                  item.value['password'],
-                  true,
-                  false,
-                  (item.value['reg_nick'] = 'true'));
-    end
 end;
 
 {---------------------------------------}
 procedure TGUIFactory.SessionCallback(event: string; tag: TXMLTag);
 var
-//    r,
-    i: integer;
+    r, i: integer;
     sjid: Widestring;
     tmp_jid: TJabberID;
     chat: TfrmChat;
     sub: TfrmSubscribe;
-    item: IExodusItem;
+    ri: TJabberRosterItem;
+    ir: TfrmInvalidRoster;
+    e: TJabberEvent;
     msg: TJabberMessage;
-    p: TJabberPres;
- //   ri: TJabberRosterItem;
- //   ir: TfrmInvalidRoster;
- //JJF msgqueue refactor
     c: TChatController;
-//    e: TJabberEvent;
-    itemList: IExodusItemList;
+    p: TJabberPres;
 begin
     // check for various events to start GUIS
-{** TODO : Roster refactor
     if (event = '/session/gui/conference-props') then begin
         ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'));
     end
     else if (event = '/session/gui/conference-props-rename') then begin
         ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'), true);
     end
-  else if (event = '/session/gui/conference') then begin
-**}
-  if (event = '/session/gui/conference') then begin
-        getDockManager().ShowDockManagerWindow(true, false);
-
+    else if (event = '/session/gui/conference') then begin
         StartRoom(tag.GetAttribute('jid'),
                   tag.GetBasicText('nick'),
                   tag.GetBasicText('password'),
@@ -142,54 +114,110 @@ begin
     else if (event = '/session/gui/contact') then begin
         // new outgoing message/chat window
         tmp_jid := TJabberID.Create(tag.getAttribute('jid'));
-        getDockManager().ShowDockManagerWindow(true, false);
-        StartChat(tmp_jid.jid, tmp_jid.resource, true);
+
+        r := MainSession.Prefs.getInt(P_CHAT);
+        //0 -> A new one to one chat window
+        //1 -> An instant message window
+        //2 -> A new or existing chat window
+        ri := MainSession.Roster.Find(tmp_jid.jid);
+        if (ri <> nil) then begin
+            if (not ri.IsNative) then begin
+                if (not ri.IsOnline) then begin
+                    MessageBoxW(Application.Handle, PWideChar(_(sCannotOffline)), PWideChar(PrefController.getAppInfo.Caption), MB_OK);
+                    exit;
+                end;
+            end;
+        end;
+
+        if ((r = 0) or (r = 2)) then begin
+            if (tmp_jid.resource <> '') then
+                StartChat(tmp_jid.jid, tmp_jid.resource, true)
+            else
+                StartChat(tmp_jid.jid, '', true);
+        end
+        else if (r = 1) then 
+            StartMsg(tmp_jid.jid);
+
         tmp_jid.Free();
     end
     else if (event = '/session/gui/chat') then begin
-        // New Chat Window
-        tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-        try
-            //bail if blocked
-            if (MainSession.IsBlocked(tmp_jid)) then exit;
-            //show window but don't bring it to front. Let notifications do that
-            chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
-            if (chat <> nil) then begin
-                msg := TJabberMessage.Create(tag);
-                if (((msg.Priority = high) or (msg.Priority = low)) and
-                   (MainSession.Prefs.getInt('notify_priority_chatactivity') > 0))  then
+        // if we are DND, or this is an offline msg, then possibly queue it,
+        // depending on prefs.
+        if ((MainSession.Prefs.getBool('queue_dnd_chats') and
+            (MainSession.Show = 'dnd')) or
+           (MainSession.Prefs.getBool('queue_offline') and
+            (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil))) then begin
+            // queue the chat window. Event now owned by msg queue, don't free
+            RenderEvent(CreateJabberEvent(tag));
+        end
+        else if ((MainSession.Prefs.getBool('queue_not_avail') and
+                ((MainSession.Show = 'away') or
+                 (MainSession.Show = 'xa') or
+                 (MainSession.Show = 'dnd'))) or
+                (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil)) then begin
+            // queue the chat window. Event now owned by msg queue, don't free
+            RenderEvent(CreateJabberEvent(tag));
+        end
+        else begin
+            // New Chat Window
+            tmp_jid := TJabberID.Create(tag.getAttribute('from'));
+            if (not MainSession.IsBlocked(tmp_jid)) then begin
+                //show window but don't bring it to front. Let notifications do that
+                chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
+                if (chat <> nil) then begin
+                  msg := TJabberMessage.Create(tag);
+                  if (((msg.Priority = high) or (msg.Priority = low)) and (MainSession.Prefs.getInt('notify_priority_chatactivity') > 0))  then
                     DoNotify(chat, 'notify_priority_chatactivity',  GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyChat) +
-                             chat.DisplayName, RosterTreeImages.Find('contact'))
-                else
+                         chat.DisplayName, RosterTreeImages.Find('contact'))
+                  else
                     DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
-                             chat.DisplayName, RosterTreeImages.Find('contact'));
-                FreeAndNil(msg);
+                         chat.DisplayName, RosterTreeImages.Find('contact'));
+                  FreeAndNil(msg);
+                end;
             end;
-        finally
             tmp_jid.Free;
         end;
-
-{** JJF msgqueue refactor
-        end;
-**}
     end
-    //this cannot be called now, windows are always created therefore
     else if (event = '/session/gui/update-chat') then begin
-        tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-        c := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
-        chat := nil;
-        if (c <> nil) then
-            chat := TfrmChat(c.Window);
-        if (chat = nil) then
-        begin
-            chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
-            if (chat <> nil) then
-                DoNotify(chat, 'notify_newchat', _(sNotifyChat) + chat.DisplayName,
-                         RosterTreeImages.Find('contact'));
-        end;
-
-    tmp_jid.Free;
+      tmp_jid := TJabberID.Create(tag.getAttribute('from'));
+       //Delayed messages processing
+       if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil) then begin
+         //Check the status of message queue for the chat controller
+         c := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
+         if (c <> nil) then begin
+           //First new delayed messate, show queue ant notifications
+           if (c.msg_queue.Count = 1) then begin
+             DoNotify(showMsgQueue, 'notify_newchat', _('Chat with ') + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid), RosterTreeImages.Find('contact'));
+           end;
+         end;
+         MainSession.EventQueue.SaveEvents();
+       end
+       else begin
+        //If not delayed messages, it was queued due to user
+        //being in not Available state, check current presence.
+        if ((MainSession.Show <> 'away') and
+            (MainSession.Show <> 'xa') and
+            (MainSession.Show <> 'dnd')) then
+             chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
+                if (chat <> nil) then begin
+                   DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
+                   chat.DisplayName, RosterTreeImages.Find('contact'));
+                end;
+       end;
+       tmp_jid.Free;
     end
+    else if (event = '/session/gui/headline') then begin
+        e := CreateJabberEvent(tag);
+        //event is now referenced by msg queue. do not free
+        MainSession.EventQueue.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
+    end
+
+    else if (event = '/session/gui/msgevent') then begin
+        // New Msg-Event style window
+        //event is now referenced by msg queue. do not free
+        RenderEvent(CreateJabberEvent(tag));
+    end
+
     else if (event = '/session/gui/no-inband-reg') then begin
         if (MainSession.Prefs.getBool('brand_show_in_band_registration_warning')) then begin
             if (MessageDlgW(_('This server does not advertise support for in-band registration. Try to register a new account anyway?'),
@@ -209,15 +237,12 @@ begin
 
     else if (event = '/session/error/presence') then begin
         // Presence errors
-{** TODO : Roster refactor
-** move to simplemessagedisplay?
         ri := MainSession.Roster.Find(tag.GetAttribute('from'));
         if ((ri <> nil) and
         MainSession.Prefs.getBool('roster_pres_errors')) then begin
             ir := getInvalidRoster();
             ir.AddPacket(tag);
         end;
-**}
     end
 
     else if (event = '/session/error/prefs-write') then begin
@@ -243,9 +268,10 @@ begin
         tmp_jid := TJabberID.Create(sjid);
         sjid := tmp_jid.getDisplayJID();
 
-        item := MainSession.ItemController.GetItem(sjid);
-        if (item <> nil) then begin
-            if ((item.value['Subscription'] = 'from') or (item.value['Subscription'] = 'both')) then
+        ri := MainSession.Roster.Find(sjid);
+
+        if (ri <> nil) then begin
+            if ((ri.subscription = 'from') or (ri.subscription = 'both')) then
                 exit;
         end;
 
@@ -263,25 +289,9 @@ begin
         end
         else begin
             sub := TfrmSubscribe.Create(Application);
-            sub.setup(tmp_jid, item, tag);
+            sub.setup(tmp_jid, ri, tag);
         end;
         tmp_jid.Free();
-    end
-    else if (event = '/session/authenticated') then
-    begin
-        //fire off autocreate
-
-        //re-load authed desktop
-        TAutoOpenEventManager.onAutoOpenEvent('authed');
-
-        //autojoin rooms
-        itemList := MainSession.ItemController.GetItemsByType(EI_TYPE_ROOM);
-        for i := 0 to itemList.Count - 1 do
-        begin
-            if (itemList.Item[i].value['autojoin'] = 'true') then
-                //yay for single threaded, this is essentially a long function call lol
-                mainSession.FireEvent('/session/gui/conference', itemList.Item[i]);
-        end;
     end;
 end;
 

@@ -25,7 +25,7 @@ uses
     IQ, XMLTag, Unicode,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls,
-    fXData, TntForms, ExFrame;
+    fXData;
 
 const
     WM_NUS_CONNECT = WM_USER + 5400;
@@ -105,7 +105,7 @@ function ShowNewUserWizard(): integer;
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, fTopLabel, JabberConst, Jabber1, LoginWindow,   
+    GnuGetText, fTopLabel, JabberConst, Jabber1, RosterWindow,   
     WebGet, XMLParser, PrefController, Session, ExUtils;
 
 const
@@ -555,7 +555,7 @@ begin
         // make sure we don't try to reconnect underneath the hood:
         frmExodus.CancelConnect();
         frmExodus.timReconnect.Enabled := false;
-        GetLoginWindow().ToggleGUI(lgsDisconnected);
+        frmRosterWindow.ToggleGUI(gui_disconnected);
     end;
 
     end;

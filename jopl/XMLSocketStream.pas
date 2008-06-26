@@ -93,13 +93,13 @@ type
         {$ifdef INDY9}
         function VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
         {$endif}
-        procedure SendXML(xml: Widestring); override;
+
     public
         constructor Create(root: String); override;
         destructor Destroy; override;
 
         procedure Connect(profile: TJabberProfile); override;
-
+        procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
         function  isSSLCapable(): boolean; override;
         procedure EnableSSL(); override;
@@ -178,7 +178,6 @@ var
     newLen : integer;
 begin
     {Get memory for the string}
-    p := nil;
     newLen := WideCharToMultiByte(  CP_UTF8,  0,  pw,  -1,  p,  0,  nil,  nil  );
     //iLen := lstrlenw(  pw  ) + 1;
     GetMem(  p,  newLen  );
@@ -487,21 +486,9 @@ function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
 var
     res : TSSLVerifyError;
     sl  : TStringList;
+    i   : integer;
     n   : TDateTime;
-
-    function ValidateHostname(host: string): Boolean;
-    var
-        i: Integer;
-    begin
-        for i := 0 to sl.Count - 1 do begin
-            if (Lowercase(sl[i]) = ('cn=' + host)) then begin
-                Result := true;
-                exit;
-            end;
-        end;
-
-        Result := false;
-    end;
+    tmps: string;
 begin
     _ssl_err := '';
     sl := TStringList.Create();
@@ -509,8 +496,14 @@ begin
     sl.QuoteChar := #0;
     sl.DelimitedText := Certificate.Subject.OneLine;
 
+    tmps := Lowercase(_profile.server);
     res := SVE_NONE;
-    _ssl_ok := ValidateHostname(LowerCase(_profile.Server)) or ValidateHostname(LowerCase(_profile.Host));
+    for i := 0 to sl.Count - 1 do begin
+        if (Lowercase(sl[i]) = ('cn=' + tmps)) then begin
+            _ssl_ok := true;
+            break;
+        end;
+    end;
     sl.Free();
 
     if (not _ssl_ok) then begin
@@ -545,7 +538,7 @@ begin
     // send a keep alive
     if _socket.Connected then begin
         xml := '    ';
-        FireOnStreamData(true, xml);
+        DoDataCallbacks(true, xml);
         try
             _socket.Write(xml);
         except
@@ -603,7 +596,7 @@ begin
 	                    tag.AddCData(_ssl_err);
 	                    fp := cert.FingerprintAsString;
 	                    tag.setAttribute('fingerprint', fp);
-	                    FireOnStreamEvent('ssl-error', tag);
+	                    DoCallbacks('ssl-error', tag);
 	                end;
                 end
                 else if (_x509_int <> nil) then begin
@@ -617,7 +610,7 @@ begin
             {$endif}
             _active := true;
             _timer.Enabled := true;
-            FireOnStreamEvent('connected', nil);
+            DoCallbacks('connected', nil);
         end;
 
         WM_DISCONNECTED: begin
@@ -626,14 +619,14 @@ begin
             KillSocket();
             _timer.Enabled := false;
             _thread := nil;
-            FireOnStreamEvent('disconnected', nil);
+            DoCallbacks('disconnected', nil);
         end;
 
         WM_SOCKET: begin
             // We are getting something on the socket
             tmps := _thread.Data;
             if tmps <> '' then
-                FireOnStreamData(false, tmps);
+                DoDataCallbacks(false, tmps);
         end;
 
         WM_XML: begin
@@ -641,10 +634,8 @@ begin
             if _thread = nil then exit;
 
             tag := _thread.GetTag;
-            if tag <> nil then
-            begin
-                fireOnPacketReceived(tag);
-                tag.Free();
+            if tag <> nil then begin
+                DoCallbacks('xml', tag);
             end;
         end;
 
@@ -658,12 +649,12 @@ begin
                 tmps := '';
 
             // show the exception
-            FireOnStreamData(false, tmps);
+            DoDataCallbacks(false, tmps);
 
             _timer.Enabled := false;
             _thread := nil;
-            FireOnStreamEvent('commtimeout', nil);
-            FireOnStreamEvent('disconnected', nil);
+            DoCallbacks('commtimeout', nil);
+            DoCallbacks('disconnected', nil);
         end;
             
         WM_COMMERROR: begin
@@ -676,12 +667,12 @@ begin
                 tmps := '';
 
             // show the exception
-            FireOnStreamData(false, tmps);
+            DoDataCallbacks(false, tmps);
 
             _timer.Enabled := false;
             _thread := nil;
-            FireOnStreamEvent('commerror', nil);
-            FireOnStreamEvent('disconnected', nil);
+            DoCallbacks('commerror', nil);
+            DoCallbacks('disconnected', nil);
         end;
 
         WM_DROPPED: begin
@@ -952,7 +943,7 @@ begin
                 tag.AddCData(_ssl_err);
                 fp := cert.FingerprintAsString;
                 tag.setAttribute('fingerprint', fp);
-                FireOnStreamEvent('ssl-error', tag);
+                DoCallbacks('ssl-error', tag);
             end;
         end;
     end
@@ -981,7 +972,7 @@ begin
     tag.AddCData(ssl_err);
     fp := _x509_int.PeerCert.FingerprintAsString;
     tag.setAttribute('fingerprint', fp);
-    FireOnStreamEvent('ssl-error', tag);
+    DoCallbacks('ssl-error', tag);
   end;
 end;
 
@@ -1058,8 +1049,9 @@ begin
     _sock_lock.Release();
 end;
 
+
 {---------------------------------------}
-procedure TXMLSocketStream.SendXML(xml: Widestring);
+procedure TXMLSocketStream.Send(xml: Widestring);
 var
     buff: UTF8String;
 begin
@@ -1067,8 +1059,7 @@ begin
 
     if (_socket = nil) then exit;
 
-    FireOnStreamData(true, xml);
-
+    DoDataCallbacks(true, xml);
     buff := PWideToString(PWideChar(xml));
     try
         _Socket.Write(buff);

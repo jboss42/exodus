@@ -38,8 +38,7 @@ type
         destructor Destroy(); override;
 
         procedure Clear();
-        procedure Add(jid: Widestring; e: TJabberEntity);overload;
-        procedure Add(jid: TJabberID; e: TJabberEntity);overload;
+        procedure Add(jid: Widestring; e: TJabberEntity);
         procedure Remove(e: TJabberEntity);
         procedure RemoveJid(jid: Widestring; node: Widestring = '');
         procedure Delete(i: integer);
@@ -232,15 +231,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberEntityCache.Add(jid: TJabberID; e: TJabberEntity);
-begin
-    _cache.AddObject(jid.full, e);
-end;
-
-{---------------------------------------}
 procedure TJabberEntityCache.Remove(e: TJabberEntity);
+var
+    i: integer;
 begin
-    Delete(indexOf(e));
+    i := indexOf(e);
+    if (i >= 0) then
+        _cache.Delete(i);
 end;
 
 {---------------------------------------}
@@ -318,34 +315,58 @@ end;
 {---------------------------------------}
 function TJabberEntityCache.fetch(jid: Widestring; js: TJabberSession;
     items_limit: boolean; node: Widestring): TJabberEntity;
+var
+    i: integer;
+    e: TJabberEntity;
 begin
-    Result := getByJid(jid, node);
-    if (Result <> nil) then
-        Result.Free();
+    e := getByJid(jid, node);
+    if (e <> nil) then begin
+        Result := e;
 
-    Result := TJabberEntity.Create(TJabberID.Create(jid), node);
-    _cache.AddObject(Result.Jid.full, Result);
+        if (e.hasItems and e.hasInfo) then begin
+            // This fires all the events..
+            e.getInfo(js);
+            e.getItems(js);
+            for i := 0 to e.ItemCount - 1 do begin
+                if (e.Items[i].hasInfo) then
+                    e.Items[i].getInfo(js);
+            end;
+        end
+        else
+            // Re-walk since we don't have all the info.
+            e.walk(js, items_limit);
 
-    Result.discoWalk(js, items_limit);
+        exit;
+    end;
+
+    e := TJabberEntity.Create(TJabberID.Create(jid), node);
+    _cache.AddObject(TJabberID.applyJEP106(jid), e);
+
+    e.walk(js, items_limit);
+    Result := e;
 end;
 
 {---------------------------------------}
 function TJabberEntityCache.discoItems(jid: Widestring; js: TJabberSession;
     node: Widestring = ''; timeout: integer = -1): TJabberEntity;
+var
+    e: TJabberEntity;
 begin
-    Result := getByJid(jid, node);
-    if (Result <> nil) then begin
-        Result.fallbackProtocols := false;
-        Result.getItems(js);
+    e := getByJid(jid, node);
+    if (e <> nil) then begin
+        Result := e;
+        e.fallbackProtocols := false;
+        e.getItems(js);
         exit;
     end;
 
-    Result := TJabberEntity.Create(TJabberID.Create(jid), node);
-    Result.fallbackProtocols := false;
-    _cache.AddObject(Result.Jid.full, Result);
+    e := TJabberEntity.Create(TJabberID.Create(jid), node);
+    e.fallbackProtocols := false;
+    _cache.AddObject(TJabberID.applyJEP106(jid), e);
     if (timeout <> -1) then
-        Result.timeout := timeout;
-    Result.getItems(js);
+        e.timeout := timeout;
+    e.getItems(js);
+    Result := e;
 end;
 
 {---------------------------------------}
@@ -381,9 +402,11 @@ begin
     for i := 0 to _cache.Count - 1 do begin
         c := TJabberEntity(_cache.Objects[i]);
        // if (c.hasFeature(f)) then begin
+       // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
          if (c.hasFeature(f)) AND (length(c.Category)>0) AND (Integer(c.Parent)>0) then begin
             Result := c;
             exit;
+       // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
         end;
     end;
 end;
@@ -420,10 +443,12 @@ var
 begin
     for i := 0 to _cache.Count -1  do begin
         e := TJabberEntity(_cache.Objects[i]);
+        // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
         if (e.hasFeature(f)) AND (length(e.Category)>0) AND (Integer(e.Parent)>0) then begin
             if (jid_list.indexOf(e.jid.full) = -1) then
                 jid_list.Add(e.jid.full);
         end;
+        // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     end;
 end;
 
@@ -449,10 +474,12 @@ var
 begin
     for i := 0 to _cache.Count -1  do begin
         e := TJabberEntity(_cache.Objects[i]);
+        // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
         if (e.hasFeature(f)) AND (length(e.Category)>0) AND (Integer(e.Parent)>0) then begin
             if (jid_list.IndexOf(e.jid.full) = -1) then
                 jid_list.Add(e.jid.full);
         end;
+        // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     end;
 end;
 {$endif}

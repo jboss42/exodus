@@ -1,14 +1,18 @@
-inherited frmWizard: TfrmWizard
+object frmWizard: TfrmWizard
   Left = 496
   Top = 232
   BorderStyle = bsDialog
   Caption = 'Wizard'
   ClientHeight = 358
   ClientWidth = 410
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
-  OnCreate = FormCreate
-  ExplicitWidth = 416
-  ExplicitHeight = 390
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object TntPanel1: TTntPanel
@@ -18,7 +22,6 @@ inherited frmWizard: TfrmWizard
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 0
     object Bevel1: TBevel
       Left = 0
@@ -35,7 +38,6 @@ inherited frmWizard: TfrmWizard
       Height = 36
       Align = alRight
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 0
       object btnBack: TTntButton
         Left = 9
@@ -71,12 +73,11 @@ inherited frmWizard: TfrmWizard
     Height = 60
     Align = alTop
     BevelOuter = bvNone
+    Color = clWhite
     Ctl3D = False
     ParentBackground = False
-    ParentColor = True
     ParentCtl3D = False
     TabOrder = 1
-    OnResize = Panel1Resize
     object Bevel2: TBevel
       Left = 0
       Top = 51
@@ -87,13 +88,10 @@ inherited frmWizard: TfrmWizard
     end
     object lblWizardTitle: TTntLabel
       Left = 16
-      Top = 5
+      Top = 8
       Width = 135
       Height = 13
-      Align = alCustom
-      AutoSize = False
       Caption = 'Wizard Label goes here'
-      EllipsisPosition = epEndEllipsis
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -104,15 +102,12 @@ inherited frmWizard: TfrmWizard
     end
     object lblWizardDetails: TTntLabel
       Left = 32
-      Top = 25
-      Width = 331
+      Top = 24
+      Width = 297
       Height = 29
-      Align = alCustom
       AutoSize = False
       Caption = 'lblWizardDetails'
-      EllipsisPosition = epEndEllipsis
       Transparent = True
-      WordWrap = True
     end
     object Image1: TImage
       Left = 369

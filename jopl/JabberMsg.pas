@@ -62,13 +62,11 @@ type
         _composing: boolean;
         _addresses: TJabberAddressList; // use optional (for JEP-33 support)
         _priority: PriorityType;
-        _timestampFromDelay: boolean;
         
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
         procedure SetThread(const Value: WideString);
         procedure SetMsgType(const Value: WideString);
-        procedure SetTime(const Value: TDateTime);
 
         function GetTagProp: TXMLTag;
 
@@ -78,15 +76,13 @@ type
         constructor Create; overload;
         constructor Create(mTag: TXMLTag); overload;
         constructor Create(cToJID, cMsgType, cBody, cSubject : WideString; priority: PriorityType = None); overload;
-        constructor Create(msg: TJabberMessage); overload;
         destructor Destroy; override;
 
         function GetTag(duplicateTag:boolean = true): TXMLTag;
 
 
         // Use of this method optional for JEP-33 support
-//        procedure AddRecipient(jid: WideString; addrType: WideString = 'to');
-
+        procedure AddRecipient(jid: WideString; addrType: WideString = 'to');        
         property Tag: TXMLTag read GetTagProp;
 
         property ToJID : WideString read _toJID write _toJID;
@@ -100,15 +96,12 @@ type
         property Action: boolean read _action;
         property Nick: WideString read _nick write _nick;
         property isMe: boolean read _isme write _isme;
-        property Time: TDateTime read _time write SetTime;
+        property Time: TDateTime read _time write _time;
         property isXdata: boolean read _isxdata;
         property highlight: boolean read _highlight write _highlight;
         property XML: Widestring read _xml write _xml;
         property Composing: boolean read _composing write _composing;
         property Priority: PriorityType read _priority write _priority;
-        property Addresses: TJabberAddressList read _addresses;
-
-        property TimeIsFromDelayTag: boolean read _timestampFromDelay;
   end;
 
 
@@ -167,7 +160,6 @@ begin
     _tag := nil;
     _addresses := TJabberAddressList.Create();
     _priority := None;
-    _timestampFromDelay := false;
 end;
 
 {---------------------------------------}
@@ -206,36 +198,16 @@ begin
         t := GetFirstTag('thread');
         if t <> nil then _thread := t.Data;
 
-        t := GetDelayTag(_tag); // Could be XEP-0091 or XEP-0203 delay tag
+        t := QueryXPTag(XP_MSGDELAY);
         if (t = nil) then
             _time := Now()
         else begin
             // we have a delay tag
-            _timestampFromDelay := true;
             tmps := t.getAttribute('stamp');
-            if (Trim(tmps) <> '') then
-            begin
-                if (t.Name = 'x') then
-                begin
-                    // XEP-0091
-                    _time := JabberToDateTime(t.getAttribute('stamp'));
-                end
-                else if (t.Name = 'delay') then
-                begin
-                    // XEP-0203
-                    _time := XEP82DateTimeToDateTime(t.getAttribute('stamp'));
-                end
-                else begin
-                    // Shouldn't get here, but if somehow we did, fail gracefully
-                    _time := Now();
-                    _timestampFromDelay := false;
-                end;
-            end
-            else begin
-                // Stamp attribute is empty, so fail gracefully
+            if (tmps <> '') then
+                _time := JabberToDateTime(t.getAttribute('stamp'))
+            else
                 _time := Now();
-                _timestampFromDelay := false;
-            end;
         end;
 
         //Check for composing event
@@ -249,8 +221,8 @@ begin
             _addresses := TJabberAddressList.Create(t);
         end;
 
-        t := GetFirstTag('headers');
-        if (t <> nil) then begin
+       t := GetFirstTag('headers');
+       if (t <> nil) then begin
           headerList := t.ChildTags();
           for i := 0 to headerList.Count - 1 do begin
             if ((headerList[i].Name = 'header') and (headerList[i].GetAttribute('name') = 'Urgency')) then begin
@@ -258,13 +230,9 @@ begin
                break;
             end;
           end;
-        end;
 
-        // Rich text formating XEP-71
-        t := GetFirstTag('html');
-        if (t <> nil) then begin
-            _xml := t.XML;
-        end;
+       end;
+
     end;
 end;
 
@@ -283,33 +251,6 @@ begin
     setBody(cBody);
     setMsgType(cMsgType);
     _priority := priority;
-end;
-
-{---------------------------------------}
-constructor TJabberMessage.Create(msg: TJabberMessage);
-begin
-    if (msg.Tag <> nil) then begin
-        Create(msg.Tag);
-    end
-    else begin
-        Create();
-    end;
-    _ToJID := msg.ToJID;
-    _FromJID := msg.FromJID;
-    _Subject := msg.Subject;
-    _Thread := msg.Thread;
-    _Body := msg.Body;
-    _msg_type := msg.MsgType;
-    _ID := msg.ID;
-    _Action := msg.Action;
-    _Nick := msg.Nick;
-    _isMe := msg.isMe;
-    _Time := msg.Time;
-    _isXdata := msg.isXdata;
-    _highlight := msg.highlight;
-    _XML := msg.XML;
-    _Composing := msg.Composing;
-    _Priority := msg.Priority;
 end;
 
 {---------------------------------------}
@@ -429,10 +370,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberMessage.SetTime(const Value: TDateTime);
+procedure TJabberMessage.AddRecipient(jid: WideString; addrType: WideString = 'to');
 begin
-    _timestampFromDelay := false;
-    _Time := Value;
+    _addresses.AddAddress(jid, addrType);
 end;
 
 end.

@@ -47,12 +47,11 @@ type
     procedure Copy(); override;
     procedure ScrollToBottom(); override;
     procedure Clear(); override;
-    procedure Reset(); override;
     procedure setContextMenu(popup: TTntPopupMenu); override;
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); override;
-    procedure DisplayPresence(nick, txt: Widestring; timestamp: string; dtTimestamp: TDateTime); override;
+    procedure DisplayPresence(txt: string; timestamp: string); override;
     function  getHandle(): THandle; override;
     function  getObject(): TObject; override;
     function  empty(): boolean; override;
@@ -63,7 +62,6 @@ type
     procedure DisplayComposing(msg: Widestring); override;
     procedure HideComposing(); override;
     function  isComposing(): boolean; override;
-    procedure DisplayRawText(txt: Widestring); override;
   end;
 
 var
@@ -76,16 +74,8 @@ implementation
 
 uses
     Emote,
-    XMLTag,
-    JabberUtils,
-    ExUtils,
-    Session,
-    MsgDisplay,
-    ShellAPI,
-    BaseChat,
-    Jabber1,
-    PrefController,
-    FontConsts;
+    XMLTag, 
+    JabberUtils, ExUtils,  Session, MsgDisplay, ShellAPI, BaseChat, Jabber1;
 
 {$R *.dfm}
 
@@ -121,12 +111,6 @@ begin
          MsgList.Lines[i] := '';
     end;
 
-end;
-
-{---------------------------------------}
-procedure TfRTFMsgList.Reset();
-begin
-    Clear();
 end;
 
 {---------------------------------------}
@@ -180,12 +164,8 @@ begin
     if (Ord(key) = 22) then begin
         // paste, Ctrl-V
         if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
-            try
-                bc.MsgOut.SetFocus();
-                bc.MsgOut.PasteFromClipboard();
-            except
-                // To handle Cannot focus exception
-            end;
+            bc.MsgOut.SetFocus();
+            bc.MsgOut.PasteFromClipboard();
         end;
         Key := #0;
         exit;
@@ -201,13 +181,9 @@ begin
     if (Ord(key) < 32) then exit;
 
     if (bc.pnlInput.Visible) then begin
-        if (bc.MsgOut.Visible and bc.MsgOut.Enabled and not bc.MsgOut.ReadOnly) then begin
-            try
-                bc.MsgOut.SetFocus();
-                bc.MsgOut.WideSelText := Key;
-            except
-                // To handle Cannot focus exception
-            end;
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+            bc.MsgOut.SetFocus();
+            bc.MsgOut.WideSelText := Key;
         end;
     end;
 
@@ -255,14 +231,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfRTFMsgList.DisplayPresence(nick, txt: Widestring; timestamp: string; dtTimestamp: TDateTime);
+procedure TfRTFMsgList.DisplayPresence(txt: string; timestamp: string);
 var
     pt : integer;
     at_bottom: boolean;
     c : TColor;
 begin
     at_bottom := MsgList.atBottom;
-    c := TColor(MainSession.Prefs.getInt(P_COLOR_TIME));
+    c := TColor(MainSession.Prefs.getInt('color_time'));
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
     with MsgList do begin
@@ -318,7 +294,7 @@ end;
 procedure TfRTFMsgList.setupPrefs();
 begin
     AssignDefaultFont(MsgList.Font);
-    MsgList.Color := TColor(MainSession.Prefs.getInt(P_COLOR_BG));
+    MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
 end;
 
 {---------------------------------------}
@@ -361,7 +337,7 @@ begin
     _composing := MsgList.WideLines.Count;
     MsgList.SelStart := Length(MsgList.WideLines.Text);
     MsgList.SelLength := 0;
-    MsgList.SelAttributes.Color := TColor(MainSession.Prefs.getInt(P_COLOR_COMPOSING));
+    MsgList.SelAttributes.Color := TColor(MainSession.Prefs.getInt('color_action'));
     MsgList.Paragraph.Alignment := taCenter;
     MsgList.WideSelText := msg + #13#10;
 end;
@@ -374,14 +350,6 @@ begin
 
     MsgList.WideLines.Delete(_composing);
     _composing := -1;
-end;
-
-{---------------------------------------}
-procedure TfRTFMsgList.DisplayRawText(txt: Widestring);
-begin
-    MsgList.SelStart := Length(MsgList.WideLines.Text);
-    MsgList.SelLength := 0;
-    MsgList.WideSelText := txt + #13#10;
 end;
 
 {---------------------------------------}

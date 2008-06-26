@@ -1,8 +1,9 @@
-inherited fSendStatus: TfSendStatus
+object fSendStatus: TfSendStatus
+  Left = 0
+  Top = 0
   Width = 402
   Height = 89
-  ExplicitWidth = 402
-  ExplicitHeight = 89
+  TabOrder = 0
   object Panel1: TPanel
     Left = 313
     Top = 45
@@ -10,7 +11,6 @@ inherited fSendStatus: TfSendStatus
     Height = 44
     Align = alRight
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 0
     object btnCancel: TButton
       Left = 8
@@ -30,7 +30,6 @@ inherited fSendStatus: TfSendStatus
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 7
-    ParentColor = True
     TabOrder = 1
     object lblStatus: TTntLabel
       Left = 7
@@ -39,7 +38,6 @@ inherited fSendStatus: TfSendStatus
       Height = 13
       Align = alTop
       Caption = 'Status...'
-      ExplicitWidth = 43
     end
     object Bar1: TProgressBar
       Left = 7
@@ -58,7 +56,6 @@ inherited fSendStatus: TfSendStatus
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    ParentColor = True
     TabOrder = 2
     object lblFile: TTntLabel
       Left = 2
@@ -69,7 +66,6 @@ inherited fSendStatus: TfSendStatus
       Caption = 'lblFile'
       Transparent = False
       Layout = tlCenter
-      ExplicitWidth = 26
     end
     object lblTo: TTntLabel
       Left = 2
@@ -79,7 +75,6 @@ inherited fSendStatus: TfSendStatus
       Align = alTop
       Caption = 'lblTo'
       Transparent = False
-      ExplicitWidth = 22
     end
     object Bevel1: TBevel
       Left = 2
@@ -100,6 +95,7 @@ inherited fSendStatus: TfSendStatus
   end
   object httpClient: TIdHTTP
     MaxLineAction = maException
+    ReadTimeout = 0
     AllowCookies = True
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
@@ -116,6 +112,7 @@ inherited fSendStatus: TfSendStatus
   object tcpClient: TIdTCPClient
     IOHandler = SocksHandler
     MaxLineAction = maException
+    ReadTimeout = 0
     Port = 0
     Left = 216
   end

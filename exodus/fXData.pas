@@ -24,10 +24,10 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Grids, TntGrids, ExtCtrls, ExFrame;
+    Dialogs, Grids, TntGrids, ExtCtrls;
 
 type
-  TframeXData = class(TExFrame)
+  TframeXData = class(TFrame)
     Panel1: TPanel;
     ScrollBox1: TScrollBox;
     procedure FrameResize(Sender: TObject);
@@ -93,7 +93,6 @@ var
     ins: TXMLTag;
     t, i, rh: integer;
     ro: TXDataRow;
-    warning : TXMLTag;
 begin
     tpe := x.GetAttribute('type');
     fields := x.QueryTags('field');
@@ -102,13 +101,6 @@ begin
     // make sure we're starting fresh
     t := 0;
     assert((_rows.Count = 0));
-
-    // Create a warning.
-    warning := TXMLTag.Create('warning', 'This form was sent by a potentially untrusted source. Please insure that you trust this source before submitting data');
-    ro := TXDataRow.Create(ScrollBox1, warning);
-    rh := ro.Draw(t, 0, _w);
-    _rows.Add(ro);
-    t := t + rh;
 
     // check for an instructions tag
     if (ins <> nil) then begin

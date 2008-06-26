@@ -22,53 +22,29 @@ unit BaseMsgList;
 interface
 
 uses
-{$IFNDEF EXODUS}
-    Exodus_TLB,
-{$ENDIF}
-    TntMenus,
-    JabberMsg,
-    Windows,
-    Messages,
-    SysUtils,
-    Variants,
-    Classes,
-    Graphics,
-    Controls,
-    Forms,
-    Dialogs,
-    ExFrame;
+    TntMenus, JabberMsg,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs;
 
 type
-  TfBaseMsgList = class(TExFrame)
+  TfBaseMsgList = class(TFrame)
   protected
     _base: TObject; // this is our base form
-{$IFNDEF EXODUS}
-    _controller: IExodusController;
-{$ENDIF}
-
-    function _getPrefBool(prefName: Widestring): boolean; virtual;
-    function _getPrefString(prefName: Widestring): widestring; virtual;
-    function _getPrefInt(prefName: Widestring): integer; virtual;
 
   public
     { Public declarations }
-{$IFDEF EXODUS}
     constructor Create(Owner: TComponent); override;
-{$ELSE}
-    constructor Create(Owner: TComponent; controller: IExodusController);
-{$ENDIF}
 
     procedure Invalidate(); override;
     procedure CopyAll(); virtual;
     procedure Copy(); virtual;
     procedure ScrollToBottom(); virtual;
-    procedure Clear(); virtual; // Clear the msg list
-    procedure Reset(); virtual; // Clear the msg list and reset last date, last nick, etc. (Currently used in IEMsgList)
+    procedure Clear(); virtual;
     procedure setContextMenu(popup: TTntPopupMenu); virtual;
     procedure setDragOver(event: TDragOverEvent); virtual;
     procedure setDragDrop(event: TDragDropEvent); virtual;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); virtual;
-    procedure DisplayPresence(nick, txt: Widestring; timestamp: string; dtTimestamp: TDateTime); virtual;
+    procedure DisplayPresence(txt: string; timestamp: string); virtual;
     function  getHandle(): THandle; virtual;
     function  getObject(): TObject; virtual;
     function  empty(): boolean; virtual;
@@ -83,63 +59,22 @@ type
     procedure DisplayComposing(msg: Widestring); virtual;
     procedure HideComposing(); virtual;
     function  isComposing(): boolean; virtual;
-    procedure DisplayRawText(txt: Widestring); virtual;
 
     property Handle: THandle read getHandle;
     property winObject: TObject read getObject;
   end;
 
-{$IFDEF EXODUS}
-  function MsgListFactory(Owner: TComponent;
-                          Parent: TWinControl;
-                          ListName: widestring = 'msg_list_frame'): TfBaseMsgList;
-{$ENDIF}
-
 implementation
 
 {$R *.dfm}
 
-{$IFDEF EXODUS}
 uses
-    Session,
-    RTFMsgList,
-    IEMsgList;
-{$ENDIF}
+    BaseChat;
 
-const
-    RTF_MSGLIST = 0;
-    HTML_MSGLIST = 1;
-
-{$IFDEF EXODUS}
-function MsgListFactory(Owner: TComponent; Parent: TWinControl; ListName: widestring): TfBaseMsgList;
- var
-    mtype: integer;
-begin
-    mtype := MainSession.prefs.getInt('msglist_type');
-    if (mtype = HTML_MSGLIST) then
-        Result := TfIEMsgList.Create(Owner)
-    else if (mtype = RTF_MSGLIST) then
-        Result := TfRTFMsgList.Create(Owner)
-    else Result := TfRTFMsgList.Create(Owner);
-
-    Result.Parent := Parent;
-    Result.Name := ListName;
-    Result.Align := alClient;
-    Result.Visible := true;
-end;
-{$ENDIF}
-
-{$IFDEF EXODUS}
 constructor TfBaseMsgList.Create(Owner: TComponent);
-{$ELSE}
-constructor TfBaseMsgList.Create(Owner: TComponent; controller: IExodusController);
-{$ENDIF}
 begin
-    inherited Create(Owner);
+    inherited;
     _base := Owner;
-{$IFNDEF EXODUS}
-    _controller := controller;
-{$ENDIF}
 end;
 
 procedure TfBaseMsgList.Invalidate();
@@ -167,11 +102,6 @@ begin
     //
 end;
 
-procedure TfBaseMsgList.Reset();
-begin
-    //
-end;
-
 procedure TfBaseMsgList.setContextMenu(popup: TTntPopupMenu);
 begin
     //
@@ -192,7 +122,7 @@ begin
     // NOOP
 end;
 
-procedure TfBaseMsgList.DisplayPresence(nick, txt: Widestring; timestamp: string; dtTimestamp: TDateTime);
+procedure TfBaseMsgList.DisplayPresence(txt: string; timestamp: string);
 begin
     // NOOP
 end;
@@ -252,11 +182,6 @@ begin
     // NOOP
 end;
 
-procedure TfBaseMsgList.DisplayRawText(txt: Widestring); 
-begin
-    // NOOP
-end;
-
 procedure TfBaseMsgList.HideComposing();
 begin
     // NOOP
@@ -266,45 +191,5 @@ function TfBaseMsgList.IsComposing(): boolean;
 begin
     result := false;
 end;
-
-{---------------------------------------}
-function TfBaseMsgList._getPrefBool(prefName: Widestring): boolean;
-begin
-{$IFDEF EXODUS}
-    Result := MainSession.Prefs.getBool(prefName);
-{$ELSE}
-    Result := false;
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsBool(prefName);
-{$ENDIF}
-end;
-
-{---------------------------------------}
-function TfBaseMsgList._getPrefString(prefName: Widestring): widestring;
-begin
-{$IFDEF EXODUS}
-    Result := MainSession.Prefs.getString(prefName);
-{$ELSE}
-    Result := '';
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsString(prefName);
-{$ENDIF}
-end;
-
-{---------------------------------------}
-function TfBaseMsgList._getPrefInt(prefName: Widestring): integer;
-begin
-{$IFDEF EXODUS}
-    Result := MainSession.Prefs.getInt(prefName);
-{$ELSE}
-    Result := 0;
-    if (_controller = nil) then exit;
-
-    Result := _controller.GetPrefAsInt(prefName);
-{$ENDIF}
-end;
-
 
 end.

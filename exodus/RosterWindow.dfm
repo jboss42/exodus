@@ -1,29 +1,34 @@
-inherited frmRosterWindow: TfrmRosterWindow
+object frmRosterWindow: TfrmRosterWindow
   Left = 271
   Top = 186
   AlphaBlendValue = 220
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'contact list - Exodus'
-  ClientHeight = 502
-  ClientWidth = 238
+  ClientHeight = 505
+  ClientWidth = 240
+  Color = clBtnFace
   Constraints.MinWidth = 130
   DefaultMonitor = dmDesktop
   DragKind = dkDock
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   OnActivate = FormActivate
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  ExplicitWidth = 246
-  ExplicitHeight = 536
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 472
-    Width = 238
-    Height = 9
+    Top = 474
+    Width = 240
+    Height = 10
     Align = alBottom
     AutoSize = True
     Center = True
@@ -32,34 +37,35 @@ inherited frmRosterWindow: TfrmRosterWindow
     Transparent = True
     Visible = False
     OnClick = imgAdClick
+    ExplicitTop = 479
+    ExplicitWidth = 194
   end
   object pnlFind: TPanel
     Left = 0
     Top = 0
-    Width = 238
+    Width = 240
     Height = 49
     Align = alTop
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 4
     Visible = False
     object lblFind: TTntLabel
       Left = 3
       Top = 4
-      Width = 24
+      Width = 23
       Height = 13
       Caption = 'Find:'
     end
     object btnFindClose: TSpeedButton
-      Left = 163
+      Left = 162
       Top = 2
-      Width = 22
+      Width = 23
       Height = 21
       Caption = 'X'
       Flat = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -15
+      Font.Height = -13
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
@@ -98,8 +104,8 @@ inherited frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 481
-    Width = 238
+    Top = 484
+    Width = 240
     Height = 21
     Panels = <
       item
@@ -107,36 +113,32 @@ inherited frmRosterWindow: TfrmRosterWindow
         Text = 'foo@jabber.org'
         Width = 50
       end>
-    ParentColor = True
-    ParentFont = True
-    UseSystemFont = False
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 447
-    Width = 238
-    Height = 25
+    Top = 450
+    Width = 240
+    Height = 24
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
-    ParentColor = True
     TabOrder = 1
     Visible = False
     object imgStatus: TPaintBox
       Left = 2
       Top = 2
       Width = 23
-      Height = 21
+      Height = 20
       Align = alLeft
       ParentShowHint = False
       ShowHint = True
       OnPaint = imgStatusPaint
     end
     object imgSSL: TImage
-      Left = 220
+      Left = 219
       Top = 2
       Width = 19
-      Height = 21
+      Height = 20
       Align = alRight
       Center = True
       Picture.Data = {
@@ -169,51 +171,52 @@ inherited frmRosterWindow: TfrmRosterWindow
         FFFF}
       Transparent = True
       Visible = False
+      ExplicitLeft = 173
     end
     object pnlStatus: TTntPanel
       Left = 25
       Top = 2
-      Width = 195
-      Height = 21
+      Width = 194
+      Height = 20
       Cursor = crArrow
       Align = alClient
       Alignment = taLeftJustify
       AutoSize = True
       BevelOuter = bvNone
       BevelWidth = 0
-      ParentColor = True
       TabOrder = 0
       object lblStatusLink: TTntLabel
         Left = 0
         Top = 0
-        Width = 32
-        Height = 13
+        Width = 30
+        Height = 20
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
+        ExplicitHeight = 13
       end
     end
   end
   object pnlConnect: TPanel
     Left = 0
     Top = 49
-    Width = 238
+    Width = 240
     Height = 296
     Align = alTop
     BevelOuter = bvLowered
     BorderWidth = 4
+    Color = clWindow
     Ctl3D = True
     ParentBackground = False
-    ParentColor = True
     ParentCtl3D = False
     TabOrder = 2
     object lblStatus: TTntLabel
       Left = 5
       Top = 49
-      Width = 228
+      Width = 230
       Height = 32
       Align = alTop
       Alignment = taCenter
@@ -222,14 +225,12 @@ inherited frmRosterWindow: TfrmRosterWindow
       Transparent = False
       Layout = tlCenter
       WordWrap = True
-      ExplicitLeft = 4
-      ExplicitTop = 48
-      ExplicitWidth = 230
+      ExplicitWidth = 184
     end
     object lblConnect: TTntLabel
       Left = 5
       Top = 81
-      Width = 228
+      Width = 230
       Height = 23
       Cursor = crHandPoint
       Align = alTop
@@ -240,22 +241,17 @@ inherited frmRosterWindow: TfrmRosterWindow
       Layout = tlCenter
       WordWrap = True
       OnClick = lblConnectClick
-      ExplicitLeft = 4
-      ExplicitTop = 80
-      ExplicitWidth = 230
+      ExplicitWidth = 184
     end
     object pnlAnimation: TPanel
       Left = 5
       Top = 5
-      Width = 228
+      Width = 230
       Height = 44
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 230
       object aniWait: TAnimate
         Left = 48
         Top = 3
@@ -270,7 +266,7 @@ inherited frmRosterWindow: TfrmRosterWindow
     object lstProfiles: TTntListView
       Left = 5
       Top = 104
-      Width = 228
+      Width = 230
       Height = 37
       Align = alClient
       BorderStyle = bsNone
@@ -284,7 +280,7 @@ inherited frmRosterWindow: TfrmRosterWindow
       PopupMenu = popProfiles
       ShowColumnHeaders = False
       ShowHint = False
-      SmallImages = frmExodus.ImageList1
+      SmallImages = frmExodus.ImageList2
       TabOrder = 1
       ViewStyle = vsReport
       OnClick = lblConnectClick
@@ -292,61 +288,53 @@ inherited frmRosterWindow: TfrmRosterWindow
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
       OnSelectItem = lstProfilesSelectItem
-      ExplicitLeft = 4
-      ExplicitTop = 103
-      ExplicitWidth = 230
-      ExplicitHeight = 40
     end
     object pnlConnectLogo: TPanel
       Left = 5
       Top = 141
-      Width = 228
+      Width = 230
       Height = 150
       Align = alBottom
       BevelOuter = bvNone
-      ParentColor = True
+      Color = clWindow
       TabOrder = 2
       OnResize = pnlConnectLogoResize
-      ExplicitLeft = 4
-      ExplicitTop = 143
-      ExplicitWidth = 230
       object ImageLogo: TImage
         Left = 0
         Top = 0
-        Width = 228
+        Width = 230
         Height = 33
         Align = alTop
         Center = True
-        ExplicitWidth = 230
       end
       object lblNewUser: TTntLabel
         Left = 0
         Top = 124
-        Width = 228
+        Width = 230
         Height = 13
         Cursor = crHandPoint
         Align = alBottom
         Caption = 'Run the New User Wizard'
         Transparent = False
         OnClick = lblNewUserClick
-        ExplicitWidth = 123
+        ExplicitWidth = 124
       end
       object lblCreate: TTntLabel
         Left = 0
         Top = 137
-        Width = 228
+        Width = 230
         Height = 13
         Cursor = crHandPoint
         Align = alBottom
         Caption = 'Create a New Profile'
         Transparent = False
         OnClick = lblCreateClick
-        ExplicitWidth = 99
+        ExplicitWidth = 97
       end
       object txtDisclaimer: TExRichEdit
         Left = 0
         Top = 33
-        Width = 228
+        Width = 230
         Height = 40
         Align = alTop
         AutoURLDetect = adDefault
@@ -425,7 +413,6 @@ inherited frmRosterWindow: TfrmRosterWindow
           end>
         LangOptions = [loAutoFont]
         Language = 1033
-        ParentColor = True
         ReadOnly = True
         ScrollBars = ssVertical
         ShowSelectionBar = False
@@ -445,8 +432,8 @@ inherited frmRosterWindow: TfrmRosterWindow
   object treeRoster: TTntTreeView
     Left = 0
     Top = 345
-    Width = 238
-    Height = 102
+    Width = 240
+    Height = 105
     Cursor = crArrow
     Hint = 'Contact List Hint'
     Align = alClient
@@ -455,7 +442,7 @@ inherited frmRosterWindow: TfrmRosterWindow
     Ctl3D = True
     DragMode = dmAutomatic
     HideSelection = False
-    Images = frmExodus.ImageList1
+    Images = frmExodus.ImageList2
     Indent = 19
     MultiSelect = True
     MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
@@ -483,6 +470,7 @@ inherited frmRosterWindow: TfrmRosterWindow
     OnEndDrag = treeRosterEndDrag
     OnExit = treeRosterExit
     OnExpanded = treeRosterExpanded
+    OnKeyDown = treeRosterKeyDown
     OnKeyPress = treeRosterKeyPress
     OnMouseDown = treeRosterMouseDown
     OnMouseMove = treeRosterMouseMove
@@ -579,7 +567,7 @@ inherited frmRosterWindow: TfrmRosterWindow
   end
   object popStatus: TTntPopupMenu
     AutoHotkeys = maManual
-    Images = frmExodus.ImageList1
+    Images = frmExodus.ImageList2
     Left = 8
     Top = 376
     object presOnline: TTntMenuItem
@@ -625,7 +613,7 @@ inherited frmRosterWindow: TfrmRosterWindow
       Caption = '-'
     end
   end
-  object ImageList1: TImageList
+  object ImageList2: TImageList
     BkColor = clWhite
     ShareImages = True
     Left = 104

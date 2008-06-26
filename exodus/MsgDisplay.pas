@@ -42,21 +42,8 @@ uses
     JabberConst,
     XMLParser,
     RT_XIMConversion,
-    Clipbrd,
-    Jabber1,
-    JabberUtils,
-    ExUtils,
-    Emote,
-    ExtCtrls,
-    Dialogs,
-    XMLTag,
-    XMLUtils,
-    Session,
-    Keywords,
-    TypInfo,
-    DateUtils,
-    PrefController,
-    FontConsts;
+    Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
+    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords, TypInfo, DateUtils;
 
 const
     MAX_MSG_LENGTH = 512;
@@ -90,13 +77,13 @@ begin
     DisplayRTFMsg(RichEdit,
                   Msg,
                   AutoScroll,
-                  MainSession.Prefs.getInt(P_COLOR_TIME),
-                  MainSession.Prefs.getInt(P_COLOR_PRIORITY),
-                  MainSession.Prefs.getInt(P_COLOR_SERVER),
-                  MainSession.Prefs.getInt(P_COLOR_ACTION),
-                  MainSession.Prefs.getInt(P_COLOR_ME),
-                  MainSession.Prefs.getInt(P_COLOR_OTHER),
-                  MainSession.Prefs.getInt(P_FONT_COLOR));
+                  MainSession.Prefs.getInt('color_time'),
+                  MainSession.Prefs.getInt('color_priority'),
+                  MainSession.Prefs.getInt('color_server'),
+                  MainSession.Prefs.getInt('color_action'),
+                  MainSession.Prefs.getInt('color_me'),
+                  MainSession.Prefs.getInt('color_other'),
+                  MainSession.Prefs.getInt('font_color'));
 end;
 
 function getXIMTag(msg: TJabberMessage): TXMLTag;
@@ -147,7 +134,6 @@ var
     is_scrolling: boolean;
     ximTag: TXMLTag;
     hlStartPos: integer;
-    offset : integer;
 begin
     // add the message to the richedit control
     fvl := RichEdit.FirstVisibleLine;
@@ -164,7 +150,6 @@ begin
         RTFColor(color_priority) + // \cf7
         '}\uc1';
 
-    offset := Length(txt);
     if (MainSession.Prefs.getBool('timestamp')) then begin
         txt := txt + '\cf1[';
         try
@@ -194,8 +179,7 @@ begin
        //We want to default color for low priority messages to timestamp color
        txt := txt + '\cf1[' + EscapeRTF(GetDisplayPriority(Msg.Priority)) + ']';
     end;
-
-    offset := Length(txt) - offset;
+         
 
     len := Length(Msg.Body);
 
@@ -253,11 +237,11 @@ begin
     if (ximTag <> nil) then begin
         //if this is our messages, don't eat font style props
         XIMToRT(richedit, ximTag, Msg.Body, not Msg.isMe);
-        HighlightKeywords(RichEdit, hlStartPos+offset);
+        HighlightKeywords(RichEdit, hlStartPos);
         ximTag.Free();
     end
     else begin
-        HighlightKeywords(RichEdit, hlStartPos+offset);
+        HighlightKeywords(RichEdit, hlStartPos);
     end;
 
     RichEdit.SelStart := RichEdit.GetTextLen;
@@ -393,77 +377,16 @@ var
   timezoneinfo: TTimezoneinformation;
   dstStart, dstEnd: TDateTime;
   Year, Month, Day, Hour, Min, Sec, Milli: word;
-  StartYear, EndYear: word;
 begin
     FillChar(timezoneinfo, SizeOf(timezoneinfo), #0);
     GetTimezoneInformation(timezoneinfo);
     DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
 
-    // If we don't get a year we have a "relative" date.
-    // We need to find out what actual date that relative date corresponds to.
-    // If the (relative) start day is before end day, then assume we can use
-    // the dates from the current year to figure out DST.
-    // If the end day is before the start day, then assume we are in the
-    // souther hemesphere.
-    // Essentually, start before end should correspond to Northern Hemisphere
-    // DST and end before start should correspond to Sothern Hemisphere as
-    // the seasons are reveresed in the two hemispeheres and thus DST is
-    // reversed.  We need to then figure out which year to shift.
-    // Start or end.  This depends on when in the year we are.
-    if ((timezoneinfo.DaylightDate.wMonth < timezoneinfo.StandardDate.wMonth) or
-        ((timezoneinfo.DaylightDate.wMonth = timezoneinfo.StandardDate.wMonth) and
-         (timezoneinfo.DaylightDate.wDay < timezoneinfo.StandardDate.wDay))) then begin
-        // Start before end -  Assume same year.
-        StartYear := Year;
-        EndYear := Year;
-    end
-    else begin
-        // End before start - Need to figure out which year to bump
-        if ((Month > timezoneinfo.DaylightDate.wMonth) or
-
-            ((Month = timezoneinfo.DaylightDate.wMonth) and
-             (Day > timezoneinfo.DaylightDate.wDay)) or
-
-            ((Month = timezoneinfo.DaylightDate.wMonth) and
-             (Day = timezoneinfo.DaylightDate.wDay) and
-             (Hour > timezoneinfo.DaylightDate.wHour)) or
-
-            ((Month = timezoneinfo.DaylightDate.wMonth) and
-             (Day = timezoneinfo.DaylightDate.wDay) and
-             (Hour = timezoneinfo.DaylightDate.wHour) and
-             (Min > timezoneinfo.DaylightDate.wMinute)) or
-
-            ((Month = timezoneinfo.DaylightDate.wMonth) and
-             (Day = timezoneinfo.DaylightDate.wDay) and
-             (Hour = timezoneinfo.DaylightDate.wHour) and
-             (Min = timezoneinfo.DaylightDate.wMinute) and
-             (Sec > timezoneinfo.DaylightDate.wSecond)) or
-
-            ((Month = timezoneinfo.DaylightDate.wMonth) and
-             (Day = timezoneinfo.DaylightDate.wDay) and
-             (Hour = timezoneinfo.DaylightDate.wHour) and
-             (Min = timezoneinfo.DaylightDate.wMinute) and
-             (Sec = timezoneinfo.DaylightDate.wSecond) and
-             (Milli >= timezoneinfo.DaylightDate.wMilliseconds))) then
-        begin
-            // Our time is greater then or equal to the DST start time
-            // so we need to bump the end year to next year
-            StartYear := Year;
-            EndYear := Year + 1;
-        end
-        else begin
-            // Our time is less then the DST start time
-            // so we need to bump the start year to last year
-            StartYear := Year - 1;
-            EndYear := Year;
-        end;
-    end;
-
     //Calculate when daylight savings time begins
     if (timezoneinfo.DaylightDate.wYear = 0) then begin
         with timezoneinfo.DaylightDate do begin
             try
-                dstStart := EncodeDayOfWeekInMonth(StartYear, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
+                dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
                 dstStart := dstStart + EncodeTime(whour, wminute, wsecond, wmilliseconds);
             except
                 on EConvertError do begin
@@ -471,7 +394,7 @@ begin
                     // in the month.  This is a difference in how GetTimeZoneInfo returns
                     // info and how EncodeDayOfWeekInMonth works.
                     if (wday = 5) then begin
-                        dstStart := EncodeDayOfWeekInMonth(StartYear, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
+                        dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
                         dstStart := dstStart + EncodeTime(whour, wminute, wsecond, wmilliseconds);
                     end
                     else begin
@@ -482,15 +405,13 @@ begin
         end;
     end
     else begin
-        // We have an actual start date
         dstStart := SystemTimeToDateTime(timezoneinfo.DaylightDate);
     end;
-
     //Calculate when daylight savings time ends
     if (timezoneinfo.StandardDate.wYear = 0) then begin
         with timezoneinfo.StandardDate do begin
             try
-                dstEnd := EncodeDayOfWeekInMonth(EndYear, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
+                dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
                 dstEnd := dstEnd + EncodeTime(whour, wminute, wsecond, wmilliseconds);
             except
                 on EConvertError do begin
@@ -498,7 +419,7 @@ begin
                     // in the month.  This is a difference in how GetTimeZoneInfo returns
                     // info and how EncodeDayOfWeekInMonth works.
                     if (wday = 5) then begin
-                        dstEnd := EncodeDayOfWeekInMonth(EndYear, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
+                        dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
                         dstEnd := dstEnd + EncodeTime(whour, wminute, wsecond, wmilliseconds);
                     end
                     else begin
@@ -509,12 +430,9 @@ begin
         end;
     end
     else begin
-        // We have an actual end date
         dstEnd := SystemTimeToDateTime(timezoneinfo.StandardDate);
     end;
 
-    // If our given time is between the calculated start and end,
-    // then the time IS in DST.
     if ((time >= dstStart) and (time <= dstEnd)) then
       Result := DST_YES
     else

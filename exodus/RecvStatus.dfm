@@ -1,8 +1,10 @@
-inherited fRecvStatus: TfRecvStatus
+object fRecvStatus: TfRecvStatus
+  Left = 0
+  Top = 0
   Width = 495
   Height = 90
-  ExplicitWidth = 495
-  ExplicitHeight = 90
+  TabOrder = 0
+  TabStop = True
   object Panel3: TPanel
     Left = 0
     Top = 0
@@ -11,7 +13,6 @@ inherited fRecvStatus: TfRecvStatus
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    ParentColor = True
     TabOrder = 0
     object lblFile: TTntLabel
       Left = 2
@@ -60,7 +61,6 @@ inherited fRecvStatus: TfRecvStatus
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 7
-    ParentColor = True
     TabOrder = 1
     object lblStatus: TTntLabel
       Left = 7
@@ -87,7 +87,6 @@ inherited fRecvStatus: TfRecvStatus
     Height = 45
     Align = alRight
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 2
     object btnRecv: TButton
       Left = 8

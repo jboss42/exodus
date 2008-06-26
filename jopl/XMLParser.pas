@@ -36,7 +36,7 @@ type
         constructor Create();
         destructor Destroy; override;
 
-        procedure ParseString(buff: WideString; stream_tag: WideString = '');
+        procedure ParseString(buff, stream_tag: WideString);
         procedure ParseFile(filename: String);
 
         // from the current exe

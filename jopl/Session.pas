@@ -27,11 +27,10 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Chat, ChatController,
-    Presence, COMExodusItem,
+    JabberAuth, Chat, ChatController, MsgList, Presence, Roster, Bookmarks, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
-    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, 
-    COMExodusItemController, ContactController, Exodus_TLB, RoomController;
+    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, EventQueue;
+
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
 
@@ -56,6 +55,7 @@ type
         _compression_on: boolean;
         _lang: WideString;
         _sent_stream: boolean;
+        _sjid: TJabberID;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -69,18 +69,17 @@ type
         _unhandledSignal: TBasicSignal;
 
         // other signals
-        _itemSignal: TItemSignal;
+        _rosterSignal: TRosterSignal;
         _presSignal: TPresenceSignal;
         _dataSignal: TStringSignal;
         _winSignal: TPacketSignal;
         _chatSignal: TChatSignal;
 
         // other misc. flags
-{** JJF msgqueue refactor
         _paused: boolean;
         _resuming: boolean;
         _pauseQueue: TQueue;
-**}
+        _queue: TEventMsgQueue;
         _id: longint;
         _cb_id: longint;
         _authd: boolean;
@@ -88,9 +87,6 @@ type
         _avails: TWidestringlist;
         _auth_agent: TJabberAuth;
         _no_auth: boolean;
-        //_intfItemController: IExodusItemController;
-
-        _sjid: TJabberID;   //differentiate between auth and session
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
@@ -99,9 +95,6 @@ type
         procedure SetServer(server: WideString);
         procedure SetResource(resource: WideString);
         procedure SetPort(port: integer);
-
-        function GetSessionJid(): TJabberID;
-        procedure SetSessionJid(jid: TJabberID);
 
         procedure handleDisconnect();
         procedure manualBlastPresence(p: TXMLTag);
@@ -121,6 +114,7 @@ type
 
         procedure doConnect();
 
+    published
         procedure DataEvent(send: boolean; data: Widestring);
         procedure SessionCallback(event: string; tag: TXMLTag);
         procedure BindCallback(event: string; tag: TXMLTag);
@@ -128,14 +122,11 @@ type
         procedure CompressionCallback(event: string; tag: TXMLTag);
         procedure CompressionErrorCallback(event: string; tag: TXMLTag);
 
-        procedure OnAllDependanciesResolved(SessionTag : TXMLTag);
-        procedure OnDependancyResolved(module: widestring; Tag : TXMLTag);
     public
         ppdb: TJabberPPDB;
-        ItemController: IExodusItemController;
-        roster: TContactController;
-        rooms: TRoomController;
-        //bookmarks: TBookmarkManager;
+        roster: TJabberRoster;
+        bookmarks: TBookmarkManager;
+        MsgList: TJabberMsgList;
         ChatList: TJabberChatList;
         Prefs: TPrefController;
         dock_windows: boolean;
@@ -160,9 +151,13 @@ type
         function  getAuthAgent: TJabberAuth;
 
         procedure setPresence(show, status: WideString; priority: integer);
+        function  GetExtList(): TWideStringList;
+        function  GetExtStr(): WideString;
+        procedure AddExtension(ext: WideString; feature: WideString);
+        procedure RemoveExtension(ext: WideString);
 
         function RegisterCallback(callback: TPacketEvent; xplite: Widestring; pausable: boolean = false): integer; overload;
-        function RegisterCallback(callback: TItemEvent; event: Widestring): integer; overload;
+        function RegisterCallback(callback: TRosterEvent; xplite: Widestring): integer; overload;
         function RegisterCallback(callback: TPresenceEvent): integer; overload;
         function RegisterCallback(callback: TDataStringEvent): integer; overload;
         function RegisterCallback(callback: TChatEvent): integer; overload;
@@ -170,19 +165,18 @@ type
 
         procedure FireEvent(event: string; tag: TXMLTag); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const p: TJabberPres); overload;
-        procedure FireEvent(event: string; const item: IExodusItem); overload;
+        procedure FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const data: WideString); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const controller: TChatController); overload;
 
         procedure SendTag(tag: TXMLTag);
         procedure ActivateProfile(i: integer);
         procedure ActivateDefaultProfile();
-        
-{** JJF msgqueue refactor
+
         procedure Pause;
         procedure Play;
         procedure QueueEvent(event: string; tag: TXMLTag; Callback: TPacketEvent);
-**}
+
         function generateID: WideString;
         function IsBlocked(jid : WideString): boolean;  overload;
         function IsBlocked(jid : TJabberID): boolean; overload;
@@ -195,6 +189,11 @@ type
         procedure addAvailJid(jid: Widestring);
         procedure removeAvailJid(jid: Widestring);
 
+        // Added by SIG for setting default nickname.
+//JJF now handled by DisplayName        
+//        procedure SetDefaultNickname();
+//        procedure vcardCallback(event: string; tag: TXMLTag);
+
         // Account information
         property Username: WideString read GetUsername write SetUsername;
         property Password: WideString read GetPassword write SetPassword;
@@ -205,6 +204,8 @@ type
         property Port: integer read GetPort write SetPort;
         property Profile: TJabberProfile read _profile;
 
+        property SessionJid: TJabberID read _sjid;
+
         // Presence Info
         property Priority: integer read _priority write _priority;
         property Show: WideString read _show;
@@ -214,10 +215,8 @@ type
         property Stream: TXMLStream read _stream;
         property StreamID: Widestring read _stream_id;
         property Dispatcher: TSignalDispatcher read _dispatcher;
-{** JJF msgqueue refactor
         property IsPaused: boolean read _paused;
         property IsResuming: boolean read _resuming;
-**}
         property Invisible: boolean read _invisible write _invisible;
         property Active: boolean read GetActive;
         property isXMPP: boolean read _xmpp;
@@ -230,96 +229,8 @@ type
         property NoAuth: boolean read _no_auth write _no_auth;
         property AuthAgent: TJabberAuth read _auth_agent;
         property Authenticated: boolean read _authd;
+        property EventQueue: TEventMsgQueue read _queue;
     end;
-
-    {------------------------ TSessionListener --------------------------------}
-    TDisconnectEvent = procedure(ForcedDisconnect: boolean; Reason: WideString) of object;
-    TAuthenticatedEvent = procedure () of object;
-
-    TSessionListener = class
-    private
-        _OnAuthEvent: TAuthenticatedEvent;
-        _OnDisconnectEvent: TDisconnectEvent;
-        _Session: TJabberSession;
-
-        _ReceivedError: WideString;
-        _Authenticated: Boolean;
-
-        _SessionCB: integer;
-    protected
-        procedure FireAuthenticated(); virtual;
-        procedure FireDisconnected(); virtual;
-
-        procedure SessionListenerCallback(event: string; tag: TXMLTag);
-    public
-        Constructor Create(OnAuthenticated: TAuthenticatedEvent; OnDisconnect: TDisconnectEvent; JabberSession: TJabberSession = nil);
-        Destructor Destroy(); override;
-    end;
-
-    {------------------------ TDependancyHandler ------------------------------}
-    { a helper class that tracks session/ready and fires an event when all
-      given dependancies signal ready. Assumes /session/ready/session is
-      one of the signals caught, so the original tag can be accessed. If not
-      in the dependacy list, session is auto added }
-    TModuleInfo = record
-        module: widestring;
-        ready: boolean;
-    end;
-
-    TDepModInfoArray = array of TModuleInfo;
-    //TDependancyHandler owns sessiontag and will destroy it after OnREsolved is fired
-    TAllResolvedEvent = procedure(SessionTag: TXMLTag) of object;
-    TResolvedEvent = procedure(module: widestring; SessionTag: TXMLTag) of object;
-    TDependancyHandler = class
-    private
-        _sessionCB: integer;
-        _session: TJabberSession;
-        _dependancies: TDepModInfoArray;
-        _sessionReadyTag: TXMLTag; //tag passed along with /session/ready/session event
-        _OnAllResolved: TAllResolvedEvent;
-        _onResolved: TResolvedEvent;
-
-        procedure ResetState();
-    protected
-        procedure SessionCallback(event: string; tag: TXMLTag);
-        procedure FireOnAllResolved();
-        procedure FireOnResolved(module: widestring; tag: TXMLTag);
-        function IndexOfModule(module: widestring): integer;
-        function AllReady(): boolean;
-    public
-        constructor create(session: TJabberSession; depmods: TDepModInfoArray);overload;
-        constructor create(session: TJabberSession; depmods: Array of TModuleInfo);overload;
-
-        destructor Destroy(); override;
-
-        property OnResolved: TResolvedEvent read _OnResolved write _OnResolved;
-        property OnAllResolved: TAllResolvedEvent read _OnAllResolved write _OnAllResolved;
-    end;
-
-const
-    DEPMOD_SESSION      = 'session';
-    DEPMOD_DISPLAYNAME  = 'displayname';
-    DEPMOD_ROSTER       = 'roster';
-    DEPMOD_BOOKMARKS    = 'bookmarks';
-    DEPMOD_GROUPS       = 'groups';
-    DEPMOD_UI           = 'ui';
-    DEPMOD_CAPS_CACHE   = 'caps-cache';
-    DEPMOD_ENTITY_CACHE = 'entity-cache';
-
-    DEPMOD_READY_EVENT = '/session/ready/';
-    DEPMOD_READY_SESSION_EVENT = DEPMOD_READY_EVENT + DEPMOD_SESSION;
-
-    ALL_DEPENDANT_MODULES: array[0..7] of TModuleInfo  = (
-                                                   (module:DEPMOD_SESSION; ready:false),
-                                                   (module:DEPMOD_DISPLAYNAME; ready:false),
-                                                   (module:DEPMOD_ROSTER; ready:false),
-                                                   (module:DEPMOD_BOOKMARKS; ready:false),
-                                                   (module:DEPMOD_GROUPS; ready:false),
-                                                   (module:DEPMOD_UI; ready:false),
-                                                   (module:DEPMOD_CAPS_CACHE; ready:false),
-                                                   (module:DEPMOD_ENTITY_CACHE; ready:false)
-                                                   );
-
 
 var
     MainSession: TJabberSession;
@@ -334,20 +245,14 @@ uses
     EntityCache, CapsCache,
     DisplayName, //display name cache
     PluginAuth,
-    Profile,
-    RoomProperties,
-    StrUtils,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
-    JabberConst, CapPresence, XMLVCard, Windows, JabberUtils;
-
-
+    JabberConst, CapPresence, XMLVCard, Windows, strutils, JabberUtils;
 
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: widestring);
 var
     exe_FullPath: string;
     exe_FullPath_len: cardinal;
-    tdephand: TDependancyHandler;
 begin
     //
     inherited Create();
@@ -374,28 +279,20 @@ begin
 
     // other signals
     _sessionSignal := TBasicSignal.Create('/session');
-    _itemSignal := TItemSignal.Create('/roster');
+    _rosterSignal := TRosterSignal.Create('/roster');
     _presSignal := TPresenceSignal.Create('/presence');
     _dataSignal := TStringSignal.Create('/data');
     _winSignal := TPacketSignal.Create('/windows');
     _chatSignal := TChatSignal.Create('/chat');
     _dispatcher.AddSignal(_sessionSignal);
-    _dispatcher.AddSignal(_itemSignal);
+    _dispatcher.AddSignal(_rosterSignal);
     _dispatcher.AddSignal(_presSignal);
     _dispatcher.AddSignal(_dataSignal);
     _dispatcher.AddSignal(_winSignal);
     _dispatcher.AddSignal(_chatSignal);
 
-{** JJF msgqueue refactor
     _pauseQueue := TQueue.Create();
-**}
-
-    //create a handler that will callback when a set of dependancies has been resolved
-    //in this case all known dependancies
-    tdephand := TDependancyHandler.create(Self, ALL_DEPENDANT_MODULES);
-    tdephand.OnAllResolved := OnAllDependanciesResolved;
-    tdephand.OnResolved := OnDependancyResolved;
-    
+    _queue := TEventMsgQueue.Create();
     _avails := TWidestringlist.Create();
     _features := nil;
     _xmpp := false;
@@ -410,17 +307,25 @@ begin
 
     //display name cache
     DisplayName.getDisplayNameCache().setSession(Self);
-
+    
     // Create the Presence Proxy Database (PPDB)
     ppdb := TJabberPPDB.Create;
     ppdb.SetSession(Self);
 
-    // Create chat controllers
+    // Create the Roster
+    roster := TJabberRoster.Create;
+    roster.SetSession(Self);
+
+    // Create the bookmark manager
+    bookmarks := TBookmarkManager.Create();
+    bookmarks.SetSession(Self);
+
+    // Create the msg & chat controllers
+    MsgList := TJabberMsgList.Create();
     ChatList := TJabberChatList.Create();
+    MsgList.SetSession(Self);
     ChatList.SetSession(Self);
 
-    OnSessionStartProfile(Self);
-    OnSessionStartRoomProperties(Self);
     // Create the preferences controller
     Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
@@ -443,24 +348,20 @@ begin
     Presence_XML := TWideStringlist.Create();
 
     _extensions := TWideStringList.Create();
-
-    ItemController := TExodusItemController.create(Self);
-    roster := TContactController.create(Self);
-    rooms := TRoomController.create(Self);
 end;
 
 {---------------------------------------}
 Destructor TJabberSession.Destroy;
 begin
     // Clean up everything
+
     ClearStringListObjects(ppdb);
     ppdb.Clear();
     Prefs.Free();
     ppdb.Free();
-    //itemController.Free();
     roster.Free();
-    rooms.Free();
-    //bookmarks.Free();
+    bookmarks.Free();
+    MsgList.Free();
     ChatList.Free();
     ClearStringListObjects(_extensions);
     _extensions.Free();
@@ -469,13 +370,17 @@ begin
 
     if (_stream <> nil) then
         _stream.Free();
+    if (_sjid <> nil) then
+        _sjid.Free();
+
+    _pauseQueue.Free();
+    _queue.Free();
     Presence_XML.Free();
 
-    OnSessionEndProfile();
-    OnSessionEndRoomProperties();
     // Free the dispatcher... this should free the signals
     _dispatcher.Free;
-   inherited Destroy;
+
+    inherited Destroy;
 end;
 
 {---------------------------------------}
@@ -547,7 +452,7 @@ begin
     else if (_cur_server <> '') then
         result := _cur_server
     else if (_profile <> nil) then
-        result := _profile.Server
+         result := _profile.Server
     else
         result := '';
 end;
@@ -567,22 +472,6 @@ begin
         result := _profile.Resource
     else
         result := '';
-end;
-
-{---------------------------------------}
-function TJabberSession.GetSessionJid(): TJabberID;
-begin
-    if (_sjid <> nil) then
-        Result := _sjid
-    else
-        Result := _profile.GetJabberID();
-end;
-{---------------------------------------}
-procedure TJabberSession.SetSessionJid(jid: TJabberID);
-begin
-    if (_sjid <> nil) then
-        _sjid.Free();
-    _sjid := jid;
 end;
 
 {---------------------------------------}
@@ -638,8 +527,6 @@ begin
         // don't I18N
         raise Exception.Create('Invalid connection type');
     end;
-    //fire a stream ready event, so anything that wants to add listeners can
-    _dispatcher.DispatchSignal('/session/stream/ready', nil);
 
     // Register our session to get XML Tags
     _stream.RegisterStreamCallback(Self.StreamCallback);
@@ -659,7 +546,6 @@ begin
     if (Self.Stream.Active) then begin
         if (_authd) then begin
             Prefs.SaveServerPrefs();
-            _dispatcher.DispatchSignal('/session/disconnecting', nil);
             _stream.Send('<presence type="unavailable"/>');
         end;
 
@@ -669,7 +555,6 @@ begin
     else
         Self.handleDisconnect();
 
-    _authd := false;
     _register := false;
 end;
 
@@ -682,6 +567,7 @@ begin
             tag.setAttribute('xml:lang', _lang);
 
         _stream.SendTag(tag);
+        tag.Free;
     end
     else begin
         tag.Free;
@@ -714,22 +600,20 @@ begin
     _dispatcher.DispatchSignal('/session/disconnected', nil);
 
     // Clear the roster, ppdb and fire the callbacks
+    _sjid := nil;
     _first_pres := false;
     _authd := false;
     _cur_server := '';
     _ssl_on := false;
     _compression_on := false;
 
-{** JJF msgqueue refactor
     if (_paused) then
         Self.Play();
-**}
+
     FreeAndNil(_features);
-    FreeAndNil(_sjid);
 
     ppdb.Clear;
-    ItemController.ClearItems;
-    //roster.Clear;
+    Roster.Clear;
     ppdb.Clear;
 
     _stream.Free();
@@ -745,13 +629,21 @@ end;
 procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
     biq: TJabberIQ;
+    l, lang, tmps: WideString;
     methods: TXMLTagList;
     i: integer;
 begin
     // Something is happening... our stream says so.
     if ((msg = 'connected') and (_sent_stream = false)) then begin
         // we are connected... send auth stuff.
-        _stream.SendStreamHeader(Server, Prefs.getString('locale'));
+        lang := Prefs.getString('locale');
+        if (lang <> '') then l := ' xml:lang="' + lang + '" ' else l := '';
+        tmps := '<stream:stream to="' + Trim(Server) +
+            '" xmlns="jabber:client" ' +
+            'xmlns:stream="http://etherx.jabber.org/streams" ' + l +
+            'version="1.0" ' +
+            '>';
+        _stream.Send(tmps);
         _sent_stream := true;
     end
 
@@ -874,6 +766,7 @@ procedure TJabberSession.BindCallback(event: string; tag: TXMLTag);
 var
     iq: TJabberIQ;
     j: WideString;
+    jid: TJabberID;
 begin
     // Callback for our xmpp-bind request
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
@@ -883,7 +776,7 @@ begin
     else begin
         j := tag.QueryXPData('/iq/bind[@xmlns="urn:ietf:params:xml:ns:xmpp-bind"]/jid');
         if (j <> '') then begin
-            SetSessionJID(TJabberID.Create(j));
+            _sjid := TJabberID.Create(j);
         end;
 
         iq := TJabberIQ.Create(Self, generateID(), SessionCallback, AUTH_TIMEOUT);
@@ -903,38 +796,29 @@ begin
         _dispatcher.DispatchSignal('/session/error/auth', tag);
         exit;
     end
-    else _dispatcher.DispatchSignal(DEPMOD_READY_SESSION_EVENT, tag);
+    else
+        StartSession(tag);
 end;
 
 {---------------------------------------}
-{
-    Just about everything that initializes at auth catches this event. Many
-    listeners have dependacies on entity cache, roster, bookmarks and private
-    storeage fetch. To address these dependancies new "ready" events will
-    be fired instead of authenticated. Once rosrter, enitify cahche etc. have
-    signaled ready,  /session/authneticated will be fired. This logic is
-    controlled in jabber1.pas
-}
 procedure TJabberSession.StartSession(tag: TXMLTag);
 begin
     // We have an active session
     _first_pres := true;
-     Prefs.FetchServerPrefs(); //server prefs will just fire a /session/prefs on success
-    _authd := true;
     _dispatcher.DispatchSignal('/session/authenticated', tag);
+    Prefs.FetchServerPrefs();
+    // Added by SIG - set Default Nickname
+//    SetDefaultNickname();
 end;
 
 {---------------------------------------}
-{** JJF msgqueue refactor
-
 procedure TJabberSession.Pause();
 begin
     // pause the session
     _paused := true;
 end;
-**}
+
 {---------------------------------------}
-{** JJF msgqueue refactor
 procedure TJabberSession.Play();
 var
     q: TQueuedEvent;
@@ -953,15 +837,14 @@ begin
     end;
     _resuming := false;
 end;
-**}
-{---------------------------------------}
-{** JJF msgqueue refactor
 
+{---------------------------------------}
 procedure TJabberSession.QueueEvent(event: string; tag: TXMLTag; Callback: TPacketEvent);
 var
     q: TQueuedEvent;
 begin
     // Queue an event to a specific Callback
+
     q := TQueuedEvent.Create();
     q.callback := TMethod(Callback);
     q.event := event;
@@ -970,8 +853,9 @@ begin
     // it makes the rounds thru the dispatcher.
     q.tag := TXMLTag.Create(tag);
     _pauseQueue.Push(q);
+
 end;
-**}
+
 {---------------------------------------}
 function TJabberSession.RegisterCallback(callback: TPacketEvent; xplite: Widestring; pausable: boolean = false): integer;
 var
@@ -1015,12 +899,12 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.RegisterCallback(callback: TItemEvent; event: Widestring): integer;
+function TJabberSession.RegisterCallback(callback: TRosterEvent; xplite: Widestring): integer;
 var
-    l: TItemListener;
+    l: TRosterListener;
 begin
-    // add a callback to the item signal
-    l := _itemSignal.addListener(event, callback);
+    // add a callback to the roster signal
+    l := _rosterSignal.addListener(callback, xplite);
     Result := l.cb_id;
 end;
 
@@ -1069,11 +953,10 @@ begin
 end;
 
 {---------------------------------------}
-//procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const ritem: IExodusItem);
-procedure TJabberSession.FireEvent(event: string; const item: IExodusItem);
+procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem);
 begin
     // dispatch a roster event directly
-    _itemSignal.Invoke(event, item);
+    _rosterSignal.Invoke(event, tag, ritem);
 end;
 
 {---------------------------------------}
@@ -1157,7 +1040,7 @@ begin
 
         // allow plugins to add stuff, by trapping this event
         MainSession.FireEvent('/session/before_presence', p);
-        //do stuff by adding to Presence_XML
+
         for i := 0 to Presence_XML.Count - 1 do
             p.addInsertedXML(Presence_XML[i]);
 
@@ -1178,16 +1061,67 @@ begin
             Prefs.SaveServerPrefs();
 
         MainSession.FireEvent('/session/presence', nil);
-{** JJF msgqueue refactor
+
         if (_paused) then begin
             // If the session is paused, and we're changing back
             // to available, or chat, then make sure we play the session
             if ((_show <> 'away') and (_show <> 'xa') and (_show <> 'dnd')) then
                 Self.Play();
         end;
-**}        
     end;
 end;
+{---------------------------------------}
+function TJabberSession.GetExtList(): TWideStringList;
+begin
+    Result := _extensions;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetExtStr(): WideString;
+var
+    i : integer;
+begin
+    Result := '';
+    for i := 0 to _extensions.Count - 1 do begin
+        if (i <> 0) then
+            Result := Result + ' ';
+        Result := Result + _extensions[i];
+    end;
+end;
+{---------------------------------------}
+
+procedure TJabberSession.AddExtension(ext: WideString; feature: WideString);
+var
+    i : integer;
+    features : TWideStringList;
+begin
+    i := _extensions.IndexOf(ext);
+    if (i < 0) then begin
+        features := TWideStringList.Create();
+        _extensions.AddObject(ext, features);
+    end
+    else begin
+        features := TWideStringList(_extensions.Objects[i]);
+    end;
+
+    features.Add(feature);
+end;
+
+{---------------------------------------}
+procedure TJabberSession.RemoveExtension(ext: WideString);
+var
+    i : integer;
+    features : TWideStringList;
+begin
+    i := _extensions.IndexOf(ext);
+    if (i < 0) then exit;
+
+    features := TWideStringList(_extensions.Objects[i]);
+
+    _extensions.Delete(i);
+    features.Free();
+end;
+
 {---------------------------------------}
 procedure TJabberSession.manualBlastPresence(p: TXMLTag);
 var
@@ -1232,7 +1166,7 @@ end;
 {---------------------------------------}
 function TJabberSession.IsBlocked(jid : TJabberID): boolean;
 var
-    r1: IExodusItem;
+    r1, r2: TJabberRosterItem;
     blockers: TWideStringList;
 begin
     blockers := TWideStringList.Create();
@@ -1245,9 +1179,11 @@ begin
 
     if ((not result) and (Prefs.getBool('block_nonroster'))) then begin
         // block this jid if they are not in my roster
-         r1 := ItemController.getItem(jid.jid);
-         if (r1 = nil) then
-             result := true;
+        r1 := Roster.Find(jid.jid);
+        r2 := nil;
+        if (r1 = nil) then
+            r2 := Roster.Find(jid.full);
+        Result := ((r1 = nil) and (r2 = nil));
     end;
 end;
 
@@ -1275,8 +1211,8 @@ begin
        for j := Count - 1 downto 0 do begin
            c := TChatController(Objects[j]);
            if (c <> nil) then
-             if (c.BareJID = jid.jid) then
-                c.SetJid(c.BareJID);
+             if (c.jid = jid.jid) then
+                c.SetJid(c.jid);
        end;
     end;
     block.Free();
@@ -1294,16 +1230,16 @@ begin
     with MainSession.ChatList do begin
        for j := Count - 1 downto 0 do begin
            c := TChatController(Objects[j]);
-           block.setAttribute('jid', c.BareJID);
+           block.setAttribute('jid', c.jid);
            if (c <> nil) then begin
-             if (IsBlocked(c.BareJID)) then begin
+             if (IsBlocked(c.jid)) then begin
                 //If blocked, chat window will be closed and will
                 //disable controller for this jid
                 MainSession.FireEvent('/session/block', block);
              end
              else begin
                 //Enable controller just in case window is not open
-                c.SetJid(c.BareJID);
+                c.SetJid(c.jid);
                 //MainSession.FireEvent('/session/unblock', block);
              end;
            end;
@@ -1391,27 +1327,20 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag; reset_stream: boolean);
-var
-    jid: TJabberID;
 begin
     // our auth-agent is all set\
     //remove temp password from prefs
-    _authd := ok;
     Prefs.setString('temp-pw', '');
     if (ok) then begin
-        jid := TJabberID.Create(
-                _profile.Username,
-                _profile.Server,
-                _profile.Resource);
-        SetSessionJid(jid);
+        _authd := true;
         _profile.NewAccount := false;
         _register := false;
+        _sjid := TJabberID.Create(_profile.Username, _profile.Server, _profile.Resource);
 
         if (reset_stream) then
             ResetStream()
         else
-            //fire session/ready/session, see TDepMod
-            _dispatcher.DispatchSignal(DEPMOD_READY_SESSION_EVENT, tag);
+            StartSession(tag);
     end
     else begin
         _dispatcher.DispatchSignal('/session/error/auth', tag);
@@ -1420,10 +1349,17 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.ResetStream();
+var
+    tmps: Widestring;
 begin
     // send a new stream:stream...
     _stream.ResetParser();
-    _stream.SendStreamHeader(Server, Prefs.getString('locale'));
+    tmps := '<stream:stream to="' + Trim(Server) +
+        '" xmlns="jabber:client" ' +
+        'xmlns:stream="http://etherx.jabber.org/streams" ' +
+        'version="1.0" ' +
+        '>';
+    _stream.Send(tmps);
 end;
 
 {---------------------------------------}
@@ -1513,199 +1449,41 @@ begin
     Result := DisplayName.getDisplayNameCache().getDisplayName(Profile.getJabberID);
 end;
 
-procedure TJabberSession.OnAllDependanciesResolved(SessionTag : TXMLTag);
-begin
-    StartSession(SessionTag);
-end;
 
-procedure TJabberSession.OnDependancyResolved(module: widestring; Tag : TXMLTag);
+{------------- Added by SIG to support setting default nick name---}
+{---------- JJF now handled by DisplayName --------}
+{------------------------------------
+procedure TJabberSession.SetDefaultNickname();
+var
+  vciq: TJabberIQ;
+  default_nick: WideString;
 begin
-    if (module = DEPMOD_SESSION) then
+   default_nick := Prefs.getString('default_nick');
+    if ( default_nick = '' ) then
     begin
-        //kick off some other depandcies
-        jEntityCache.fetch(Self.Server, Self);
+      vciq := TJabberIQ.Create(Self,generateID(),vcardCallback);
+      vciq.qTag.Name := 'VCARD';
+      vciq.Namespace := 'vcard-temp';
+      vciq.iqType := 'get';
+      vciq.toJid := Username + '@' + Server;
+      vciq.Send();
     end;
 end;
-
-{*******************************************************************************
-**************************** TSessionListener **********************************
-*******************************************************************************}
-procedure TSessionListener.FireAuthenticated();
-begin
-    if (Assigned(_OnAuthEvent)) then
-        _OnAuthEvent();
-end;
-
-procedure TSessionListener.FireDisconnected();
-begin
-    if (Assigned(_OnDisconnectEvent)) then
-        _OnDisconnectEvent((_ReceivedError <> ''), _ReceivedError);
-end;
-
-procedure TSessionListener.SessionListenerCallback(event: string; tag: TXMLTag);
-begin
-    if (event = '/session/authenticated') then
-    begin
-        _Authenticated := true;
-        _ReceivedError := '';
-        FireAuthenticated();
-    end
-    else if ((event = '/session/disconnected') and _Authenticated) then
-    begin
-        FireDisconnected();
-        _Authenticated := false;
-    end
-    else if (event = '/session/commerror') then
-    begin
-        _ReceivedError := 'Comm Error';
-    end
-end;
-
-Constructor TSessionListener.Create(OnAuthenticated: TAuthenticatedEvent; OnDisconnect: TDisconnectEvent; JabberSession: TJabberSession = nil);
-begin
-    _Authenticated := false;
-    _ReceivedError := '';
-    _SessionCB := -1;
-    _OnAuthEvent := OnAuthenticated;
-    _OnDisconnectEvent := OnDisconnect;
-    _Session := JabberSession;
-    if (_Session = nil) then
-        _Session := MainSession;
-
-    _SessionCB := _Session.RegisterCallback(SessionListenerCallback, '/session');
-    _Authenticated := _Session.Authenticated;
-end;
-
-Destructor TSessionListener.Destroy();
-begin
-    if (_SessionCB <> -1) then        begin
-        _Session.UnRegisterCallback(_SessionCB);
-        _SessionCB := -1;
-    end;
-end;
-
-{------------------------ TDependancyHandler ------------------------------}
-function ArrayToTArray(ina: array of TModuleInfo): TDepModInfoArray;
+{------------------------------------
+procedure TJabberSession.vcardCallback(event: string; tag: TXMLTag);
 var
-    i: integer;
+  vcard: TXMLVCard;
+  default_nick: WideString;
 begin
-    SetLength(Result, Length(ina));
-    for i := 0 to Length(ina) - 1 do
-        Result[i] := ina[i];
+
+   if (event <> 'xml') then exit;
+   vcard := TXMLVCard.Create;
+   vcard.parse(tag);
+   default_nick := vcard.FamilyName + ', ' + vcard.GivenName;
+   Prefs.setString('default_nick',default_nick);
+   vcard.Free();
 end;
-
-function TDependancyHandler.indexOfModule(module: widestring): integer;
-begin
-    for Result := 0 to Length(_dependancies) - 1 do
-        if (_dependancies[Result].module = module) then exit;
-    Result := -1;
-end;
-
-function TDependancyHandler.AllReady(): boolean;
-var
-    i: integer;
-begin
-    Result := false;
-    for i := 0 to Length(_dependancies) - 1 do
-        if (not _dependancies[i].ready) then exit;
-
-    Result := true;
-end;
-
-procedure TDependancyHandler.SessionCallback(event: string; tag: TXMLTag);
-
-var
-    idx: integer;
-    depmod: string;
-begin
-    if (StartsText(DEPMOD_READY_EVENT, event)) then
-    begin
-        depmod := RightStr(event, Length(event) - Length(DEPMOD_READY_EVENT));
-        idx := indexOfModule(depmod);
-        if (idx <> -1) then
-        begin
-            _dependancies[idx].ready := true;
-            if (depmod = DEPMOD_SESSION) then
-                _sessionReadyTag := TXMLTag.create(Tag); //copy
-            fireOnResolved(depmod, Tag);
-        end;
-
-        if (AllReady()) then
-            FireOnAllResolved();
-    end
-    else if (event = '/session/disconnected') then
-        ResetState()
-    else if (event = '/session/entity/items') then
-    begin
-        depmod := tag.GetAttribute('from');
-        if (depmod = _session.Server) then
-            _session.FireEvent(DEPMOD_READY_EVENT + DEPMOD_ENTITY_CACHE, nil);
-    end;
-
-end;
-
-procedure TDependancyHandler.ResetState();
-var
-    i: integer;
-begin
-    for i := 0 to Length(_dependancies) - 1 do
-        _dependancies[i].ready := false;
-
-    if (_sessionReadyTag <> nil) then
-        _sessionReadyTag.Free();
-    _sessionReadyTag := nil;
-end;
-
-procedure TDependancyHandler.FireOnAllResolved();
-begin
-    if (Assigned(_OnAllResolved)) then
-        _OnAllResolved(_sessionReadyTag);
-
-    ResetState();
-end;
-
-procedure TDependancyHandler.FireOnResolved(module: widestring; tag: TXMLTag);
-begin
-    if (Assigned(_onResolved)) then
-        _OnResolved(module, tag);
-end;
-
-constructor TDependancyHandler.create(session: TJabberSession; depmods: Array of TModuleInfo);
-begin
-    Create(session, ArrayToTArray(depmods));
-end;
-
-
-constructor TDependancyHandler.create(session: TJabberSession; depmods: TDepModInfoArray);
-var
-    i: integer;
-    sessionDependancy: TModuleInfo;
-begin
-    _Session := session;
-    
-    SetLength(_dependancies, Length(depmods));
-    for i := 0 to Length(depmods) - 1 do
-        _dependancies[i] := depmods[i];
-    if (indexOfModule(DEPMOD_SESSION) = -1) then
-    begin
-        sessionDependancy.module := DEPMOD_SESSION;
-        sessionDependancy.ready := false;
-
-        SetLength(_dependancies, Length(_dependancies) + 1);
-        _dependancies[Length(_dependancies)] := sessionDependancy;
-    end;
-    _sessionCB := _session.RegisterCallback(SessionCallback, '/session');
-    _sessionReadyTag := nil;
-end;
-
-destructor TDependancyHandler.Destroy();
-begin
-    _session.UnRegisterCallback(_sessionCB);
-    ResetState();
-    inherited;
-end;
-
-
+}
 end.
 
 

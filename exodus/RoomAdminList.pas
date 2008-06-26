@@ -21,13 +21,13 @@ unit RoomAdminList;
 interface
 
 uses
-    XMLTag, IQ, Unicode, SelectItem, SelRoomOccupant,  
+    XMLTag, IQ, Unicode, SelContact, SelRoomOccupant,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
-    TntComCtrls, TntStdCtrls, ExForm, TntForms, ExFrame;
+    TntComCtrls, TntStdCtrls;
 
 type
-  TfrmRoomAdminList = class(TExForm)
+  TfrmRoomAdminList = class(TForm)
     frameButtons1: TframeButtons;
     lstItems: TTntListView;
     Panel2: TPanel;
@@ -52,6 +52,7 @@ type
     _iq: TJabberIQ;
     _adds: TWidestringlist;
     _dels: TWidestringlist;
+    _selector: TfrmSelContact;
     _occupant_selector: TfrmSelRoomOccupant;
     _rlist: TList;
 
@@ -66,14 +67,14 @@ type
     { Public declarations }
 
     procedure Start();
-    procedure SetList(rlist: TWideStringList);
+    procedure SetList(rlist: TList);
   end;
 
 var
   frmRoomAdminList: TfrmRoomAdminList;
 
 procedure ShowRoomAdminList(room_win: TForm; room_jid, role, affiliation: WideString;
-    caption: WideString = ''; rlist: TWideStringList = nil);
+    caption: WideString = ''; rlist: TList = nil);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -82,13 +83,13 @@ implementation
 
 uses
     JabberUtils, ExUtils,  GnuGetText, JabberConst, JabberID, Session, Room,
-    RosterForm, Exodus_TLB;
+    NodeItem, RosterWindow;
 
 {$R *.dfm}
 
 {---------------------------------------}
 procedure ShowRoomAdminList(room_win: TForm; room_jid, role, affiliation: WideString;
-    caption: Widestring = ''; rlist: TWideStringList = nil);
+    caption: Widestring = ''; rlist: TList = nil);
 var
     f: TfrmRoomAdminList;
 begin
@@ -120,7 +121,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoomAdminList.SetList(rlist: TWideStringList);
+procedure TfrmRoomAdminList.SetList(rlist: TList);
 var
     i: integer;
     rm: TRoomMember;
@@ -129,15 +130,15 @@ begin
         _rlist := TList.Create();
         for i := 0 to rlist.Count - 1 do begin
             rm := TRoomMember.Create();
-            rm.jid := TRoomMember(rlist.Objects[i]).jid;
-            rm.Nick := TRoomMember(rlist.Objects[i]).Nick;
-            rm.Node := TRoomMember(rlist.Objects[i]).Node;
-            rm.status := TRoomMember(rlist.Objects[i]).status;
-            rm.show := TRoomMember(rlist.Objects[i]).show;
-            rm.blockShow := TRoomMember(rlist.Objects[i]).blockShow;
-            rm.role := TRoomMember(rlist.Objects[i]).role;
-            rm.affil := TRoomMember(rlist.Objects[i]).affil;
-            rm.real_jid := TRoomMember(rlist.Objects[i]).real_jid;
+            rm.jid := TRoomMember(rlist.Items[i]).jid;
+            rm.Nick := TRoomMember(rlist.Items[i]).Nick;
+            rm.Node := TRoomMember(rlist.Items[i]).Node;
+            rm.status := TRoomMember(rlist.Items[i]).status;
+            rm.show := TRoomMember(rlist.Items[i]).show;
+            rm.blockShow := TRoomMember(rlist.Items[i]).blockShow;
+            rm.role := TRoomMember(rlist.Items[i]).role;
+            rm.affil := TRoomMember(rlist.Items[i]).affil;
+            rm.real_jid := TRoomMember(rlist.Items[i]).real_jid;
             _rlist.Add(rm);
         end;
     end
@@ -173,12 +174,6 @@ begin
         lstItems.Columns.Delete(1);
         lstItems.Column[0].Width := lstItems.Width - 5;
     end;
-
-    if (onList = MUC_OUTCAST) then begin
-        lstItems.Columns.Delete(0);
-        lstItems.Column[0].Width := lstItems.Width - 5;
-    end;
-
     Show();
 end;
 
@@ -213,13 +208,8 @@ begin
         for i := 0 to items.Count - 1 do begin
             itemJID := TJabberID.Create(items[i].GetAttribute('jid'));
             li := TTntListItem(lstItems.Items.Add());
-            if (onList = MUC_OUTCAST) then begin
-                li.Caption := itemJID.getDisplayFull();
-            end
-            else begin
-                li.Caption := items[i].GetAttribute('nick');
-                li.SubItems.Add(itemJID.getDisplayFull());
-            end;
+            li.Caption := items[i].GetAttribute('nick');
+            li.SubItems.Add(itemJID.getDisplayFull());
             li.Checked := true;
             itemJID.Free();
         end;
@@ -309,6 +299,7 @@ begin
     _iq := nil;
     _adds := TWidestringlist.Create();
     _dels := TWidestringlist.Create();
+    _selector := TfrmSelContact.Create(nil);
     _rlist := nil;
 
     MainSession.Prefs.RestorePosition(Self);
@@ -322,6 +313,7 @@ begin
     if (_iq <> nil) then FreeAndNil(_iq);
     FreeAndNil(_adds);
     FreeAndNil(_dels);
+    _selector.Free();
 
     if (_rlist <> nil) then begin
         for i := 0 to _rlist.Count - 1 do
@@ -336,7 +328,7 @@ end;
 procedure TfrmRoomAdminList.btnAddClick(Sender: TObject);
 var
     j: Widestring;
-    item: IExodusItem;
+    ritem: TJabberRosterItem;
 begin
     // Add a JID
     if (role) then begin
@@ -351,11 +343,11 @@ begin
     end
     else begin
         // Select by JID
-        j := SelectUIDByType('contact');
-        if (j <> '') then begin
-            item := MainSession.ItemController.GetItem(j);
-            if (item <> nil) and (item.Type_ = 'contact') then
-                AddJid(j, item.value['Name'])
+        if (_selector.ShowModal = mrOK) then begin
+            j := _selector.GetSelectedJID();
+            ritem := MainSession.Roster.Find(j);
+            if (ritem <> nil) then
+                AddJid(j, ritem.Text)
             else
                 AddJid(j, '');
         end;
@@ -400,42 +392,42 @@ procedure TfrmRoomAdminList.lstItemsDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 begin
     // Accept roster items
-    Accept := (Source = frmRoster.RosterTree);
+    Accept := (Source = frmRosterWindow.treeRoster) or
+        (Source = _selector.frameTreeRoster1.treeRoster);
 end;
 
 {---------------------------------------}
 procedure TfrmRoomAdminList.lstItemsDragDrop(Sender, Source: TObject; X,
   Y: Integer);
-//var
-//    tree: TTreeView;
-//    n: TTreeNode;
-//    i,j: integer;
-//    ritem: TJabberRosterItem;
-//    gitems: TList;
-//    grp: TJabberGroup;
+var
+    tree: TTreeView;
+    n: TTreeNode;
+    i,j: integer;
+    ritem: TJabberRosterItem;
+    gitems: TList;
+    grp: TJabberGroup;
 begin
-{ TODO : Roster refactor }
-//    // dropping from main roster window
-//    tree := TTreeView(Source);
-//    with tree do begin
-//        for i := 0 to SelectionCount - 1 do begin
-//            n := Selections[i];
-//            if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
-//                // We have a roster item
-//                ritem := TJabberRosterItem(n.Data);
-//                AddJid(ritem.jid.jid, ritem.Text);
-//            end
-//            else if ((n.Data <> nil) and (TObject(n.Data) is TJabberGroup)) then begin
-//                // We have a roster grp
-//                grp := TJabberGroup(n.Data);
-//                gitems := MainSession.roster.getGroupItems(grp.FullName, false);
-//                for j := 0 to gitems.count - 1 do begin
-//                    ritem := TJabberRosterItem(gitems[j]);
-//                    AddJid(ritem.Jid.jid, ritem.Text);
-//                end;
-//            end;
-//        end;
-//    end;
+    // dropping from main roster window
+    tree := TTreeView(Source);
+    with tree do begin
+        for i := 0 to SelectionCount - 1 do begin
+            n := Selections[i];
+            if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
+                // We have a roster item
+                ritem := TJabberRosterItem(n.Data);
+                AddJid(ritem.jid.jid, ritem.Text);
+            end
+            else if ((n.Data <> nil) and (TObject(n.Data) is TJabberGroup)) then begin
+                // We have a roster grp
+                grp := TJabberGroup(n.Data);
+                gitems := MainSession.roster.getGroupItems(grp.FullName, false);
+                for j := 0 to gitems.count - 1 do begin
+                    ritem := TJabberRosterItem(gitems[j]);
+                    AddJid(ritem.Jid.jid, ritem.Text);
+                end;
+            end;
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -468,10 +460,7 @@ begin
     else begin
         for i := lstItems.Items.Count - 1 downto 0 do begin
             if (lstItems.Items[i].Selected) then begin
-                if (onList = MUC_OUTCAST) then
-                    itemJID := TJabberID.Create(lstItems.Items[i].Caption, false)
-                else
-                    itemJID := TJabberID.Create(lstItems.Items[i].SubItems[0], false);
+                itemJID := TJabberID.Create(lstItems.Items[i].SubItems[0], false);
                 j := itemJID.full();
                 idx := _adds.IndexOf(j);
                 if (idx >= 0) then

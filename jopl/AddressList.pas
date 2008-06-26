@@ -32,18 +32,7 @@ uses
     SysUtils,
     JabberConst,
     Classes;
-
-const
-    ADDRESS_TYPE_TO = 'to';
-    ADDRESS_TYPE_CC = 'cc';
-    ADDRESS_TYPE_BCC = 'bcc';
-    ADDRESS_TYPE_REPLYTO = 'replyto';
-    ADDRESS_TYPE_REPLYROOM = 'replyroom';
-    ADDRESS_TYPE_NOREPLY = 'noreply';
-
-    ADDRESS_REPLYTO_JID = '<REPLYTO>';
 type
-
     TJabberAddressList = class(TStringList)
     private
         _tag      : TXMLTag;
@@ -53,7 +42,7 @@ type
         constructor Create(mTag: TXMLTag); overload;
         destructor Destroy; override;
 
-        procedure AddAddress(jid: WideString; addrType: WideString = ADDRESS_TYPE_TO);
+        procedure AddAddress(jid: WideString; addrType: WideString = 'to');
         function  GetTag(): TXMLTag;
     end;
 
@@ -148,9 +137,7 @@ begin
         setAttribute('type', Self.AddrType);
 
         // if JID no URI attribute & vise versa
-        //little hack here, replyto does not require a JID, use the JID
-        //placeholder <REPLYTO> iin place of a jid when adding address
-        if (Self.ToJID <> '') and (Self.ToJID <> ADDRESS_REPLYTO_JID) then begin
+        if (Self.ToJID <> '') then begin
             setAttribute('jid', Self.ToJID);
             if (Self.Node <> '') then
                 setAttribute('node', Self.Node);
@@ -205,7 +192,7 @@ end;
     Use this method to add an address to the list.
     The address type defaults to 'to'
 }
-procedure TJabberAddressList.AddAddress(jid: WideString; addrType: WideString);
+procedure TJabberAddressList.AddAddress(jid: WideString; addrType: WideString = 'to');
 var
     addr: TJabberAddress;
 begin
@@ -232,7 +219,6 @@ begin
 
     // build a tag based on this
     Result := TXMLTag.Create('addresses');
-    Result.SetAttribute('xmlns',XMLNS_ADDRESS);
 
     // add all address objects
     for i:=0 to Self.Count-1 do begin

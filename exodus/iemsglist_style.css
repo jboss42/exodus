@@ -1,108 +1,52 @@
-/*
- * The comments in this CSS are replaced programmatically with the
- * values specified in the prefs.
- */
-
-
 body {
-    font-family: /*font_name*/,Arial Unicode MS, Verdana;
-    font-size: /*font_size*/;
-    font-weight: /*font_weight*/;
-    font-style: /*font_style*/;
-    text-decoration: /*text_decoration*/;
-    background: /*color_bg*/;
+    font-family: Arial Unicode MS, Verdana;
+    font-size: 9pt;
+    background: #eee;
     margin: 0pt;
-    word-wrap: break-word;
-}
-
-.date {
-    width: 100%;
-    text-align: center;
-    background: /*color_date_bg*/;
-    font-weight: bold;
-    color: /*color_date*/;
-}
-
-.composing {
-    width: 100%;
-    text-align: center;
-	color: /*color_composing*/;
+    overflow: hidden;
 }
 
 .ts {
-    color: /*color_time*/;
+    color:gray;
     white-space: nowrap;
     padding-right: 3;
-    /*font-size: smaller;*/
 }
 
 .me {
-    color: /*color_me*/;
+    color: blue;
     white-space: nowrap;
     padding-right: 3;
-    font-weight: bold;
-    display: block;
-    /*font-size: larger;*/
-	margin-left: 3;
 }
 
 .other {
-    color: /*color_other*/;
+    color:red;
     white-space: nowrap;
     padding-right: 3;
-    font-weight: bold;
-    display: block;
-    /*font-size: larger;*/
-	margin-left: 3;
 }
 
-.line1 {
+.line {
+   text-indent: -20;
+   margin-left: 25;
    padding-top: 3;
-   background: /*color_bg*/;
-}
-
-.line2 {
-   padding-top: 3;
-   background: /*color_alt_bg*/;
 }
 
 .msg {
-    color: /*font_color*/;
+    color:black;
 }
 
-.msgts {
-    margin-left: 25;
-}
-
-.priorityimg {
-    position: absolute;
-    left: 5;
-}
-
-.svr {
-	color:/*color_server*/;
-	margin-left: 3;
-}
-
-.alert {
-	color:/*color_alert*/;
-}
-
-.action {
-	color:/*color_action*/;
-}
-
-.pres {
-	color:/*color_presence*/;
-}
+.svr {color:green}
+.alert {color:blue}
+.action {color:purple}
+.pres {color:gray}
 
 #content {
   height: 100%;
+  overflow: auto;
 }
 
-/*#splash {
+#splash {
     z-index: -1;
-    position: absolute;
+    position: absolute; 
     left: 0;
     top: 50%;
     width: 100%;
@@ -111,4 +55,4 @@ body {
     font-size: 24pt;
     font-weight: bold;
     color: #ddd;
-} */
+}

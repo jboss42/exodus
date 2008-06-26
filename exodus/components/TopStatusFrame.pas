@@ -55,7 +55,7 @@ implementation
 {---------------------------------------}
 procedure Register;
 begin
-  RegisterComponents('Exodus Components', [TExodusStatusFrame]);
+  RegisterComponents('Win32', [TExodusStatusFrame]);
 end;
 
 {getters and setters for general frame props}

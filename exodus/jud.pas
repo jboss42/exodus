@@ -21,19 +21,12 @@ unit Jud;
 interface
 
 uses
-    IQ, XMLTag, Contnrs,
-    Unicode, Windows, Messages,
-    SysUtils, Variants, Classes,
-    Graphics, Controls, Forms,
-    Dialogs, DockWizard, ComCtrls,
-    TntComCtrls, StdCtrls, TntStdCtrls,
-    ExtCtrls, TntExtCtrls, Menus,
-    Wizard, TntMenus, fXData,
-    ToolWin, TntForms, ExFrame;
-
+    IQ, XMLTag, Contnrs, Unicode, 
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
+    TntExtCtrls, Menus, Wizard, TntMenus, fXData, ToolWin;
 const
    WM_FIELDS_UPDATED = WM_USER + 6000;
-   
 type
 
   TJUDItem = class
@@ -58,9 +51,12 @@ type
     TabSheet4: TTabSheet;
     Panel2: TPanel;
     Label3: TTntLabel;
+    cboGroup: TTntComboBox;
+    lblAddGrp: TTntLabel;
     lstContacts: TTntListView;
     PopupMenu1: TTntPopupMenu;
     btnContacts: TButton;
+    popMessage: TTntMenuItem;
     popChat: TTntMenuItem;
     N1: TTntMenuItem;
     popProfile: TTntMenuItem;
@@ -70,7 +66,6 @@ type
     xdataBox: TframeXData;
     btnChat: TButton;
     btnBroadcastMsg: TButton;
-    lblGroup: TTntLabel;
     procedure lstContactsMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure btnBroadcastMsgClick(Sender: TObject);
@@ -82,8 +77,10 @@ type
       var Handled: Boolean);
     procedure popAddClick(Sender: TObject);
     procedure Label1Click(Sender: TObject);
+    procedure lblAddGrpClick(Sender: TObject);
     procedure popProfileClick(Sender: TObject);
     procedure popChatClick(Sender: TObject);
+    procedure popMessageClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure lstContactsColumnClick(Sender: TObject; Column: TListColumn);
     procedure lstContactsData(Sender: TObject; Item: TListItem);
@@ -152,15 +149,14 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
-    XData, ChatWin,
-//    MsgRecv,
-    Entity, EntityCache, InputPassword,
-    GnuGetText, JabberConst,
-    Profile, JabberID,
-    fGeneric, Session, JabberUtils,
-    ExUtils,  XMLUtils, fTopLabel,
-    TntClasses, DisplayName, Jabber1,
-    RosterImages, Exodus_TLB;
+    XData,
+    ChatWin, MsgRecv, Entity, EntityCache,
+    InputPassword, NodeItem, GnuGetText, 
+    JabberConst, Profile, Roster, JabberID, fGeneric,
+    Session, JabberUtils, ExUtils,  XMLUtils, fTopLabel,
+    TntClasses,
+    DisplayName,
+    Jabber1;
 
 var
     cur_sort: integer;
@@ -229,11 +225,6 @@ begin
     end
     else  f.cboJID.Items.AddStrings(stringlist);
 
-    if ((f.cboJid.Items.Count > 0) and
-        (f.cboJid.Items.Strings[0] <> '')) then begin
-        f.Hint := f.cboJid.Items.Strings[0];
-    end;
-
     f.reset();
     f.ShowDefault();
 
@@ -266,16 +257,20 @@ begin
     cur_state := 'get_fields';
     cur_sort := -1;
     cur_dir := true;
-  
+    MainSession.Roster.AssignGroups(cboGroup.Items);
     dflt_grp := MainSession.Prefs.getString('roster_default');
-    Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
 
+    if (dflt_grp <> '') then
+        cboGroup.ItemIndex := cboGroup.Items.IndexOf(dflt_grp);
+        
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
 
     AssignDefaultFont(Self.Font);
     AssignDefaultFont(Tabs.Font);
     AssignDefaultFont(TabFields.Font);
+    AssignUnicodeURL(lblAddGrp.Font, 8);
+
     TabSheet1.TabVisible := false;
     TabSheet2.TabVisible := false;
     TabFields.TabVisible := false;
@@ -286,8 +281,6 @@ begin
     btnChat.Enabled := false;
     btnBroadcastMsg.Enabled := false;
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
-    lblGroup.Caption := dflt_grp;
-    _windowType := 'jud';
 end;
 
 
@@ -702,9 +695,6 @@ begin
     btnContacts.Enabled := false;
     btnChat.Enabled := false;
     btnBroadcastMsg.Enabled := false;
-    if (cboJid.SelText <> '') then begin
-        Hint := cboJid.SelText;
-    end;
 end;
 
 {---------------------------------------}
@@ -736,6 +726,7 @@ begin
 
     popProfile.Enabled := not multi;
     popChat.Enabled := not multi;
+    popMessage.Enabled := not multi;
 end;
 
 {---------------------------------------}
@@ -746,16 +737,14 @@ var
     procedure doAdd(item: TListItem);
     var
         nick: Widestring;
-        ExItem: IExodusItem;
+        ritem: TJabberRosterItem;
         jid: TJabberID;
-        dflt_grp: WideString;
     begin
-        dflt_grp := MainSession.Prefs.getString('roster_default');
         // do the actual add stuff
         jid := TJabberID.Create(item.caption, false); // item may be escaped
-        ExItem := MainSession.ItemController.GetItem(jid.jid);
-        if (ExItem <> nil) then begin
-            if ((ExItem.Value['Subscription'] = 'to') or (ExItem.Value['Subscription'] = 'both')) then
+        ritem := MainSession.roster.Find(jid.jid);
+        if (ritem <> nil) then begin
+            if ((ritem.subscription = 'to') or (ritem.subscription = 'both')) then
                 exit;
         end;
 
@@ -765,7 +754,8 @@ var
             nick := item.SubItems[nick_col];
 
         if (nick = '') then nick := DisplayName.getDisplayNameCache().getDisplayName(jid);
-        MainSession.Roster.AddItem(jid.jid, nick, dflt_grp, true);
+
+        MainSession.roster.AddItem(jid.jid, nick, cboGroup.Text, true);
         jid.Free();
         
     end;
@@ -798,6 +788,17 @@ begin
     self.reset();
 end;
 
+{---------------------------------------}
+procedure TfrmJUD.lblAddGrpClick(Sender: TObject);
+var
+    go: TJabberGroup;
+begin
+  inherited;
+    // Add a new group to the list...
+    go := promptNewGroup();
+    if (go <> nil) then
+        MainSession.Roster.AssignGroups(cboGroup.Items);
+end;
 
 {---------------------------------------}
 function TfrmJUD.convertDisplayToJID(displayJID: widestring): widestring;
@@ -824,6 +825,14 @@ begin
   inherited;
     // Chat with this person
     StartChat(convertDisplayToJID(lstContacts.Selected.Caption), '', true);
+end;
+
+{---------------------------------------}
+procedure TfrmJUD.popMessageClick(Sender: TObject);
+begin
+  inherited;
+    // Send a message to this person
+    StartMsg(convertDisplayToJID(lstContacts.Selected.Caption));
 end;
 
 {---------------------------------------}
@@ -1016,7 +1025,7 @@ begin
        end;
      end;
      //Broadcast message and cleanup
-//JJF TODO hmm     BroadcastMsg(jidList);
+     BroadcastMsg(jidList);
      jidList.Free();
  end;
 end;

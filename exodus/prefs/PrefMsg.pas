@@ -23,94 +23,92 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ExGroupBox,
-  TntForms, ExFrame, ExBrandPanel;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
-const
-    S10N_PROMPT_ALL = 0;
-    S10N_AUTO_ACCEPT_CONTACTS = 1;
-    S10N_AUTO_ACCEPT_ALL = 2;
-    S10N_AUTO_DENY_ALL = 3;
-    
 type
   TfrmPrefMsg = class(TfrmPrefPanel)
-    pnlContainer: TExBrandPanel;
-    gbSubscriptions: TExGroupBox;
-    chkIncomingS10nAdd: TTntCheckBox;
-    rbAcceptContacts: TTntRadioButton;
-    rbAcceptAll: TTntRadioButton;
-    rbDenyAll: TTntRadioButton;
-    rbPromptAll: TTntRadioButton;
-    pnlOtherPrefs: TExGroupBox;
-    chkInviteAutoJoin: TTntCheckBox;
+    lblTimestampFmt: TTntLabel;
+    lblMsgOptions: TTntLabel;
+    lblSpoolPath: TTntLabel;
+    lblInviteOptions: TTntLabel;
+    chkTimestamp: TTntCheckBox;
+    chkMsgQueue: TTntCheckBox;
+    cboMsgOptions: TTntComboBox;
+    txtSpoolPath: TTntEdit;
+    btnSpoolBrowse: TTntButton;
+    cboInviteOptions: TTntComboBox;
     chkBlockNonRoster: TTntCheckBox;
-    pnlS10NOpts: TExBrandPanel;
-    gbAdvancedPrefs: TExGroupBox;
-    btnManageKeywords: TTntButton;
-    procedure btnManageKeywordsClick(Sender: TObject);
+    OpenDialog1: TOpenDialog;
+    txtTimestampFmt: TTntComboBox;
+    chkQueueDNDChats: TTntCheckBox;
+    chkQueueNotAvail: TTntCheckBox;
+    chkChatAvatars: TTntCheckBox;
+    chkShowPriority: TTntCheckBox;
+    chkQueueOffline: TTntCheckBox;
+    procedure btnSpoolBrowseClick(Sender: TObject);
   private
     { Private declarations }
   public
+    { Public declarations }
     procedure LoadPrefs(); override;
     procedure SavePrefs(); override;
   end;
+
+var
+  frmPrefMsg: TfrmPrefMsg;
 
 implementation
 {$WARN UNIT_PLATFORM OFF}
 {$R *.dfm}
 uses
     JabberUtils, ExUtils,  FileCtrl, Session, Unicode,
-    PrefFile, PrefController, ManageKeywordsDlg;
-
-procedure TfrmPrefMsg.btnManageKeywordsClick(Sender: TObject);
-var
-    tkw: TManageKeywordsDlg;
-begin
-    inherited;
-    tkw := TManageKeywordsDlg.Create(Self);
-    tkw.ShowModal();
-    tkw.Free();
-end;
+    PrefFile, PrefController;
 
 procedure TfrmPrefMsg.LoadPrefs();
 var
-    s: TPrefState;
+  date_time_formats: TWideStringList;
+  s: TPrefState;
 begin
     inherited;
-
-    s := GetPrefState('s10n_auto_accept');
-    pnlS10NOpts.Visible := (s <> psInvisible);
-    pnlS10NOpts.enabled := (s <> psReadOnly);
-
-    case (MainSession.prefs.getInt('s10n_auto_accept')) of
-        S10N_AUTO_ACCEPT_CONTACTS: rbAcceptContacts.checked := true;
-        S10N_AUTO_ACCEPT_ALL: rbAcceptAll.checked := true;
-        S10N_AUTO_DENY_ALL: rbDenyAll.checked := true;
-        else rbPromptAll.checked := true;
+    date_time_formats := TWideStringList.Create;
+    MainSession.Prefs.fillStringlist('date_time_formats', date_time_formats);
+    if (date_time_formats.Count > 0) then begin
+       AssignTntStrings(date_time_formats, txtTimestampFmt.Items);
     end;
 
-    s := getPrefState('keywords');
-    btnManageKeywords.Visible := (s <> psInvisible);
-    btnManageKeywords.Enabled := (s <> psReadOnly);
+    chkShowPriority.Visible := MainSession.Prefs.getBool('branding_priority_notifications');
+    if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = true) then begin
+       chkQueueDNDChats.Visible  := false;
+       chkQueueOffline.Visible := false;
+       s := PrefController.getPrefState('queue_not_avail');
+       chkQueueNotAvail.Visible := (s <> psInvisible);
+       chkQueueNotAvail.Top :=  chkQueueDNDChats.Top;
+       chkQueueNotAvail.Left :=  chkQueueDNDChats.Left;
+    end
+    else begin
+       s := PrefController.getPrefState('queue_dnd_chats');
+       chkQueueDNDChats.Visible  := (s <> psInvisible);
+       s := PrefController.getPrefState('queue_offline');
+       chkQueueOffline.Visible := (s <> psInvisible);
+       chkQueueNotAvail.Visible := false;
+    end;
 
-    pnlContainer.CaptureChildStates();
-    pnlContainer.CheckAutoHide();
 end;
 
 procedure TfrmPrefMsg.SavePrefs();
-var
-    sval: widestring;
 begin
+    if (Trim(txtTimestampFmt.Text) <> '') then
+       if (txtTimestampFmt.Items.IndexOf(txtTimestampFmt.Text) < 0) then
+         txtTimestampFmt.Items.Add(txtTimestampFmt.Text);
+    MainSession.Prefs.setStringList('date_time_formats', txtTimestampFmt.Items);
     inherited;
-    if (rbAcceptContacts.checked) then
-        sval := '1'
-    else if (rbAcceptAll.checked) then
-        sval := '2'
-    else if (rbDenyAll.checked) then
-        sval := '3'
-    else
-        sval := '0';
-    MainSession.Prefs.setString('s10n_auto_accept', sval);
+end;
+
+procedure TfrmPrefMsg.btnSpoolBrowseClick(Sender: TObject);
+begin
+    OpenDialog1.FileName := txtSpoolPath.Text;
+    if (OpenDialog1.Execute) then
+        txtSpoolPath.Text := OpenDialog1.FileName;
 end;
 
 end.

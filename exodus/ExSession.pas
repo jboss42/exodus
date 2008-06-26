@@ -23,14 +23,12 @@ interface
 uses
     // Exodus'y stuff
     COMEntityCache, COMToolbar, COMBookmarkManager,
-    COMRosterImages, COMMainToolBarImages, COMController, COMRoster, COMPPDB, JabberID,
+    COMRosterImages, COMController, COMRoster, COMPPDB, JabberID,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify, Regexpr,
-    S10n, COMExodusDataStore, SQLLogger, COMExodusHistorySearchManager,
-    SQLSearchHandler, COMExodusPacketDispatcher,
+    S10n,
 
     // Delphi stuff
-    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils,
-    Exodus_TLB;
+    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils;
 
 type
     TExStartParams = class
@@ -73,49 +71,18 @@ var
     sExodusMutex: Cardinal;
 
     ExCOMController: TExodusController;
-    //We need to provide variables referencing com objects
-    //to make sure ref count will never goes to 0 during the execution.
-    //var
-    // myClass: TMyClass;
-    // myInterface: TMyInterface;
-    //begin
-    // myClass := TMyClass.Create(); //reference count does not change
-    // myInterface := myClass;       //referebce count increments
-    //The code fragment above demonstrates how Delphi keeps track of reference
-    //couting.
-    //With the new approach reference count for each object will never be less than 1.
-    //And we can actually release plugin objects afre we are done with them.
-    COMController: IExodusController;
     ExCOMRoster: TExodusRoster;
-    COMRoster: IExodusRoster;
     ExCOMPPDB: TExodusPPDB;
-    COMPPDB: IExodusPPDB;
     ExCOMRosterImages: TExodusRosterImages;
-    COMRosterImages: IExodusRosterImages;
-    ExCOMToolBarImages: TExodusMainToolBarImages;
-    COMToolBarImages: IExodusRosterImages;
-
     ExCOMEntityCache: TExodusEntityCache;
-    COMEntityCache: IExodusEntityCache;
     ExCOMToolbar: TExodusToolbar;
-    COMToolbar: IExodusToolbar;
     ExCOMBookmarkManager: TExodusBookmarkManager;
-    COMBookmarkManager: IExodusBookmarkManager;
-
-    COMExPacketDispatcher: IExodusPacketDispatcher;
 
     ExRegController: TRegController;
     ExStartup: TExStartParams;
     uri_regex: TRegExpr;
     pair_regex: TRegExpr;
     im_regex: TRegExpr;
-
-    // SQLDatabase and logger
-    DataStore: TExodusDataStore;
-    MsgLogger: TSQLLogger;
-    HistorySearchManager: TExodusHistorySearchManager;
-    SQLSearch: TSQLSearchHandler;
-
 
 {---------------------------------------}
 {---------------------------------------}
@@ -125,18 +92,13 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    Avatar, NewUser, RosterImages, RosterForm,
+    Avatar, NewUser, RosterImages, RosterWindow,   
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
-    PrefNotify, Room, RosterAdd, NetMeetingFix, Profile, RegForm,
+    PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
-    XMLParser, XMLUtils, DebugLogger, DebugManager,
-    InviteReceived,
-    ExForm,
-    HistorySearch,
-    MiscMessages,
-    ToolbarImages;
+    XMLParser, XMLUtils, DebugLogger;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -175,7 +137,7 @@ const
 var
     // Various other key controllers
     _guibuilder: TGUIFactory;
-    _Notify: TPresNotifier;
+    _Notify: TNotifyController;
     _subcontroller: TSubController;
     _richedit: THandle;
     _mutex: THandle;
@@ -224,12 +186,6 @@ var
     ws2: THandle;
 
     inloop: Boolean;
-
-    tf: TFont;
-    tc: TColor;
-    tstr: widestring;
-
-    dbfile: widestring;
 
 begin
     // setup all the session stuff, parse cmd line params, etc..
@@ -379,27 +335,6 @@ begin
     // Create our main Session object
     MainSession := TJabberSession.Create(config);
 
-    //set default font and window color
-    tstr := MainSession.Prefs.getString('brand_default_font_name');
-    if ((tstr <> '') and (Screen.Fonts.IndexOf(tstr) <> -1)) then begin
-        tf := TFont.Create();
-        tf.Name := tstr;
-        tf.Size := MainSession.Prefs.getInt('brand_default_font_size');
-        tf.Style := [];
-        if (MainSession.Prefs.getBool('brand_default_font_bold')) then
-            tf.Style := tf.Style + [fsBold];
-        if (MainSession.Prefs.getBool('brand_default_font_italic')) then
-            tf.Style := tf.Style + [fsItalic];
-        if (MainSession.Prefs.getBool('brand_default_font_underline')) then
-            tf.Style := tf.Style + [fsUnderline];
-        TExForm.SetDefaultFont(tf);
-        tf.Free();
-    end;
-
-    tc := TColor(MainSession.Prefs.getInt('brand_default_window_color'));
-    if (tc <> clBlack) then //gonna assume they didn't brand if == 0
-        TExForm.SetDefaultWindowColor(tc);
-
     // Get our over-riding locale..
     // Normally, the GNUGetText stuff will try to find
     // a subdir which matches our Win32 specified locale.
@@ -440,8 +375,11 @@ begin
     _guibuilder := TGUIFactory.Create();
     _guibuilder.SetSession(MainSession);
 
-    // Presence Notification singlton
-    _Notify := TPresNotifier.Create;
+    // Notification singlton
+    _Notify := TNotifyController.Create;
+    _Notify.SetSession(MainSession);
+
+    MainSession.EventQueue.SetSession(MainSession);
 
     // S10N controller singleton
     _subcontroller := TSubController.Create();
@@ -595,34 +533,44 @@ begin
 
     // Initialize the global responders/xpath events
     initResponders();
-    StartDBGManager();
 
     if (log_debug) then begin
         StartDebugLogger(log_filename);
     end;
 
+    // if we don't have sound registry settings, then add them
+    // sigh.  If we had an installer, that would be the place to
+    // do this.
+    {** JJf moved to installer
+    try
+        reg := TRegistry.Create();
+        reg.RootKey := HKEY_CURRENT_USER;
+        reg.OpenKey('\AppEvents\Schemes\Apps\' + getAppInfo().ID , true);
+        reg.WriteString('', getAppInfo().ID);
+        AddSound(reg, 'notify_chatactivity', _(sSoundChatactivity));
+        AddSound(reg, 'notify_invite', _(sSoundInvite));
+        AddSound(reg, 'notify_keyword', _(sSoundKeyword));
+        AddSound(reg, 'notify_newchat', _(sSoundNewchat));
+        AddSound(reg, 'notify_normalmsg', _(sSoundNormalmsg));
+        AddSound(reg, 'notify_offline', _(sSoundOffline));
+        AddSound(reg, 'notify_online', _(sSoundOnline));
+        AddSound(reg, 'notify_roomactivity', _(sSoundRoomactivity));
+        AddSound(reg, 'notify_s10n', _(sSoundS10n));
+        AddSound(reg, 'notify_oob', _(sSoundOOB));
+        AddSound(reg, 'notify_autoresponse', _(sSoundAutoResponse));
+        reg.CloseKey();
+    except
+        // do nothing... just silently ignore
+    end;
+    **}
     // create COM interfaces for plugins to use
-    COMExPacketDispatcher := TExodusPacketDispatcher.Create();
-
     ExCOMController := TExodusController.Create();
-    COMController := ExCOMController;
     ExCOMRoster := TExodusRoster.Create();
-    COMRoster := ExCOMRoster;
     ExCOMPPDB := TExodusPPDB.Create();
-    COMPPDB := ExCOMPPDB;
     ExCOMRosterImages := TExodusRosterImages.Create();
-    COMRosterImages := ExCOMRosterImages;
-
-    ExCOMToolBarImages := TExodusMainToolBarImages.Create();
-    COMToolBarImages := ExCOMToolBarImages;
-
-
     ExCOMEntityCache := TExodusEntityCache.Create();
-    COMEntityCache := ExCOMEntityCache;
     ExCOMToolbar := TExodusToolbar.Create();
-    COMToolbar := ExCOMToolbar;
-    ExCOMBookmarkManager := TExodusBookmarkManager.Create();
-    COMBookmarkManager := ExCOMBookmarkManager;
+    ExCOMBookmarkManager := TExodusBookmarkManager.Create(MainSession.bookmarks);
 
     // Setup the ExStartup object props
     ExStartup.priority := cli_priority;
@@ -633,51 +581,8 @@ begin
     // Setup our avatar cache
     Avatars.setSession(MainSession);
 
-    InviteReceived.OnSessionStart(MainSession);
-    MiscMessages.SetSession(MainSession);
     //create a roster early so all other windows can get east access
-    RosterForm.GetRosterWindow().InitControlls();
-
-    // Setup SQL DB
-    dbfile := MainSession.Prefs.getString('datastore');
-    if (dbfile = '') then begin
-        // No db file specified in prefs/branding/etc.
-        // Default to MyDocs/appname/appname.db
-        dbfile := getUserDir() +
-                  getAppInfo().ID +
-                  '.db';
-    end;
-
-    try
-        DataStore := TExodusDataStore.Create(dbfile);
-        DataStore.ObjAddRef();
-        MsgLogger := TSQLLogger.Create();
-        HistorySearchManager := TExodusHistorySearchManager.Create();
-        HistorySearchManager.ObjAddRef();
-        SQLSearch := TSQLSearchHandler.Create();
-    except
-        //???dda - if not successful, we are in a world of hurt.
-        DataStore := nil;
-        MsgLogger := nil;
-        HistorySearchManager := nil;
-        SQLSearch := nil;
-    end;
-
-    try
-        if (DataStore <> nil) then begin
-            case MainSession.Prefs.getInt('sqlite_table_synchronous_level') of
-                2: DataStore.ExecSQL('PRAGMA synchronous = FULL;');
-                1: DataStore.ExecSQL('PRAGMA synchronous = NORMAL;');
-                else DataStore.ExecSQL('PRAGMA synchronous = OFF;');
-            end;
-        end;
-    finally
-    end;
-
-    if (MainSession.Prefs.getBool('brand_history_search')) then begin
-        HistoryAction.Enabled := true;
-    end;
-
+    RosterWindow.GetRosterWindow();
     Result := true;
 end;
 
@@ -831,16 +736,8 @@ begin
     // free all of the stuff we created
     // kill all of the auto-responders..
     OutputDebugString('TeardownSession');
-
-    SQLSearch.Free();
-    HistorySearchManager.Free();
-    MsgLogger.Free();
-    DataStore.Free();
-
     cleanupResponders();
     StopDebugLogger();
-
-    StopDBGManager();
 
     // Free the Richedit library
     if (_richedit <> 0) then begin
@@ -855,9 +752,6 @@ begin
         _guiBuilder.Free();
         ExRegController.Free();
         _SubController.Free();
-
-        InviteReceived.OnSessionEnd();
-                
         MainSession.Free();
         MainSession := nil;
     end;
@@ -867,15 +761,13 @@ begin
         _mutex := 0;
     end;
 
-// There is no need to free. COM objects will be released as soon as references to
-// the interfaces will go out of scope (at the end of the execution).    
-//    if (ExStartup <> nil) then          FreeAndNil(ExStartup);
-//    if (ExCOMToolbar <> nil) then       FreeAndNil(ExCOMToolbar);
-//    if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);
-//    if (ExCOMPPDB <> nil) then          FreeAndNil(ExCOMPPDB);
-//    if (ExCOMRosterImages <> nil) then  FreeAndNil(ExCOMRosterImages);
-//    if (ExCOMEntityCache <> nil) then   FreeAndNil(ExCOMEntityCache);
-//    if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
+    if (ExStartup <> nil) then          FreeAndNil(ExStartup);
+    if (ExCOMToolbar <> nil) then       FreeAndNil(ExCOMToolbar);
+    if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);
+    if (ExCOMPPDB <> nil) then          FreeAndNil(ExCOMPPDB);
+    if (ExCOMRosterImages <> nil) then  FreeAndNil(ExCOMRosterImages);
+    if (ExCOMEntityCache <> nil) then   FreeAndNil(ExCOMEntityCache);
+    if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
 
 end;
 
@@ -885,9 +777,9 @@ procedure PlayXMPPActions();
 var
     i,k : integer;
     node: TXMLTag;
-    j: WideString;
+    j, tmp: WideString;
     jid: TJabberID;
-    //msgRcv: TfrmMsgRecv;
+    msgRcv: TfrmMsgRecv;
     chatWin: TfrmChat;
     tags: TXMLTagList;
     jids: TWideStringList;
@@ -905,16 +797,13 @@ begin
         jid := TJabberID.Create(j);
 
         if (node.Name = 'message') then begin
-{JJF Message Queue refactor}
-            if node.GetBasicText('type') <> 'normal' then begin
-{
+            if node.GetBasicText('type') = 'normal' then begin
                 msgRcv := StartMsg(jid.full);
                 tmp := node.GetBasicText('subject');
                 msgRcv.txtSendSubject.Text := Tnt_WideStringReplace(tmp, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
                 msgRcv.txtMsg.Text := node.GetBasicText('body');
             end
             else begin
-}
                 chatWin := StartChat(jid.jid, jid.resource, true);
                 chatWin.MsgOut.Text := node.GetBasicText('body');
             end;

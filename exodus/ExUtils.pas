@@ -22,9 +22,9 @@ unit ExUtils;
 interface
 uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
-    TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs,   
+    TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs, NodeItem,  
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows,
-    TntSysUtils, Exodus_TLB;
+    TntSysUtils;
 
 const
     cWIN_95 = 1;             { Windows version constants}
@@ -56,7 +56,6 @@ procedure ClearAllRoomLogs();
 
 Procedure DebugMsgBox(msg : string);
 procedure DebugMsg(Message : string; debugModeOnly: boolean = false);
-
 procedure AssignDefaultFont(font: TFont);
 procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload;
 procedure AssignUnicodeFont(Form: TForm; font_size: short = 0); overload;
@@ -67,7 +66,7 @@ procedure URLLabel(lbl: TTntLabel); overload;
 
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
 
-function jabberSendCTCP(jid, xmlns: Widestring; callback: TPacketEvent): TJabberIQ;
+function jabberSendCTCP(jid, xmlns: Widestring; callback: TPacketEvent = nil): TJabberIQ;
 function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): Widestring;
 function GetPresenceAtom(status: string): ATOM;
@@ -98,7 +97,7 @@ procedure centerMainForm(f: TForm);
 procedure CenterChildForm(f: TForm; anchor: TForm);
 procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
-function promptNewGroup(base_grp: Widestring = ''): IExodusItem;
+function promptNewGroup: TJabberGroup;
 
 function IsUnicodeEnabled(): boolean;
 
@@ -128,12 +127,11 @@ function GetParentForm(c: TWinControl): TForm;
 {---------------------------------------}
 implementation
 uses
-    COMLogMsg, ExSession, GnuGetText, Presence, InputPassword,
-    IniFiles, StrUtils, IdGlobal, ShellAPI, Types,
-    XMLUtils, Session, JabberUtils, JabberID, Jabber1, 
+    Exodus_TLB, COMLogMsg, ExSession, GnuGetText, Presence, InputPassword,
+    IniFiles, StrUtils, IdGlobal, ShellAPI, Types, 
+    XMLUtils, Session, JabberUtils, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay,
     RT_XIMConversion,
-    ExForm,
     Debug;
 
 type
@@ -159,8 +157,9 @@ const
 
     sTurnOnBlocking = 'You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)';
 
-    sNewGroup = 'New Group';
-    sNewGroupPrompt = 'Enter new group name: ';
+    sNewGroup = 'New Roster Group';
+    sNewGroupPrompt = 'Enter new group name below. ';
+    sNewGroupNested = 'To create a nested group, use a name like foo%sbar.';
     sNewGroupExists = 'This group already exists!';
 
 var
@@ -267,7 +266,7 @@ begin
     until (c = '/') or (c = '\') or (c = ':') or (i <= 0);
 
     if (i > 0) then begin
-        // we got a separator
+        // we got a seperator
         fn := Copy(url, i + 2, length(url) - i);
         fp := MainSession.Prefs.getString('xfer_path');
         if (AnsiEndsText('\', fp)) then
@@ -348,12 +347,6 @@ var
     logger: IExodusLogger;
     m: TExodusLogMsg;
 begin
-    // Internal SQL Logger
-    if (MsgLogger <> nil) then begin
-        MsgLogger.LogMsg(msg);
-    end;
-
-    // Logger Plugin
     if (msg.MsgType = 'groupchat') then
         logger := ExCOMController.RoomLogger
     else
@@ -418,7 +411,25 @@ end;
 {---------------------------------------}
 procedure AssignUnicodeFont(f: TFont; font_size: short);
 begin
-    TExForm.GetDefaultFont(f);
+    // Assign either Arial or Arial Unicode MS to this form.
+    if (unicode_font = nil) then begin
+        unicode_font := TFont.Create();
+        if (Screen.Fonts.IndexOf('Arial Unicode MS') < 0) then begin
+            unicode_font.name := 'Arial';
+            unicode_font.size := 8;
+        end
+        else begin
+            unicode_font.Name := 'Arial Unicode MS';
+            unicode_font.Size := 8;
+        end;
+    end;
+
+    f.Name := unicode_font.name;
+
+    if ((font_size = 0) or (font_size < 5)) then
+        f.size := unicode_font.size
+    else
+        f.size := font_size;
 end;
 
 {---------------------------------------}
@@ -426,24 +437,21 @@ procedure AssignUnicodeHighlight(f: TFont; font_size: short);
 begin
     AssignUnicodeFont(f, font_size);
     f.Color := clHighlightText;
-    f.Style := f.Style + [fsBold];
+    f.Style := [fsBold];
 end;
 
 {---------------------------------------}
 procedure AssignUnicodeURL(f: TFont; font_size: short);
 begin
     AssignUnicodeFont(f, font_size);
-    if (not (fsUnderline in f.Style)) then    
-        f.Size := f.Size + 1; //bump a little to make room for the underbar
     f.Color := clBlue;
-    f.Style := f.Style + [fsUnderline];
+    f.Style := [fsUnderline];
 end;
 
 {---------------------------------------}
 procedure AssignUnicodeFont(form: TForm; font_size: short);
 begin
-    if (not (form is TExForm)) then //if exform, font, color already assigned
-        AssignUnicodeFont(form.font, font_size);
+    AssignUnicodeFont(form.font, font_size);
 end;
 
 {---------------------------------------}
@@ -459,6 +467,7 @@ begin
             Font.Charset := cs;
 
         Font.Style := [];
+        // Color := TColor(getInt('color_bg'));
         Font.Color := TColor(getInt('font_color'));
         if getBool('font_bold') then
             Font.Style := Font.Style + [fsBold];
@@ -583,8 +592,8 @@ var
     iq: TJabberIQ;
 begin
     // Send an iq-get to some jid, with this namespace
-//    if (@callback = nil) then
-//        callback := frmExodus.CTCPCallback;
+    if (@callback = nil) then
+        callback := frmExodus.CTCPCallback;
     iq := TJabberIQ.Create(MainSession, MainSession.generateID, callback);
     iq.iqType := 'get';
     iq.toJID := jid;
@@ -635,7 +644,7 @@ var
     i,j : integer;
     b: WideString;
     msg, x, item: TXMLTag;
-    xi: IExodusItem;
+    ri: TJabberRosterItem;
     noi, noi_domain, noi_parameter: Widestring;
     offset: Cardinal;
 begin
@@ -647,21 +656,21 @@ begin
     x := msg.AddTag('x');
     x.setAttribute('xmlns', XMLNS_XROSTER);
     for i := 0 to items.Count - 1 do begin
-        xi := IExodusItem(items[i]);
+        ri := TJabberRosterItem(items[i]);
         item := x.AddTag('item');
-        item.SetAttribute('jid', xi.UID);
-        item.SetAttribute('name', xi.Text);
+        item.setAttribute('jid', ri.jid.full);
+        item.setAttribute('name', ri.Text);
         for j := 0 to MainSession.Prefs.getStringlistCount('send_contact_noi') - 1 do begin
             noi_parameter := MainSession.Prefs.getStringlistValue('send_contact_noi', j);
             offset := Pos('=', noi_parameter);
             if (offset > 0) then begin
                 noi_domain := Trim(LeftStr(noi_parameter, offset -1));
                 noi := Trim(RightStr(noi_parameter, StrLenW(PWideChar(noi_parameter)) - offset));
-                //if (noi_domain = ri.jid.domain) then
+                if (noi_domain = ri.jid.domain) then
                     item.setAttribute('noi', noi);
             end;
         end;
-        //b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.getDisplayFull();
+        b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.getDisplayFull();
     end;
 
     jabberSendMsg(to_jid, msg, x, b, '');
@@ -945,6 +954,7 @@ end;
 
 {---------------------------------------}
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
+
     procedure ClearCustoms(mi: TMenuItem);
     var
         j: integer;
@@ -963,101 +973,83 @@ var
     grp, i: integer;
     mnu: TTntMenuItem;
     cp: TJabberCustompres;
-    c, mnuAvail, mnuChat, mnuAway, mnuXa, mnuDnd: TMenuItem;
+    c, avail, chat, away, xa, dnd: TMenuItem;
     pm: TTntMenuItem;
     pp: TTntPopupMenu;
-    title: Widestring;
 begin
     // Build the custom presence menus.
     // make sure to leave the main "Custom" entry and the divider
 
     // Parent is a has children, which have children..
-    mnuAvail := nil;
-    mnuAway := nil;
-    mnuXa := nil;
-    mnuDnd := nil;
-    mnuChat := nil;
+    avail := nil;
+    away := nil;
+    xa := nil;
+    dnd := nil;
+    chat := nil;
 
     if (parent is TTntMenuItem) then begin
         pm := TTntMenuItem(Parent);
+        for i := 0 to pm.Count - 1 do begin
+            c := pm.Items[i];
+            case c.tag of
+            0: avail := c;
+            1: chat := c;
+            2: away := c;
+            3: xa := c;
+            4: dnd := c;
+            else
+                continue;
+            end;
+            ClearCustoms(c);
+        end;
     end
     else if (parent is TTntPopupMenu) then begin
         pp := TTntPopupMenu(parent);
-        pm := TTntMenuItem(pp.Items);
-    end;
-
-    for i := 0 to pm.Count - 1 do begin
-        c := pm.Items[i];
-        case c.GroupIndex of
-        0: if mnuAvail = nil then mnuAvail := c;
-        1: if mnuChat = nil then mnuChat := c;
-        2: if mnuAway = nil then mnuAway := c;
-        3: if mnuXa = nil then mnuXa := c;
-        4: if mnuDnd = nil then mnuDnd := c;
-        else
-            Continue;
+        for i := 0 to pp.Items.Count - 1 do begin
+            c := pp.Items[i];
+            case c.tag of
+            0: avail := c;
+            1: chat := c;
+            2: away := c;
+            3: xa := c;
+            4: dnd := c;
+            else
+                continue;
+            end;
+            ClearCustoms(c);
         end;
-
-        ClearCustoms(c);
     end;
 
     // Make sure we got them all.
-    if ((mnuAvail = nil) or (mnuChat = nil) or (mnuAway = nil) or (mnuXa = nil) or (mnuDnd = nil)) then exit;
+    if ((avail = nil) or (chat = nil) or (away = nil) or (xa = nil) or (dnd = nil)) then exit;
 
-    with MainSession.Prefs do begin
-        mnuAvail.Visible := getBool('show_presence_menu_available');
-        mnuChat.Visible := getBool('show_presence_menu_chat');
-        mnuAway.Visible := getBool('show_presence_menu_away');
-        mnuXa.Visible := getBool('show_presence_menu_xa');
-        mnuDnd.Visible := getBool('show_presence_menu_dnd');
-        plist := getAllPresence();
-    end;
-
+    plist := MainSession.prefs.getAllPresence();
     for i := 0 to plist.count - 1 do begin
         cp := TJabberCustomPres(plist.Objects[i]);
 
         if (cp.show = 'chat') then begin
             grp := 4;
-            c := mnuChat;
+            c := chat;
         end
         else if (cp.show = 'away') then begin
             grp := 1;
-            c := mnuAway;
+            c := away;
         end
         else if (cp.Show = 'xa') then begin
             grp := 2;
-            c := mnuXa;
+            c := xa;
         end
         else if (cp.show = 'dnd') then begin
             grp := 3;
-            c := mnuDnd;
+            c := dnd;
         end
         else begin
             grp := 0;
-            c := mnuAvail;
+            c := avail;
         end;
-
-        if not c.Visible then continue;
-
-        if c.Count = 0 then begin
-            //Add "default" item
-            mnu := TTntMenuItem.Create(c);
-            mnu.Caption := c.Caption;
-            mnu.OnClick := c.OnClick;
-            mnu.ShortCut := c.ShortCut;
-            mnu.ImageIndex := c.ImageIndex;
-            mnu.Tag := c.Tag;
-            mnu.GroupIndex := grp;
-            c.Add(mnu);
-        end;
-
-        title := cp.title;
-        if title = '' then title := cp.Status;
-        if title = '' then title := _(cp.Show);
-        if title = '' then title := _('Available');
 
         mnu := TTntMenuItem.Create(c);
-        mnu.Caption := title;
+        mnu.Caption := cp.title;
         mnu.tag := i;
         mnu.OnClick := clickev;
         mnu.ShortCut := TextToShortcut(cp.hotkey);
@@ -1072,59 +1064,52 @@ begin
 end;
 
 {---------------------------------------}
-function promptNewGroup(base_grp: Widestring): IExodusItem;
+function promptNewGroup: TJabberGroup;
 var
     msg: Widestring;
     new_grp: WideString;
-    nesting: Boolean;
-    grpSeparator: Widestring;
+    go: TJabberGroup;
 begin
     // Add a roster grp.
     Result := nil;
 
     new_grp := _(sDefaultGroup);
+    msg := _(sNewGroupPrompt);
 
-    with MainSession.Prefs do begin
-        grpSeparator := getString('group_separator');
-        nesting := getBool('nested_groups') and getBool('branding_nested_subgroup')and (grpSeparator <> '');
-    end;
-    if nesting then begin
-        //TODO:  use a different msg when nesting?
-        msg := _(sNewGroupPrompt);
-    end
-    else begin
-        msg := _(sNewGroupPrompt);
-    end;
+    if (MainSession.Prefs.getBool('nested_groups')) then
+        msg := msg + ''#13#10 + WideFormat(_(sNewGroupNested),
+            [MainSession.Prefs.getString('group_seperator')]);
     if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
 
     // add the new grp.
-    if (nesting) and (base_grp <> '') then
-        new_grp := base_grp + grpSeparator + new_grp;
-    Result := MainSession.ItemController.GetItem(new_grp);
-    if (Result <> nil) then begin
-        MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
+    go := MainSession.Roster.getGroup(new_grp);
+    if (go <> nil) then begin
+       if (go.Data <> nil) then begin
+         MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
+         Result := nil;
+       end
+       else
+         Result := go;
     end
     else begin
-        Result := MainSession.ItemController.AddGroup(new_grp);
+        // add the new grp.
+        Result := MainSession.Roster.addGroup(new_grp);
     end;
 end;
 
 {---------------------------------------}
 procedure checkAndCenterForm(f: TForm);
 var
-//    ok: boolean;
-//    dtop, tmp: TRect;
+    ok: boolean;
+    dtop, tmp: TRect;
     cp: TPoint;
-//    m: TMonitor;
+    m: TMonitor;
 begin
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
 
     // Get the nearest monitor to the form
-    f.MakeFullyVisible();
-{
     tmp := f.BoundsRect;
-
     cp := CenterPoint(tmp);
 
     m := Screen.MonitorFromPoint(cp, mdNearest);
@@ -1142,11 +1127,10 @@ begin
 
     if (ok = false) then begin
         // center it on the default monitor
-}
-        cp := CenterPoint(f.Monitor.WorkareaRect);
+        cp := CenterPoint(dtop);
         f.Left := cp.x - (f.Width div 2);
         f.Top := cp.y - (f.Height div 2);
-{    end;}
+    end;
 end;
 
 function IsUnicodeEnabled(): boolean;

@@ -35,21 +35,17 @@ type
     TJabberChatList = class(TWideStringList)
     private
         _s: TObject;
-        _chatCB: integer;
-        _chateventCB: integer;
+        _callback: integer;
     public
         constructor Create;
         destructor Destroy; override;
 
         procedure SetSession(s: TObject);
 
-        function FindChat(barejid, sresource: widestring; sthread: Widestring = ''): TChatController;overload;
-        function FindChat(cjid: TJabberID; sthread: widestring = ''): TChatController;overload;
-        
-        function AddChat(sjid, sresource: Widestring; anonymousChat: boolean): TChatController; overload;
+        function FindChat(sjid, sresource, sthread: Widestring): TChatController;
+        function AddChat(sjid, sresource: Widestring): TChatController; overload;
 
         procedure MsgCallback(event: string; tag: TXMLTag);
-        procedure PostChatEventCallback(event: string; tag: TXMLTag);
     end;
 
 {---------------------------------------}
@@ -58,26 +54,21 @@ type
 implementation
 uses
     Presence,
-    XMLUtils,
-    JabberConst, PrefController, Session,
-    Room;
+    JabberConst, PrefController, Session;
 
 {---------------------------------------}
 constructor TJabberChatList.Create;
 begin
     inherited;
     _s := nil;
-    _chatCB := -1;
-    _chateventCB := -1;
+    _callback := -1;
 end;
 
 {---------------------------------------}
 destructor TJabberChatList.Destroy;
 begin
-    if (_chateventCB <> -1) then
-        MainSession.UnRegisterCallback(_chatCB);
-    if (_chateventCB <> -1) then
-        MainSession.UnRegisterCallback(_chateventCB);
+    if (_callback <> -1) then
+        MainSession.UnRegisterCallback(_callback);
     inherited;
 end;
 
@@ -85,20 +76,20 @@ end;
 procedure TJabberChatList.SetSession(s: TObject);
 begin
     _s := s;
-    _chatCB := TJabberSession(s).RegisterCallback(MsgCallback,'/post/message[@type="chat"]/body');
-    _chateventCB := TJabberSession(s).RegisterCallback(PostChatEventCallback,'/post/message/*[@xmlns="' + XMLNS_XEVENT + '"]');
+    _callback := TJabberSession(s).RegisterCallback(MsgCallback,'/post/message[@type!="error"]');
 end;
 
 {---------------------------------------}
 procedure TJabberChatList.MsgCallback(event: string; tag: TXMLTag);
 var
+    fjid: Widestring;
     tmp_jid: TJabberID;
     c: TChatController;
-//    isEvent: boolean;
+    idx1, idx2, mt: integer;
+    mtype: string;
 begin
     // check to see if we have a session already open for
     // this jid, if not, create one.
-{** JJF msgqueue refactor
     fjid := tag.getAttribute('from');
     mtype := tag.getAttribute('type');
 
@@ -107,148 +98,117 @@ begin
     // pgm 2/29/04 - we should never get these packets anymore...
     // throw out any x-data msgs we get.. the xdata handler will pick them up.
     //if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
-    isEvent := (tag.QueryXPTag(XP_MSGXEVENT) <> nil);
-    // we are only interested in packets w/ a body tag
-    if (not isEvent and (tag.GetFirstTag('body') = nil)) then exit;
-**}
-    tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-    try
-        // in the blocker list?
-        if (TJabberSession(_s).IsBlocked(tmp_jid)) then exit;
 
-{** JJF msgqueue refactor
-        if (not isEvent) and (mtype <> 'chat') then begin
+    // we are only interested in packets w/ a body tag
+    if (tag.GetFirstTag('body') = nil) then exit;
+
+    tmp_jid := TJabberID.Create(fjid);
+
+    try
+        idx1 := Self.indexOf(fjid);
+        idx2 := Self.indexOf(tmp_jid.jid);
+
+        if (mtype <> 'chat') then begin
             if ((mt = msg_existing_chat) and (idx1 = -1) and (idx2 = -1)) then
                 exit
-            else if (mt = msg_normal)then
+            else if (mt = msg_normal) then
                 exit;
         end;
-**}
 
-        //really should be nil here,
-        //other chat messages handled in /packet dispatcher
-        if (FindChat(tmp_jid) = nil) then
-        begin
-            // Create a new chat controller, anon if msg from room
-            c := Self.AddChat(tmp_jid.jid, tmp_jid.resource, (FindRoom(tmp_jid.jid) <> nil));
+        if ((idx1 = -1) and (idx2 = -1)) then begin
+            // Create a new session
+            if (Self.indexOf(tmp_jid.jid) >= 0) then
+                exit;
+
+            // in the blocker list?
+            if (MainSession.IsBlocked(tmp_jid)) then
+                exit;
+
+            // Create a new chat controller
+            c := Self.AddChat(tmp_jid.jid, tmp_jid.resource);
             c.MsgCallback(event, tag);
+
         end;
     finally
         tmp_jid.Free();
     end;
-end;
-
-procedure TJabberChatList.PostChatEventCallback(event: string; tag: TXMLTag);
-var
-    tmp_jid: TJabberID;
-    etag: TXMLTag;
-    m: TXMLTag;
-begin
-    //should be no open chat to handle this message. If one were open it
-    //would have handled this in the /packet dispatcher.
-    tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-    try
-        // in the blocker list?
-        if (TJabberSession(_s).IsBlocked(tmp_jid)) then exit;
-
-        if (FindChat(tmp_jid) <> nil) then exit;
-{** JJF msqueue refactor
-        // Create a new chat controller
-        c := Self.AddChat(tmp_jid.jid, tmp_jid.resource, FindRoom(tmp_jid.jid) <> nil);
-        c.MsgCallback(event, tag);
-**}
-
-        etag := tag.QueryXPTag(XP_MSGXEVENT);
-        //ack delivered
-        if (etag.GetFirstTag('id') = nil) and
-           (etag.GetFirstTag('delivered') <> nil) then
-        begin
-            m := generateEventMsg(tag, 'delivered');
-            TJabberSession(_s).SendTag(m);//m freed by SendTag
-        end;
-    finally
-        tmp_jid.Free();
-    end;
-end;
-
-function TJabberChatList.FindChat(barejid, sresource, sthread: widestring): TChatController;
-var
-    tstr: widestring;
-    tjid: TJabberID;
-begin
-    tstr := barejid;
-    if sresource <> '' then
-        tstr := tstr + '/' + sresource;
-
-    tjid := TJabberID.create(tstr);
-    Result := FindChat(tjid, sthread);
-    tjid.free();
-end;
-
-{---------------------------------------
-    barejid chat == chat listeneing for message from foo@bar
-    resource chat == chat listening for message from foo@bar/resource
-
-    resource is specified
-        return matching resource chat
-        return barejid chat if no matching resource chat exists
-        return nil if no barejid chat exists
-
-    no resource specified
-        return barejid chat
-        return resource chat for first matching online resource (priority sorted) if barejid chat doesn't exist
-        return resource chat session that matches barejid if no online reosurces have a chat.
-        return nil if no chats exist
-}
-function TJabberChatList.FindChat(cjid: TJabberID; sthread: widestring): TChatController;
-var
-    i: integer;
-    chatIdx: integer;
-    p: TJabberPres;
-    jid: TJabberID;
-begin
-    if (cjid.resource <> '') then
-    begin
-        chatIdx := indexOf(cjid.Full);
-        if (chatIdx = -1) then
-            chatIdx := indexOf(cjid.jid);
-    end
-    else begin //no resource specified
-        chatIdx := indexOf(cjid.jid);
-        p := MainSession.ppdb.FindPres(cjid.jid, '');
-        while (chatIdx = -1) and (p <> nil) do
-        begin
-            chatIdx := indexOf(p.fromJid.full);
-            p := MainSession.ppdb.NextPres(p);
-        end;
-        i := 0;
-        while (chatIdx = -1) and (i < Self.Count) do
-        begin
-            jid := TJabberID.Create(Self.Get(i));
-            if (jid.jid = cjid.jid) then
-                chatIdx := i;
-            inc(i);
-            jid.Free;
-        end;
-    end;
-
-    Result := nil;
-    if (chatIdx <> -1) then
-        Result := TChatController(Objects[chatIdx]);
 end;
 
 {---------------------------------------}
-function TJabberChatList.AddChat(sjid, sresource: Widestring; anonymousChat: boolean): TChatController;
+function TJabberChatList.FindChat(sjid, sresource, sthread: widestring): TChatController;
+var
+    full: string;
+    i,j: integer;
+    p: TJabberPres;
+    jid: TJabberID;
 begin
-    //
-    try
-        Result := TChatController.Create(sjid, sresource, anonymousChat);
-        if (sresource = '') then
-            Self.AddObject(sjid, Result)
-        else
-            Self.AddObject(sjid + '/' + sresource, Result);
-    except
+    // find a chat object for this jid/resource/thread
+    if sresource <> '' then
+        full := sjid + '/' + sresource
+    else
+        full := '';
+
+    // check for full first
+    i := -1;
+    if full <> '' then
+        i := indexOf(full);
+
+    if (i < 0) then begin
+        p := nil;
+        i := indexOf(sjid);
+        while (i < 0) do begin
+            // See if they are online to find their Full JID
+            if (p = nil) then
+                p := MainSession.ppdb.FindPres(sjid, '')
+            else
+                p := MainSession.ppdb.NextPres(p);
+            if (p <> nil) then
+                // We have presence so try to find any conversation thread
+                i := indexOf(p.fromJid.full)
+            else begin
+                // Offline (no presence) so see if we can find ANY conversation
+                // to attach to for sending offline message.
+                i := -1;
+                for j := 0 to Self.Count - 1 do begin
+                    jid := TJabberID.Create(Self.Get(j));
+                    if (jid.jid = sjid) then begin
+                        //Found a conversation with base JID
+                        i := j;
+                        jid.Free;
+                        break;
+                    end;
+                    jid.Free;
+                end;
+                break;
+            end;
+        end;
+    end;
+
+    if (i < 0) then
+        Result := nil
+    else begin
+        Result := TChatController(Objects[i]);
+
+        // if we have a resource specified...
+        // and the chat controller has a different one,
+        // then don't return it.
+        if ((sresource <> '') and
+            (Result.resource <> '') and
+            (sresource <> Result.Resource)) then
+            Result := nil;
     end;
 end;
+
+{---------------------------------------}
+function TJabberChatList.AddChat(sjid, sresource: Widestring): TChatController;
+begin
+    //
+    Result := TChatController.Create(sjid, sresource);
+    if (sresource = '') then
+        Self.AddObject(sjid, Result)
+    else
+        Self.AddObject(sjid + '/' + sresource, Result);
+end;
+
 end.
 

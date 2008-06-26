@@ -4,6 +4,7 @@ inherited frmDebug: TfrmDebug
   Caption = 'Debug'
   ClientHeight = 380
   ClientWidth = 400
+  OnClose = FormClose
   ExplicitWidth = 408
   ExplicitHeight = 414
   PixelsPerInch = 96
@@ -20,11 +21,13 @@ inherited frmDebug: TfrmDebug
       Left = 0
       Top = 0
       Width = 348
-      Height = 33
+      Height = 32
       Align = alClient
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 1
+      ExplicitTop = 32
+      ExplicitWidth = 400
+      ExplicitHeight = 25
       object lblJID: TTntLabel
         Left = 71
         Top = 9
@@ -37,7 +40,7 @@ inherited frmDebug: TfrmDebug
       object lblLabel: TTntLabel
         Left = 6
         Top = 9
-        Width = 66
+        Width = 62
         Height = 13
         Caption = 'Current JID:  '
       end
@@ -45,20 +48,19 @@ inherited frmDebug: TfrmDebug
   end
   object Panel2: TPanel
     Left = 0
-    Top = 33
+    Top = 32
     Width = 400
-    Height = 347
+    Height = 348
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     Caption = 'Panel2'
-    Constraints.MinHeight = 50
-    ParentColor = True
     TabOrder = 0
-    OnResize = Panel2Resize
+    ExplicitTop = 57
+    ExplicitHeight = 323
     object Splitter1: TSplitter
       Left = 4
-      Top = 298
+      Top = 299
       Width = 392
       Height = 5
       Cursor = crVSplit
@@ -69,7 +71,7 @@ inherited frmDebug: TfrmDebug
       Left = 4
       Top = 4
       Width = 392
-      Height = 294
+      Height = 295
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -163,7 +165,7 @@ inherited frmDebug: TfrmDebug
     end
     object MemoSend: TExRichEdit
       Left = 4
-      Top = 303
+      Top = 304
       Width = 392
       Height = 40
       Align = alBottom
@@ -260,8 +262,8 @@ inherited frmDebug: TfrmDebug
   end
   object PopupMenu1: TTntPopupMenu
     AutoHotkeys = maManual
-    Left = 48
-    Top = 136
+    Left = 40
+    Top = 144
     object Clear1: TTntMenuItem
       Caption = 'Clear '
       ShortCut = 16430
@@ -269,7 +271,6 @@ inherited frmDebug: TfrmDebug
     end
     object SendXML1: TTntMenuItem
       Caption = 'Send XML'
-      ShortCut = 16397
       OnClick = btnSendRawClick
     end
     object Find1: TTntMenuItem

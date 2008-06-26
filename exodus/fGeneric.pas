@@ -24,11 +24,11 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, TntCheckLst, TntStdCtrls, ExtCtrls, Contnrs, ExodusLabel, ExFrame;
+    StdCtrls, TntCheckLst, TntStdCtrls, ExtCtrls, Contnrs, ExodusLabel;
 
 type
 
-  TframeGeneric = class(TExFrame)
+  TframeGeneric = class(TFrame)
     elCaption: TExodusLabel;
     procedure FrameResize(Sender: TObject);
   private
@@ -63,7 +63,7 @@ uses
     Math, JabberConst, 
     Jabber1, GnuGetText,
     JabberID, ShellAPI,
-    SelectItem, ExRichEdit,
+    SelContact, ExRichEdit,
     JabberUtils, ExUtils,  CheckLst, RichEdit2, Types;
 
 const
@@ -254,9 +254,6 @@ begin
     fld_type := t;
     if (frm_type = 'submit') then
         c.Enabled := false;
-
-    // Force redraw to make everything size correctly.
-    FrameResize(nil);
 end;
 
 {---------------------------------------}
@@ -343,19 +340,25 @@ end;
 {---------------------------------------}
 procedure TframeGeneric.JidFieldDotClick(Sender: TObject);
 var
-    selected :Widestring;
+    fsel: TfrmSelContact;
 begin
-    selected := SelectUIDByType('contact');
-    if (selected <> '') then begin
-        TTntEdit(c).Text := selected;
+    fsel := TfrmSelContact.Create(Application);
+    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    frmExodus.PreModal(fsel);
+
+    if (fsel.ShowModal = mrOK) then begin
+        TTntEdit(c).Text := fsel.GetSelectedJID();
     end;
+
+    frmExodus.PostModal();
 end;
 
 {---------------------------------------}
 procedure TframeGeneric.FrameResize(Sender: TObject);
 begin
     if (change_width) then exit;
-
+    
     if (c is TTntEdit) then begin
         if (dot <> nil) then
             c.width := Self.ClientWidth - elCaption.Width - dot.Width - 6 - 2

@@ -4,6 +4,7 @@ inherited frmXferManager: TfrmXferManager
   Caption = 'File Transfer Manager'
   ClientWidth = 455
   OldCreateOrder = True
+  OnClose = FormClose
   OnDestroy = FormDestroy
   ExplicitWidth = 463
   PixelsPerInch = 96
@@ -24,7 +25,6 @@ inherited frmXferManager: TfrmXferManager
       Align = alClient
       BevelOuter = bvNone
       BorderWidth = 5
-      ParentColor = True
       TabOrder = 1
       object pnlCaption: TTntPanel
         Left = 5
@@ -42,16 +42,14 @@ inherited frmXferManager: TfrmXferManager
   end
   object box: TScrollBox
     Left = 0
-    Top = 33
+    Top = 32
     Width = 455
-    Height = 130
+    Height = 135
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 0
-    ExplicitTop = 32
-    ExplicitHeight = 135
   end
   object httpServer: TIdHTTPServer
     Bindings = <>

@@ -24,13 +24,13 @@ interface
 uses
     Variants,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-    Dialogs, ExtCtrls, StdCtrls, TntStdCtrls, ExForm;
+    Dialogs, ExtCtrls, StdCtrls, TntStdCtrls;
 
 const
     TOAST_BUFFER_PIX = 2;
 
 type
-  TfrmRiser = class(TExForm)
+  TfrmRiser = class(TForm)
     Timer1: TTimer;
     Timer2: TTimer;
     Image1: TImage;
@@ -50,8 +50,6 @@ type
     _taskdir: integer;
     _clickForm: TForm;
     _clickHandle: HWND;
-    _event: widestring;
-    _eventXML: widestring;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
@@ -65,9 +63,8 @@ var
 
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer); overload;
 procedure ShowRiserWindow(clickHandle: HWND; msg: Widestring; imgIndex: integer); overload;
-procedure ShowRiserWindow(msg: Widestring; imgIndex: integer; clickEvent: widestring; clickEventXML: widestring); overload;
 
-procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer; event: widestring = ''; eventXML: widestring = ''); overload;
+procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer); overload;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -76,15 +73,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Types,
-    JabberUtils,
-    ExUtils,
-    GnuGetText,
-    Session,
-    Dockable,
-    Jabber1,
-    XMLTag,
-    XMLParser;
+    Types, JabberUtils, ExUtils,  GnuGetText, Session, Dockable, Jabber1;
 
 {---------------------------------------}
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
@@ -99,13 +88,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure ShowRiserWindow(msg: Widestring; imgIndex: integer; clickEvent: widestring; clickEventXML: widestring);
-begin
-    ShowRiserWindow(nil, 0, msg, imgIndex, clickEvent, clickEventXML);
-end;
-
-{---------------------------------------}
-procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer; event: widestring; eventXML: widestring);
+procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer);
 var
     animate: boolean;
 begin
@@ -117,7 +100,7 @@ begin
         // create a new instance
         singleToast := TfrmRiser.Create(Application);
         animate := true;
-//        AssignDefaultFont(singleToast.Label1.Font);
+        AssignDefaultFont(singleToast.Label1.Font);
 
         // reduce the font size by 1 pt.
         //singleToast.Label1.Font.Size := singleToast.Label1.Font.Size - 1;
@@ -139,8 +122,6 @@ begin
 
     singleToast._clickForm := clickForm;
     singleToast._clickHandle := clickHandle;
-    singleToast._event := event;
-    singleToast._eventXML := eventXML;
 
     if ((clickForm <> nil) and (clickHandle = 0)) then
         singleToast._clickHandle := clickForm.Handle;
@@ -163,7 +144,7 @@ begin
     with singleToast.Image1 do begin
         Canvas.Brush.Color := clBtnFace;
         Canvas.FillRect(Rect(0, 0,  Width, Height));
-        frmExodus.ImageList1.GetBitmap(imgIndex, Picture.Bitmap);
+        frmExodus.ImageList2.GetBitmap(imgIndex, Picture.Bitmap);
         if (not animate) then Repaint();
     end;
 
@@ -295,29 +276,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRiser.Panel2Click(Sender: TObject);
-var
-    ttag: TXMLTag;
-    parser: TXMLTagParser;
 begin
     Self.Close;
-
-    // If we have an event AND no window handle of any sort,
-    // fire the event, then exit.  This is useful for plugins.
-    if ((_event <> '') and
-        (_clickHandle = 0) and
-        (_clickForm = nil)) then
-    begin
-        parser := TXMLTagParser.Create();
-        parser.ParseString(_eventXML);
-        ttag := parser.popTag();
-        if (ttag <> nil) then
-        begin
-            MainSession.FireEvent(_event, ttag);
-        end;
-        ttag.Free();
-        parser.Free();
-        exit;
-    end;
 
     // make sure the window handle is still valid
     if ((_clickHandle <> 0) and (not IsWindow(_clickHandle))) then

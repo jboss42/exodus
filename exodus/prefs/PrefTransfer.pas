@@ -23,8 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, TntForms,
-  ExFrame, ExBrandPanel, ExGroupBox;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
 const
     xfer_socks = 0;
@@ -61,23 +60,6 @@ type
     lbl65Proxy: TTntLabel;
     txt65Proxy: TTntEdit;
     lblXferMethod: TTntLabel;
-    gbProxy: TExGroupBox;
-    rbIE: TTntRadioButton;
-    rbNone: TTntRadioButton;
-    rbCustom: TTntRadioButton;
-    pnlProxyInfo: TExBrandPanel;
-    lblProxyHost: TTntLabel;
-    lblProxyPort: TTntLabel;
-    txtProxyHost: TTntEdit;
-    txtProxyPort: TTntEdit;
-    pnlAuthInfo: TExBrandPanel;
-    lblProxyUsername: TTntLabel;
-    lblProxyPassword: TTntLabel;
-    chkProxyAuth: TTntCheckBox;
-    txtProxyUsername: TTntEdit;
-    txtProxyPassword: TTntEdit;
-    procedure chkProxyAuthClick(Sender: TObject);
-    procedure rbIEClick(Sender: TObject);
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkXferIPClick(Sender: TObject);
     procedure lblXferDefaultClick(Sender: TObject);
@@ -96,20 +78,17 @@ var
 
 const
     sPrefsXFerDir = 'Select download directory';
-    sBadProxy = 'Your IE proxy settings won''t help, since you use an autoconfiguration script.  Please configure your proxy manually.';
 
 
 implementation
 {$WARN UNIT_PLATFORM OFF}
 {$R *.dfm}
 uses
-    JabberUtils, PrefFile, Registry, GnuGetText, ExUtils,  Session, FileCtrl, PrefController;
+    JabberUtils, ExUtils,  Session, FileCtrl, PrefController;
 
 procedure TfrmPrefTransfer.LoadPrefs();
 var
     m: integer;
-    pType: integer;
-    s: TPrefState;
 begin
     inherited;
     with MainSession.Prefs do begin
@@ -119,47 +98,12 @@ begin
         if (getBool('xfer_oob')) then m := xfer_oob;
         cboXferMode.ItemIndex := m;
         cboXferModeChange(Self);
-        ptype := MainSession.Prefs.getInt('http_proxy_approach');
-        case (ptype) of
-            http_proxy_ie: rbIE.Checked := true;
-            http_proxy_none: rbNone.Checked := true;
-            else rbCustom.Checked := true;
-        end;
-
-        s := getPrefState('http_proxy_approach');
-        rbIe.Visible := (s <> psInvisible);
-        rbIE.Enabled := (s <> psReadOnly);
-        rbNone.Visible := (s <> psInvisible);
-        rbNone.enabled := (s <> psReadOnly);
-        rbCustom.Visible := (s <> psInvisible);
-        rbCustom.Enabled := (s <> psReadOnly);
-        pnlProxyInfo.Visible := (s <> psInvisible);
-        pnlProxyInfo.Enabled := (s <> psReadOnly);
-        pnlAuthInfo.Visible := (s <> psInvisible);
-        pnlAuthInfo.Enabled := (s <> psReadOnly);
-
-        rbIEClick(Self);
-
     end;
-end;
-
-
-procedure TfrmPrefTransfer.rbIEClick(Sender: TObject);
-begin
-  inherited;
-    inherited;
-    pnlProxyInfo.Enabled := rbCustom.Checked;
-    pnlAuthInfo.Enabled := rbCustom.Checked;
-    if (not rbCustom.Checked) then
-        chkProxyAuth.Checked := false;
-    chkProxyAuthClick(Self);
 end;
 
 procedure TfrmPrefTransfer.SavePrefs();
 var
     m: integer;
-    reg: TRegistry;
-    ptype: integer;
 begin
     inherited;
     with MainSession.Prefs do begin
@@ -169,30 +113,6 @@ begin
         setBool('xfer_oob', (m = xfer_oob));
 
     end;
-    if (rbIE.Checked) then
-        ptype := http_proxy_ie
-    else if (rbNone.Checked) then
-        ptype := http_proxy_none
-    else
-        ptype := http_proxy_custom;
-
-    if (ptype = http_proxy_ie) then begin
-        reg := TRegistry.Create();
-        try
-            reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
-            if (reg.ValueExists('AutoConfigURL')) then begin
-                ptype := http_proxy_custom;
-                rbCustom.Checked := true;
-                rbIEClick(Self);
-                txtProxyHost.SetFocus();
-                MessageDlgW(_(sBadProxy), mtWarning, [mbOK], 0);
-            end;
-        finally
-            reg.Free();
-        end;
-    end;
-    MainSession.prefs.setInt('http_proxy_approach', ptype);
-
 end;
 
 procedure TfrmPrefTransfer.btnTransferBrowseClick(Sender: TObject);
@@ -202,15 +122,6 @@ begin
     tmps := txtXFerPath.Text;
     if SelectDirectory(sPrefsXFerDir, '', tmps) then
         txtXFerPath.Text := tmps;
-end;
-
-procedure TfrmPrefTransfer.chkProxyAuthClick(Sender: TObject);
-begin
-  inherited;
-    lblProxyUsername.Enabled := chkProxyAuth.Checked;
-    lblProxyPassword.Enabled := chkProxyAuth.Checked;
-    txtProxyUsername.Enabled := chkProxyAuth.Checked;
-    txtProxyPassword.Enabled := chkProxyAuth.Checked;
 end;
 
 procedure TfrmPrefTransfer.chkXferIPClick(Sender: TObject);

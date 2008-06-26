@@ -39,7 +39,7 @@ const
     WM_USER = 0;
     {$endif}
 
-    WM_JABBER = WM_USER + 5222; //lol, very nice Peter
+    WM_JABBER = WM_USER + 5222;
 
     WM_XML = WM_USER + 7001;
     WM_HTTPPROXY = WM_USER + 7002;
@@ -54,28 +54,22 @@ const
 type
     EXMLStream = class(Exception)
     public
-    end;
+end;
 
     TJabberMsg = record
         msg: Cardinal;
         lparam: integer;
-    end;
+end;
 
-    TPacketDirection = (pdInbound, pdOutbound);
     TDataEvent = procedure (send: boolean; data: Widestring) of object;
     TXMLStreamCallback = procedure (msg: string; tag: TXMLTag) of object;
-    TPacketControlCallback = procedure (direction: TPacketDirection;const inPacket: TXMLTag; var outPacket: TXMLTag; var allow: WordBool) of object;
 
     TParseThread = class;
 
     TXMLStream = class
     private
         _callbacks: TObjectList;
-        _controlCallbacks: TObjectList;
-
         _data_event: TDataEvent;
-        procedure DoCallbacks(msg: string; tag: TXMLTag);
-        procedure DoPacketControlCallbacks(direction: TPacketDirection;const inPacket: TXMLTag; var ModifiedPacket: TXMLTag; var allow: WordBool);
 
     protected
         _Server:    string;
@@ -85,21 +79,16 @@ type
         _root_tag:  string;
         _thread:    TParseThread;
 
-        procedure SendXML(xml: Widestring); virtual; abstract; // Make sure the imp. does ANSI -> UTF8
+        procedure DoCallbacks(msg: string; tag: TXMLTag);
+        procedure DoDataCallbacks(send: boolean; data: Widestring);
 
-        procedure fireOnStreamEvent(event: string; packet: TXMLTag);virtual;
-        procedure fireOnPacketReceived(packet: TXMLTag);virtual;
-        procedure FireOnStreamData(send: boolean; data: Widestring);virtual;
     public
         constructor Create(root: String); virtual;
         destructor Destroy(); override;
 
         procedure Connect(profile : TJabberProfile); virtual; abstract;
-
-        procedure SendStreamHeader(Server: widestring; lang: widestring='');
+        procedure Send(xml: Widestring); virtual; abstract; // Make sure the imp. does ANSI -> UTF8
         procedure SendTag(tag: TXMLTag);
-        procedure Send(xml: Widestring);
-
         procedure Disconnect; virtual; abstract;
         procedure ResetParser();
         function  isSSLCapable(): boolean; virtual; abstract;
@@ -108,9 +97,6 @@ type
 
         procedure RegisterStreamCallback(p: TXMLStreamCallback);
         procedure UnregisterStreamCallback(p: TXMLStreamCallback);
-
-        procedure RegisterPacketControlCallback(p: TPacketControlCallback);
-        procedure UnregisterPacketControlCallback(p: TPacketControlCallback);
 
         property Active: boolean read _active;
         property LocalIP: string read _local_ip;
@@ -156,11 +142,6 @@ implementation
 uses
     Signals,
     Math;
-
-type
-    TControlCallbackWrapper = class
-        _callback: TPacketControlCallback;
-    end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -312,16 +293,14 @@ begin
     }
     Result := nil;
     _lock.Acquire();
-    try
-        if _domstack.count > 0 then
-        begin
-            Result := TXMLTag(_domstack[0]);
-            _domstack.Delete(0);
-        end;
-    finally
+    if _domstack.count <= 0 then begin
         _lock.Release();
+        exit;
     end;
 
+    Result := TXMLTag(_domstack[0]);
+    _domstack.Delete(0);
+    _lock.Release();
 end;
 
 {---------------------------------------}
@@ -505,7 +484,6 @@ begin
     inherited Create();
     _root_tag := root;
     _callbacks := TObjectList.Create;
-    _controlCallbacks := TObjectList.create(true); //frees objects
     _active := false;
     _local_ip := '';
 end;
@@ -527,22 +505,7 @@ begin
     _thread := nil;
 
     _callbacks.Free;
-    _ControlCallbacks.free();
     inherited;
-end;
-
-procedure TXMLStream.SendStreamHeader(Server: widestring; lang: widestring='');
-var
-    l: widestring;
-    tstr: widestring;
-begin
-    if (lang <> '') then l := ' xml:lang="' + lang + '" ' else l := '';
-    tstr := '<stream:stream to="' + Trim(Server) +
-            '" xmlns="jabber:client" ' +
-            'xmlns:stream="http://etherx.jabber.org/streams" ' + l +
-            'version="1.0" ' +
-            '>';
-    SendXML(tstr);
 end;
 
 {---------------------------------------}
@@ -575,34 +538,8 @@ begin
     end;
 end;
 
-procedure TXMLStream.RegisterPacketControlCallback(p: TPacketControlCallback);
-var
-    tcb: TControlCallbackWrapper;
-begin
-    tcb := TControlCallbackWrapper.create();
-    tcb._callback := p;
-    _controlCallbacks.Add(tcb);
-end;
-
-procedure TXMLStream.UnregisterPacketControlCallback(p: TPacketControlCallback);
-var
-    i: integer;
-    cb: TPacketControlCallback;
-begin
-    for i := 0 to _ControlCallbacks.Count - 1 do
-    begin
-        cb := TControlCallbackWrapper(_ControlCallbacks[i])._callback;
-
-        if (@cb = @p) then
-        begin
-            _ControlCallbacks.Delete(i);
-            exit;
-        end;
-    end;
-end;
-
 {---------------------------------------}
-procedure TXMLStream.FireOnStreamData(send: boolean; data: Widestring);
+procedure TXMLStream.DoDataCallbacks(send: boolean; data: Widestring);
 begin
     // Call the "debug" event handler if it's been assigned
     if (Assigned(_data_event)) then
@@ -624,111 +561,17 @@ begin
         cb := TXMLStreamCallback(l.callback);
         cb(msg, tag);
     end;
-end;
 
-procedure TXMLStream.DoPacketControlCallbacks(direction: TPacketDirection;
-                                              const inPacket: TXMLTag;
-                                              var ModifiedPacket: TXMLTag;
-                                              var allow: WordBool);
-var
-    i: integer;
-    otag: TXMLtag;
-    itag: TXMLtag;
-begin
-    allow := true;
-    ModifiedPacket := nil;
-    if (_ControlCallbacks.Count = 0) then exit;
-    //this is pretty messy, trying to push off any tag creation as long as possible
-    itag := inPacket;
-    otag := nil;
-    for i := 0 to _ControlCallbacks.Count - 1 do
-    begin
-        TControlCallbackWrapper(_ControlCallbacks[i])._callback(direction, itag, otag, allow);
-
-        if (not allow) then
-        begin
-            if (itag <> inPacket) then
-                itag.free();
-            exit;
-        end;
-        //if we have a modified tag, make it the inptu to the next listener
-        if (otag <> nil) then
-        begin
-            if (itag <> inPacket) then
-                itag.free();
-            itag := otag;
-            otag := nil;
-        end;
-    end;
-    if (itag <> inPacket) then
-        ModifiedPacket := itag;
+    // free the tag here after it's been dispatched thru the system
+    if (tag <> nil) then
+        tag.Release();
 end;
 
 {---------------------------------------}
 procedure TXMLStream.SendTag(tag: TXMLTag);
-var
-    allow: WordBool;
-    dispPacket: TXMLtag;
 begin
-    //check with packet control listeners
-    //before forwarding onto other callbacks
-    allow := true;
-    dispPacket := nil;
-    DoPacketControlCallbacks(pdOutbound, tag, dispPacket, allow);
-    
-    if (allow) then
-    begin
-        if (dispPacket = nil) then
-            SendXML(tag.xml)
-        else
-            SendXML(dispPacket.xml);
-    end;
-    if (dispPacket <> nil) then
-        dispPacket.free();
-    if (tag <> nil)  then
-        tag.Release();
-end;
-
-procedure TXMLStream.Send(xml: Widestring);
-begin
-    //only parse if we have packet control listeners
-    if (_ControlCallbacks.Count > 0) then
-        SendTag(StringToXMLTag(xml))
-    else SendXML(xml);
-end;
-
-procedure TXMLStream.fireOnStreamEvent(event: string; packet: TXMLTag);
-begin
-    DoCallbacks(event, packet);
-    // free the tag here after it's been dispatched thru the system
-    if (packet <> nil) then
-        packet.Release();
-end;
-
-procedure fireOnPacketEvent(direction: TPacketDirection; var packet: TXMLTag; allow: boolean);
-begin
-
-end;
-
-procedure TXMLStream.fireOnPacketReceived(packet: TXMLTag);
-var
-    allow: WordBool;
-    dispPacket: TXMLtag;
-begin
-    //check with packet control listeners
-    //before forwarding onto other callbacks
-    allow := true;
-    dispPacket := nil;
-    DoPacketControlCallbacks(pdInbound, packet, dispPacket, allow);
-    if (allow) then
-    begin
-        if (dispPacket = nil) then
-            DoCallbacks('xml', Packet)
-        else
-            DoCallbacks('xml', dispPacket)
-    end;
-    if (dispPacket <> nil) then
-        dispPacket.free();
+    // Send this xml tag out the socket
+    Send(tag.xml);
 end;
 
 {---------------------------------------}

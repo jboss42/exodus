@@ -20,9 +20,11 @@ program Exodus;
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
+{%File 'README.txt'}
+{%File '..\todo.txt'}
 {$R 'version.res' 'version.rc'}
 {$R 'iehtml.res' 'iehtml.rc'}
-{$R 'priority_images.res' 'priority_images.rc'}
+{%File 'defaults.xml'}
 
 {$ifdef VER150}
     {$define INDY9}
@@ -39,6 +41,7 @@ uses
   AutoUpdate in '..\jopl\AutoUpdate.pas',
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
   BaseChat in 'BaseChat.pas' {frmBaseChat},
+  Bookmark in 'Bookmark.pas' {frmBookmark},
   Browser in 'Browser.pas' {frmBrowse},
   Chat in '..\jopl\Chat.pas',
   ChatController in '..\jopl\ChatController.pas',
@@ -56,6 +59,7 @@ uses
   Dockable in 'Dockable.pas' {frmDockable},
   DropTarget in 'DropTarget.pas' {ExDropTarget: CoClass},
   Emoticons in 'Emoticons.pas' {frmEmoticons},
+  ExEvents in 'ExEvents.pas',
   ExResponders in 'ExResponders.pas',
   ExUtils in 'ExUtils.pas',
   fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
@@ -81,22 +85,28 @@ uses
   LibXmlParser in '..\jopl\LibXmlParser.pas',
   MsgController in '..\jopl\MsgController.pas',
   MsgDisplay in 'MsgDisplay.pas',
+  MsgList in '..\jopl\MsgList.pas',
+  MsgQueue in 'MsgQueue.pas' {frmMsgQueue},
+  MsgRecv in 'MsgRecv.pas' {frmMsgRecv},
   Notify in 'Notify.pas',
   Password in 'Password.pas' {frmPassword},
   PathSelector in 'PathSelector.pas' {frmPathSelector},
   PluginAuth in 'PluginAuth.pas',
   PrefAway in 'prefs\PrefAway.pas' {frmPrefAway},
   PrefController in '..\jopl\PrefController.pas',
+  PrefDialogs in 'prefs\PrefDialogs.pas' {frmPrefDialogs},
+  PrefFont in 'prefs\PrefFont.pas' {frmPrefFont},
   PrefMsg in 'prefs\PrefMsg.pas' {frmPrefMsg},
   PrefNotify in 'prefs\PrefNotify.pas' {frmPrefNotify},
   PrefPanel in 'prefs\PrefPanel.pas' {frmPrefPanel},
-  ManagePluginsDlg in 'prefs\ManagePluginsDlg.pas' {frmPrefPlugins},
+  PrefPlugins in 'prefs\PrefPlugins.pas' {frmPrefPlugins},
   PrefPresence in 'prefs\PrefPresence.pas' {frmPrefPresence},
+  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster},
   Prefs in 'Prefs.pas' {frmPrefs},
+  PrefSubscription in 'prefs\PrefSubscription.pas' {frmPrefSubscription},
   PrefSystem in 'prefs\PrefSystem.pas' {frmPrefSystem},
   Presence in '..\jopl\Presence.pas',
   Profile in 'Profile.pas' {frmProfile},
-  RoomProperties in 'RoomProperties.pas' {frmRoomProperties},
   RegExpr in '..\jopl\RegExpr.pas',
   Register in 'Register.pas',
   RemoveContact in 'RemoveContact.pas' {frmRemove},
@@ -104,10 +114,13 @@ uses
   RiserWindow in 'RiserWindow.pas' {frmRiser},
   Room in 'Room.pas' {frmRoom},
   RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList},
+  Roster in '..\jopl\Roster.pas',
   RosterAdd in 'RosterAdd.pas' {frmAdd},
   RosterRecv in 'RosterRecv.pas' {frmRosterRecv},
+  RosterWindow in 'RosterWindow.pas' {frmRosterWindow},
   S10n in '..\jopl\S10n.pas',
   SecHash in '..\jopl\SecHash.pas',
+  SelContact in 'SelContact.pas' {frmSelContact},
   Session in '..\jopl\Session.pas',
   Signals in '..\jopl\Signals.pas',
   StandardAuth in '..\jopl\StandardAuth.pas',
@@ -131,7 +144,10 @@ uses
   buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
   ExSession in 'ExSession.pas',
   WebGet in 'WebGet.pas' {frmWebDownload},
+  PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork},
+  PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups},
   HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
+  PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts},
   Wizard in 'Wizard.pas' {frmWizard},
   LocalUtils in 'LocalUtils.pas',
   SendStatus in 'SendStatus.pas' {fSendStatus: TFrame},
@@ -139,10 +155,12 @@ uses
   RecvStatus in 'RecvStatus.pas' {fRecvStatus: TFrame},
   GrpManagement in 'GrpManagement.pas' {frmGrpManagement},
   CapPresence in '..\jopl\CapPresence.pas',
+  NodeItem in '..\jopl\NodeItem.pas',
   Jud in 'Jud.pas' {frmJud},
   DockWizard in 'DockWizard.pas' {frmDockWizard},
   SSLWarn in 'SSLWarn.pas' {frmSSLWarn},
   DNSUtils in '..\jopl\DNSUtils.pas',
+  IdDNSResolver in '..\jopl\IdDNSResolver.pas',
   Entity in '..\jopl\Entity.pas',
   EntityCache in '..\jopl\EntityCache.pas',
   SASLAuth in '..\jopl\SASLAuth.pas',
@@ -156,7 +174,7 @@ uses
   RTFMsgList in 'RTFMsgList.pas' {fRTFMsgList: TFrame},
   Emote in 'Emote.pas',
   GIFImage in 'GIFImage.pas',
-  PrefEmoteDlg in 'prefs\PrefEmoteDlg.pas' {frmPrefEmoteDlg},
+  PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote},
   EmoteProps in 'EmoteProps.pas' {frmEmoteProps},
   JabberUtils in '..\jopl\JabberUtils.pas',
   DockContainer in 'DockContainer.pas' {frmDockContainer},
@@ -171,12 +189,11 @@ uses
   NewUser in 'NewUser.pas' {frmNewUser},
   pngimage in '..\jopl\png\pngimage.pas',
   pnglang in '..\jopl\png\pnglang.pas',
-  pngextra in '..\jopl\png\pngextra.pas',
   DiscoIdentity in '..\jopl\DiscoIdentity.pas',
   fProfile in 'fProfile.pas' {frameProfile: TFrame},
   ZlibHandler in '..\jopl\ZlibHandler.pas',
+  Bookmarks in '..\jopl\Bookmarks.pas',
   RosterImages in '..\jopl\RosterImages.pas',
-  ToolbarImages in '..\jopl\ToolbarImages.pas',
   COMRosterGroup in 'COMRosterGroup.pas' {ExodusRosterGroup: CoClass},
   COMRosterImages in 'COMRosterImages.pas' {ExodusRosterImages: CoClass},
   CapsCache in '..\jopl\CapsCache.pas',
@@ -228,82 +245,11 @@ uses
   DisplayName in '..\jopl\DisplayName.pas',
   BrowseForFolderU in 'BrowseForFolderU.pas',
   SelRoomOccupant in 'SelRoomOccupant.pas' {frmSelRoomOccupant},
+  EventQueue in '..\jopl\EventQueue.pas',
   COMDockToolbar in 'COMDockToolbar.pas',
   COMMsgOutToolbar in 'COMMsgOutToolbar.pas',
   idSSLSchannel in 'idSSLSchannel.pas',
-  DebugManager in '..\jopl\DebugManager.pas',
-  VistaAltFixUnit in 'VistaAltFixUnit.pas',
-  ExFrame in 'components\base\ExFrame.pas' {baseFrame},
-  ExForm in 'components\base\ExForm.pas' {baseForm},
-  ActivityWindow in 'ActivityWindow.pas' {frmActivityWindow},
-  DockWindow in 'DockWindow.pas' {frmDockWindow},
-  ExodusDockManager in 'ExodusDockManager.pas',
-  AWItem in 'AWItem.pas' {fAWItem: TTntFrame},
-  PrefDisplay in 'prefs\PrefDisplay.pas' {frmPrefDisplay},
-  toastsettings in 'prefs\toastsettings.pas',
-  ManageBlockDlg in 'prefs\ManageBlockDlg.pas' {Form1},
-  ManageKeywordsDlg in 'prefs\ManageKeywordsDlg.pas' {Form2},
-  IEMsgList in 'IEMsgList.pas' {fIEMsgList: TFrame},
-  MSHTMLEvents in 'MSHTMLEvents.pas',
-  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm},
-  ActiveXDockable in 'ActiveXDockable.pas' {frmActiveXDockable},
-  COMAXWindow in 'COMAXWindow.pas',
-  LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm},
-  COMExodusItem in '..\jopl\COMExodusItem.pas',
-  COMExodusItemController in '..\jopl\COMExodusItemController.pas',
-  COMExodusTabWrapper in 'COMExodusTabWrapper.pas',
-  ContactController in '..\jopl\ContactController.pas',
-  RosterForm in 'RosterForm.pas' {Form3},
-  InviteReceived in 'InviteReceived.pas' {frmInviteReceived: TTntForm},
-  IdDNSResolver in '..\jopl\IdDNSResolver.pas',
-  COMExodusTabController in 'COMExodusTabController.pas' {ExodusTabController: CoClass},
-  COMExodusTab in 'COMExodusTab.pas' {ExodusTab: CoClass},
-  ExTreeView in 'components\ExTreeView.pas',
-  COMExodusItemWrapper in '..\jopl\COMExodusItemWrapper.pas' {/ExTreeView in 'components\ExTreeView.pas';
-},
-  RoomController in '..\jopl\RoomController.pas',
-  IEMsgListUIHandler in 'IEMsgListUIHandler.pas',
-  ExContactsTreeView in 'components\ExContactsTreeView.pas',
-  ExRoomsTreeView in 'components\ExRoomsTreeView.pas',
-  ExActions in '..\jopl\actions\ExActions.pas',
-  ExActionCtrl in '..\jopl\actions\ExActionCtrl.pas',
-  ExActionMap in '..\jopl\actions\ExActionMap.pas',
-  COMExodusItemList in '..\jopl\COMExodusItemList.pas' {ExodusItemList: CoClass},
-  SQLiteTable3 in 'SQLiteTable3.pas',
-  SQLite3 in 'SQLite3.pas',
-  COMExodusDataStore in 'COMExodusDataStore.pas',
-  COMExodusDataTable in 'COMExodusDataTable.pas',
-  SQLLogger in 'SQLLogger.pas',
-  ManageTabsDlg in 'prefs\ManageTabsDlg.pas' {frmPrefTabs: TTntForm},
-  SQLSearchHandler in 'SQLSearchHandler.pas',
-  SQLSearchThread in 'SQLSearchThread.pas',
-  SQLUtils in '..\jopl\SQLUtils.pas',
-  HistorySearch in 'HistorySearch.pas' {HistorySearchDlg},
-  SelectItem in 'SelectItem.pas' {frmSelectItem},
-  ContactActions in 'ContactActions.pas',
-  FrmUtils in '..\jopl\FrmUtils.pas',
-  SelectItemAny in 'SelectItemAny.pas' {frmSelectItemAny: TTntForm},
-  COMExodusHistorySearchManager in 'COMExodusHistorySearchManager.pas',
-  COMExodusHistoryResult in 'COMExodusHistoryResult.pas',
-  COMExodusHistorySearch in 'COMExodusHistorySearch.pas',
-  GroupParser in '..\jopl\GroupParser.pas',
-  GroupActions in 'GroupActions.pas',
-  MiscMessages in 'MiscMessages.pas' {frmSimpleDisplay: TTntForm},
-  SelectItemRoom in 'SelectItemRoom.pas' {frmSelectItemRoom: TTntForm},
-  SelectItemAnyRoom in 'SelectItemAnyRoom.pas' {frmSelectItemAnyRoom: TTntForm},
-  ExAllTreeView in 'components\ExAllTreeView.pas',
-  CommonActions in 'CommonActions.pas',
-  ExContactHoverFrame in 'components\ExContactHoverFrame.pas' {ExContactHoverFrame: TTntFrame},
-  ExItemHoverForm in 'components\ExItemHoverForm.pas' {ExItemHoverForm: TTntForm},
-  ExRoomHoverFrame in 'components\ExRoomHoverFrame.pas' {ExRoomHoverFrame: TTntFrame},
-  SndBroadcastDlg in 'SndBroadcastDlg.pas' {dlgSndBroadcast},
-  BookmarkForm in 'BookmarkForm.pas',
-  FontConsts in '..\jopl\FontConsts.pas',
-  COMMainToolBarImages in 'COMMainToolBarImages.pas',
-  COMExodusHover in 'COMExodusHover.pas' {COMExodusHover: CoClass},
-  ExHoverFrame in 'components\ExHoverFrame.pas' {Frame1: TFrame},
-  COMExEventData in 'COMExEventData.pas' {ExodusEventXML: CoClass},
-  COMExodusPacketDispatcher in 'COMExodusPacketDispatcher.pas';
+  VistaAltFixUnit in 'VistaAltFixUnit.pas';
 
 {$R *.TLB}
 
@@ -316,8 +262,7 @@ uses
 var
     continue: boolean;
 
-
-    begin
+begin
 
   // Sometimes OLE registration fails if the user don't
   // have sufficient privs.. Just silently eat these.
@@ -326,9 +271,6 @@ var
   except
   end;
 
-{$IFDEF VER185}
-  Application.MainFormOnTaskbar := True;
-{$ENDIF}
   Application.Title := '';
   Application.ShowMainForm := false;
 

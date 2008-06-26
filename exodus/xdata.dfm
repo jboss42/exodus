@@ -5,6 +5,7 @@ inherited frmXData: TfrmXData
   ClientHeight = 416
   ClientWidth = 492
   OldCreateOrder = True
+  OnClose = FormClose
   ExplicitWidth = 500
   ExplicitHeight = 450
   PixelsPerInch = 96
@@ -12,10 +13,10 @@ inherited frmXData: TfrmXData
   inherited pnlDockTop: TPanel
     Width = 492
     TabOrder = 2
-    ExplicitWidth = 492
+    ExplicitWidth = 355
     inherited tbDockBar: TToolBar
       Left = 443
-      ExplicitLeft = 443
+      ExplicitLeft = 306
       inherited btnCloseDock: TToolButton
         Visible = False
       end
@@ -27,23 +28,15 @@ inherited frmXData: TfrmXData
     Width = 492
     Height = 34
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 0
     TabStop = True
-    ExplicitTop = 382
-    ExplicitWidth = 492
+    ExplicitTop = 247
+    ExplicitWidth = 355
     ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 492
       Height = 34
-      ExplicitWidth = 492
+      ExplicitWidth = 355
       ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 492
@@ -52,7 +45,7 @@ inherited frmXData: TfrmXData
       inherited Panel1: TPanel
         Left = 332
         Height = 29
-        ExplicitLeft = 332
+        ExplicitLeft = 195
         ExplicitHeight = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
@@ -65,33 +58,25 @@ inherited frmXData: TfrmXData
   end
   inline frameXData: TframeXData
     Left = 0
-    Top = 33
+    Top = 32
     Width = 492
-    Height = 349
+    Height = 350
     Align = alClient
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 1
     TabStop = True
     ExplicitTop = 32
-    ExplicitWidth = 492
-    ExplicitHeight = 350
+    ExplicitWidth = 355
+    ExplicitHeight = 215
     inherited Panel1: TPanel
       Width = 492
       Height = 350
-      ExplicitWidth = 492
-      ExplicitHeight = 350
+      ExplicitWidth = 355
+      ExplicitHeight = 215
       inherited ScrollBox1: TScrollBox
         Width = 482
         Height = 340
-        ExplicitWidth = 482
-        ExplicitHeight = 340
+        ExplicitWidth = 345
+        ExplicitHeight = 205
       end
     end
   end

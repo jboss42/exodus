@@ -22,7 +22,7 @@ unit Signals;
 interface
 uses
     Unicode, XMLTag,
-    Contnrs, Classes, SysUtils, Exodus_TLB;
+    Contnrs, Classes, SysUtils;
 
 type
 
@@ -186,15 +186,6 @@ type
         procedure Invoke(event: string; tag: TXMLTag; data: Widestring); overload;
     end;
 
-    //TItemEvent = procedure(event: string; tag: TXMLTag; ritem: IExodusItem) of object;
-    TItemEvent = procedure(event: string; item: IExodusItem) of object;
-    TItemListener = class(TSignalListener);
-
-    TItemSignal = class(TSignal)
-    public
-        procedure Invoke(event: string; item: IExodusItem = nil); overload;
-        function addListener(event: string;  callback: TItemEvent): TItemListener; overload;
-    end;
     {M-}
 
 implementation
@@ -709,63 +700,5 @@ begin
         Self.processChangeList();
 end;
 
-{---------------------------------------}
-function TItemSignal.addListener(event: string;  callback: TItemEvent): TItemListener;
-var
-    l: TItemListener;
-begin
-    l := TItemListener.Create;
-    l.callback := TMethod(callback);
-
-    inherited addListener(event, l);
-
-    Result := l;
-end;
-
-{---------------------------------------}
-procedure TItemSignal.Invoke(event: string; item: IExodusItem = nil);
-var
-    i: integer;
-    l: TItemListener;
-    cmp, e: string;
-    sig: TItemEvent;
-begin
-    // dispatch this to all interested listeners
-    cmp := Lowercase(Trim(event));
-
-    inc(_invoking);
-    for i := 0 to Self.Count - 1 do begin
-        e := Strings[i];
-        l := TItemListener(Objects[i]);
-        if (l <> nil) then begin
-            sig := TItemEvent(l.callback);
-            if (e <> '') then begin
-                // check to see if the listener's string is a substring of the event
-                if (Pos(e, cmp) >= 1) then begin
-                    try
-                        sig(event, item);
-                    except
-                        //on e: Exception do
-                        //    Dispatcher.handleException(Self, e, l, event, tag);
-                    end;
-                end;
-            end
-            else begin
-                // otherwise, signal
-                try
-                    sig(event, item);
-                except
-//                    on e: Exception do
-//                        Dispatcher.handleException(Self, e, l, event, tag);
-                end;
-            end;
-        end;
-    end;
-
-    dec(_invoking);
-
-    if (change_list.Count > 0) and (_invoking = 0) then
-        Self.processChangeList();
-end;
 
 end.

@@ -44,7 +44,7 @@ type
 implementation
 
 uses
-    RosterImages, Jabber1, COMToolbarControl, ComServ, ToolbarImages;
+    RosterImages, Jabber1, COMToolbarControl, ComServ;
 
 {---------------------------------------}
 function TExodusToolbar.addButton(
@@ -60,7 +60,6 @@ begin
         old_left := Toolbar1.Buttons[Toolbar1.ButtonCount - 1].Left +
                         Toolbar1.Buttons[Toolbar1.ButtonCount - 1].Width;
         btn := TToolButton.Create(frmExodus);
-        btn.ShowHint := true;
         btn.Top := Toolbar1.Buttons[Toolbar1.ButtonCount - 1].Top;
         btn.Left := old_left + 1;
         ToolBar1.Width := Toolbar1.Width +
@@ -69,7 +68,7 @@ begin
         Toolbar1.AutoSize := true;
     end;
 
-    idx := MainbarImages.Find(ImageID);
+    idx := RosterTreeImages.Find(ImageID);
     if (idx >= 0) then
         btn.ImageIndex := idx;
 
@@ -79,7 +78,8 @@ begin
     guid := AnsiReplaceStr(guid, '-', '_');
     btn.Name := 'toolbar_button_' + guid;
 
-    Result := TExodusToolbarButton.Create(btn, MainbarImages);
+
+    Result := TExodusToolbarButton.Create(btn);
 end;
 
 {---------------------------------------}
@@ -96,7 +96,7 @@ begin
     Result := nil;
     if (Index >= 0) and (Index < frmExodus.ToolBar1.ButtonCount) then begin
         btn := frmExodus.ToolBar1.Buttons[Index];
-        Result := TExodusToolbarButton.Create(btn, MainbarImages) as IExodusToolbarButton;
+        Result := TExodusToolbarButton.Create(btn) as IExodusToolbarButton;
     end;
 end;
 
@@ -115,14 +115,14 @@ end;
 {---------------------------------------}
 function TExodusToolbar.addControl(const ClassId: WideString): IExodusToolbarControl;
 var
-  AXControl: TAXControl;
+  MyControl: TMyControl;
   ParentControl: TWinControl;
 begin
   ParentControl := frmExodus.Toolbar;
 
-  AXControl := TAXControl.Create(ParentControl, StringToGuid(ClassId));
-  AXControl.Parent := ParentControl;
-  Result := TExodusToolbarControl.Create(AXControl);
+  MyControl := TMyControl.Create(ParentControl, StringToGuid(ClassId));
+  MyControl.Parent := ParentControl;
+  Result := TExodusToolbarControl.Create(MyControl);
 
   frmExodus.Toolbar.Bands.Items[frmExodus.Toolbar.Bands.Count-1].Text := ClassId;
   frmExodus.Toolbar.ShowText := false;

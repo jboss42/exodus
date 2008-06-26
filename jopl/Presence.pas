@@ -93,7 +93,7 @@ type
         function FindPresSpec(sjid, resource: Widestring): TJabberPres;
         procedure AddPres(p: TJabberPres);
         function  GetPresList(sjid: WideString): TWideStringList;
-        function  IsRoomPres(jid: WideString): Boolean;
+        
     published
         procedure Callback(event: string; tag: TXMLTag);
     public
@@ -367,8 +367,7 @@ begin
 
             // if there are no more presence packets, they are offline.
             if (p = nil) then
-                if (not IsRoomPres(curp.fromJid.full)) then
-                    s.FireEvent('/presence/offline', tag, curp)
+                s.FireEvent('/presence/offline', tag, curp)
             else
                 s.FireEvent('/presence/unavailable', tag, curp);
         end;
@@ -425,23 +424,6 @@ begin
     end;
 end;
 
-{---------------------------------------}
-//
-// We need to know if unavailable presence received is for the room.
-// Assume that if domain is in the entity cache, it is conference component
-// of the server.
-function  TJabberPPDB.IsRoomPres(jid: WideString): Boolean;
-var
-    tmp: TJabberID;
-    e: TJabberEntity;
-begin
-    Result := false;
-    tmp := TJabberID.Create(jid);
-    e := jEntityCache.getByJid(tmp.domain, '');
-    if ((e <> nil) and (e.hasFeature('groupchat'))) then
-        Result := true;
-    tmp.Free();
-end;
 {---------------------------------------}
 procedure TJabberPPDB.AddPres(p: TJabberPres);
 var

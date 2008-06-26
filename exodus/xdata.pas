@@ -26,7 +26,7 @@ uses
     TntCheckLst, TntStdCtrls, StdCtrls, ExodusLabel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, buttonFrame, Grids, TntGrids, ExtCtrls, fXData, JabberID,
-  ComCtrls, ToolWin, EntityCache, Entity, TntForms, ExFrame;
+  ComCtrls, ToolWin, EntityCache, Entity;
 
 type
 
@@ -111,7 +111,7 @@ procedure showXData(tag: TXMLTag);
 implementation
 {$R *.dfm}
 uses
-    SelectItem, Jabber1, 
+    SelContact, Jabber1, 
     GnuGetText, JabberUtils, Session, Math, XMLUtils;
 
 const
@@ -171,14 +171,6 @@ begin
     fixed := false;
     hidden := false;
     valid := true;
-
-    if (x.Name = 'warning') then begin
-        t := 'warning';
-        fixed := true;
-        req := false;
-        buildLabel(x.Data);
-        exit;
-    end;
 
     if (x.Name = 'instructions') then begin
         t := 'instructions';
@@ -470,18 +462,24 @@ end;
 {---------------------------------------}
 procedure TXDataRow.JidSelect(Sender: TObject);
 var
-    selected: Widestring;
+    fsel: TfrmSelContact;
     jid: TJabberID;
 begin
-    selected := SelectUIDByType('contact');
-    if (selected <> '') then begin
-        jid := TJabberID.Create(selected);
+    fsel := TfrmSelContact.Create(Application);
+    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    frmExodus.PreModal(fsel);
+
+    if (fsel.ShowModal = mrOK) then begin
+        jid := TJabberID.Create(fsel.GetSelectedJid());
         if (con is TTntEdit) then
             TTntEdit(con).Text := jid.GetDisplayFull()
         else if (con is TTntMemo) then
             TTntMemo(con).Lines.Add(jid.GetDisplayFull());
         jid.Free();
     end;
+
+    frmExodus.PostModal();
 end;
 
 {---------------------------------------}
@@ -621,7 +619,6 @@ end;
 procedure TfrmXData.FormCreate(Sender: TObject);
 begin
   inherited;
-  _windowType := 'xdata';
 end;
 
 {---------------------------------------}
@@ -653,8 +650,6 @@ var
 begin
     // Get our context/xmlns
     _to_jid := tag.getAttribute('from');
-    Caption := Caption + ' from ' + _to_jid;
-
     if (tag.Name = 'iq') then begin
         _packet := 'iq';
         _ns := tag.QueryXPData('/iq/query@xmlns')
