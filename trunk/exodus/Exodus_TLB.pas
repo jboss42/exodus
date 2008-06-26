@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/25/2008 2:11:16 PM from Type Library described below.
+// File generated on 6/25/2008 5:16:28 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\MomentIM-trunk\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -157,6 +157,7 @@ const
   CLASS_ExodusPacketDispatcher: TGUID = '{DB860D8B-51E5-479E-A8A0-648288C8D031}';
   IID_IExodusMenuListener2: TGUID = '{046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}';
   IID_IExodusPacketControlListener: TGUID = '{1DDEA354-6FA2-43E1-AE81-8ABE167AB791}';
+  IID_IExodusControlSite: TGUID = '{B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -356,6 +357,8 @@ type
   IExodusMenuListener2Disp = dispinterface;
   IExodusPacketControlListener = interface;
   IExodusPacketControlListenerDisp = dispinterface;
+  IExodusControlSite = interface;
+  IExodusControlSiteDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -5557,6 +5560,33 @@ type
                                const modifiedPacket: IExodusEventXML; var allow: WordBool); dispid 201;
     procedure OnPacketSent(const xpath: WideString; const packet: IExodusEventXML; 
                            const modifiedPacket: IExodusEventXML; var allow: WordBool); dispid 202;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlSite
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}
+// *********************************************************************//
+  IExodusControlSite = interface(IDispatch)
+    ['{B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}']
+    function Get_Control: IDispatch; safecall;
+    function Get_ControlName: WideString; safecall;
+    function Get_ControlGUID: WideString; safecall;
+    property Control: IDispatch read Get_Control;
+    property ControlName: WideString read Get_ControlName;
+    property ControlGUID: WideString read Get_ControlGUID;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlSiteDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}
+// *********************************************************************//
+  IExodusControlSiteDisp = dispinterface
+    ['{B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}']
+    property Control: IDispatch readonly dispid 201;
+    property ControlName: WideString readonly dispid 202;
+    property ControlGUID: WideString readonly dispid 203;
   end;
 
 // *********************************************************************//
