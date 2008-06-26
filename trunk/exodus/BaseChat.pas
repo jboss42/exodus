@@ -979,7 +979,7 @@ Headers: OleVariant; var Cancel: WordBool);
 var
    Tag: TXMLTag;
 begin
-    _fileLinkInfo.ExtendedURL := UTF8Encode(URL);
+    _fileLinkInfo.ExtendedURL := URL;
     _fileLinkInfo.Handled := false;
 
     Tag := TXMLTag.Create('filelink', _fileLinkInfo.ExtendedURL);
