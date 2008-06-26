@@ -67,6 +67,7 @@ contains
   ExGraphicButton in 'ExGraphicButton.pas',
   SClrRGrp in 'SClrRGrp.pas',
   Exodus_TLB in '..\Exodus_TLB.pas',
-  ActionMenus in 'ActionMenus.pas';
+  ActionMenus in 'ActionMenus.pas',
+  MSXML_TLB in '..\MSXML_TLB.pas';
 
 end.
