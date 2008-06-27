@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag, XMLUtils,
-    Buttons, COMMsgOutToolbar, COMDockToolbar, AppEvnts;
+    Buttons, Exodus_TLB, COMMsgOutToolbar, COMDockToolbar, AppEvnts;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -81,6 +81,8 @@ type
     ChatToolbarButtonColors: TTntToolButton;
     cmbPriority: TTntComboBox;
     AppEvents: TApplicationEvents;
+    pnlToolbar: TPanel;
+    pnlControlSite: TPanel;
     procedure AppEventsShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -161,8 +163,8 @@ type
   public
     { Public declarations }
     AutoScroll: boolean;
-    MsgOutToolbar: TExodusMsgOutToolbar;
-    DockToolbar: TExodusDockToolbar;
+    MsgOutToolbar: IExodusMsgOutToolbar;
+    DockToolbar: IExodusDockToolbar;
 
     constructor Create(AOwner: TComponent);override;
     procedure SetEmoticon(e: TEmoticon);
@@ -214,7 +216,7 @@ uses
     PrefController,
     RosterImages,
     ActivityWindow,
-    Exodus_TLB,
+    ExSession,
     COMChatController;
 
 const
@@ -551,11 +553,8 @@ begin
         _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
         _filelink_callback := MainSession.RegisterCallback(OnFileLinkCallback, '/session/filelink/click/response');
 
-        MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar);
-        MsgOutToolbar.ObjAddRef();
-
-        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar);
-        DockToolbar.ObjAddRef();
+        MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar, pnlControlSite, COMRosterImages);
+        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar, pnlControlSite, COMRosterImages);
 
         updateFromPrefs();
         DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
@@ -598,11 +597,8 @@ begin
     TfBaseMsgList(_msgframe).Free();
     _msgHistory.Free();
 
-    if (MsgOutToolbar <> nil) then
-        MsgOutToolbar.Free();
-
-    if (DockToolbar <> nil) then
-        DockToolbar.Free();
+    MsgOutToolbar := nil;
+    DockToolbar := nil;
 
     inherited;
 end;

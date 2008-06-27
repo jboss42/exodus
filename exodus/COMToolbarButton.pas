@@ -1,6 +1,6 @@
 unit COMToolbarButton;
 {
-    Copyright 2001, Peter Millard
+    Copyright 2008, Estate of Peter Millard
 
     This file is part of Exodus.
 
@@ -24,16 +24,16 @@ unit COMToolbarButton;
 interface
 
 uses
-  ComCtrls, ComObj, ActiveX, Exodus_TLB, ExodusImageList, StdVcl;
+  ComCtrls, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusToolbarButton = class(TAutoObject, IExodusToolbarButton, IExodusToolbarButton2)
   private
     _button: TToolButton;
     _menu_listener: IExodusMenuListener;
-    _imgList: TExodusImageList;
+    _imgList: IExodusRosterImages;
   public
-    constructor Create(btn: TToolButton; imgList: TExodusImageList = nil);
+    constructor Create(btn: TToolButton; imgList: IExodusRosterImages = nil);
     destructor Destroy(); override;
   protected
     function Get_ImageID: WideString; safecall;
@@ -48,7 +48,7 @@ type
     procedure Set_MenuListener(const Value: IExodusMenuListener); safecall;
     function Get_Name: Widestring; safecall;
 
-    procedure SetImageList(images: TExodusImageList);
+    procedure SetImageList(images: IExodusRosterImages);
   public
     procedure OnClick(Sender: TObject);
   end;
@@ -57,9 +57,9 @@ type
 implementation
 
 uses
-    RosterImages, ComServ, Debug;
+    RosterImages, {ExodusImageList, }ComServ, Debug, ExSession;
 
-constructor TExodusToolbarButton.Create(btn: TToolButton; imgList: TExodusImageList);
+constructor TExodusToolbarButton.Create(btn: TToolButton; imgList: IExodusRosterImages);
 begin
     _button := btn;
     if (not Assigned(_button.OnClick)) then
@@ -68,7 +68,7 @@ begin
     if (imgList <> nil) then
         SetImageList(imgList)
     else
-        SetImageList(RosterTreeImages);
+        SetImageList(COMRosterImages);
 end;
 
 destructor TExodusToolbarButton.Destroy();
@@ -81,14 +81,14 @@ begin
     inherited;
 end;
 
-procedure TExodusToolbarButton.SetImageList(images: TExodusImageList);
+procedure TExodusToolbarButton.SetImageList(images: IExodusRosterImages);
 begin
     _imgList := images;
 end;
 
 function TExodusToolbarButton.Get_ImageID: WideString;
 begin
-    Result := _imgList.GetID(_button.ImageIndex);
+    Result := RosterTreeImages.GetID(_button.ImageIndex);
 end;
 
 function TExodusToolbarButton.Get_Tooltip: WideString;

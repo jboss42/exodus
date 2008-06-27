@@ -54,7 +54,7 @@ type
 
   public
     { Public declarations }
-    DockToolbar: TExodusDockToolbar;
+    DockToolbar: IExodusDockToolbar;
 
     procedure OnDocked(); override;
     procedure OnFloat(); override;
@@ -77,6 +77,7 @@ implementation
 {$R *.dfm}
 
 uses
+    ExSession,
     StrUtils,
     ExUtils,
     XMLUtils,
@@ -159,8 +160,7 @@ begin
 
         inherited;
 
-        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar);
-        DockToolbar.ObjAddRef();
+        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar, Self.tbDockBar, ExSession.COMRosterImages);
 
         _windowType := 'activex_dockable';
         _callback := nil;
@@ -171,9 +171,7 @@ end;
 {---------------------------------------}
 procedure TfrmActiveXDockable.FormDestroy(Sender: TObject);
 begin
-    if (DockToolbar <> nil) then
-        DockToolbar.Free();
-
+    DockToolbar := nil;
     _callback := nil;
 
     inherited;
