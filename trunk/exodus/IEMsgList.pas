@@ -1597,7 +1597,7 @@ begin
         _we.Connect(_content);
         _we.onscroll   := onscroll;
         _we.onresize   := onresize;
-        _we.ondrop     := ondrop;
+        //_we.ondrop     := ondrop;
         _we.ondragover := ondragover;
 
         _we2 := TMSHTMLHTMLElementEvents2.Create(self);
