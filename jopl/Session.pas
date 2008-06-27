@@ -475,6 +475,7 @@ begin
     OnSessionEndRoomProperties();
     // Free the dispatcher... this should free the signals
     _dispatcher.Free;
+    _dispatcher := nil; //keeps bad refs from calling back during their destruction
    inherited Destroy;
 end;
 
@@ -1094,7 +1095,7 @@ end;
 procedure TJabberSession.UnRegisterCallback(index: integer);
 begin
     // Unregister a callback
-    if (index >= 0) then
+    if (index >= 0) and (_dispatcher <> nil) then
         _dispatcher.DeleteListener(index);
 end;
 
