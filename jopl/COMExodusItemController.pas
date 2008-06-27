@@ -173,11 +173,12 @@ begin
 
     _GroupsCB._Release();
     _GroupsCB := nil;
+
     while (_HoverControls.Count > 0) do
     begin
         Hover := TCOMExodusHover(_HoverControls.Objects[0]);
         _HoverControls.Delete(0);
-        Hover.Free();
+        //Hover.Free(); hover freed by owner
     end;
     _HoverControls.Free;
 
