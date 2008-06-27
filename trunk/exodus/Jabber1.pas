@@ -293,6 +293,9 @@ type
     popShowAll: TTntMenuItem;
     mnuContacts_ViewHistory: TTntMenuItem;
     pnlStatusLabel: TPanel;
+    mnuFile_Plugins: TTntMenuItem;
+    N16: TTntMenuItem;
+    mnuFile_Plugins_Options: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
