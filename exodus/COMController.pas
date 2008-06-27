@@ -1711,74 +1711,89 @@ end;
 {---------------------------------------}
 function TExodusController.AddContactMenu(const caption: WideString;
   const menuListener: IExodusMenuListener): WideString;
-//var
-//    id: Widestring;
-//    mi: TMenuItem;
 begin
-    // add a new TMenuItem to the Plugins menu
-//    mi := TMenuItem.Create(frmRosterWindow);
-//    frmRosterWindow.popRoster.Items.Add(mi);
-//    mi.Caption := caption;
-//    mi.OnClick := frmRosterWindow.pluginClick;
-//    id := 'ct_menu_' + IntToStr(_roster_menus.Count);
-//    mi.Name := id;
-//    //add menu listener as menu items tag
-//    mi.Tag := Integer(menuListener);
-//    _roster_menus.AddObject(id, mi);
-//    Result := id;
+    Result := COMRoster.AddContextMenuItem('Roster', caption, menuListener);
 end;
 
 {---------------------------------------}
 procedure TExodusController.RemoveContactMenu(const ID: WideString);
-var
-    idx: integer;
 begin
-    idx := _roster_menus.IndexOf(ID);
-    if (idx >= 0) then begin
-        TMenuItem(_roster_menus.Objects[idx]).Tag := 0; //loose IExodusMenuListener ref
-        TMenuItem(_roster_menus.Objects[idx]).Free();
-        _roster_menus.Delete(idx);
-    end;
+    COMRoster.RemoveContextMenuItem('Roster', ID);
 end;
 
 {---------------------------------------}
 function TExodusController.GetActiveContact: WideString;
-//var
-//    ritem: TJabberRosterItem;
-//begin
-//    ritem := frmRosterWindow.CurRosterItem;
-//    if (ritem <> nil) then
-//        Result := ritem.jid.full
-//    else
-//        Result := '';
-//end;
+var
+    tabCtrl: IExodusTabController;
+    tab: IExodusTab;
+    items: IExodusItemList;
+    item: IExodusItem;
+    idx: Integer;
 begin
+    Result := '';
+    tabCtrl := GetRosterWindow().TabController;
+    if (tabCtrl.ActiveTab = -1) then exit;
 
+    tab := tabCtrl.Tab[tabCtrl.ActiveTab];
+    items := tab.GetSelectedItems();
+
+    for idx := 0 to items.Count - 1 do begin
+        item := items.item[idx];
+        if (item.Type_ <> 'contact') then continue;
+        Result := item.UID;
+    end;
 end;
 
 {---------------------------------------}
 function TExodusController.GetActiveGroup: WideString;
+var
+    tabCtrl: IExodusTabController;
+    tab: IExodusTab;
+    items: IExodusItemList;
+    item: IExodusItem;
+    idx: Integer;
 begin
-    //Result := frmRosterWindow.CurGroup;
+    Result := '';
+    tabCtrl := GetRosterWindow().TabController;
+    if (tabCtrl.ActiveTab = -1) then exit;
+
+    tab := tabCtrl.Tab[tabCtrl.ActiveTab];
+    items := tab.GetSelectedItems();
+    if (items.Count = 0) then exit;
+
+    for idx := 0 to items.Count - 1 do begin
+        if (items.item[idx].Type_ <> 'group') then continue;
+        Result := items.item[idx].UID;
+    end;
 end;
 
 {---------------------------------------}
 function TExodusController.GetActiveContacts(Online: WordBool): OleVariant;
-//var
-//    items: IExodusItemList;
-//    idx: Integer;
-//    va : Variant;
+var
+    tabCtrl: IExodusTabController;
+    tab: IExodusTab;
+    items: IExodusItemList;
+    item: IExodusItem;
+    idx: Integer;
+    va : Variant;
 begin
-    { TODO : Roster refactor }
-//    clist := frmRosterWindow.getSelectedContacts(Online);
-//    va := VarArrayCreate([0,clist.Count], varOleStr);
-//
-//    for i := 0 to clist.count - 1 do begin
-//        ritem := TJabberRosterItem(clist[i]);
-//        VarArrayPut(va, ritem.jid.full, i);
-//    end;
-//    clist.Free();
-//    result := va;
+    tabCtrl := GetRosterWindow().TabController;
+    if (tabCtrl.ActiveTab = -1) then begin
+        va := VarArrayCreate([0, 0], varOleStr);
+   end
+   else begin
+        items := tabCtrl.Tab[tabCtrl.ActiveTab].GetSelectedItems();
+        va := VarArrayCreate([0, items.Count], varOleStr);
+
+        for idx := 0 to items.Count - 1 do begin
+            item := items.item[idx];
+            if (item.Type_ <> 'contact') then continue;
+
+            VarArrayPut(va, item.UID, idx);
+        end;
+   end;
+
+   Result := va;
 end;
 
 {---------------------------------------}
