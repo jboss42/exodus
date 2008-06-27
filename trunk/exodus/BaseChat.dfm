@@ -1,20 +1,20 @@
 inherited frmBaseChat: TfrmBaseChat
   Left = 414
   Top = 474
-  ClientHeight = 260
-  ClientWidth = 415
+  ClientHeight = 320
+  ClientWidth = 511
   OnDestroy = FormDestroy
   OnResize = TntFormResize
-  ExplicitWidth = 423
-  ExplicitHeight = 294
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 519
+  ExplicitHeight = 353
+  PixelsPerInch = 120
+  TextHeight = 16
   object Splitter1: TSplitter [0]
     AlignWithMargins = True
     Left = 4
-    Top = 191
-    Width = 407
-    Height = 4
+    Top = 235
+    Width = 503
+    Height = 5
     Cursor = crVSplit
     Margins.Left = 4
     Margins.Top = 0
@@ -24,16 +24,16 @@ inherited frmBaseChat: TfrmBaseChat
     AutoSnap = False
     Beveled = True
     OnMoved = Splitter1Moved
-    ExplicitLeft = 0
-    ExplicitWidth = 415
+    ExplicitLeft = 5
+    ExplicitWidth = 501
   end
   inherited pnlDockTop: TPanel
-    Width = 415
+    Width = 511
     TabOrder = 2
-    ExplicitWidth = 415
+    ExplicitWidth = 511
     inherited tbDockBar: TToolBar
-      Left = 366
-      ExplicitLeft = 366
+      Left = 462
+      ExplicitLeft = 462
       inherited btnDockToggle: TToolButton
         ParentShowHint = False
         ShowHint = True
@@ -46,8 +46,8 @@ inherited frmBaseChat: TfrmBaseChat
     object pnlChatTop: TPanel
       Left = 0
       Top = 0
-      Width = 363
-      Height = 33
+      Width = 459
+      Height = 41
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
@@ -56,22 +56,22 @@ inherited frmBaseChat: TfrmBaseChat
   end
   object pnlMsgList: TPanel
     Left = 0
-    Top = 33
-    Width = 415
-    Height = 158
+    Top = 41
+    Width = 511
+    Height = 194
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
-    Constraints.MinHeight = 20
+    Constraints.MinHeight = 25
     ParentColor = True
     TabOrder = 0
   end
   object pnlInput: TPanel
     AlignWithMargins = True
     Left = 2
-    Top = 195
-    Width = 411
-    Height = 65
+    Top = 240
+    Width = 507
+    Height = 80
     Margins.Left = 2
     Margins.Top = 0
     Margins.Right = 2
@@ -83,9 +83,9 @@ inherited frmBaseChat: TfrmBaseChat
     TabOrder = 1
     object MsgOut: TExRichEdit
       Left = 2
-      Top = 24
-      Width = 407
-      Height = 39
+      Top = 25
+      Width = 503
+      Height = 53
       Align = alClient
       AutoURLDetect = adNone
       Ctl3D = True
@@ -186,149 +186,178 @@ inherited frmBaseChat: TfrmBaseChat
       UndoLimit = 0
       AllowInPlace = False
     end
-    object tbMsgOutToolbar: TTntToolBar
+    object pnlToolbar: TPanel
       Left = 2
       Top = 2
-      Width = 407
-      Height = 22
-      ButtonWidth = 25
-      Images = frmExodus.ImageList1
+      Width = 503
+      Height = 23
+      Align = alTop
+      BevelOuter = bvNone
+      Caption = 'pnlToolbar'
+      ParentColor = True
       TabOrder = 1
-      Transparent = True
-      object ChatToolbarButtonBold: TTntToolButton
+      object tbMsgOutToolbar: TTntToolBar
         Left = 0
         Top = 0
-        Hint = 'Bold'
-        AllowAllUp = True
-        ImageIndex = 70
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-        OnClick = ChatToolbarButtonBoldClick
-      end
-      object ChatToolbarButtonUnderline: TTntToolButton
-        Left = 25
-        Top = 0
-        Hint = 'Underline'
-        AllowAllUp = True
-        Caption = 'Underline'
-        ImageIndex = 71
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-        OnClick = ChatToolbarButtonUnderlineClick
-      end
-      object ChatToolbarButtonItalics: TTntToolButton
-        Left = 50
-        Top = 0
-        Hint = 'Italics'
-        AllowAllUp = True
-        Caption = 'Color'
-        ImageIndex = 72
-        ParentShowHint = False
-        ShowHint = True
-        Style = tbsCheck
-        Visible = False
-        OnClick = ItalicsClick
-      end
-      object ChatToolbarButtonColors: TTntToolButton
-        Left = 75
-        Top = 0
-        Hint = 'Colors'
-        AllowAllUp = True
-        Caption = 'Color'
-        ImageIndex = 84
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = ChatToolbarButtonColorsClick
-      end
-      object ChatToolbarButtonSeparator1: TTntToolButton
-        Left = 100
-        Top = 0
-        Width = 8
-        Style = tbsSeparator
-      end
-      object ChatToolbarButtonCut: TTntToolButton
-        Left = 108
-        Top = 0
-        Hint = 'Cut'
-        Caption = 'Cut'
-        ImageIndex = 73
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = Copy2Click
-      end
-      object ChatToolbarButtonCopy: TTntToolButton
-        Left = 133
-        Top = 0
-        Hint = 'Copy'
-        Caption = 'Copy'
-        ImageIndex = 74
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = Copy3Click
-      end
-      object ChatToolbarButtonPaste: TTntToolButton
-        Left = 158
-        Top = 0
-        Hint = 'Paste'
-        Caption = 'Paste'
-        ImageIndex = 75
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = Paste1Click
-      end
-      object ChatToolbarButtonSeparator2: TTntToolButton
-        Left = 183
-        Top = 0
-        Width = 8
-        Style = tbsSeparator
-      end
-      object ChatToolbarButtonEmoticons: TTntToolButton
-        Left = 191
-        Top = 0
-        Hint = 'Emoticons'
-        Caption = 'Emoticons'
-        ImageIndex = 76
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = Emoticons1Click
-      end
-      object ChatToolbarButtonHotkeys: TTntToolButton
-        Left = 216
-        Top = 0
-        Hint = 'Hotkeys'
-        Caption = 'Hotkeys'
-        ImageIndex = 77
-        ParentShowHint = False
-        PopupMenu = popHotkeys
-        ShowHint = True
-        OnClick = ChatToolbarButtonHotkeysClick
-      end
-      object TntToolButton1: TTntToolButton
-        Left = 241
-        Top = 0
-        Width = 8
-        Caption = 'TntToolButton1'
-        Style = tbsSeparator
-      end
-      object cmbPriority: TTntComboBox
-        Left = 249
-        Top = 0
-        Width = 72
-        Height = 21
-        Hint = 'Hotkeys'
-        Style = csDropDownList
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ItemHeight = 13
-        ParentFont = False
-        ParentShowHint = False
-        ShowHint = True
+        Width = 321
+        Height = 23
+        Align = alLeft
+        AutoSize = True
+        ButtonWidth = 25
+        Images = frmExodus.ImageList1
         TabOrder = 0
+        Transparent = True
+        ExplicitLeft = 1
+        ExplicitTop = 1
+        ExplicitHeight = 21
+        object ChatToolbarButtonBold: TTntToolButton
+          Left = 0
+          Top = 0
+          Hint = 'Bold'
+          AllowAllUp = True
+          ImageIndex = 70
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+          OnClick = ChatToolbarButtonBoldClick
+        end
+        object ChatToolbarButtonUnderline: TTntToolButton
+          Left = 25
+          Top = 0
+          Hint = 'Underline'
+          AllowAllUp = True
+          Caption = 'Underline'
+          ImageIndex = 71
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+          OnClick = ChatToolbarButtonUnderlineClick
+        end
+        object ChatToolbarButtonItalics: TTntToolButton
+          Left = 50
+          Top = 0
+          Hint = 'Italics'
+          AllowAllUp = True
+          Caption = 'Color'
+          ImageIndex = 72
+          ParentShowHint = False
+          ShowHint = True
+          Style = tbsCheck
+          Visible = False
+          OnClick = ItalicsClick
+        end
+        object ChatToolbarButtonColors: TTntToolButton
+          Left = 75
+          Top = 0
+          Hint = 'Colors'
+          AllowAllUp = True
+          Caption = 'Color'
+          ImageIndex = 84
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = ChatToolbarButtonColorsClick
+        end
+        object ChatToolbarButtonSeparator1: TTntToolButton
+          Left = 100
+          Top = 0
+          Width = 8
+          Style = tbsSeparator
+        end
+        object ChatToolbarButtonCut: TTntToolButton
+          Left = 108
+          Top = 0
+          Hint = 'Cut'
+          Caption = 'Cut'
+          ImageIndex = 73
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = Copy2Click
+        end
+        object ChatToolbarButtonCopy: TTntToolButton
+          Left = 133
+          Top = 0
+          Hint = 'Copy'
+          Caption = 'Copy'
+          ImageIndex = 74
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = Copy3Click
+        end
+        object ChatToolbarButtonPaste: TTntToolButton
+          Left = 158
+          Top = 0
+          Hint = 'Paste'
+          Caption = 'Paste'
+          ImageIndex = 75
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = Paste1Click
+        end
+        object ChatToolbarButtonSeparator2: TTntToolButton
+          Left = 183
+          Top = 0
+          Width = 8
+          Style = tbsSeparator
+        end
+        object ChatToolbarButtonEmoticons: TTntToolButton
+          Left = 191
+          Top = 0
+          Hint = 'Emoticons'
+          Caption = 'Emoticons'
+          ImageIndex = 76
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = Emoticons1Click
+        end
+        object ChatToolbarButtonHotkeys: TTntToolButton
+          Left = 216
+          Top = 0
+          Hint = 'Hotkeys'
+          Caption = 'Hotkeys'
+          ImageIndex = 77
+          ParentShowHint = False
+          PopupMenu = popHotkeys
+          ShowHint = True
+          OnClick = ChatToolbarButtonHotkeysClick
+        end
+        object TntToolButton1: TTntToolButton
+          Left = 241
+          Top = 0
+          Width = 8
+          Caption = 'TntToolButton1'
+          Style = tbsSeparator
+        end
+        object cmbPriority: TTntComboBox
+          Left = 249
+          Top = 0
+          Width = 72
+          Height = 21
+          Hint = 'Hotkeys'
+          Style = csDropDownList
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ItemHeight = 13
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+        end
+      end
+      object pnlControlSite: TPanel
+        Left = 321
+        Top = 0
+        Width = 182
+        Height = 23
+        Align = alClient
+        BevelOuter = bvNone
+        ParentColor = True
+        TabOrder = 1
+        ExplicitLeft = 318
+        ExplicitWidth = 185
+        ExplicitHeight = 22
       end
     end
   end

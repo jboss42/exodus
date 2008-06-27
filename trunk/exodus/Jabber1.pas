@@ -1189,6 +1189,9 @@ begin
     GetRosterWindow().ImageList := RosterTreeImages.ImageList;
     MainbarImages.setImageList(MainbarImageList);
 
+    Exsession.ExCOMToolbar := TExodusToolbar.Create(toolbar1, toolbar, COMToolbarImages);
+    Exsession.COMToolbar := ExCOMToolbar;
+
     // if we are testing auto-away, then fire the
     // timer every 1 second, instead of every 10 secs.
     if (ExStartup.testaa) then

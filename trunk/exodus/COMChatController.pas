@@ -845,8 +845,7 @@ begin
     if (_chat <> nil) and (_chat.Window <> nil) then
         Result := TfrmChat(_chat.Window).MsgOutToolbar
     else if (_room <> nil) then
-        Result := _room
-        .MsgOutToolbar;
+        Result := _room.MsgOutToolbar;
 end;
 
 {---------------------------------------}

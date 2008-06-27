@@ -1,6 +1,6 @@
-unit COMDockToolbar;
+  unit COMDockToolbar;
 {
-    Copyright 2006, Peter Millard
+    Copyright 2008, Estate of Peter Millard
 
     This file is part of Exodus.
 
@@ -24,160 +24,64 @@ unit COMDockToolbar;
 interface
 
 uses
-  Classes, windows, ComObj, Messages, Controls, ActiveX, Exodus_TLB,
-  StdVcl, COMToolbarButton, PLUGINCONTROLLib_TLB, JclStrHashMap
-  ,Forms, Dialogs, StdCtrls, ComCtrls, SysUtils, strutils;
+    ComObj, Exodus_TLB, COMToolbar, Controls, ComCtrls, StdVcl;
 
 type
-  TExodusDockToolbar = class(TAutoObject, IExodusDockToolbar)
-  public
-    constructor Create(); overload;
-    constructor Create(toolbar: TToolbar); overload;
-    destructor Destroy; override;
-
-  protected
-    _toolbar: TToolbar;
-    function AddButton(const ImageID: WideString): ExodusToolbarButton; safecall;
-    function Get_Count: Integer; safecall;
-    function getButton(Index: Integer): IExodusToolbarButton; safecall;
-    function addControl(const ClassId: WideString): IExodusToolbarControl; safecall;
-    procedure RemoveButton(const button: WideString); safecall;  function IExodusDockToolbar.AddControl = IExodusDockToolbar_AddControl;
-    function IExodusDockToolbar.GetButton = IExodusDockToolbar_GetButton;
-  
-    function IExodusDockToolbar_AddControl(
-      const ID: WideString): ExodusToolbarControl; safecall;
-    function IExodusDockToolbar_GetButton(index: Integer): ExodusToolbarButton;
-      safecall;
-  end;
+    TExodusDockToolbar = class(TAutoObject, IExodusDockToolbar)
+    private
+        _tbProxy: TToolbarProxy;
+    protected
+        function AddButton(const ImageID: WideString): ExodusToolbarButton; safecall;
+        function AddControl(const ID: WideString): ExodusToolbarControl; safecall;
+        function Get_Count: Integer; safecall;
+        function GetButton(index: Integer): ExodusToolbarButton; safecall;
+        procedure RemoveButton(const button: WideString); safecall;
+    public
+        constructor Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);reintroduce; overload;
+        destructor Destroy; override;
+    end;
 
 implementation
 
 uses
-    Debug, RosterImages, Jabber1, COMToolbarControl, ComServ;
+    ComServ;
 
-{---------------------------------------}
-function TExodusDockToolbar.AddButton(
-  const ImageID: WideString): ExodusToolbarButton;
-var
-    idx: integer;
-    btn: TToolButton;
-    g: TGUID;
-    guid: string;
+constructor TExodusDockToolbar.Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);
 begin
-    btn := TToolButton.Create(frmExodus);
-    btn.Parent := _toolbar;
-    btn.ShowHint := true;
-
-    idx := RosterTreeImages.Find(ImageID);
-    if (idx >= 0) then
-        btn.ImageIndex := idx;
-
-    CreateGUID(g);
-    guid := GUIDToString(g);
-    guid := AnsiMidStr(guid, 2, length(guid) - 2);
-    guid := AnsiReplaceStr(guid, '-', '_');
-    btn.Name := 'dock_toolbar_button_' + guid;
-
-    _toolbar.Visible := true;
-
-    Result := TExodusToolbarButton.Create(btn);
+    _tbProxy := TToolbarProxy.create(btnBar, controlSite, imgList);
 end;
 
-{---------------------------------------}
+destructor TExodusDockToolbar.Destroy;
+begin
+    _tbProxy.Free();
+end;
+
+function TExodusDockToolbar.AddButton(const ImageID: WideString): ExodusToolbarButton;
+begin
+    Result := _tbProxy.AddButton(ImageID);
+end;
+
+function TExodusDockToolbar.AddControl(const ID: WideString): ExodusToolbarControl;
+begin
+    Result := _tbProxy.AddControl(ID);
+end;
+
 function TExodusDockToolbar.Get_Count: Integer;
 begin
-    Result := _toolbar.ButtonCount;
+    Result := _tbProxy.Count;
 end;
 
-{---------------------------------------}
-function TExodusDockToolbar.getButton(Index: Integer): IExodusToolbarButton;
-var
-    btn: TToolButton;
+function TExodusDockToolbar.GetButton(index: Integer): ExodusToolbarButton;
 begin
-    Result := nil;
-    if (Index >= 0) and (Index < _toolbar.ButtonCount) then begin
-        btn := _toolbar.Buttons[Index];
-        Result := TExodusToolbarButton.Create(btn) as IExodusToolbarButton;
-    end;
-end;
-
-{---------------------------------------}
-{---------------------------------------}
-constructor TExodusDockToolbar.Create();
-begin
-    inherited Create;
-end;
-
-constructor TExodusDockToolbar.Create(toolbar: TToolbar);
-begin
-    _toolbar := toolbar;
-    Create;
-end;
-
-{---------------------------------------}
-destructor TExodusDockToolbar.Destroy();
-begin
-end;
-
-{---------------------------------------}
-function TExodusDockToolbar.addControl(const ClassId: WideString): IExodusToolbarControl;
-var
-  AXControl: TAXControl;
-  ParentControl: TWinControl;
-begin
-  ParentControl := frmExodus.Toolbar;
-
-  AXControl := TAXControl.Create(ParentControl, StringToGuid(ClassId));
-  AXControl.Parent := ParentControl;
-  Result := TExodusToolbarControl.Create(AXControl);
-
-  frmExodus.Toolbar.Bands.Items[frmExodus.Toolbar.Bands.Count-1].Text := ClassId;
-  frmExodus.Toolbar.ShowText := false;
+    Result := _tbProxy.GetButton(index);
 end;
 
 procedure TExodusDockToolbar.RemoveButton(const button: WideString);
-var
-    i: integer;
-    visibleButtons: integer;
 begin
-    try
-        _toolbar.AutoSize := false;
-        for i := _toolbar.ButtonCount - 1 downto 0 do begin
-            if (_toolbar.Buttons[i].Name = button) then begin
-                _toolbar.RemoveControl(_toolbar.Buttons[i]);
-            end;
-        end;
-        _toolbar.AutoSize := true;
-
-//        if (_toolbar.Visible) then begin
-            visibleButtons := 0;
-            for i := 0 to _toolbar.ButtonCount - 1 do begin
-                if (_toolbar.Buttons[i].Visible) then
-                    inc(visibleButtons);
-            end;
-
-            _toolbar.Visible := (visibleButtons > 0);
-//        end;
-    except
-        on E:Exception do
-            DebugMessage('Exception in TExodusDockToolbar.RemoveButton (' + E.Message + ')');
-    end;
-end;
-
-
-function TExodusDockToolbar.IExodusDockToolbar_AddControl(
-  const ID: WideString): ExodusToolbarControl;
-begin
-
-end;
-
-function TExodusDockToolbar.IExodusDockToolbar_GetButton(
-  index: Integer): ExodusToolbarButton;
-begin
-
+    _tbProxy.RemoveButton(button);
 end;
 
 initialization
-  TAutoObjectFactory.Create(ComServer, TExodusDockToolbar, Class_ExodusDockToolbar,
-    ciMultiInstance, tmApartment);
+    TAutoObjectFactory.Create(ComServer, TExodusDockToolbar, Class_ExodusDockToolbar,
+                              ciMultiInstance, tmApartment);
 end.
