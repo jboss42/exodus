@@ -12,7 +12,6 @@ type
   TExodusPacketDispatcher = class(TAutoObject, IExodusPacketDispatcher)
   private
     _listenersByXPath: TWidestringList;
-    _disconnectCB: integer;
     _streamreadyCB: integer;
   protected
     procedure PacketControlCallback(direction: TPacketDirection;
@@ -111,7 +110,6 @@ end;
 Destructor TExodusPacketDispatcher.Destroy();
 begin
     _listenersByXPath.free(); //free objects at some poitn
-
 end;
 
 procedure TExodusPacketDispatcher.Initialize();
@@ -120,15 +118,12 @@ begin
     _listenersByXPath := TWidestringlist.create();
 
     _streamreadyCB := Session.MainSession.RegisterCallback(SessionListenerCallback, '/session/stream/ready');
-    _disconnectCB := Session.MainSession.RegisterCallback(SessionListenerCallback, '/session/disconnected');
 end;
 
 procedure TExodusPacketDispatcher.SessionListenerCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/stream/ready') then
         Session.MainSession.Stream.RegisterPacketControlCallback(PacketControlCallback)
-    else if (event = '/session/disconnected') then
-        Session.MainSession.Stream.UnRegisterPacketControlCallback(PacketControlCallback)
 end;
 
 procedure TExodusPacketDispatcher.RegisterPacketControlListener(
