@@ -405,6 +405,7 @@ begin
         if (idx = -1) then exit;
 
         //TODO:  support removing actions from controller???
+        TExMenuListenerAction(_actions.Objects[idx]).Enabled := false;
         _actions.Delete(idx);
     end;
 end;
