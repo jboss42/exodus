@@ -1316,9 +1316,13 @@ var
 begin
     // add a new TMenuItem to the Plugins menu
     mi := TMenuItem.Create(frmExodus);
-    frmExodus.mnuOptions_Plugins.Add(mi);
     mi.Caption := caption;
     mi.OnClick := frmExodus.mnuPluginDummyClick; //calls fireMenuClick
+    //frmExodus.mnuOptions_Plugins.Add(mi);
+    with frmExodus.mnuFile_Plugins do begin
+        if not Visible then Visible := true;
+        Add(mi);
+    end;
     inc(_nextid);
     id := 'plugin_' + IntToStr(_nextid);
     mi.Name := id;
@@ -1342,6 +1346,9 @@ begin
             TMenuItem(o).Free();
             _menu_items.Delete(idx);
         end;
+
+        if (frmExodus.mnuFile_Plugins.Count <= 2) then
+            frmExodus.mnuFile_Plugins.Visible := false;
     end;
 end;
 

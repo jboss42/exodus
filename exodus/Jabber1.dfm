@@ -20,7 +20,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 646
+  ExplicitHeight = 652
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
@@ -915,6 +915,17 @@ inherited frmExodus: TfrmExodus
       object mnuFile_ShowDebugXML: TTntMenuItem
         Caption = '&Show Console...'
         OnClick = ShowXML1Click
+      end
+      object mnuFile_Plugins: TTntMenuItem
+        Caption = '&Plugins'
+        Visible = False
+        object mnuFile_Plugins_Options: TTntMenuItem
+          Caption = '&Options...'
+          OnClick = mnuPluginOptsClick
+        end
+        object N16: TTntMenuItem
+          Caption = '-'
+        end
       end
       object N21: TTntMenuItem
         Caption = '-'
