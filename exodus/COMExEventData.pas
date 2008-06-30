@@ -88,16 +88,13 @@ begin
 end;
 
 procedure TExodusEventXMLExodusEventXML.SetTag(XMLTagPointer: Integer);
-var
-    //absolute maps tagBar to the same memory as intFoo, converting between int and pointer (object)
-    xTag: TXMLTag absolute XMLTagPointer;
 begin
     _xmlDOM := nil;
     if (_xmlTag <> nil) then
         _xmlTag.Free();
     _xmlTag := nil;
-    if ((xTag <> nil) and (TObject(xTag).InheritsFrom(TXMLtag))) then
-        _xmlTag := TXMLTag.Create(xTag);
+    if (XMLTagPointer <> 0) then
+        _xmlTag := TXMLTag.Create(TXMLTag(XMLTagPointer));
 end;
 
 initialization

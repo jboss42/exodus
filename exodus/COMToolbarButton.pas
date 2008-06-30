@@ -69,11 +69,13 @@ begin
         SetImageList(imgList)
     else
         SetImageList(COMRosterImages);
+    inherited create();
 end;
 
 destructor TExodusToolbarButton.Destroy();
 begin
     _menu_listener := nil;
+    _imgList := nil;
     //TODO JJF button may not be valid here, may have already been freed by parent
     //toolbar. Even so, if we assigned an onlcick handler to the button
     //we should clear it now.

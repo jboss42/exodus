@@ -48,7 +48,7 @@ uses
 
 constructor TExodusDockToolbar.Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);
 begin
-    _tbProxy := TToolbarProxy.create(btnBar, controlSite, imgList);
+    _tbProxy := TToolbarProxy.create(btnBar, controlSite, imgList, false); //grow left
 end;
 
 destructor TExodusDockToolbar.Destroy;
