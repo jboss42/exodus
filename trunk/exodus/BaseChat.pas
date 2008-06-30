@@ -976,19 +976,23 @@ Headers: OleVariant; var Cancel: WordBool);
 var
    Tag: TXMLTag;
 begin
-    _fileLinkInfo.ExtendedURL := URL;
-    _fileLinkInfo.Handled := false;
+    try
+        _fileLinkInfo.ExtendedURL := URL;
+        _fileLinkInfo.Handled := false;
 
-    Tag := TXMLTag.Create('filelink', _fileLinkInfo.ExtendedURL);
+        Tag := TXMLTag.Create('filelink', _fileLinkInfo.ExtendedURL);
 
-    MainSession.fireEvent('/session/filelink/click', Tag);
-    if ( _fileLinkInfo.Handled) then
-    begin
-        Cancel := true;
-        exit;
+        MainSession.fireEvent('/session/filelink/click', Tag);
+        if ( _fileLinkInfo.Handled) then
+        begin
+            Cancel := true;
+            exit;
+        end;
+
+       TfIEMsgList(_msgframe).browserBeforeNavigate2(Sender, pDisp, URL, Flags,  TargetFrameName, PostData, Headers, Cancel);
+    finally
+        Tag.Free();
     end;
-
-   TfIEMsgList(_msgframe).browserBeforeNavigate2(Sender, pDisp, URL, Flags,  TargetFrameName, PostData, Headers, Cancel);
 end;
 
 

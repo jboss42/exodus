@@ -13,6 +13,7 @@ type
     _xmlTag: TXMLTag;
     _xmlDOM: IXMLDOMDocument;
   public
+    destructor Destroy; override;
     function GetDOM: IXMLDOMDocument;virtual; safecall;
     function GetString: WideString; virtual; safecall;
     function GetTag: Integer; virtual; safecall;
@@ -24,6 +25,13 @@ type
 implementation
 
 uses XMLUtils, SysUtils, ComServ;
+
+destructor TExodusEventXMLExodusEventXML.Destroy;
+begin
+    FreeAndNil(_xmlTag);
+    _xmlDom := nil;
+    inherited;
+end;
 
 function TExodusEventXMLExodusEventXML.GetDOM: IXMLDOMDocument;
 begin
