@@ -95,6 +95,8 @@ begin
     lblUID.Hint := Item.UID;
     lblUID.Caption := Item.UID;
     lblUID.ShowHint := true;
+    lblPresence.ShowHint := true;
+    lblPresence.Hint := Item.ExtendedText;
 
     _GetAvatar();
     _GetPresence();
