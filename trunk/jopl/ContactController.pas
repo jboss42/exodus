@@ -464,6 +464,7 @@ var
     IsBlocked, IsOffline, IsPending, IsObserver, IsNone: boolean;
     ImagePrefix, Subs, Ask, Show: Widestring;
     Tag: TXMLTag;
+    presIdx: Integer;
 begin
     Item.Active := false;
     Item.IsVisible := true;
@@ -481,6 +482,7 @@ begin
 
     // is contact offline?
     //Set contact unavailable by default
+    Pres := TJabberSession(_js).ppdb.FindPres(Item.UID, '');
     if (Pres <> nil) then
     begin
         if (Pres.PresType = 'unavailable') then

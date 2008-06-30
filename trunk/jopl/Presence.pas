@@ -366,9 +366,10 @@ begin
             jEntityCache.RemoveJid(curp.fromJid.full);
 
             // if there are no more presence packets, they are offline.
-            if (p = nil) then
+            if (p = nil) then begin
                 if (not IsRoomPres(curp.fromJid.full)) then
-                    s.FireEvent('/presence/offline', tag, curp)
+                    s.FireEvent('/presence/offline', tag, curp);
+            end
             else
                 s.FireEvent('/presence/unavailable', tag, curp);
         end;
