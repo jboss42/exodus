@@ -32,9 +32,10 @@ type
         _btnBar: TToolbar;
         _controlSite: TWinControl;
         _imgList: IExodusRosterImages;
+        _growRight: boolean;
     public
         constructor Create(); overload;
-        constructor Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);overload;
+        constructor Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages; growRight: boolean = true);overload;
         destructor Destroy; override;
 
         function Get_Count: Integer; virtual; safecall;
@@ -65,7 +66,7 @@ type
 implementation
 
 uses
-    SysUtils, StrUtils, Jabber1, ExSession, Debug,
+    Forms, SysUtils, StrUtils, Jabber1, ExSession, Debug,
     COMToolbarControl, COMExodusControlSite, ComServ;
 
 constructor TToolbarProxy.create();
@@ -76,12 +77,13 @@ begin
     _imgList := nil;
 end;
 
-constructor TToolbarProxy.Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);
+constructor TToolbarProxy.Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages; growRight: boolean);
 begin
     inherited create();
     _btnBar := btnBar;
     _controlSite := controlSite;
     _imgList := imgList;
+    _growRight := growRight;
 end;
 
 destructor TToolbarProxy.Destroy;
@@ -106,7 +108,7 @@ end;
 
 function TToolbarProxy.AddButton(const ImageID: WideString): IExodusToolbarButton;
 var
-    idx, old_left: integer;
+    idx, oldLeft: integer;
     btn: TToolButton;
     g: TGUID;
     guid: string;
@@ -114,18 +116,16 @@ begin
     Result := nil;
     try
         if (_btnBar = nil) then exit;
-        
+        oldleft := _btnBar.Buttons[_btnBar.ButtonCount - 1].Left + _btnBar.Buttons[_btnBar.ButtonCount - 1].Width;
         _btnBar.AutoSize := false;
-        old_left := _btnBar.Buttons[_btnBar.ButtonCount - 1].Left +
-                        _btnBar.Buttons[_btnBar.ButtonCount - 1].Width;
-        btn := TToolButton.Create(_btnBar);
+        btn := TToolButton.Create(Application.MainForm);
         btn.ShowHint := true;
         btn.Top := _btnBar.Buttons[_btnBar.ButtonCount - 1].Top;
-        btn.Left := old_left + 1;
+        if (_growRight and (_btnBar.ButtonCount > 1)) then
+            btn.Left := oldLeft + 1;
         _btnBar.Width := _btnBar.Width + _btnBar.Buttons[_btnBar.ButtonCount - 1].Width + 1;
-        btn.Parent := _btnBar;
         _btnBar.AutoSize := true;
-
+        btn.Parent := _btnBar;
         idx := _imgList.Find(ImageID);
         if (idx >= 0) then
             btn.ImageIndex := idx;
@@ -136,6 +136,7 @@ begin
         guid := AnsiReplaceStr(guid, '-', '_');
         btn.Name := _btnBar.Name + '_button_' + guid;
 
+        _btnBar.Visible := true; //we have at least one button
         Result := TExodusToolbarButton.Create(btn, _imgList);
     except
         on E:Exception do
@@ -200,10 +201,11 @@ begin
     Result := nil;
     try
         if (_controlSite = nil) then exit;
-
         Result := TExodusControlSite.Create(_controlSite, StringToGuid(ClassId));
         if (Result <> nil) then
             _controlSite.Visible := true;
+        _controlSite.Realign();
+        _controlSite.Parent.Realign();
     except
         on E:Exception do
         begin
