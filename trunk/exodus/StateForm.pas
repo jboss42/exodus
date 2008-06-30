@@ -523,25 +523,29 @@ var
     i: integer;
     tstr: wideString;
 begin
-    Result := false;
-    aoWindows := nil;
-    if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
+    try
+        Result := false;
+        aoWindows := nil;
+        if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
 
-    aoTag := rootTag.GetFirstTag('auto-open');
-    if (aoTag = nil) then exit;
+        aoTag := rootTag.GetFirstTag('auto-open');
+        if (aoTag = nil) then exit;
 
-    tstr := 'event-' + event;
-    if (Profile <> '') then
-        tstr := tstr + '-' + XMLUtils.MungeXMLName(Profile);
+        tstr := 'event-' + event;
+        if (Profile <> '') then
+            tstr := tstr + '-' + XMLUtils.MungeXMLName(Profile);
 
-    eTag := aoTag.GetFirstTag(tstr);
-    if (eTag = nil) or (eTag.ChildCount = 0) then exit;
+        eTag := aoTag.GetFirstTag(tstr);
+        if (eTag = nil) or (eTag.ChildCount = 0) then exit;
 
-    aoWindows := TXMLTagList.Create();
-    for i := 0 to eTag.ChildCount - 1 do
-        aoWindows.Add(TXMLTag.Create(eTag.ChildTags[i]));
+        aoWindows := TXMLTagList.Create();
+        for i := 0 to eTag.ChildCount - 1 do
+            aoWindows.Add(TXMLTag.Create(eTag.ChildTags[i]));
 
-    Result := true;
+        Result := true;
+    finally
+        rootTag.Free(); 
+    end;
 end;
 
 {---------------------------------------}

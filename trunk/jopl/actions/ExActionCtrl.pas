@@ -151,10 +151,23 @@ begin
     _disabling := TWidestringList.Create;
     _disabling.Duplicates := dupAccept;
 end;
+
 Destructor TActionProxy.Destroy;
+var
+    i: integer;
 begin
+    for i := 0 to _enabling.Count - 1 do
+    begin
+        TFilteringItem(_enabling.Objects[i]).Free();
+    end;
+    for i := 0 to _disabling.Count - 1 do
+    begin
+        TFilteringItem(_disabling.Objects[i]).Free();
+    end;
     _enabling.Free;
     _disabling.Free;
+
+    Action := nil;
 
     inherited;
 end;
@@ -513,10 +526,17 @@ begin
     _enableHints := TWidestringList.Create;
     _disableHints := TWidestringList.Create;
 end;
+
 destructor TPotentialActions.Destroy;
+var
+    i: integer;
 begin
     _enableHints.Free;
     _disableHints.Free;
+    for i := 0 to _proxies.Count - 1 do
+    begin
+        TActionProxy(_proxies.Objects[i]).Free();
+    end;
     _proxies.Free;
 
     inherited;
@@ -574,8 +594,15 @@ begin
 
     _actions := TWidestringList.Create;
 end;
+
 destructor TExodusActionController.Destroy;
+var
+    i: integer;
 begin
+    for i := 0 to _actions.Count - 1 do
+    begin
+        TPotentialActions(_actions.Objects[i]).Free();
+    end;
     _actions.Clear;
     _actions.Free;
 
@@ -963,8 +990,16 @@ begin
 end;
 
 initialization
+    g_ActCtrl := nil;
     TAutoObjectFactory.Create(ComServer,
             TExodusActionController,
             CLASS_ExodusActionController,
             ciMultiInstance, tmApartment);
+
+
+finalization
+    // Cleanup memory
+    if (g_ActCtrl <> nil) then g_ActCtrl._Release();
+    
+
 end.
