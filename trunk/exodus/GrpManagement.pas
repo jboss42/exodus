@@ -40,6 +40,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
     procedure optChangeGroupOpClick(Sender: TObject);
+    procedure lstGroupsClick(Sender: TObject);
+    procedure lstGroupsDblClick(Sender: TObject);
   private
     { Private declarations }
     _items: IExodusItemList;
@@ -131,9 +133,8 @@ var
 begin
     Self.Close();
 
-    if ((_items = nil) or (_items.Count <= 0)) then begin
-        exit;
-    end;
+    if (lstGroups.ItemIndex = -1) then exit;
+    if ((_items = nil) or (_items.Count <= 0)) then exit;
 
     itemCtrl := MainSession.ItemController;
     new_grp := lstGroups.Items[lstGroups.ItemIndex];
@@ -144,6 +145,17 @@ begin
             tgoMove: itemCtrl.MoveItem(_items.Item[idx].UID, '', new_grp);
         end;
     end;
+end;
+
+procedure TfrmGrpManagement.lstGroupsClick(Sender: TObject);
+begin
+    frameButtons1.btnOK.Enabled := (lstGroups.ItemIndex <> -1);
+end;
+
+procedure TfrmGrpManagement.lstGroupsDblClick(Sender: TObject);
+begin
+    if (frameButtons1.btnOK.Enabled) or (lstGroups.ItemIndex <> -1) then
+        frameButtons1btnOKClick(Sender);
 end;
 
 procedure TfrmGrpManagement.optChangeGroupOpClick(Sender: TObject);
