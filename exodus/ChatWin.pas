@@ -105,6 +105,7 @@ type
     _pcallback: integer;    // Presence Callback
     _spcallback: integer;  // Self Presence Callback - for chats via a room
     _scallback: integer;    // Session callback
+    _itemcallback: integer; // item callback
     _msg_out: boolean;
     _res_menus: TWidestringlist;
 
@@ -209,6 +210,7 @@ type
 
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure ItemCallback(event: string; item: IExodusItem);
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
     procedure OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
@@ -478,6 +480,7 @@ begin
     _pcallback := -1;
     _spcallback:= -1;
     _scallback := -1;
+    _itemcallback := -1;
     _displayName := '';
     _dnListener := TDisplayNameEventListener.Create();
     _dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
@@ -503,6 +506,7 @@ begin
     SetupMenus();
 
     _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
+    _itemcallback := MainSession.RegisterCallback(ItemCallback, '/item/update');
 
     // branding/menus
     with MainSession.Prefs do begin
@@ -1242,6 +1246,18 @@ begin
         end;
     end;
 end;
+{---------------------------------------}
+procedure TfrmChat.ItemCallback(event: string; item: IExodusItem);
+begin
+    if (event = '/item/update') and (item.UID = _jid.jid) then begin
+        if MainSession.IsBlocked(Self._jid.jid) then
+            mnuBlock.Caption := _('Unblock')
+        else
+            mnuBlock.Caption := _('Block');
+
+        updatePresenceImage();
+    end;
+end;
 
 {---------------------------------------}
 procedure TfrmChat.PresCallback(event: string; tag: TXMLTag);
@@ -1610,10 +1626,13 @@ begin
             MainSession.UnRegisterCallback(_spcallback);
         if (_scallback <> -1) then
             MainSession.UnRegisterCallback(_scallback);
+        if (_itemcallback <> -1) then
+            MainSession.UnRegisterCallback(_itemcallback);
 
-        _pcallback  := -1;
-        _spcallback := -1;
-        _scallback  := -1;
+        _pcallback      := -1;
+        _spcallback     := -1;
+        _scallback      := -1;
+        _itemcallback   := -1;
     end;
 
     if (chat_object <> nil) then
