@@ -376,8 +376,9 @@ begin
         ScrollDownBevel.Shadow := _scrolldown_bevel_shadow_color;
         ScrollDownBevel.HighLight := _scrolldown_bevel_highlight_color;
     end;
-    _FilesDragAndDropEnabled := false;
+    FreeAndNil(tag);
 
+    _FilesDragAndDropEnabled := false;
 end;
 
 {---------------------------------------}
