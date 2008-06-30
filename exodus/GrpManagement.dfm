@@ -58,6 +58,7 @@ inherited frmGrpManagement: TfrmGrpManagement
         ExplicitLeft = 201
         ExplicitHeight = 31
         inherited btnOK: TTntButton
+          Enabled = False
           OnClick = frameButtons1btnOKClick
         end
         inherited btnCancel: TTntButton
@@ -101,5 +102,7 @@ inherited frmGrpManagement: TfrmGrpManagement
     ItemHeight = 13
     Sorted = True
     TabOrder = 3
+    OnClick = lstGroupsClick
+    OnDblClick = lstGroupsDblClick
   end
 end
