@@ -154,6 +154,7 @@ begin
         end;
         _tablemap.Delete(i);
     end;
+    _tablemap.Free();
 end;
 
 {---------------------------------------}

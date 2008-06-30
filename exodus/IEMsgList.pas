@@ -555,6 +555,7 @@ begin
                 for i := 0 to nodes.Count - 1 do
                     txt := txt + ProcessTag(cleanXIM, TXMLNode(nodes[i]));
             end;
+            cleanXIM.Free();
         end;
     end;
 
