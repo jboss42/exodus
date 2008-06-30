@@ -214,12 +214,6 @@ begin
             end;
           end;
 
-        WM_SOCKET: begin
-            // We are getting something on the socket
-            tmps := _thread.Data;
-            if tmps <> '' then
-                FireOnStreamData(false, tmps);
-        end;
         WM_CONNECTED: begin
             // Socket is connected
             _active := true;
