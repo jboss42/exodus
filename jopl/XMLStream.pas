@@ -193,19 +193,17 @@ begin
     _indata.Add(buff);
     _lock.Release;
 
-    doMessage(WM_SOCKET);
+    doMessage(WM_DEBUG);
 end;
 
 {---------------------------------------}
 procedure TParseThread.Push(buff: Widestring);
 begin
-    Debug(buff);
-    
+
     if (Copy(buff, 1, _root_len + 2) = '</' + _root_tag) then
         doMessage(WM_COMMERROR)
-    else begin
-        handleBuffer(buff);
-    end;
+    else
+        handleBuffer(buff); //eventually fires an WM_XML message
 end;
 
 {---------------------------------------}
@@ -714,6 +712,7 @@ procedure TXMLStream.fireOnPacketReceived(packet: TXMLTag);
 var
     allow: WordBool;
     dispPacket: TXMLtag;
+    sPacket: TXMLtag;
 begin
     //check with packet control listeners
     //before forwarding onto other callbacks
@@ -722,10 +721,13 @@ begin
     DoPacketControlCallbacks(pdInbound, packet, dispPacket, allow);
     if (allow) then
     begin
-        if (dispPacket = nil) then
-            DoCallbacks('xml', Packet)
-        else
-            DoCallbacks('xml', dispPacket)
+        sPacket := dispPacket;
+        if (sPacket = nil) then
+            sPacket := Packet;
+        //fire stream data listeners, essentially loggers
+        FireOnStreamData(false, sPacket.XML);
+        //fire packet callbacks
+        DoCallbacks('xml', sPacket);
     end;
     if (dispPacket <> nil) then
         dispPacket.free();

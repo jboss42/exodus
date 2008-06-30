@@ -629,13 +629,6 @@ begin
             FireOnStreamEvent('disconnected', nil);
         end;
 
-        WM_SOCKET: begin
-            // We are getting something on the socket
-            tmps := _thread.Data;
-            if tmps <> '' then
-                FireOnStreamData(false, tmps);
-        end;
-
         WM_XML: begin
             // We are getting XML data from the thread
             if _thread = nil then exit;
@@ -1067,7 +1060,7 @@ begin
 
     if (_socket = nil) then exit;
 
-    FireOnStreamData(true, xml);
+    FireOnStreamData(true, xml); //fire log listeners
 
     buff := PWideToString(PWideChar(xml));
     try
