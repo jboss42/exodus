@@ -102,7 +102,12 @@ begin
 
     Act := IExodusAction(Pointer(chkAutoJoin.Tag));
     if (Act <> nil) then
+    begin
+        chkAutoJoin.OnClick := nil;
         chkAutoJoin.Checked := (Act.Name = '{000-exodus.googlecode.com}-010-unjoin-on-startup');
+        //We do not want to invoke OnClick handler at this point
+        chkAutoJoin.OnClick := chkAutoJoinClick;
+    end;
     RoomDisplayName.Caption := Item.Text;
     RoomDisplayName.Hint := Item.Text;
     RoomDisplayName.ShowHint := true;
