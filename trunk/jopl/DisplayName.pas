@@ -462,6 +462,7 @@ end;
 Destructor  TProfileParser.Destroy();
 begin
     _parsedProfileMap.Free();
+    _regEx.Free();
 end;
 
 procedure TProfileParser.setProfileParseMap(profileMap: Widestring);
