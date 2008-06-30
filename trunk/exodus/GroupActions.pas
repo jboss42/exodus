@@ -6,7 +6,7 @@ uses Exodus_TLB, ExActions;
 
 type TAddGroupAction = class(TExBaseAction)
 private
-    constructor Create();
+    constructor Create(id, caption: Widestring);
 public
     destructor Destroy(); override;
 
@@ -17,11 +17,11 @@ implementation
 
 uses ComServ, gnugettext, ExActionCtrl, ExUtils;
 
-constructor TAddGroupAction.Create;
+constructor TAddGroupAction.Create(id: Widestring; caption: Widestring);
 begin
-    inherited Create('{000-exodus.googlecode.com}-090-add-group');
+    inherited Create(id);
 
-    set_Caption(_('New Group'));
+    set_Caption(caption);
     set_Enabled(true);
 end;
 destructor TAddGroupAction.Destroy;
@@ -47,9 +47,14 @@ var
 begin
     actCtrl := GetActionController();
 
-    act := TAddGroupAction.Create();
+    act := TAddGroupAction.Create(
+            '{000-exodus.googlecode.com}-090-add-group',
+            _('New Group'));
     actCtrl.registerAction('{create}', act);
 
+    act := TAddGroupAction.Create(
+            '{000-exodus.googlecode.com}-090-add-subgroup',
+            _('Create nested group'));
     actCtrl.registerAction('group', act);
     actCtrl.addEnableFilter('group', act.Name, 'selection=single');
 end;
