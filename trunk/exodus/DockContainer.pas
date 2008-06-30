@@ -23,7 +23,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Dockable, ExtCtrls, ComCtrls, ToolWin, OleCtrls, SHDocVw, gnugettext;
+  Dialogs, Dockable, ExtCtrls, ComCtrls, ToolWin, OleCtrls, SHDocVw, gnugettext,
+  TntExtCtrls;
 
 type
   TfrmDockContainer = class(TfrmDockable)

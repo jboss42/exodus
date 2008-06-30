@@ -2,104 +2,111 @@ inherited frmRoom: TfrmRoom
   Left = 252
   Top = 264
   Caption = 'Conference Room'
-  ClientHeight = 416
-  ClientWidth = 492
+  ClientHeight = 512
+  ClientWidth = 606
   OldCreateOrder = True
-  ExplicitWidth = 500
-  ExplicitHeight = 450
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 614
+  ExplicitHeight = 545
+  PixelsPerInch = 120
+  TextHeight = 16
   inherited Splitter1: TSplitter
-    Top = 347
-    Width = 484
-    ExplicitTop = 352
-    ExplicitWidth = 492
+    Top = 427
+    Width = 598
+    ExplicitLeft = 4
+    ExplicitTop = 427
+    ExplicitWidth = 596
   end
-  inherited pnlDockTop: TPanel
-    Width = 492
+  inherited pnlDock: TTntPanel
+    Width = 606
     TabOrder = 1
-    ExplicitWidth = 492
-    inherited tbDockBar: TToolBar
-      Left = 443
-      ExplicitLeft = 443
-    end
-    inherited pnlChatTop: TPanel
-      Width = 440
-      ExplicitWidth = 440
-      object pnlSubj: TPanel
-        AlignWithMargins = True
-        Left = 4
-        Top = 0
-        Width = 352
-        Height = 33
-        Margins.Left = 4
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        Align = alLeft
-        BevelOuter = bvNone
-        ParentColor = True
-        TabOrder = 0
-        object lblSubject: TTntLabel
-          Left = 27
-          Top = 5
-          Width = 289
-          Height = 21
-          AutoSize = False
-          Caption = ' lblSubject'
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          Layout = tlCenter
-        end
-        object SpeedButton1: TSpeedButton
-          Left = 1
-          Top = 7
-          Width = 20
-          Height = 19
-          Flat = True
-          Glyph.Data = {
-            F6000000424DF600000000000000760000002800000010000000100000000100
-            04000000000080000000120B0000120B00001000000010000000000000000000
-            8000008000000080800080000000800080008080000080808000C0C0C0000000
-            FF00C0C0C00000FFFF00FF000000C0C0C000FFFF0000FFFFFF00DADADADADADA
-            DADAAD77777777777777D000000000000007A0FBFBFBFB00FB07D0BFBFBFBF08
-            0F07A0F0F0F0FB0B8007D0BFBFB00F000007A0FBFBF0B0FBFB07D0BFBFB0B0BF
-            BF07A0FBFBF0BB0BFB07D0BFBFB0BB0FBF07A00000000BB0000DDADADADA0BB0
-            DADAADADADADA0000DADDADADADAD0110ADAADADADADAD00ADAD}
-          ParentShowHint = False
-          ShowHint = True
-          Transparent = False
-          OnClick = lblSubjectURLClick
+    inherited pnlDockTopContainer: TTntPanel
+      Width = 606
+      inherited pnlDockTop: TTntPanel
+        ExplicitWidth = 552
+        inherited pnlChatTop: TTntPanel
+          ExplicitWidth = 550
+          object pnlSubj: TPanel
+            AlignWithMargins = True
+            Left = 4
+            Top = 0
+            Width = 433
+            Height = 42
+            Margins.Left = 4
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 0
+            Align = alLeft
+            BevelOuter = bvNone
+            ParentColor = True
+            TabOrder = 0
+            object lblSubject: TTntLabel
+              Left = 33
+              Top = 6
+              Width = 356
+              Height = 26
+              AutoSize = False
+              Caption = ' lblSubject'
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -15
+              Font.Name = 'MS Sans Serif'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+              Layout = tlCenter
+            end
+            object SpeedButton1: TSpeedButton
+              Left = 1
+              Top = 9
+              Width = 25
+              Height = 23
+              Flat = True
+              Glyph.Data = {
+                F6000000424DF600000000000000760000002800000010000000100000000100
+                04000000000080000000120B0000120B00001000000010000000000000000000
+                8000008000000080800080000000800080008080000080808000C0C0C0000000
+                FF00C0C0C00000FFFF00FF000000C0C0C000FFFF0000FFFFFF00DADADADADADA
+                DADAAD77777777777777D000000000000007A0FBFBFBFB00FB07D0BFBFBFBF08
+                0F07A0F0F0F0FB0B8007D0BFBFB00F000007A0FBFBF0B0FBFB07D0BFBFB0B0BF
+                BF07A0FBFBF0BB0BFB07D0BFBFB0BB0FBF07A00000000BB0000DDADADADA0BB0
+                DADAADADADADA0000DADDADADADAD0110ADAADADADADAD00ADAD}
+              ParentShowHint = False
+              ShowHint = True
+              Transparent = False
+              OnClick = lblSubjectURLClick
+            end
+          end
         end
       end
     end
+    inherited pnlDockControlSite: TTntPanel
+      Width = 606
+    end
   end
   inherited pnlMsgList: TPanel
-    Width = 492
-    Height = 314
+    Width = 606
+    Height = 330
+    Constraints.MinHeight = 31
     TabOrder = 2
-    ExplicitWidth = 492
-    ExplicitHeight = 314
+    ExplicitWidth = 606
+    ExplicitHeight = 330
     object Splitter2: TSplitter
-      Left = 380
+      Left = 469
       Top = 4
-      Width = 4
-      Height = 306
+      Width = 5
+      Height = 322
       Align = alRight
       ResizeStyle = rsUpdate
-      ExplicitHeight = 311
+      ExplicitLeft = 468
+      ExplicitTop = 5
+      ExplicitHeight = 377
     end
     object Panel6: TPanel
-      Left = 384
+      Left = 474
       Top = 4
-      Width = 104
-      Height = 306
+      Width = 128
+      Height = 322
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -108,8 +115,8 @@ inherited frmRoom: TfrmRoom
       object lstRoster: TTntListView
         Left = 1
         Top = 1
-        Width = 102
-        Height = 304
+        Width = 126
+        Height = 320
         Align = alClient
         Columns = <
           item
@@ -142,17 +149,21 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    Top = 351
-    Width = 488
+    Top = 432
+    Width = 602
     TabOrder = 0
-    ExplicitTop = 351
-    ExplicitWidth = 488
+    ExplicitTop = 432
+    ExplicitWidth = 602
     inherited MsgOut: TExRichEdit
-      Width = 484
+      Width = 598
     end
-    inherited tbMsgOutToolbar: TTntToolBar
-      Width = 484
-      ExplicitWidth = 484
+    inherited pnlToolbar: TPanel
+      Width = 598
+      ExplicitWidth = 598
+      inherited pnlControlSite: TPanel
+        Width = 277
+        ExplicitWidth = 277
+      end
     end
   end
   inherited popMsgList: TTntPopupMenu

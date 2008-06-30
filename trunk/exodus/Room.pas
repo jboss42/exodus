@@ -25,7 +25,7 @@ uses
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
     JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg,
-    AppEvnts, IQ, Exodus_TLB, ExActions;
+    AppEvnts, IQ, Exodus_TLB, ExActions, TntExtCtrls;
 
 type
   TMemberNode = TTntListItem;

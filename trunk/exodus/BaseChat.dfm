@@ -1,20 +1,20 @@
 inherited frmBaseChat: TfrmBaseChat
   Left = 414
   Top = 474
-  ClientHeight = 320
-  ClientWidth = 511
+  ClientHeight = 260
+  ClientWidth = 415
   OnDestroy = FormDestroy
   OnResize = TntFormResize
-  ExplicitWidth = 519
-  ExplicitHeight = 353
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 423
+  ExplicitHeight = 288
+  PixelsPerInch = 96
+  TextHeight = 13
   object Splitter1: TSplitter [0]
     AlignWithMargins = True
     Left = 4
-    Top = 235
-    Width = 503
-    Height = 5
+    Top = 191
+    Width = 407
+    Height = 4
     Cursor = crVSplit
     Margins.Left = 4
     Margins.Top = 0
@@ -24,54 +24,74 @@ inherited frmBaseChat: TfrmBaseChat
     AutoSnap = False
     Beveled = True
     OnMoved = Splitter1Moved
-    ExplicitLeft = 5
-    ExplicitWidth = 501
+    ExplicitLeft = 3
+    ExplicitWidth = 409
   end
-  inherited pnlDockTop: TPanel
-    Width = 511
+  inherited pnlDock: TTntPanel
+    Width = 415
     TabOrder = 2
-    ExplicitWidth = 511
-    inherited tbDockBar: TToolBar
-      Left = 462
-      ExplicitLeft = 462
-      inherited btnDockToggle: TToolButton
-        ParentShowHint = False
-        ShowHint = True
+    ExplicitWidth = 415
+    inherited pnlDockTopContainer: TTntPanel
+      Width = 413
+      ExplicitLeft = 1
+      ExplicitTop = 1
+      ExplicitWidth = 413
+      inherited tbDockBar: TToolBar
+        Left = 364
+        ExplicitLeft = 364
+        inherited btnDockToggle: TToolButton
+          ParentShowHint = False
+          ShowHint = True
+        end
+        inherited btnCloseDock: TToolButton
+          ParentShowHint = False
+          ShowHint = True
+        end
       end
-      inherited btnCloseDock: TToolButton
-        ParentShowHint = False
-        ShowHint = True
+      inherited pnlDockTop: TTntPanel
+        Width = 361
+        AutoSize = True
+        ExplicitWidth = 361
+        object pnlChatTop: TTntPanel
+          Left = 0
+          Top = 0
+          Width = 361
+          Height = 28
+          Align = alClient
+          BevelOuter = bvNone
+          ParentColor = True
+          TabOrder = 0
+        end
       end
     end
-    object pnlChatTop: TPanel
-      Left = 0
-      Top = 0
-      Width = 459
-      Height = 41
-      Align = alClient
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 1
+    inherited pnlDockControlSite: TTntPanel
+      Width = 413
+      AutoSize = True
+      Visible = True
+      ExplicitLeft = 1
+      ExplicitTop = 29
+      ExplicitWidth = 413
+      ExplicitHeight = 25
     end
   end
   object pnlMsgList: TPanel
     Left = 0
-    Top = 41
-    Width = 511
-    Height = 194
+    Top = 55
+    Width = 415
+    Height = 136
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
-    Constraints.MinHeight = 25
+    Constraints.MinHeight = 20
     ParentColor = True
     TabOrder = 0
   end
   object pnlInput: TPanel
     AlignWithMargins = True
     Left = 2
-    Top = 240
-    Width = 507
-    Height = 80
+    Top = 195
+    Width = 411
+    Height = 65
     Margins.Left = 2
     Margins.Top = 0
     Margins.Right = 2
@@ -84,8 +104,8 @@ inherited frmBaseChat: TfrmBaseChat
     object MsgOut: TExRichEdit
       Left = 2
       Top = 25
-      Width = 503
-      Height = 53
+      Width = 407
+      Height = 38
       Align = alClient
       AutoURLDetect = adNone
       Ctl3D = True
@@ -189,7 +209,7 @@ inherited frmBaseChat: TfrmBaseChat
     object pnlToolbar: TPanel
       Left = 2
       Top = 2
-      Width = 503
+      Width = 407
       Height = 23
       Align = alTop
       BevelOuter = bvNone
@@ -207,9 +227,6 @@ inherited frmBaseChat: TfrmBaseChat
         Images = frmExodus.ImageList1
         TabOrder = 0
         Transparent = True
-        ExplicitLeft = 1
-        ExplicitTop = 1
-        ExplicitHeight = 21
         object ChatToolbarButtonBold: TTntToolButton
           Left = 0
           Top = 0
@@ -349,15 +366,12 @@ inherited frmBaseChat: TfrmBaseChat
       object pnlControlSite: TPanel
         Left = 321
         Top = 0
-        Width = 182
+        Width = 86
         Height = 23
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
-        ExplicitLeft = 318
-        ExplicitWidth = 185
-        ExplicitHeight = 22
       end
     end
   end

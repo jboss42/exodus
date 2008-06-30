@@ -2,190 +2,197 @@ inherited frmBrowse: TfrmBrowse
   Left = 253
   Top = 551
   Caption = 'Jabber Browser'
-  ClientHeight = 391
-  ClientWidth = 442
+  ClientHeight = 481
+  ClientWidth = 544
   DefaultMonitor = dmMainForm
   OnDestroy = FormDestroy
   OnDragOver = FormDragOver
   OnResize = ResizeAddressBar
-  ExplicitWidth = 450
-  ExplicitHeight = 425
-  PixelsPerInch = 96
-  TextHeight = 13
-  inherited pnlDockTop: TPanel
-    Width = 442
+  ExplicitWidth = 552
+  ExplicitHeight = 514
+  PixelsPerInch = 120
+  TextHeight = 16
+  inherited pnlDock: TTntPanel
+    Width = 544
     TabOrder = 1
-    ExplicitWidth = 442
-    inherited tbDockBar: TToolBar
-      Left = 393
-      ExplicitLeft = 393
-    end
-    object pnlTop: TTntPanel
-      Left = 0
-      Top = 0
-      Width = 390
-      Height = 33
-      Align = alClient
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 1
-      object CoolBar1: TCoolBar
-        Left = 0
-        Top = 0
-        Width = 390
-        Height = 33
-        Align = alClient
-        BandMaximize = bmNone
-        Bands = <
-          item
-            Control = tlbToolBar
-            HorizontalOnly = True
-            ImageIndex = -1
-            MinHeight = 22
-            Width = 388
-          end>
-        EdgeBorders = []
-        EdgeInner = esNone
-        EdgeOuter = esNone
-        object tlbToolBar: TToolBar
-          Left = 12
-          Top = 0
-          Width = 374
-          Height = 22
-          AutoSize = True
-          DisabledImages = DisToolbar
-          EdgeInner = esNone
-          EdgeOuter = esNone
-          Images = Toolbar
-          ParentShowHint = False
-          ShowHint = True
+    inherited pnlDockTopContainer: TTntPanel
+      Width = 544
+      inherited tbDockBar: TToolBar
+        Left = 494
+        ExplicitLeft = 494
+      end
+      inherited pnlDockTop: TTntPanel
+        Width = 490
+        ExplicitWidth = 490
+        object pnlTop: TTntPanel
+          Left = 1
+          Top = 1
+          Width = 488
+          Height = 42
+          Align = alClient
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 0
-          Wrapable = False
-          object btnBack: TToolButton
+          object CoolBar1: TCoolBar
             Left = 0
             Top = 0
-            Hint = 'Previous JID'
-            AllowAllUp = True
-            AutoSize = True
-            Caption = 'Back'
-            DropdownMenu = popHistory
-            ImageIndex = 2
-            Style = tbsDropDown
-            OnClick = btnBackClick
-          end
-          object btnFwd: TToolButton
-            Left = 42
-            Top = 0
-            Hint = 'Next JID'
-            AllowAllUp = True
-            Caption = 'btnFwd'
-            ImageIndex = 3
-            OnClick = btnFwdClick
-          end
-          object ToolButton2: TToolButton
-            Left = 65
-            Top = 0
-            Width = 13
-            AllowAllUp = True
-            Caption = 'ToolButton2'
-            ImageIndex = 3
-            Style = tbsSeparator
-          end
-          object btnHome: TToolButton
-            Left = 78
-            Top = 0
-            Hint = 'Home'
-            AllowAllUp = True
-            Caption = 'btnHome'
-            ImageIndex = 1
-            OnClick = btnHomeClick
-          end
-          object ToolButton1: TToolButton
-            Left = 101
-            Top = 0
-            Hint = 'Change Views'
-            AllowAllUp = True
-            Caption = 'ToolButton1'
-            DropdownMenu = popViewStyle
-            ImageIndex = 0
-            Style = tbsDropDown
-          end
-          object btnBookmark: TToolButton
-            Left = 137
-            Top = 0
-            Hint = 'Add a Bookmark'
-            AllowAllUp = True
-            Caption = 'btnBookmark'
-            ImageIndex = 4
-            OnClick = mBookmarkClick
-          end
-          object ToolButton3: TToolButton
-            Left = 160
-            Top = 0
-            Hint = 'Get properties for all items in this window'
-            AllowAllUp = True
-            Caption = 'btnProps'
-            ImageIndex = 6
-            OnClick = ToolButton3Click
-          end
-          object btnNode: TToolButton
-            Left = 183
-            Top = 0
-            Hint = 'Show Node Identifier'
-            AllowAllUp = True
-            AutoSize = True
-            Caption = 'btnNode'
-            ImageIndex = 7
-            OnClick = btnNodeClick
-          end
-          object btnInfo: TToolButton
-            Left = 206
-            Top = 0
-            Hint = 'Get identity and features'
-            AllowAllUp = True
-            AutoSize = True
-            Caption = 'Information'
-            ImageIndex = 8
-            OnClick = btnInfoClick
+            Width = 488
+            Height = 42
+            Align = alClient
+            BandMaximize = bmNone
+            Bands = <
+              item
+                Control = tlbToolBar
+                HorizontalOnly = True
+                ImageIndex = -1
+                MinHeight = 22
+                Width = 488
+              end>
+            EdgeBorders = []
+            EdgeInner = esNone
+            EdgeOuter = esNone
+            object tlbToolBar: TToolBar
+              Left = 9
+              Top = 0
+              Width = 475
+              Height = 22
+              AutoSize = True
+              DisabledImages = DisToolbar
+              EdgeInner = esNone
+              EdgeOuter = esNone
+              Images = Toolbar
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 0
+              Wrapable = False
+              object btnBack: TToolButton
+                Left = 0
+                Top = 0
+                Hint = 'Previous JID'
+                AllowAllUp = True
+                AutoSize = True
+                Caption = 'Back'
+                DropdownMenu = popHistory
+                ImageIndex = 2
+                Style = tbsDropDown
+                OnClick = btnBackClick
+              end
+              object btnFwd: TToolButton
+                Left = 40
+                Top = 0
+                Hint = 'Next JID'
+                AllowAllUp = True
+                Caption = 'btnFwd'
+                ImageIndex = 3
+                OnClick = btnFwdClick
+              end
+              object ToolButton2: TToolButton
+                Left = 63
+                Top = 0
+                Width = 13
+                AllowAllUp = True
+                Caption = 'ToolButton2'
+                ImageIndex = 3
+                Style = tbsSeparator
+              end
+              object btnHome: TToolButton
+                Left = 76
+                Top = 0
+                Hint = 'Home'
+                AllowAllUp = True
+                Caption = 'btnHome'
+                ImageIndex = 1
+                OnClick = btnHomeClick
+              end
+              object ToolButton1: TToolButton
+                Left = 99
+                Top = 0
+                Hint = 'Change Views'
+                AllowAllUp = True
+                Caption = 'ToolButton1'
+                DropdownMenu = popViewStyle
+                ImageIndex = 0
+                Style = tbsDropDown
+              end
+              object btnBookmark: TToolButton
+                Left = 139
+                Top = 0
+                Hint = 'Add a Bookmark'
+                AllowAllUp = True
+                Caption = 'btnBookmark'
+                ImageIndex = 4
+                OnClick = mBookmarkClick
+              end
+              object ToolButton3: TToolButton
+                Left = 162
+                Top = 0
+                Hint = 'Get properties for all items in this window'
+                AllowAllUp = True
+                Caption = 'btnProps'
+                ImageIndex = 6
+                OnClick = ToolButton3Click
+              end
+              object btnNode: TToolButton
+                Left = 185
+                Top = 0
+                Hint = 'Show Node Identifier'
+                AllowAllUp = True
+                AutoSize = True
+                Caption = 'btnNode'
+                ImageIndex = 7
+                OnClick = btnNodeClick
+              end
+              object btnInfo: TToolButton
+                Left = 208
+                Top = 0
+                Hint = 'Get identity and features'
+                AllowAllUp = True
+                AutoSize = True
+                Caption = 'Information'
+                ImageIndex = 8
+                OnClick = btnInfoClick
+              end
+            end
           end
         end
       end
     end
+    inherited pnlDockControlSite: TTntPanel
+      Width = 544
+    end
   end
   object Panel3: TTntPanel
     Left = 0
-    Top = 95
-    Width = 442
-    Height = 276
+    Top = 173
+    Width = 544
+    Height = 284
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
     ParentColor = True
     TabOrder = 0
-    ExplicitTop = 94
-    ExplicitHeight = 277
     object vwBrowse: TTntListView
-      Left = 73
+      Left = 89
       Top = 3
-      Width = 366
-      Height = 270
+      Width = 452
+      Height = 278
       Align = alClient
       Columns = <
         item
           Caption = 'Name'
-          Width = 150
+          Width = 185
         end
         item
           Caption = 'Jabber ID'
-          Width = 150
+          Width = 185
         end
         item
           Caption = 'Type'
-          Width = 150
+          Width = 185
         end
         item
           Caption = 'Node ID'
-          Width = 150
+          Width = 185
         end>
       HotTrack = True
       HotTrackStyles = [htHandPoint, htUnderlineHot]
@@ -205,8 +212,8 @@ inherited frmBrowse: TfrmBrowse
     object pnlInfo: TTntPanel
       Left = 3
       Top = 3
-      Width = 70
-      Height = 270
+      Width = 86
+      Height = 278
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -216,42 +223,54 @@ inherited frmBrowse: TfrmBrowse
       object lblIdentity: TTntLabel
         Left = 4
         Top = 4
-        Width = 55
-        Height = 13
+        Width = 78
+        Height = 16
         Align = alTop
         Caption = 'Indentities:'
+        ExplicitLeft = 5
+        ExplicitTop = 5
+        ExplicitWidth = 64
       end
       object Splitter1: TSplitter
         Left = 4
-        Top = 137
-        Width = 62
+        Top = 168
+        Width = 78
         Height = 3
         Cursor = crVSplit
         Align = alTop
+        ExplicitLeft = 5
+        ExplicitTop = 169
+        ExplicitWidth = 76
       end
       object lblFeatures: TTntLabel
         Left = 4
-        Top = 140
-        Width = 47
-        Height = 13
+        Top = 171
+        Width = 78
+        Height = 16
         Align = alTop
         Caption = 'Features:'
+        ExplicitLeft = 5
+        ExplicitTop = 172
+        ExplicitWidth = 55
       end
       object vwInfo: TTntListView
         Left = 4
-        Top = 17
-        Width = 62
-        Height = 120
+        Top = 20
+        Width = 78
+        Height = 148
         Align = alTop
         Columns = <
           item
             Caption = 'Name'
+            Width = 62
           end
           item
             Caption = 'Category'
+            Width = 62
           end
           item
             Caption = 'Type'
+            Width = 62
           end>
         HotTrack = True
         HotTrackStyles = [htHandPoint, htUnderlineHot]
@@ -265,20 +284,20 @@ inherited frmBrowse: TfrmBrowse
       end
       object lsFeatures: TTntListBox
         Left = 4
-        Top = 153
-        Width = 62
-        Height = 113
+        Top = 187
+        Width = 78
+        Height = 87
         Align = alClient
-        ItemHeight = 13
+        ItemHeight = 16
         TabOrder = 0
       end
     end
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 371
-    Width = 442
-    Height = 20
+    Top = 457
+    Width = 544
+    Height = 24
     Panels = <
       item
         Alignment = taCenter
@@ -297,32 +316,31 @@ inherited frmBrowse: TfrmBrowse
   end
   object pnlJid: TPanel
     Left = 0
-    Top = 33
-    Width = 442
-    Height = 31
+    Top = 97
+    Width = 544
+    Height = 38
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 1
     ParentColor = True
     TabOrder = 2
-    ExplicitTop = 32
     DesignSize = (
-      442
-      31)
+      544
+      38)
     object btnGo: TSpeedButton
-      Left = 367
-      Top = 3
-      Width = 28
-      Height = 23
+      Left = 452
+      Top = 4
+      Width = 34
+      Height = 28
       Caption = 'GO'
       Flat = True
       OnClick = btnGoClick
     end
     object btnRefresh: TSpeedButton
-      Left = 395
-      Top = 3
-      Width = 23
-      Height = 23
+      Left = 486
+      Top = 4
+      Width = 28
+      Height = 28
       Hint = 'Re-Browse this object'
       Flat = True
       Glyph.Data = {
@@ -339,8 +357,8 @@ inherited frmBrowse: TfrmBrowse
     object pnlJidID: TTntPanel
       Left = 1
       Top = 1
-      Width = 88
-      Height = 29
+      Width = 109
+      Height = 36
       Align = alLeft
       BevelOuter = bvNone
       ParentColor = True
@@ -348,43 +366,44 @@ inherited frmBrowse: TfrmBrowse
       object TntLabel1: TTntLabel
         Left = 0
         Top = 0
-        Width = 75
-        Height = 13
+        Width = 109
+        Height = 36
         Align = alClient
         Caption = 'Jabber Address'
         Layout = tlCenter
+        ExplicitWidth = 88
+        ExplicitHeight = 16
       end
     end
     object cboJID: TTntComboBox
-      Left = 91
-      Top = 4
-      Width = 225
-      Height = 21
+      Left = 112
+      Top = 5
+      Width = 277
+      Height = 24
       Anchors = [akLeft, akTop, akBottom]
-      ItemHeight = 0
+      ItemHeight = 16
       TabOrder = 1
       OnKeyPress = cboJIDKeyPress
     end
   end
   object pnlNode: TPanel
     Left = 0
-    Top = 64
-    Width = 442
-    Height = 31
+    Top = 135
+    Width = 544
+    Height = 38
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 1
     ParentColor = True
     TabOrder = 3
-    ExplicitTop = 63
     DesignSize = (
-      442
-      31)
+      544
+      38)
     object pnlNodeID: TTntPanel
       Left = 1
       Top = 1
-      Width = 88
-      Height = 29
+      Width = 109
+      Height = 36
       Align = alLeft
       Alignment = taLeftJustify
       BevelOuter = bvNone
@@ -393,20 +412,22 @@ inherited frmBrowse: TfrmBrowse
       object TntLabel2: TTntLabel
         Left = 0
         Top = 0
-        Width = 72
-        Height = 13
+        Width = 109
+        Height = 36
         Align = alClient
         Caption = 'Node Identifier'
         Layout = tlCenter
+        ExplicitWidth = 84
+        ExplicitHeight = 16
       end
     end
     object cboNode: TTntComboBox
-      Left = 92
-      Top = 3
-      Width = 225
-      Height = 21
+      Left = 113
+      Top = 4
+      Width = 277
+      Height = 24
       Anchors = [akLeft, akTop, akBottom]
-      ItemHeight = 0
+      ItemHeight = 16
       TabOrder = 1
       OnKeyPress = cboJIDKeyPress
     end
@@ -415,7 +436,7 @@ inherited frmBrowse: TfrmBrowse
     Left = 8
     Top = 337
     Bitmap = {
-      494C010109000E00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010109000B00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -824,7 +845,7 @@ inherited frmBrowse: TfrmBrowse
     Left = 40
     Top = 336
     Bitmap = {
-      494C010109000E00040020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010109000B00040020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       00000000000036000000280000008000000060000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2419,7 +2440,7 @@ inherited frmBrowse: TfrmBrowse
     Left = 7
     Top = 301
     Bitmap = {
-      494C010109000E00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010109000B00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2826,7 +2847,7 @@ inherited frmBrowse: TfrmBrowse
     Left = 38
     Top = 301
     Bitmap = {
-      494C010109000E00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010109000B00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

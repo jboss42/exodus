@@ -27,7 +27,7 @@ uses
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
     DisplayName,
   ToolWin, ImgList, JabberMsg, AppEvnts,
-  ExActions, ExActionCtrl;
+  ExActions, ExActionCtrl, TntExtCtrls;
 
 type
   {

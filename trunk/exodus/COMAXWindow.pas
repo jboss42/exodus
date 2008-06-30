@@ -228,7 +228,7 @@ var
 begin
     Result := nil;
     try
-        ParentControl := _frm.pnlChatTop;
+        ParentControl := _frm.pnlDockTop;
         AXControl := TAXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
         if (AXControl <> nil) then begin
             AXControl.Parent := ParentControl;

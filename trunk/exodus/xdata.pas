@@ -26,7 +26,7 @@ uses
     TntCheckLst, TntStdCtrls, StdCtrls, ExodusLabel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, buttonFrame, Grids, TntGrids, ExtCtrls, fXData, JabberID,
-  ComCtrls, ToolWin, EntityCache, Entity, TntForms, ExFrame;
+  ComCtrls, ToolWin, EntityCache, Entity, TntForms, ExFrame, TntExtCtrls;
 
 type
 

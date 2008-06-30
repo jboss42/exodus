@@ -2,74 +2,84 @@ inherited frmDebug: TfrmDebug
   Left = 318
   Top = 199
   Caption = 'Debug'
-  ClientHeight = 380
-  ClientWidth = 400
-  ExplicitWidth = 408
-  ExplicitHeight = 414
-  PixelsPerInch = 96
-  TextHeight = 13
-  inherited pnlDockTop: TPanel
-    Width = 400
+  ClientHeight = 468
+  ClientWidth = 492
+  ExplicitWidth = 500
+  ExplicitHeight = 501
+  PixelsPerInch = 120
+  TextHeight = 16
+  inherited pnlDock: TTntPanel
+    Width = 492
     TabOrder = 1
-    ExplicitWidth = 400
-    inherited tbDockBar: TToolBar
-      Left = 351
-      ExplicitLeft = 351
+    inherited pnlDockTopContainer: TTntPanel
+      Width = 492
+      inherited tbDockBar: TToolBar
+        Left = 442
+      end
+      inherited pnlDockTop: TTntPanel
+        Width = 438
+        ExplicitWidth = 438
+        object pnlTop: TPanel
+          Left = 1
+          Top = 1
+          Width = 436
+          Height = 42
+          Align = alClient
+          BevelOuter = bvNone
+          ParentColor = True
+          TabOrder = 0
+          object lblJID: TTntLabel
+            Left = 87
+            Top = 11
+            Width = 85
+            Height = 16
+            Cursor = crHandPoint
+            Caption = '(Disconnected)'
+            OnClick = lblJIDClick
+          end
+          object lblLabel: TTntLabel
+            Left = 7
+            Top = 11
+            Width = 77
+            Height = 16
+            Caption = 'Current JID:  '
+          end
+        end
+      end
     end
-    object pnlTop: TPanel
-      Left = 0
-      Top = 0
-      Width = 348
-      Height = 33
-      Align = alClient
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 1
-      object lblJID: TTntLabel
-        Left = 71
-        Top = 9
-        Width = 72
-        Height = 13
-        Cursor = crHandPoint
-        Caption = '(Disconnected)'
-        OnClick = lblJIDClick
-      end
-      object lblLabel: TTntLabel
-        Left = 6
-        Top = 9
-        Width = 66
-        Height = 13
-        Caption = 'Current JID:  '
-      end
+    inherited pnlDockControlSite: TTntPanel
+      Width = 492
     end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 33
-    Width = 400
-    Height = 347
+    Top = 97
+    Width = 492
+    Height = 371
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     Caption = 'Panel2'
-    Constraints.MinHeight = 50
+    Constraints.MinHeight = 62
     ParentColor = True
     TabOrder = 0
     OnResize = Panel2Resize
     object Splitter1: TSplitter
       Left = 4
-      Top = 298
-      Width = 392
-      Height = 5
+      Top = 312
+      Width = 484
+      Height = 6
       Cursor = crVSplit
       Align = alBottom
-      ExplicitTop = 310
+      ExplicitLeft = 5
+      ExplicitTop = 367
+      ExplicitWidth = 482
     end
     object MsgDebug: TExRichEdit
       Left = 4
       Top = 4
-      Width = 392
-      Height = 294
+      Width = 484
+      Height = 308
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -163,9 +173,9 @@ inherited frmDebug: TfrmDebug
     end
     object MemoSend: TExRichEdit
       Left = 4
-      Top = 303
-      Width = 392
-      Height = 40
+      Top = 318
+      Width = 484
+      Height = 49
       Align = alBottom
       AutoURLDetect = adNone
       CustomURLs = <
