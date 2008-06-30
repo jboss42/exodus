@@ -45,6 +45,7 @@ begin
    f.frameButtons1.btnOK.Enabled := true;
    if (f.ShowModal = mrOK) then
    begin
+       Value :=  f.txtName.Text;
        Groups.Add(f.cboGroup.Text);
        Result := true;
    end;
