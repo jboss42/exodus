@@ -2007,6 +2007,7 @@ begin
     // recreate the canned presence stuff.
     _pref_file.removeAllPresence();
 
+    {
     cp := TJabberCustomPres.Create();
     with cp do begin
         Status := _('Available');
@@ -2015,7 +2016,9 @@ begin
         hotkey := 'Ctrl + O';
     end;
     _pref_file.setPresence(cp);
+    }
 
+    {
     cp := TJabberCustomPres.Create();
     with cp do begin
         Status := _('Free for Chat');
@@ -2024,7 +2027,9 @@ begin
         hotkey := '';
     end;
     _pref_file.setPresence(cp);
+    }
 
+    {
     cp := TJabberCustomPres.Create();
     with cp do begin
         Status := _('Away');
@@ -2033,6 +2038,7 @@ begin
         hotkey := 'Ctrl + A';
     end;
     _pref_file.setPresence(cp);
+    }
 
     cp := TJabberCustomPres.Create();
     with cp do begin
@@ -2061,6 +2067,7 @@ begin
     end;
     _pref_file.setPresence(cp);
 
+    {
     cp := TJabberCustomPres.Create();
     with cp do begin
         Status := _('Extended Away');
@@ -2069,6 +2076,7 @@ begin
         hotkey := '';
     end;
     _pref_file.setPresence(cp);
+    }
 
     cp := TJabberCustomPres.Create();
     with cp do begin
@@ -2097,6 +2105,7 @@ begin
     end;
     _pref_file.setPresence(cp);
 
+    {
     cp := TJabberCustomPres.Create();
     with cp do begin
         Status := _('Do Not disturb');
@@ -2105,6 +2114,7 @@ begin
         hotkey := '';
     end;
     _pref_file.setPresence(cp);
+    }
 
     cp := TJabberCustomPres.Create();
     with cp do begin

@@ -99,13 +99,15 @@ var
     ws: TWidestringlist;
     cp: TJabberCustomPres;
 
-    procedure BrandOption(value: Widestring; brand: boolean);
+    procedure BrandShowOption(value: Widestring; brand: boolean);
+    var
+        loc: Integer;
     begin
         if brand then begin
             _show_list.Add(value);
-            Inc(pos);
+            Inc(Pos);
         end else begin
-            cboCPType.Items.Delete(pos);
+            cboCPType.Items.Delete(Pos);
         end;
     end;
 begin
@@ -124,14 +126,16 @@ begin
         // Custom Presence options
         lstCustomPres.Items.Clear();
         //Setup visible show list
-        pos := 0;
-        _show_list := TWideStringList.Create();
-        BrandOption('chat', getBool('show_presence_menu_chat'));
-        BrandOption('', getBool('show_presence_menu_available'));
-        BrandOption('away', getBool('show_presence_menu_away'));
-        BrandOption('xa', getBool('show_presence_menu_xa'));
-        BrandOption('dnd', getBool('show_presence_menu_dnd'));
-        
+        if (_show_list = nil) then begin
+            pos := 0;
+            _show_list := TWideStringList.Create();
+            BrandShowOption('chat', getBool('show_presence_menu_chat'));
+            BrandShowOption('', getBool('show_presence_menu_available'));
+            BrandShowOption('away', getBool('show_presence_menu_away'));
+            BrandShowOption('xa', getBool('show_presence_menu_xa'));
+            BrandShowOption('dnd', getBool('show_presence_menu_dnd'));
+        end;
+
         ws := getAllPresence();
         _pres_list := TList.Create();
 
