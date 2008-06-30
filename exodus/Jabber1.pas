@@ -2692,49 +2692,52 @@ begin
   aFile := TWideStringList.Create;
 
   try
-    MainSession.Prefs.fillStringlist('bands', aFile);
-
-    { Parse all available Tcoolband (s), ttoolbar }
-    while I=I do
-    begin
       try
-        ID := Toolbar.Bands.Items[I].ID;
+        MainSession.Prefs.fillStringlist('bands', aFile);
+
+        { Parse all available Tcoolband (s), ttoolbar }
+        while I=I do
+        begin
+          try
+            ID := Toolbar.Bands.Items[I].ID;
+          except
+            on EListError do Exit;
+          end;
+
+          { Restore properties from file - Get }
+          if IsValid (ID, 'Index', Value) then
+            Toolbar.Bands.Items[I].Index := Value ;
+          if IsValid (ID, 'Width', Value) then
+            Toolbar.Bands.Items[I].Width := Value;
+
+          Toolbar.Bands.Items[I].MinWidth := Toolbar.Bands.Items[I].Control.Width;
+
+          if IsValid (ID, 'Break', bValue) then
+            Toolbar.Bands.Items[I].Break := bValue;
+          if IsValid (ID, 'FixedSize', bValue) then
+            Toolbar.Bands.Items[I].FixedSize := bValue;
+          if IsValid (ID, 'HorizontalOnly', bValue) then
+            Toolbar.Bands.Items[I].HorizontalOnly := bValue;
+          if IsValid (ID, 'Visible', bValue) then
+            Toolbar.Bands.Items[I].Visible := bValue;
+
+          outputdebugMsg(PAnsiChar(Format('Restore-Band:%s, Index:%d, Width:%d, Break:%d, Control.Width:%d',
+                                          [Toolbar.Bands.Items[I].Text
+                                          ,Toolbar.Bands.Items[I].Index
+                                          ,Toolbar.Bands.Items[I].Width
+                                          ,Integer(Toolbar.Bands.Items[I].Break)
+                                          ,Toolbar.Bands.Items[I].Control.Width
+                                          ])));
+          I := I+1;
+        end;
       except
-        on EListError do Exit;
+          OutputDebugString(PAnsiChar('Exception in Restore'));
       end;
-
-      { Restore properties from file - Get }
-      if IsValid (ID, 'Index', Value) then
-        Toolbar.Bands.Items[I].Index := Value ;
-      if IsValid (ID, 'Width', Value) then
-        Toolbar.Bands.Items[I].Width := Value;
-
-      Toolbar.Bands.Items[I].MinWidth := Toolbar.Bands.Items[I].Control.Width;
-
-      if IsValid (ID, 'Break', bValue) then
-        Toolbar.Bands.Items[I].Break := bValue;
-      if IsValid (ID, 'FixedSize', bValue) then
-        Toolbar.Bands.Items[I].FixedSize := bValue;
-      if IsValid (ID, 'HorizontalOnly', bValue) then
-        Toolbar.Bands.Items[I].HorizontalOnly := bValue;
-      if IsValid (ID, 'Visible', bValue) then
-        Toolbar.Bands.Items[I].Visible := bValue;
-
-      outputdebugMsg(PAnsiChar(Format('Restore-Band:%s, Index:%d, Width:%d, Break:%d, Control.Width:%d',
-                                      [Toolbar.Bands.Items[I].Text
-                                      ,Toolbar.Bands.Items[I].Index
-                                      ,Toolbar.Bands.Items[I].Width
-                                      ,Integer(Toolbar.Bands.Items[I].Break)
-                                      ,Toolbar.Bands.Items[I].Control.Width
-                                      ])));
-      I := I+1;
-    end;
-  except
-      OutputDebugString(PAnsiChar('Exception in Restore'));
+      ToolBar.ParentColor := true;
+      aFile.Clear();
+  finally
+      aFile.Free();
   end;
-  ToolBar.ParentColor := true;
-  aFile.Clear();
-  aFile.Free();
 end;
 
 {--------------------------------------}
