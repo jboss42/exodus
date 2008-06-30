@@ -209,7 +209,6 @@ type
         property Priority: integer read _priority write _priority;
         property Show: WideString read _show;
         property Status: WideString read _status;
-        property SessionJid: TJabberID read GetSessionJid;
 
         // Stream stuff
         property Stream: TXMLStream read _stream;
