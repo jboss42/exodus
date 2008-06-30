@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/25/2008 5:16:28 PM from Type Library described below.
+// File generated on 6/26/2008 11:56:56 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\MomentIM-trunk\src\Exodus\exodus\Exodus.tlb (1)

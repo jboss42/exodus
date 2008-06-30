@@ -2,56 +2,63 @@ inherited frmXferManager: TfrmXferManager
   Left = 251
   Top = 229
   Caption = 'File Transfer Manager'
-  ClientWidth = 455
+  ClientWidth = 560
   OldCreateOrder = True
   OnDestroy = FormDestroy
-  ExplicitWidth = 463
-  PixelsPerInch = 96
-  TextHeight = 13
-  inherited pnlDockTop: TPanel
-    Width = 455
+  ExplicitWidth = 568
+  PixelsPerInch = 120
+  TextHeight = 16
+  inherited pnlDock: TTntPanel
+    Width = 560
     TabOrder = 1
-    ExplicitWidth = 455
-    inherited tbDockBar: TToolBar
-      Left = 406
-      ExplicitLeft = 406
-    end
-    object Panel1: TPanel
-      Left = 0
-      Top = 0
-      Width = 403
-      Height = 32
-      Align = alClient
-      BevelOuter = bvNone
-      BorderWidth = 5
-      ParentColor = True
-      TabOrder = 1
-      object pnlCaption: TTntPanel
-        Left = 5
-        Top = 5
-        Width = 393
-        Height = 22
-        Align = alClient
-        BevelOuter = bvLowered
-        Caption = 'File Transfers'
-        Color = clHighlight
-        ParentBackground = False
-        TabOrder = 0
+    inherited pnlDockTopContainer: TTntPanel
+      Width = 560
+      inherited tbDockBar: TToolBar
+        Left = 510
+        ExplicitLeft = 510
       end
+      inherited pnlDockTop: TTntPanel
+        Width = 506
+        ExplicitWidth = 506
+        object Panel1: TPanel
+          Left = 1
+          Top = 1
+          Width = 504
+          Height = 42
+          Align = alClient
+          BevelOuter = bvNone
+          BorderWidth = 5
+          ParentColor = True
+          TabOrder = 0
+          object pnlCaption: TTntPanel
+            Left = 5
+            Top = 5
+            Width = 494
+            Height = 32
+            Align = alClient
+            BevelOuter = bvLowered
+            Caption = 'File Transfers'
+            Color = clHighlight
+            ParentBackground = False
+            TabOrder = 0
+          end
+        end
+      end
+    end
+    inherited pnlDockControlSite: TTntPanel
+      Width = 560
     end
   end
   object box: TScrollBox
     Left = 0
-    Top = 33
-    Width = 455
-    Height = 130
+    Top = 97
+    Width = 560
+    Height = 104
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 0
-    ExplicitTop = 32
-    ExplicitHeight = 135
   end
   object httpServer: TIdHTTPServer
     Bindings = <>

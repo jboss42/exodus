@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag, XMLUtils,
-    Buttons, Exodus_TLB, COMMsgOutToolbar, COMDockToolbar, AppEvnts;
+    Buttons, Exodus_TLB, COMMsgOutToolbar, COMDockToolbar, AppEvnts, TntExtCtrls;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -77,7 +77,7 @@ type
     popHotkeys: TTntPopupMenu;
     popHotkeys_sep1: TTntMenuItem;
     Customize1: TTntMenuItem;
-    pnlChatTop: TPanel;
+    pnlChatTop: TTntPanel;
     ChatToolbarButtonColors: TTntToolButton;
     cmbPriority: TTntComboBox;
     AppEvents: TApplicationEvents;
@@ -554,7 +554,7 @@ begin
         _filelink_callback := MainSession.RegisterCallback(OnFileLinkCallback, '/session/filelink/click/response');
 
         MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar, pnlControlSite, COMRosterImages);
-        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar, pnlControlSite, COMRosterImages);
+        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar, pnlDockControlSite, COMRosterImages);
 
         updateFromPrefs();
         DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
@@ -632,8 +632,8 @@ begin
     // when (un)docking.
     inherited;
     if (ClientHeight = 0) then exit;
-
-    if ((pnlMsgList.Height + Splitter1.Height + pnlInput.Height + pnlDockTop.Height) > ClientHeight) then begin
+    {
+    if ((pnlMsgList.Height + Splitter1.Height + pnlInput.Height + pnlDock.Height) > ClientHeight) then begin
         // All combined, everything is bigger then the room we have, so resize
         oldHeight := pnlMsgList.Height + pnlInput.Height;
         if (oldHeight <> 0) then
@@ -649,9 +649,10 @@ begin
         end;
 
         // Now that we have ratios, make sure that nothing would be too small;
-        pnlMsgList.Height := Trunc(msglistratio * (ClientHeight - Splitter1.Height - pnlDockTop.Height));
-        pnlInput.Height := Trunc(pnlinputratio * (ClientHeight - Splitter1.Height- pnlDockTop.Height));
+        pnlMsgList.Height := Trunc(msglistratio * (ClientHeight - Splitter1.Height - pnlDock.Height));
+        pnlInput.Height := Trunc(pnlinputratio * (ClientHeight - Splitter1.Height- pnlDock.Height));
     end;
+    }
 end;
 
 {---------------------------------------}

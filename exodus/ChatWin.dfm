@@ -17,85 +17,93 @@ inherited frmChat: TfrmChat
     ExplicitTop = 347
     ExplicitWidth = 486
   end
-  inherited pnlDockTop: TPanel
+  inherited pnlDock: TTntPanel
     Width = 492
-    Height = 28
     ExplicitWidth = 492
-    ExplicitHeight = 28
-    inherited tbDockBar: TToolBar
-      Left = 443
-      Height = 22
-      ExplicitLeft = 443
-      ExplicitHeight = 22
-    end
-    inherited pnlChatTop: TPanel
-      Width = 440
-      Height = 28
-      ExplicitWidth = 440
-      ExplicitHeight = 28
-      object pnlJID: TPanel
-        Left = 0
-        Top = 0
-        Width = 351
-        Height = 28
-        Align = alLeft
-        BevelOuter = bvNone
-        ParentColor = True
-        TabOrder = 0
-        object lblNick: TTntLabel
-          AlignWithMargins = True
-          Left = 53
-          Top = 0
-          Width = 45
-          Height = 28
-          Cursor = crHandPoint
-          Margins.Left = 6
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alLeft
-          Caption = 'Nickname'
-          ParentShowHint = False
-          ShowHint = True
-          Layout = tlCenter
-          OnClick = lblJIDClick
-          ExplicitHeight = 13
-        end
-        object imgAvatar: TPaintBox
-          AlignWithMargins = True
-          Left = 4
-          Top = 0
-          Width = 35
-          Height = 28
-          Margins.Left = 4
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alLeft
-          OnClick = imgAvatarClick
-          OnPaint = imgAvatarPaint
-          ExplicitHeight = 33
-        end
-        object Panel3: TPanel
-          Left = 39
-          Top = 0
-          Width = 8
-          Height = 28
-          Align = alLeft
-          BevelOuter = bvNone
-          ParentColor = True
-          TabOrder = 0
+    inherited pnlDockTopContainer: TTntPanel
+      Width = 490
+      AutoSize = True
+      ExplicitWidth = 490
+      inherited tbDockBar: TToolBar
+        Left = 441
+        ExplicitLeft = 441
+      end
+      inherited pnlDockTop: TTntPanel
+        Width = 438
+        ExplicitWidth = 438
+        inherited pnlChatTop: TTntPanel
+          Width = 438
+          ExplicitWidth = 438
+          object pnlJID: TPanel
+            Left = 0
+            Top = 0
+            Width = 351
+            Height = 28
+            Align = alLeft
+            BevelOuter = bvNone
+            ParentColor = True
+            TabOrder = 0
+            object lblNick: TTntLabel
+              AlignWithMargins = True
+              Left = 53
+              Top = 0
+              Width = 45
+              Height = 28
+              Cursor = crHandPoint
+              Margins.Left = 6
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 0
+              Align = alLeft
+              Caption = 'Nickname'
+              ParentShowHint = False
+              ShowHint = True
+              Layout = tlCenter
+              OnClick = lblJIDClick
+              ExplicitHeight = 13
+            end
+            object imgAvatar: TPaintBox
+              AlignWithMargins = True
+              Left = 4
+              Top = 0
+              Width = 35
+              Height = 28
+              Margins.Left = 4
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 0
+              Align = alLeft
+              OnClick = imgAvatarClick
+              OnPaint = imgAvatarPaint
+              ExplicitLeft = 3
+              ExplicitHeight = 34
+            end
+            object Panel3: TPanel
+              Left = 39
+              Top = 0
+              Width = 8
+              Height = 28
+              Align = alLeft
+              BevelOuter = bvNone
+              ParentColor = True
+              TabOrder = 0
+            end
+          end
         end
       end
     end
+    inherited pnlDockControlSite: TTntPanel
+      Width = 490
+      AutoSize = True
+      ExplicitWidth = 490
+    end
   end
   inherited pnlMsgList: TPanel
-    Top = 28
     Width = 492
-    Height = 319
-    ExplicitTop = 28
+    Height = 292
+    Constraints.MinHeight = 25
     ExplicitWidth = 492
-    ExplicitHeight = 319
+    ExplicitHeight = 292
   end
   inherited pnlInput: TPanel
     Top = 351
@@ -107,11 +115,17 @@ inherited frmChat: TfrmChat
       WantReturns = False
       OnChange = MsgOutChange
     end
-    inherited tbMsgOutToolbar: TTntToolBar
+    inherited pnlToolbar: TPanel
       Width = 484
       ExplicitWidth = 484
-      inherited cmbPriority: TTntComboBox
-        Hint = 'Priority'
+      inherited tbMsgOutToolbar: TTntToolBar
+        inherited cmbPriority: TTntComboBox
+          Hint = 'Priority'
+        end
+      end
+      inherited pnlControlSite: TPanel
+        Width = 163
+        ExplicitWidth = 163
       end
     end
   end

@@ -36,7 +36,6 @@ inherited frmExodus: TfrmExodus
     Transparent = True
     Visible = False
     OnClick = imgAdClick
-    ExplicitTop = 661
   end
   object Toolbar: TCoolBar
     Left = 0
@@ -50,20 +49,23 @@ inherited frmExodus: TfrmExodus
   end
   object tbsView: TPageControl
     Left = 0
-    Top = 66
+    Top = 62
     Width = 404
-    Height = 523
+    Height = 527
     ActivePage = tabRoster
     Align = alClient
     Style = tsButtons
     TabOrder = 1
+    ExplicitTop = 59
+    ExplicitHeight = 530
     object tabLogin: TTabSheet
       TabVisible = False
+      ExplicitHeight = 520
       object pnlLogin: TPanel
         Left = 0
         Top = 0
         Width = 396
-        Height = 513
+        Height = 517
         Align = alClient
         BevelInner = bvSpace
         BevelOuter = bvNone
@@ -71,20 +73,23 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
+        ExplicitHeight = 520
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
+      ExplicitHeight = 520
       object pnlRoster: TPanel
         Left = 0
         Top = 50
         Width = 396
-        Height = 463
+        Height = 467
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitHeight = 470
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -180,7 +185,6 @@ inherited frmExodus: TfrmExodus
           Transparent = True
           ExplicitLeft = 384
           ExplicitWidth = 13
-          ExplicitHeight = 37
         end
         object lblDisplayName: TTntLabel
           AlignWithMargins = True
@@ -189,6 +193,8 @@ inherited frmExodus: TfrmExodus
           Width = 353
           Height = 16
           Align = alClient
+          ExplicitLeft = 20
+          ExplicitTop = 2
           ExplicitWidth = 3
           ExplicitHeight = 13
         end
@@ -251,7 +257,7 @@ inherited frmExodus: TfrmExodus
               FF00}
             Transparent = True
             OnClick = clickChangeStatus
-            ExplicitLeft = 148
+            ExplicitLeft = 7
             ExplicitHeight = 13
           end
           object pnlStatusLabel: TPanel
@@ -284,8 +290,9 @@ inherited frmExodus: TfrmExodus
               OnClick = clickEditStatus
               OnMouseEnter = pnlStatusLabelMouseEnter
               OnMouseLeave = pnlStatusLabelMouseLeave
-              ExplicitTop = 0
-              ExplicitHeight = 13
+              ExplicitLeft = 2
+              ExplicitTop = 2
+              ExplicitHeight = 19
             end
           end
           object txtStatus: TTntEdit
@@ -316,7 +323,6 @@ inherited frmExodus: TfrmExodus
           Center = True
           Transparent = True
           ExplicitWidth = 17
-          ExplicitHeight = 37
         end
       end
     end
@@ -325,9 +331,8 @@ inherited frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 404
-    Height = 35
+    Height = 31
     Align = alTop
-    AutoSize = True
     BevelEdges = []
     BevelOuter = bvNone
     ParentColor = True
@@ -336,7 +341,7 @@ inherited frmExodus: TfrmExodus
       Left = 0
       Top = 30
       Width = 404
-      Height = 5
+      Height = 1
       Align = alTop
       Shape = bsBottomLine
       HighLight = clBtnFace

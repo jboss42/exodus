@@ -26,7 +26,7 @@ uses
     XMLParser,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
-    Buttons, TntStdCtrls, TntMenus, ToolWin, DebugManager;
+    Buttons, TntStdCtrls, TntMenus, ToolWin, DebugManager, TntExtCtrls;
 
 type
   TfrmDebug = class(TfrmDockable, IDebugLogger)

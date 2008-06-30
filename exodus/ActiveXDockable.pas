@@ -36,12 +36,11 @@ uses
     Classes,
     PLUGINCONTROLLib_TLB,
     Forms,
-    Exodus_TLB;
+    Exodus_TLB, TntExtCtrls;
 
 type
   TfrmActiveXDockable = class(TfrmDockable)
     pnlMsgList: TPanel;
-    pnlChatTop: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -1,37 +1,40 @@
 inherited frmActiveXDockable: TfrmActiveXDockable
   Left = 414
   Top = 474
-  ClientHeight = 260
-  ClientWidth = 415
+  ClientHeight = 320
+  ClientWidth = 511
   OnDestroy = FormDestroy
-  ExplicitWidth = 423
-  ExplicitHeight = 294
-  PixelsPerInch = 96
-  TextHeight = 13
-  inherited pnlDockTop: TPanel
-    Width = 415
+  ExplicitWidth = 519
+  ExplicitHeight = 353
+  PixelsPerInch = 120
+  TextHeight = 16
+  inherited pnlDock: TTntPanel
+    Width = 511
     TabOrder = 1
-    ExplicitWidth = 415
-    inherited tbDockBar: TToolBar
-      Left = 366
-      ExplicitLeft = 366
+    ExplicitWidth = 511
+    inherited pnlDockTopContainer: TTntPanel
+      Width = 511
+      ExplicitWidth = 511
+      inherited tbDockBar: TToolBar
+        Left = 461
+        ExplicitLeft = 461
+      end
+      inherited pnlDockTop: TTntPanel
+        Width = 457
+        Caption = 'pnlDockTop'
+        ExplicitWidth = 457
+      end
     end
-    object pnlChatTop: TPanel
-      Left = 0
-      Top = 0
-      Width = 363
-      Height = 33
-      Align = alClient
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 1
+    inherited pnlDockControlSite: TTntPanel
+      Width = 511
+      ExplicitWidth = 511
     end
   end
   object pnlMsgList: TPanel
     Left = 0
-    Top = 33
-    Width = 415
-    Height = 227
+    Top = 97
+    Width = 511
+    Height = 223
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4

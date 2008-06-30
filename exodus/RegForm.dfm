@@ -3,8 +3,8 @@ inherited frmRegister: TfrmRegister
   Top = 361
   Caption = 'Service Registration'
   OldCreateOrder = True
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 120
+  TextHeight = 16
   inherited TntPanel1: TTntPanel
     inherited btnBack: TTntButton
       OnClick = btnPrevClick
@@ -22,8 +22,8 @@ inherited frmRegister: TfrmRegister
       object Label1: TTntLabel
         Left = 0
         Top = 0
-        Width = 486
-        Height = 90
+        Width = 600
+        Height = 111
         Align = alTop
         AutoSize = False
         Caption = 
@@ -32,30 +32,30 @@ inherited frmRegister: TfrmRegister
           'ancel this registration.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -17
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
         WordWrap = True
-        ExplicitWidth = 408
+        ExplicitWidth = 598
       end
       object lblIns: TTntLabel
         Left = 0
-        Top = 90
-        Width = 486
-        Height = 203
+        Top = 111
+        Width = 600
+        Height = 222
         Align = alClient
         AutoSize = False
         Caption = 'Waiting for agent instructions.....'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -17
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
         WordWrap = True
-        ExplicitWidth = 408
-        ExplicitHeight = 135
+        ExplicitWidth = 598
+        ExplicitHeight = 250
       end
     end
     object TabSheet2: TTabSheet
@@ -64,8 +64,8 @@ inherited frmRegister: TfrmRegister
       object formBox: TScrollBox
         Left = 0
         Top = 0
-        Width = 486
-        Height = 261
+        Width = 600
+        Height = 293
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -76,21 +76,21 @@ inherited frmRegister: TfrmRegister
       end
       object Panel2: TPanel
         Left = 0
-        Top = 261
-        Width = 486
-        Height = 32
+        Top = 293
+        Width = 600
+        Height = 40
         Align = alBottom
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
         DesignSize = (
-          486
-          32)
+          600
+          40)
         object btnDelete: TTntButton
-          Left = 325
-          Top = 5
-          Width = 161
-          Height = 25
+          Left = 400
+          Top = 6
+          Width = 198
+          Height = 31
           Anchors = [akRight, akBottom]
           Caption = 'Delete My Registration'
           TabOrder = 0
@@ -101,40 +101,32 @@ inherited frmRegister: TfrmRegister
     object TabSheet3: TTabSheet
       Caption = 'TabSheet3'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label2: TTntLabel
         Left = 0
         Top = 0
-        Width = 486
-        Height = 90
+        Width = 600
+        Height = 111
         Align = alTop
         AutoSize = False
         Caption = 'Please wait, Sending your registration to the service....'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -17
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
         WordWrap = True
-        ExplicitWidth = 408
+        ExplicitWidth = 598
       end
     end
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblOK: TTntLabel
         Left = 0
         Top = 0
-        Width = 486
-        Height = 90
+        Width = 600
+        Height = 111
         Align = alTop
         AutoSize = False
         Caption = 
@@ -142,19 +134,19 @@ inherited frmRegister: TfrmRegister
           'y. Press the '#39'Finish'#39' button to finish.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -17
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
         Visible = False
         WordWrap = True
-        ExplicitWidth = 408
+        ExplicitWidth = 598
       end
       object lblBad: TTntLabel
         Left = 0
-        Top = 90
-        Width = 486
-        Height = 90
+        Top = 111
+        Width = 600
+        Height = 111
         Align = alTop
         AutoSize = False
         Caption = 
@@ -163,26 +155,44 @@ inherited frmRegister: TfrmRegister
           'correctly. Press '#39'Cancel'#39' to close this wizard.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -17
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
         Visible = False
         WordWrap = True
-        ExplicitWidth = 408
+        ExplicitWidth = 598
       end
     end
   end
-  inherited pnlDockTop: TPanel
-    inherited Panel1: TPanel
-      inherited lblWizardTitle: TTntLabel
-        Anchors = [akLeft, akTop, akRight]
+  inherited pnlDock: TTntPanel
+    inherited pnlDockTopContainer: TTntPanel
+      inherited tbDockBar: TToolBar
+        Left = 558
       end
-      inherited lblWizardDetails: TTntLabel
-        Anchors = [akLeft, akTop, akRight]
-      end
-      inherited Image1: TImage
-        Picture.Data = {00}
+      inherited pnlDockTop: TTntPanel
+        Width = 554
+        inherited Panel1: TPanel
+          Width = 552
+          inherited lblWizardTitle: TTntLabel
+            Width = 523
+            Anchors = [akLeft, akTop, akRight]
+          end
+          inherited lblWizardDetails: TTntLabel
+            Width = 804
+            Anchors = [akLeft, akTop, akRight]
+          end
+          inherited Image1: TImage
+            Left = 502
+            Picture.Data = {00}
+          end
+        end
+        inherited pnlBevel: TTntPanel
+          Width = 552
+          inherited Bevel2: TBevel
+            Width = 552
+          end
+        end
       end
     end
   end

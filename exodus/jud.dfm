@@ -6,8 +6,6 @@ inherited frmJud: TfrmJud
   ClientWidth = 606
   OldCreateOrder = True
   OnResize = FormResize
-  ExplicitWidth = 614
-  ExplicitHeight = 552
   PixelsPerInch = 120
   TextHeight = 16
   inherited TntPanel1: TTntPanel
@@ -42,16 +40,14 @@ inherited frmJud: TfrmJud
   end
   inherited Tabs: TPageControl
     Width = 606
-    Height = 397
+    Height = 365
     ActivePage = TabSheet4
     ExplicitWidth = 606
-    ExplicitHeight = 397
+    ExplicitHeight = 365
     inherited TabSheet1: TTabSheet
       OnEnter = TabSheet1Enter
-      ExplicitLeft = 4
-      ExplicitTop = 30
       ExplicitWidth = 598
-      ExplicitHeight = 363
+      ExplicitHeight = 331
       object lblSelect: TTntLabel
         Left = 0
         Top = 0
@@ -114,7 +110,7 @@ inherited frmJud: TfrmJud
       ImageIndex = 3
       object Panel2: TPanel
         Left = 0
-        Top = 291
+        Top = 259
         Width = 598
         Height = 72
         Align = alBottom
@@ -175,7 +171,7 @@ inherited frmJud: TfrmJud
         Left = 0
         Top = 0
         Width = 598
-        Height = 291
+        Height = 259
         Align = alClient
         Columns = <
           item
@@ -208,7 +204,7 @@ inherited frmJud: TfrmJud
         Left = 0
         Top = 0
         Width = 598
-        Height = 363
+        Height = 331
         Align = alClient
         Color = 13681583
         Font.Charset = DEFAULT_CHARSET
@@ -221,51 +217,61 @@ inherited frmJud: TfrmJud
         TabOrder = 0
         TabStop = True
         ExplicitWidth = 598
-        ExplicitHeight = 363
+        ExplicitHeight = 331
         inherited Panel1: TPanel
           Width = 598
-          Height = 363
+          Height = 331
           ExplicitWidth = 598
-          ExplicitHeight = 363
+          ExplicitHeight = 331
           inherited ScrollBox1: TScrollBox
             Width = 588
-            Height = 353
+            Height = 321
             ExplicitWidth = 588
-            ExplicitHeight = 353
+            ExplicitHeight = 321
           end
         end
       end
     end
   end
-  inherited pnlDockTop: TPanel
+  inherited pnlDock: TTntPanel
     Width = 606
-    ExplicitWidth = 606
-    inherited tbDockBar: TToolBar
-      Left = 557
-      Height = 59
-      ExplicitLeft = 557
-      ExplicitHeight = 59
+    inherited pnlDockTopContainer: TTntPanel
+      Width = 606
+      inherited tbDockBar: TToolBar
+        Left = 556
+        ExplicitLeft = 556
+      end
+      inherited pnlDockTop: TTntPanel
+        Width = 552
+        ExplicitWidth = 552
+        inherited Panel1: TPanel
+          Width = 550
+          ExplicitWidth = 550
+          inherited lblWizardTitle: TTntLabel
+            Width = 155
+            Caption = 'Jabber Search Wizard'
+            ExplicitWidth = 155
+          end
+          inherited lblWizardDetails: TTntLabel
+            Caption = ''
+          end
+          inherited Image1: TImage
+            Left = 500
+            Picture.Data = {00}
+            ExplicitLeft = 491
+          end
+        end
+        inherited pnlBevel: TTntPanel
+          Width = 550
+          inherited Bevel2: TBevel
+            Width = 550
+            ExplicitWidth = 542
+          end
+        end
+      end
     end
-    inherited Panel1: TPanel
-      Width = 554
-      ExplicitWidth = 554
-      inherited Bevel2: TBevel
-        Width = 554
-        ExplicitWidth = 542
-      end
-      inherited lblWizardTitle: TTntLabel
-        Width = 155
-        Caption = 'Jabber Search Wizard'
-        ExplicitWidth = 155
-      end
-      inherited lblWizardDetails: TTntLabel
-        Caption = ''
-      end
-      inherited Image1: TImage
-        Left = 504
-        Picture.Data = {00}
-        ExplicitLeft = 491
-      end
+    inherited pnlDockControlSite: TTntPanel
+      Width = 606
     end
   end
   object PopupMenu1: TTntPopupMenu

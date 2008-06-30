@@ -12,58 +12,98 @@ inherited frmDockable: TfrmDockable
   ExplicitWidth = 212
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlDockTop: TPanel
+  object pnlDock: TTntPanel
     Left = 0
     Top = 0
     Width = 204
-    Height = 33
+    Height = 55
     Align = alTop
-    BevelOuter = bvNone
+    AutoSize = True
+    BevelOuter = bvLowered
     ParentColor = True
     TabOrder = 0
-    object tbDockBar: TToolBar
-      AlignWithMargins = True
-      Left = 155
-      Top = 3
-      Width = 46
-      Height = 27
-      Align = alRight
-      AutoSize = True
-      DockSite = True
-      EdgeInner = esNone
-      EdgeOuter = esNone
-      HideClippedButtons = True
-      Images = frmExodus.ImageList1
+    object pnlDockTopContainer: TTntPanel
+      Left = 1
+      Top = 1
+      Width = 202
+      Height = 28
+      Align = alTop
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 0
-      Transparent = True
-      Wrapable = False
-      object btnDockToggle: TToolButton
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 204
+      object tbDockBar: TToolBar
         AlignWithMargins = True
+        Left = 153
+        Top = 3
+        Width = 46
+        Height = 22
+        Align = alRight
+        AutoSize = True
+        EdgeInner = esNone
+        EdgeOuter = esNone
+        HideClippedButtons = True
+        Images = frmExodus.ImageList1
+        TabOrder = 0
+        Transparent = True
+        Wrapable = False
+        ExplicitLeft = 155
+        object btnDockToggle: TToolButton
+          AlignWithMargins = True
+          Left = 0
+          Top = 0
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          AutoSize = True
+          Caption = 'btnDockToggle'
+          ImageIndex = 82
+          OnClick = btnDockToggleClick
+        end
+        object btnCloseDock: TToolButton
+          AlignWithMargins = True
+          Left = 23
+          Top = 0
+          Hint = 'Close this tab'
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          AutoSize = True
+          Caption = 'btnCloseDock'
+          ImageIndex = 83
+          OnClick = btnCloseDockClick
+        end
+      end
+      object pnlDockTop: TTntPanel
         Left = 0
         Top = 0
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        AutoSize = True
-        Caption = 'btnDockToggle'
-        ImageIndex = 82
-        OnClick = btnDockToggleClick
+        Width = 150
+        Height = 28
+        Align = alClient
+        BevelOuter = bvNone
+        ParentColor = True
+        TabOrder = 1
+        ExplicitWidth = 152
       end
-      object btnCloseDock: TToolButton
-        AlignWithMargins = True
-        Left = 23
-        Top = 0
-        Hint = 'Close this tab'
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        AutoSize = True
-        Caption = 'btnCloseDock'
-        ImageIndex = 83
-        OnClick = btnCloseDockClick
-      end
+    end
+    object pnlDockControlSite: TTntPanel
+      Left = 1
+      Top = 29
+      Width = 202
+      Height = 25
+      Align = alClient
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 1
+      Visible = False
+      ExplicitLeft = 0
+      ExplicitTop = 28
+      ExplicitWidth = 204
+      ExplicitHeight = 27
     end
   end
 end

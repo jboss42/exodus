@@ -25,7 +25,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ImgList, Buttons, ToolWin, Contnrs,
     ExtCtrls, TntComCtrls, StateForm, Unicode, XMLTag, buttonFrame, JabberMsg,
-  Menus, TntMenus;
+  Menus, TntMenus, TntExtCtrls;
 
   function generateUID(): widestring;
 
@@ -63,10 +63,12 @@ type
     has been defined that will fire in either case.
   }
   TfrmDockable = class(TfrmState)
-    pnlDockTop: TPanel;
+    pnlDockTop: TTntPanel;
+    pnlDockTopContainer: TTntPanel;
     tbDockBar: TToolBar;
     btnDockToggle: TToolButton;
     btnCloseDock: TToolButton;
+    pnlDockControlSite: TTntPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     {
