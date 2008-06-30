@@ -647,6 +647,8 @@ var
     jid: TJabberID;
 begin
     inherited;
+    btnPrint.Enabled := false;
+    btnDelete.Enabled := false;
 
     if (_DoingSearch) then begin
         HistorySearchManager.CancelSearch(_SearchObj.Get_SearchID);
