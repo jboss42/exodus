@@ -47,8 +47,13 @@ inherited ExContactHoverFrame: TExContactHoverFrame
   object lblPresence: TTntLabel
     Left = 60
     Top = 162
-    Width = 4
+    Width = 165
     Height = 16
+    AutoSize = False
+    Caption = '1'
+    EllipsisPosition = epWordEllipsis
+    ParentShowHint = False
+    ShowHint = True
     OnMouseEnter = lblPresenceMouseEnter
     OnMouseLeave = lblPresenceMouseLeave
   end
