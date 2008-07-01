@@ -624,7 +624,7 @@ begin
 {$IFDEF EXODUS}
             if (MainSession.Prefs.getBool('show_priority')) then
 {$ELSE}
-            if ((_controller <> nil) and (_controller.GetPrefAsBool('show_priority')) then
+            if ((_controller <> nil) and (_controller.GetPrefAsBool('show_priority'))) then
 {$ENDIF}
             begin
                 if (Msg.Priority = high) then begin
