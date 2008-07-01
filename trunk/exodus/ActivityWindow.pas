@@ -31,7 +31,7 @@ uses
 
 type
 
-  TScrollState = (ssDisabled, ssEnabled, ssPriority, ssNewWindow, ssNewMessage);
+  TScrollState = (ssDisabled, ssEnabled, ssNewMessage, ssNewWindow, ssPriority);
 
   TAWTrackerItem = class
   private
@@ -893,28 +893,34 @@ begin
                     // Off the top of the viewable list
                     item.awItem.Visible := false;
                     _enableScrollUp(true);
-                    if (item.awItem.newMessageHighlight) then begin
-                        _scrollUpState := ssNewMessage;
-                    end;
-                    if (item.awItem.priority) then begin
+                    if ((item.awItem.priority) and
+                        (_scrollUpState < ssPriority)) then begin
                         _scrollUpState := ssPriority;
                     end;
-                    if (item.awItem.newWindowHighlight) then begin
+                    if ((item.awItem.newWindowHighlight) and
+                        (_scrollUpState < ssNewWindow)) then begin
                         _scrollUpState := ssNewWindow;
+                    end;
+                    if ((item.awItem.newMessageHighlight) and
+                        (_scrollUpState < ssNewMessage)) then begin
+                        _scrollUpState := ssNewMessage;
                     end;
                 end
                 else if (slotsFilled >= numSlots) then begin
                     // Off the bottom of the viewable list
                     item.awItem.Visible := false;
                     _enableScrollDown(true);
-                    if (item.awItem.newMessageHighlight) then begin
-                        _scrollDownState := ssNewMessage;
-                    end;
-                    if (item.awItem.priority) then begin
+                    if ((item.awItem.priority) and
+                        (_scrollDownState < ssPriority)) then begin
                         _scrollDownState := ssPriority;
                     end;
-                    if (item.awItem.newWindowHighlight) then begin
+                    if ((item.awItem.newWindowHighlight) and
+                        (_scrollDownState < ssNewWindow)) then begin
                         _scrollDownState := ssNewWindow;
+                    end;
+                    if ((item.awItem.newMessageHighlight) and
+                        (_scrollDownState < ssNewMessage)) then begin
+                        _scrollDownState := ssNewMessage;
                     end;
 
                     if ((slotsFilled = numSlots) and
