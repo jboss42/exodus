@@ -400,6 +400,8 @@ var
     fh: THandle;
     fns: String;
 begin
+    if (_root = nil) then exit;
+    
     if ((_filename = '') or (not _dirty)) then exit;
 
     if (_writable = pwsUnknown) then begin
