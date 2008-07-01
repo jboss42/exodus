@@ -52,7 +52,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 2
       AutoHide = True
-      ExplicitTop = 60
       object chkInlineStatus: TTntCheckBox
         AlignWithMargins = True
         Left = 0
@@ -117,7 +116,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 3
       AutoHide = True
-      ExplicitTop = 155
       object btnManageBlocked: TTntButton
         Left = 21
         Top = 0
@@ -133,7 +131,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       Left = 0
       Top = 196
       Width = 434
-      Height = 110
+      Height = 130
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -144,8 +142,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 4
       AutoHide = True
-      ExplicitTop = 190
-      ExplicitHeight = 107
       object pnlStatusColor: TExBrandPanel
         AlignWithMargins = True
         Left = 0
@@ -226,6 +222,16 @@ inherited frmPrefRoster: TfrmPrefRoster
         Caption = '&Show contacts I have asked to add as "Pending"'
         TabOrder = 3
       end
+      object chkHover: TTntCheckBox
+        Left = 0
+        Top = 110
+        Width = 434
+        Height = 20
+        Align = alTop
+        Caption = 'Show contact list &popup'
+        TabOrder = 4
+        ExplicitTop = 90
+      end
       object chkObservers: TTntCheckBox
         Left = 0
         Top = 90
@@ -233,15 +239,15 @@ inherited frmPrefRoster: TfrmPrefRoster
         Height = 20
         Align = alTop
         Caption = 'Show obser&vers'
-        TabOrder = 4
+        TabOrder = 5
       end
     end
     object gbDepricated: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 315
+      Top = 335
       Width = 434
-      Height = 367
+      Height = 462
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -252,7 +258,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 5
       AutoHide = True
-      ExplicitTop = 306
+      ExplicitTop = 315
       object chkSort: TTntCheckBox
         Left = 0
         Top = 18
@@ -441,7 +447,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Left = 0
         Top = 290
         Width = 434
-        Height = 63
+        Height = 56
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
