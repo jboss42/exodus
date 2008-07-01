@@ -621,21 +621,28 @@ begin
     end
     else if not Msg.Action then begin
         if (_exeName <> '') then begin
-            if (Msg.Priority = high) then begin
-                dv := dv +
-                      '<img class="priorityimg" src="res://' +
-                      _exeName +
-                      '/GIF/HIGH_PRI" alt="' +
-                      _('High Priority') +
-                      '" />';
-            end
-            else if (Msg.Priority = low) then begin
-                dv := dv +
-                      '<img class="priorityimg" src="res://' +
-                      _exeName +
-                      '/GIF/LOW_PRI" alt="' +
-                      _('Low Priority') +
-                      '" />';
+{$IFDEF EXODUS}
+            if (MainSession.Prefs.getBool('show_priority')) then
+{$ELSE}
+            if ((_controller <> nil) and (_controller.GetPrefAsBool('show_priority')) then
+{$ENDIF}
+            begin
+                if (Msg.Priority = high) then begin
+                    dv := dv +
+                          '<img class="priorityimg" src="res://' +
+                          _exeName +
+                          '/GIF/HIGH_PRI" alt="' +
+                          _('High Priority') +
+                          '" />';
+                end
+                else if (Msg.Priority = low) then begin
+                    dv := dv +
+                          '<img class="priorityimg" src="res://' +
+                          _exeName +
+                          '/GIF/LOW_PRI" alt="' +
+                          _('Low Priority') +
+                          '" />';
+                end;
             end;
         end;
 
