@@ -1517,11 +1517,7 @@ begin
         end;
     end
     else if ((_getPrefBool('esc_close')) and (key = 27)) then begin
-        if (Self.Parent <> nil) then begin
-            if (Self.Parent.Parent <> nil) then begin
-                SendMessage(Self.Parent.Parent.Handle, WM_CLOSE, 0, 0);
-            end;
-        end;
+        PostMessage(bc.Handle, WM_CLOSE, 0, 0);
     end
     else if (key < 32) then begin
         // Not a "printable" key
