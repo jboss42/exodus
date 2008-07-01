@@ -69,6 +69,7 @@
     </displayname_profile_map>
     <roster_show_pending value="1" control="chkShowPending" state="rw"/>
     <roster_show_observers value="1" control="chkObservers" state="rw"/>
+    <roster_show_popup value="1" control="chkHover" state="rw"/>
 
     <!-- DEPRICATED (unsupported) roster prefs -->
     <nested_groups value="1" control="chkNestedGrps" state="inv"/>

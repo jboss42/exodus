@@ -77,6 +77,7 @@ type
     chkCollapsed: TTntCheckBox;
     chkNestedGrps: TTntCheckBox;
     chkShowPending: TTntCheckBox;
+    chkHover: TTntCheckBox;
     chkObservers: TTntCheckBox;
     procedure TntFormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);

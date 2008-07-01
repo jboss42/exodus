@@ -343,8 +343,9 @@ begin
     begin
        CanShow := false;
        hnd := GetForegroundWindow();
-       if ((frmExodus.Handle = hnd) or
-           (HoverWindow.Handle = hnd)) then
+       if (((frmExodus.Handle = hnd) or
+            (HoverWindow.Handle = hnd)) and
+            (MainSession.Prefs.GetBool('roster_show_popup'))) then
           TExTreeView(HintInfo.HintControl).ActivateHover();
        exit;
     end;
