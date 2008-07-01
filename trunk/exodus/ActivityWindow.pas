@@ -770,6 +770,7 @@ begin
                         _dockWindow.AWTabControl.ActivePage := tsheet;
                         _dockWindow.setWindowCaption(trackitem.frm.Caption);
                         scrollToActive();
+                        trackitem.frm.gotActivate();
                     except
                     end;
                 end;
