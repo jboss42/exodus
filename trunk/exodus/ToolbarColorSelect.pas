@@ -58,7 +58,8 @@ type
     SelColor: TColor;
   end;
 
-function getToolbarColorSelect(toolbar: TfrmBaseChat; dColor: TColor): TForm;
+function getToolbarColorSelect(): TForm; overload;
+function getToolbarColorSelect(toolbar: TfrmBaseChat; dColor: TColor): TForm; overload;
 
 implementation
 uses
@@ -66,11 +67,17 @@ uses
 var
   frmToolbarColorSelect: TfrmToolbarColorSelect;
 
-function getToolbarColorSelect(toolbar: TfrmBaseChat; dColor: TColor): TForm;
+function getToolbarColorSelect(): TForm;
 begin
     if (frmToolbarColorSelect = nil) then begin
         frmToolbarColorSelect := TfrmToolbarColorSelect.Create(Application);
     end;
+
+    Result := frmToolbarColorSelect;
+end;
+function getToolbarColorSelect(toolbar: TfrmBaseChat; dColor: TColor): TForm;
+begin
+    getToolbarColorSelect();
     frmToolbarColorSelect._toolbar := toolbar;
     frmToolbarColorSelect.pnlDefault.Font.Color := dColor;
     Result := frmToolbarColorSelect;
@@ -103,15 +110,15 @@ end;
 procedure TfrmToolbarColorSelect.Panel1Click(Sender: TObject);
 begin
     SelColor := TPanel(Sender).Color;
-    Self.Hide();
     _toolbar.OnColorSelect(SelColor);
+    Self.Hide();
 end;
 
 procedure TfrmToolbarColorSelect.pnlDefaultClick(Sender: TObject);
 begin
     SelColor := TPanel(Sender).Font.Color;
-    Self.Hide();
     _toolbar.OnColorSelect(SelColor);
+    Self.Hide();
 end;
 
 end.
