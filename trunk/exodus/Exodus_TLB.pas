@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 7/2/2008 12:16:53 PM from Type Library described below.
+// File generated on 7/2/2008 2:39:49 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -81,7 +81,7 @@ const
   CLASS_ExodusRosterItem: TGUID = '{B39343ED-2E2D-4C91-AE4F-E0153BA347DA}';
   CLASS_ExodusPresence: TGUID = '{8B7DF610-B49C-4A90-9B98-CB0CB27D8827}';
   CLASS_ExodusRosterGroup: TGUID = '{05237BC3-3093-4541-941D-A38FAFB78D89}';
-  CLASS_ExodusRosterImages: TGUID = '{F0EA9081-9352-496D-94BA-E96605166527}';
+  IID_IExodusRosterImages2: TGUID = '{21FC4FF3-2699-4ABC-BF6D-AF42FB407C25}';
   CLASS_ExodusEntityCache: TGUID = '{B777EA4A-A2A4-4597-87E2-E1B9800BFDC2}';
   CLASS_ExodusEntity: TGUID = '{F7D97ED8-C6BA-470F-8D63-7A6D70894AB3}';
   IID_IExodusControlBitBtn: TGUID = '{2954B16B-64BA-4441-A476-918CCCCA9B46}';
@@ -145,7 +145,7 @@ const
   IID_IExodusItemSelection: TGUID = '{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}';
   IID_IExodusItemCallback: TGUID = '{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}';
   IID_IExodusAXWindowCallback: TGUID = '{87D6C026-3A1C-43CF-B153-BB6472A956AD}';
-  CLASS_MainToolBarImages: TGUID = '{EED39569-B9B7-4888-A591-2640F31B3BC0}';
+  CLASS_ExodusRosterImages: TGUID = '{F0EA9081-9352-496D-94BA-E96605166527}';
   IID_IExodusChatPlugin2: TGUID = '{B92A81A9-79B8-47F0-8A79-1CAC711089E5}';
   IID_IExodusChat3: TGUID = '{FD3F0F9F-0BD9-4087-B892-C8FE5E332E40}';
   IID_IExodusHoverListener: TGUID = '{71150EFD-FFF5-4114-A7AC-A9540453376A}';
@@ -159,6 +159,7 @@ const
   IID_IExodusPacketControlListener: TGUID = '{1DDEA354-6FA2-43E1-AE81-8ABE167AB791}';
   IID_IExodusControlSite: TGUID = '{B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}';
   CLASS_exodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
+  CLASS_MainToolBarImages: TGUID = '{EED39569-B9B7-4888-A591-2640F31B3BC0}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -268,6 +269,8 @@ type
   IExodusChatDisp = dispinterface;
   IExodusRoster = interface;
   IExodusRosterDisp = dispinterface;
+  IExodusRosterImages2 = interface;
+  IExodusRosterImages2Disp = dispinterface;
   IExodusControlBitBtn = interface;
   IExodusControlBitBtnDisp = dispinterface;
   IExodusControlMainMenu = interface;
@@ -371,7 +374,6 @@ type
   ExodusRosterItem = IExodusRosterItem;
   ExodusPresence = IExodusPresence;
   ExodusRosterGroup = IExodusRosterGroup;
-  ExodusRosterImages = IExodusRosterImages;
   ExodusEntityCache = IExodusEntityCache;
   ExodusEntity = IExodusEntity;
   ExodusToolbar = IExodusToolbar;
@@ -397,11 +399,12 @@ type
   ExodusHistorySearchManager = IExodusHistorySearchManager;
   ExodusHistorySQLSearchHandler = IExodusHistorySearchHandler;
   ExodusActionController = IExodusActionController;
-  MainToolBarImages = IExodusRosterImages;
+  ExodusRosterImages = IExodusRosterImages;
   COMExodusHover = IExodusHover;
   ExodusEventXML = IDispatch;
   ExodusPacketDispatcher = IExodusPacketDispatcher;
   exodusController = IExodusController;
+  MainToolBarImages = IExodusRosterImages;
 
 
 // *********************************************************************//
@@ -1091,8 +1094,6 @@ type
                               const resName: WideString): Integer; safecall;
     procedure Remove(const ID: WideString); safecall;
     function Find(const ID: WideString): Integer; safecall;
-    function GetImageById(const ID: WideString): WideString; safecall;
-    function GetImageByIndex(index: Integer): WideString; safecall;
   end;
 
 // *********************************************************************//
@@ -1108,8 +1109,6 @@ type
                               const resName: WideString): Integer; dispid 203;
     procedure Remove(const ID: WideString); dispid 204;
     function Find(const ID: WideString): Integer; dispid 205;
-    function GetImageById(const ID: WideString): WideString; dispid 206;
-    function GetImageByIndex(index: Integer): WideString; dispid 207;
   end;
 
 // *********************************************************************//
@@ -3152,6 +3151,28 @@ type
     procedure SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; 
                                         const Caption: WideString); dispid 215;
     function GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString; dispid 216;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusRosterImages2
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {21FC4FF3-2699-4ABC-BF6D-AF42FB407C25}
+// *********************************************************************//
+  IExodusRosterImages2 = interface(IDispatch)
+    ['{21FC4FF3-2699-4ABC-BF6D-AF42FB407C25}']
+    function GetImageById(const ID: WideString): WideString; safecall;
+    function GetImageByIndex(index: Integer): WideString; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusRosterImages2Disp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {21FC4FF3-2699-4ABC-BF6D-AF42FB407C25}
+// *********************************************************************//
+  IExodusRosterImages2Disp = dispinterface
+    ['{21FC4FF3-2699-4ABC-BF6D-AF42FB407C25}']
+    function GetImageById(const ID: WideString): WideString; dispid 206;
+    function GetImageByIndex(index: Integer): WideString; dispid 207;
   end;
 
 // *********************************************************************//
@@ -5659,18 +5680,6 @@ type
   end;
 
 // *********************************************************************//
-// The Class CoExodusRosterImages provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusRosterImages exposed by              
-// the CoClass ExodusRosterImages. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoExodusRosterImages = class
-    class function Create: IExodusRosterImages;
-    class function CreateRemote(const MachineName: string): IExodusRosterImages;
-  end;
-
-// *********************************************************************//
 // The Class CoExodusEntityCache provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusEntityCache exposed by              
 // the CoClass ExodusEntityCache. The functions are intended to be used by             
@@ -5971,13 +5980,13 @@ type
   end;
 
 // *********************************************************************//
-// The Class CoMainToolBarImages provides a Create and CreateRemote method to          
+// The Class CoExodusRosterImages provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusRosterImages exposed by              
-// the CoClass MainToolBarImages. The functions are intended to be used by             
+// the CoClass ExodusRosterImages. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
-  CoMainToolBarImages = class
+  CoExodusRosterImages = class
     class function Create: IExodusRosterImages;
     class function CreateRemote(const MachineName: string): IExodusRosterImages;
   end;
@@ -6030,6 +6039,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusController;
   end;
 
+// *********************************************************************//
+// The Class CoMainToolBarImages provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRosterImages exposed by              
+// the CoClass MainToolBarImages. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoMainToolBarImages = class
+    class function Create: IExodusRosterImages;
+    class function CreateRemote(const MachineName: string): IExodusRosterImages;
+  end;
+
 implementation
 
 uses ComObj;
@@ -6072,16 +6093,6 @@ end;
 class function CoExodusRosterGroup.CreateRemote(const MachineName: string): IExodusRosterGroup;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterGroup) as IExodusRosterGroup;
-end;
-
-class function CoExodusRosterImages.Create: IExodusRosterImages;
-begin
-  Result := CreateComObject(CLASS_ExodusRosterImages) as IExodusRosterImages;
-end;
-
-class function CoExodusRosterImages.CreateRemote(const MachineName: string): IExodusRosterImages;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterImages) as IExodusRosterImages;
 end;
 
 class function CoExodusEntityCache.Create: IExodusEntityCache;
@@ -6334,14 +6345,14 @@ begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusActionController) as IExodusActionController;
 end;
 
-class function CoMainToolBarImages.Create: IExodusRosterImages;
+class function CoExodusRosterImages.Create: IExodusRosterImages;
 begin
-  Result := CreateComObject(CLASS_MainToolBarImages) as IExodusRosterImages;
+  Result := CreateComObject(CLASS_ExodusRosterImages) as IExodusRosterImages;
 end;
 
-class function CoMainToolBarImages.CreateRemote(const MachineName: string): IExodusRosterImages;
+class function CoExodusRosterImages.CreateRemote(const MachineName: string): IExodusRosterImages;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_MainToolBarImages) as IExodusRosterImages;
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterImages) as IExodusRosterImages;
 end;
 
 class function CoCOMExodusHover.Create: IExodusHover;
@@ -6382,6 +6393,16 @@ end;
 class function CoexodusController.CreateRemote(const MachineName: string): IExodusController;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_exodusController) as IExodusController;
+end;
+
+class function CoMainToolBarImages.Create: IExodusRosterImages;
+begin
+  Result := CreateComObject(CLASS_MainToolBarImages) as IExodusRosterImages;
+end;
+
+class function CoMainToolBarImages.CreateRemote(const MachineName: string): IExodusRosterImages;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_MainToolBarImages) as IExodusRosterImages;
 end;
 
 end.
