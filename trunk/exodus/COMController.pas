@@ -29,7 +29,7 @@ uses
     Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl, COMExodusItem;
 
 type
-  TExodusController = class(TAutoObject, IExodusController)
+  TExodusController = class(TAutoObject, IExodusController, IExodusController2)
   protected
     function Get_Connected: WordBool; safecall;
     function Get_Server: WideString; safecall;
