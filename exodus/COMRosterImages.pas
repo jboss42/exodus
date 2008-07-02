@@ -28,7 +28,7 @@ uses
     Windows, Graphics, ComObj, ActiveX,  StdVcl;
 
 type
-  TExodusRosterImages = class(TAutoObject, IExodusRosterImages)
+  TExodusRosterImages = class(TAutoObject, IExodusRosterImages, IExodusRosterImages2)
   protected
     function AddImageBase64(const id, base64: WideString): Integer; safecall;
     function AddImageFilename(const id, filename: WideString): Integer;
