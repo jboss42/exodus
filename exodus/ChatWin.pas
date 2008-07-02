@@ -1139,7 +1139,8 @@ begin
     txt := getInputText(MsgOut);
     if (txt = '/clear') then begin
       Clear1Click(self);
-      MsgOut.Clear();
+      MsgOut.SelectAll;
+      MsgOut.ClearSelection();
       exit;
     end;
     xml := '';

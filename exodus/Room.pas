@@ -1182,7 +1182,10 @@ begin
 
     wsl.Destroy();
     if (Result) then
-        MsgOut.Lines.Clear();
+    begin
+        MsgOut.SelectAll;
+        MsgOut.ClearSelection();
+    end;
 end;
 
 {---------------------------------------}
@@ -1617,7 +1620,11 @@ begin
 
             // Voice stuff
             MsgOut.ReadOnly := (member.role = MUC_VISITOR);
-            if (MsgOut.Readonly) then MsgOut.Lines.Clear();
+            if (MsgOut.Readonly) then
+            begin
+                MsgOut.SelectAll;
+                MsgOut.ClearSelection();
+            end;
             
             // Who can change subject
             _EnableSubjectButton();
