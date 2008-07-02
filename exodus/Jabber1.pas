@@ -24,7 +24,7 @@ interface
 uses
     // Exodus stuff
     BaseChat, ExResponders, LoginWindow, RosterForm, Presence, XMLTag,
-    ShellAPI, Registry, Emote, 
+    ShellAPI, Registry, Emote,
     Dockable, DisplayName,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -815,7 +815,7 @@ uses
     NewUser, CommandWizard, Notify,
     About, AutoUpdate, AutoUpdateStatus, Browser, Chat,
     ChatController,
-    ChatWin,
+    ChatWin, ToolbarColorSelect,
     Debug, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils,
     InputPassword, Invite, GnuGetText,
@@ -1208,6 +1208,7 @@ begin
 
     // Init our emoticons
     InitializeEmoticonLists();
+    getToolbarColorSelect();
 
     _dnListener := TDisplayNameEventListener.Create();
     _dnListener.OnDisplayNameChange := OnDisplayNameChange;
