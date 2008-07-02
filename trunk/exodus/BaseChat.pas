@@ -435,7 +435,8 @@ begin
     _lastMsg := _msgHistory.Count;
     _pending := '';
 
-    MsgOut.Lines.Clear();
+    MsgOut.SelectAll;
+    MsgOut.ClearSelection();
     UpdateToolbarState();
     if (MainSession.Prefs.getBool('show_priority')) then
       SetPriorityNormal;
