@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 6/26/2008 11:56:56 PM from Type Library described below.
+// File generated on 7/2/2008 12:16:53 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\MomentIM-trunk\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -48,7 +48,7 @@ const
   LIBID_Exodus: TGUID = '{37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}';
 
   IID_IExodusController: TGUID = '{A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C}';
-  CLASS_exodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
+  IID_IExodusController2: TGUID = '{885E0A1E-E3A7-4F63-BD4D-0015C921CB96}';
   IID_IExodusChat2: TGUID = '{51385483-0B0F-45A3-95C7-579A8DDF62DF}';
   IID_IExodusMenuListener: TGUID = '{2ABB30A9-94E3-4085-BED5-4561F62E36EF}';
   IID_IExodusChatPlugin: TGUID = '{E28E487A-7258-4B32-AD1C-F23A808F0460}';
@@ -158,6 +158,7 @@ const
   IID_IExodusMenuListener2: TGUID = '{046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}';
   IID_IExodusPacketControlListener: TGUID = '{1DDEA354-6FA2-43E1-AE81-8ABE167AB791}';
   IID_IExodusControlSite: TGUID = '{B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}';
+  CLASS_exodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -209,6 +210,8 @@ type
 // *********************************************************************//
   IExodusController = interface;
   IExodusControllerDisp = dispinterface;
+  IExodusController2 = interface;
+  IExodusController2Disp = dispinterface;
   IExodusChat2 = interface;
   IExodusChat2Disp = dispinterface;
   IExodusMenuListener = interface;
@@ -364,7 +367,6 @@ type
 // Declaration of CoClasses defined in Type Library                       
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
-  exodusController = IExodusController;
   ExodusPPDB = IExodusPPDB;
   ExodusRosterItem = IExodusRosterItem;
   ExodusPresence = IExodusPresence;
@@ -399,6 +401,7 @@ type
   COMExodusHover = IExodusHover;
   ExodusEventXML = IDispatch;
   ExodusPacketDispatcher = IExodusPacketDispatcher;
+  exodusController = IExodusController;
 
 
 // *********************************************************************//
@@ -507,25 +510,6 @@ type
     function GetStringlistValue(const key: WideString; index: Integer): WideString; safecall;
     procedure RemoveStringlistValue(const key: WideString; const value: WideString); safecall;
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
-    function Get_TabController: IExodusTabController; safecall;
-    function Get_ItemController: IExodusItemController; safecall;
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Caption: WideString; 
-                         BringToFront: WordBool): IExodusAXWindow; safecall;
-    function Get_DataStore: IExodusDataStore; safecall;
-    function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
-    function Get_ActionController: IExodusActionController; safecall;
-    function GetPrefAsXML(const key: WideString): WideString; safecall;
-    procedure SetPrefAsXML(const XML: WideString); safecall;
-    function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
-    function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
-    procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
-                                 const eventXML: WideString; ImageIndex: Integer); safecall;
-    function Get_MainToolBarImages: IExodusRosterImages; safecall;
-    function Get_EnableFilesDragAndDrop: WordBool; safecall;
-    procedure Set_EnableFilesDragAndDrop(value: WordBool); safecall;
-    function Get_PacketDispatcher: IExodusPacketDispatcher; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -545,14 +529,6 @@ type
     property ContactLogger: IExodusLogger read Get_ContactLogger write Set_ContactLogger;
     property RoomLogger: IExodusLogger read Get_RoomLogger write Set_RoomLogger;
     property BookmarkManager: IExodusBookmarkManager read Get_BookmarkManager;
-    property TabController: IExodusTabController read Get_TabController;
-    property ItemController: IExodusItemController read Get_ItemController;
-    property DataStore: IExodusDataStore read Get_DataStore;
-    property HistorySearchManager: IExodusHistorySearchManager read Get_HistorySearchManager;
-    property ActionController: IExodusActionController read Get_ActionController;
-    property MainToolBarImages: IExodusRosterImages read Get_MainToolBarImages;
-    property EnableFilesDragAndDrop: WordBool read Get_EnableFilesDragAndDrop write Set_EnableFilesDragAndDrop;
-    property PacketDispatcher: IExodusPacketDispatcher read Get_PacketDispatcher;
   end;
 
 // *********************************************************************//
@@ -652,6 +628,51 @@ type
     function GetStringlistValue(const key: WideString; index: Integer): WideString; dispid 220;
     procedure RemoveStringlistValue(const key: WideString; const value: WideString); dispid 221;
     property BookmarkManager: IExodusBookmarkManager readonly dispid 222;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusController2
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {885E0A1E-E3A7-4F63-BD4D-0015C921CB96}
+// *********************************************************************//
+  IExodusController2 = interface(IDispatch)
+    ['{885E0A1E-E3A7-4F63-BD4D-0015C921CB96}']
+    function Get_TabController: IExodusTabController; safecall;
+    function Get_ItemController: IExodusItemController; safecall;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Caption: WideString; 
+                         BringToFront: WordBool): IExodusAXWindow; safecall;
+    function Get_DataStore: IExodusDataStore; safecall;
+    function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
+    function Get_ActionController: IExodusActionController; safecall;
+    function GetPrefAsXML(const key: WideString): WideString; safecall;
+    procedure SetPrefAsXML(const XML: WideString); safecall;
+    function SelectItem(const ItemType: WideString; const Title: WideString; 
+                        IncludeAnyOption: WordBool): WideString; safecall;
+    function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
+                        IncludeAnyOption: WordBool): WideString; safecall;
+    procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
+                                 const eventXML: WideString; ImageIndex: Integer); safecall;
+    function Get_MainToolBarImages: IExodusRosterImages; safecall;
+    function Get_EnableFilesDragAndDrop: WordBool; safecall;
+    procedure Set_EnableFilesDragAndDrop(value: WordBool); safecall;
+    function Get_PacketDispatcher: IExodusPacketDispatcher; safecall;
+    property TabController: IExodusTabController read Get_TabController;
+    property ItemController: IExodusItemController read Get_ItemController;
+    property DataStore: IExodusDataStore read Get_DataStore;
+    property HistorySearchManager: IExodusHistorySearchManager read Get_HistorySearchManager;
+    property ActionController: IExodusActionController read Get_ActionController;
+    property MainToolBarImages: IExodusRosterImages read Get_MainToolBarImages;
+    property EnableFilesDragAndDrop: WordBool read Get_EnableFilesDragAndDrop write Set_EnableFilesDragAndDrop;
+    property PacketDispatcher: IExodusPacketDispatcher read Get_PacketDispatcher;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusController2Disp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {885E0A1E-E3A7-4F63-BD4D-0015C921CB96}
+// *********************************************************************//
+  IExodusController2Disp = dispinterface
+    ['{885E0A1E-E3A7-4F63-BD4D-0015C921CB96}']
     property TabController: IExodusTabController readonly dispid 223;
     property ItemController: IExodusItemController readonly dispid 224;
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Caption: WideString; 
@@ -5590,18 +5611,6 @@ type
   end;
 
 // *********************************************************************//
-// The Class CoexodusController provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusController exposed by              
-// the CoClass exodusController. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoexodusController = class
-    class function Create: IExodusController;
-    class function CreateRemote(const MachineName: string): IExodusController;
-  end;
-
-// *********************************************************************//
 // The Class CoExodusPPDB provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusPPDB exposed by              
 // the CoClass ExodusPPDB. The functions are intended to be used by             
@@ -6009,19 +6018,21 @@ type
     class function CreateRemote(const MachineName: string): IExodusPacketDispatcher;
   end;
 
+// *********************************************************************//
+// The Class CoexodusController provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusController exposed by              
+// the CoClass exodusController. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoexodusController = class
+    class function Create: IExodusController;
+    class function CreateRemote(const MachineName: string): IExodusController;
+  end;
+
 implementation
 
 uses ComObj;
-
-class function CoexodusController.Create: IExodusController;
-begin
-  Result := CreateComObject(CLASS_exodusController) as IExodusController;
-end;
-
-class function CoexodusController.CreateRemote(const MachineName: string): IExodusController;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_exodusController) as IExodusController;
-end;
 
 class function CoExodusPPDB.Create: IExodusPPDB;
 begin
@@ -6361,6 +6372,16 @@ end;
 class function CoExodusPacketDispatcher.CreateRemote(const MachineName: string): IExodusPacketDispatcher;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusPacketDispatcher) as IExodusPacketDispatcher;
+end;
+
+class function CoexodusController.Create: IExodusController;
+begin
+  Result := CreateComObject(CLASS_exodusController) as IExodusController;
+end;
+
+class function CoexodusController.CreateRemote(const MachineName: string): IExodusController;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_exodusController) as IExodusController;
 end;
 
 end.
