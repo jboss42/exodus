@@ -1053,7 +1053,6 @@ begin
         _home := 'res://' + URL_EscapeChars(Application.ExeName);
         _Clearing := true;
         browser.Navigate(_home + '/iemsglist');
-        _msgProcessor.Reset();
     except
     end;
 end;

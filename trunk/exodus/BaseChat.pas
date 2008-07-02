@@ -772,6 +772,12 @@ begin
     inherited;
     MsgList.Clear();
     _msgHistory.Clear();
+
+    if ((_msglist_type = HTML_MSGLIST) and
+        (TfIEMsgList(_msgframe).msgProcessor <> nil)) then
+    begin
+        TfIEMsgList(_msgframe).msgProcessor.Reset();
+    end;
 end;
 
 
