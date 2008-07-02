@@ -400,6 +400,7 @@ var
     fh: THandle;
     fns: String;
 begin
+    // Not sure how we could get a nil here, but it has happened, so protect against using nil
     if (_root = nil) then exit;
     
     if ((_filename = '') or (not _dirty)) then exit;
