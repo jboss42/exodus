@@ -604,12 +604,12 @@ begin
         try
             dv := dv + '<span class="ts">' +
                 HTML_EscapeChars(FormatDateTime(_getPrefString('timestamp_format'), Msg.Time), false, true) +
-                '</span>';
+                '</span> ';
         except
             on EConvertError do begin
                 dv := dv + '<span class="ts">' +
                     HTML_EscapeChars(FormatDateTime(_getPrefString('timestamp_format'), Now()), false, true) +
-                    '</span>';
+                    '</span> ';
             end;
         end;
     end;
