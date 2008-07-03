@@ -16,6 +16,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     Width = 418
     ExplicitWidth = 418
     inherited lblHeader: TTntLabel
+      Left = 6
       Width = 43
       Caption = 'Display'
       ExplicitLeft = 6
@@ -27,17 +28,17 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     Top = 23
     Width = 418
     Height = 616
+    VertScrollBar.Position = 243
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 1
-    ExplicitHeight = 686
     object pnlContainer: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 3
-      Width = 399
+      Top = -240
+      Width = 398
       Height = 524
       Margins.Left = 0
       Margins.Bottom = 0
@@ -51,7 +52,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         AlignWithMargins = True
         Left = 0
         Top = 3
-        Width = 399
+        Width = 398
         Height = 163
         Margins.Left = 0
         Margins.Right = 0
@@ -158,7 +159,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         AlignWithMargins = True
         Left = 0
         Top = 169
-        Width = 399
+        Width = 398
         Height = 200
         Margins.Left = 0
         Margins.Right = 0
@@ -368,7 +369,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         AlignWithMargins = True
         Left = 0
         Top = 375
-        Width = 396
+        Width = 395
         Height = 149
         Margins.Left = 0
         Margins.Top = 6
@@ -384,7 +385,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           AlignWithMargins = True
           Left = 3
           Top = 18
-          Width = 390
+          Width = 389
           Height = 21
           Hint = 'Send and display messages with different fonts, colors etc.'
           Margins.Top = 0
@@ -398,7 +399,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           AlignWithMargins = True
           Left = 3
           Top = 107
-          Width = 390
+          Width = 389
           Height = 42
           Margins.Top = 0
           Margins.Bottom = 0
@@ -419,7 +420,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           object chkTimestamp: TTntCheckBox
             Left = 0
             Top = 0
-            Width = 390
+            Width = 389
             Height = 21
             Margins.Top = 0
             Margins.Bottom = 0
@@ -446,7 +447,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           AlignWithMargins = True
           Left = 3
           Top = 86
-          Width = 390
+          Width = 389
           Height = 21
           Margins.Top = 0
           Margins.Bottom = 0
@@ -458,7 +459,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           AlignWithMargins = True
           Left = 3
           Top = 39
-          Width = 390
+          Width = 389
           Height = 21
           Margins.Top = 0
           Margins.Bottom = 0
@@ -470,7 +471,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           AlignWithMargins = True
           Left = 3
           Top = 60
-          Width = 390
+          Width = 389
           Height = 26
           Margins.Top = 0
           Margins.Bottom = 0
@@ -506,8 +507,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     object gbAdvancedPrefs: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 533
-      Width = 399
+      Top = 290
+      Width = 398
       Height = 326
       Margins.Left = 0
       Margins.Top = 6
@@ -522,14 +523,16 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       object pnlAdvancedLeft: TExBrandPanel
         AlignWithMargins = True
         Left = 3
-        Top = 70
+        Top = 120
         Width = 343
-        Height = 253
+        Height = 203
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
         AutoHide = True
+        ExplicitTop = 119
+        ExplicitHeight = 204
         object gbRTIncludes: TExGroupBox
           AlignWithMargins = True
           Left = 0
@@ -688,7 +691,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
               Left = 151
               Top = 15
               Width = 62
-              Height = 24
+              Height = 25
               BevelOuter = bvNone
               ParentColor = True
               TabOrder = 0
@@ -698,7 +701,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
               OnChange = txtChatMemoryChange
               DesignSize = (
                 62
-                24)
+                25)
             end
           end
         end
@@ -706,8 +709,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       object pnlSnapTo: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 21
-        Width = 396
+        Top = 71
+        Width = 395
         Height = 46
         Margins.Left = 0
         Margins.Bottom = 0
@@ -717,6 +720,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 2
         AutoHide = True
+        ExplicitTop = 70
         object chkSnap: TTntCheckBox
           Left = 3
           Top = 0
@@ -746,7 +750,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Left = 176
           Top = 20
           Width = 61
-          Height = 24
+          Height = 25
           BevelOuter = bvNone
           Enabled = False
           ParentColor = True
@@ -757,7 +761,64 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           OnChange = txtSnapChange
           DesignSize = (
             61
-            24)
+            25)
+        end
+      end
+      object pnlGlueWindows: TExBrandPanel
+        AlignWithMargins = True
+        Left = 0
+        Top = 21
+        Width = 395
+        Height = 47
+        Margins.Left = 0
+        Margins.Bottom = 0
+        Align = alTop
+        AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
+        TabOrder = 3
+        AutoHide = True
+        object chkGlue: TTntCheckBox
+          Left = 3
+          Top = 0
+          Width = 300
+          Height = 19
+          Caption = 'Make the activity window snap to the main window'
+          TabOrder = 1
+          OnClick = chkGlueClick
+        end
+        object trkGlue: TTrackBar
+          Left = 20
+          Top = 25
+          Width = 150
+          Height = 22
+          Enabled = False
+          Max = 50
+          Min = 1
+          PageSize = 15
+          Frequency = 15
+          Position = 15
+          TabOrder = 2
+          ThumbLength = 15
+          TickStyle = tsNone
+          OnChange = trkGlueChange
+        end
+        object txtGlue: TExNumericEdit
+          Left = 176
+          Top = 20
+          Width = 61
+          Height = 25
+          BevelOuter = bvNone
+          Enabled = False
+          ParentColor = True
+          TabOrder = 0
+          Text = '15'
+          Min = 1
+          Max = 50
+          OnChange = txtGlueChange
+          DesignSize = (
+            61
+            25)
         end
       end
     end
