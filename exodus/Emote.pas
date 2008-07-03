@@ -538,6 +538,7 @@ var
 begin
     doc := nil;
     parser := nil;
+    icons := nil;
     try
         parser := TXMLTagParser.Create();
         parser.ParseFile(filename);
@@ -562,7 +563,7 @@ begin
     finally
         if (doc <> nil) then doc.Free();
         if (parser <> nil) then parser.Free();
-        icons.Free();
+        if (icons <> nil) then icons.Free();
     end;
 end;
 
