@@ -2293,6 +2293,12 @@ begin
     else
         SavePasswd := true;
 
+    ptag := tag.GetFirstTag('new_acct');
+    if (ptag <> nil) then
+        NewAccount := SafeBool(tag.GetBasicText('new_acct'))
+    else
+        NewAccount := false;
+
     ptag := tag.GetFirstTag('winlogin');
     if (ptag <> nil) then
         WinLogin := SafeBool(tag.GetBasicText('winlogin'))
@@ -2388,6 +2394,7 @@ begin
     node.AddBasicTag('saslrealm', SASLRealm);
     node.AddBasicTag('server', _jabberID.domain);
     node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
+    node.AddBasicTag('new_acct', SafeBoolStr(NewAccount));
     node.AddBasicTag('winlogin', SafeBoolStr(WinLogin));
     node.AddBasicTag('kerblogin', SafeBoolStr(KerbAuth));
     node.AddBasicTag('x509login', SafeBoolStr(x509Auth));
