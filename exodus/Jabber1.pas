@@ -1384,8 +1384,8 @@ begin
         Visible := true;
     end;
 
-    if (MainSession.Prefs.getBool('brand_glue_activity_window')) then begin
-        _glueRange := MainSession.Prefs.getInt('brand_glue_activity_window_range');
+    if (MainSession.Prefs.getBool('glue_activity_window')) then begin
+        _glueRange := MainSession.Prefs.getInt('glue_activity_window_range');
     end
     else begin
         _glueRange := -1;
@@ -1984,6 +1984,14 @@ begin
             if ((tag = nil) or (tag.Name <> 'startup')) then
                 MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
         end;
+
+        if (MainSession.Prefs.getBool('glue_activity_window')) then begin
+            _glueRange := MainSession.Prefs.getInt('glue_activity_window_range');
+        end
+        else begin
+            _glueRange := -1;
+        end;
+        
     end
 
     else if (event = '/session/presence') then begin
@@ -4880,6 +4888,8 @@ end;
 
 procedure TfrmExodus.WMMoving(var Msg: TWMMoving);
 begin
+    OutputDebugString('Got WM_MOVING');
+
     if (_dockWindowGlued) then begin
         if (_dockWindow <> nil) then begin
             _dockWindow.moveGlued();
@@ -4893,11 +4903,12 @@ procedure TfrmExodus.WMMove(var Msg: TWMMove);
 var
     gedge: TGlueEdge;
 begin
+    OutputDebugString('Got WM_MOVE');
+
     if (not _dockWindowGlued) then begin
         if (_dockWindow <> nil) then begin
             gedge := withinGlueSnapRange(_dockWindow, self, _glueRange);
             if (gedge <> geNone) then begin
-                //_dockWindowGlued := true;
                 // Set the edge on the dock window.
                 // Edge is opposite of gedge
                 case gedge of
@@ -4926,6 +4937,11 @@ begin
                     end;
                 end;
             end;
+        end;
+    end
+    else begin
+        if (_dockWindow <> nil) then begin
+            _dockWindow.moveGlued();
         end;
     end;
 

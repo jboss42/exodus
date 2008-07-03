@@ -83,6 +83,10 @@ type
     lblChatBG: TTntLabel;
     cbChatBG: TColorBox;
     btnManageTabs: TTntButton;
+    pnlGlueWindows: TExBrandPanel;
+    chkGlue: TTntCheckBox;
+    trkGlue: TTrackBar;
+    txtGlue: TExNumericEdit;
     procedure btnEmoSettingsClick(Sender: TObject);
     procedure chkEmoticonsClick(Sender: TObject);
     procedure txtChatMemoryChange(Sender: TObject);
@@ -105,6 +109,9 @@ type
     procedure cboChatElementChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnManageTabsClick(Sender: TObject);
+    procedure chkGlueClick(Sender: TObject);
+    procedure trkGlueChange(Sender: TObject);
+    procedure txtGlueChange(Sender: TObject);
   private
     _color_me: integer;
     _color_other: integer;
@@ -332,6 +339,11 @@ begin
     if (chkSnap.Visible) then
       chkSnapClick(Self);
 
+    trkGlue.Visible := chkGlue.Visible;
+    txtGlue.Visible := chkGlue.Visible;
+    if (chkGlue.Visible) then
+      chkGlueClick(Self);
+
     s := GetPrefState('custom_icondefs');
     btnEmoSettings.Visible := ((s <> psInvisible) and chkEmoticons.Visible);
     btnEmoSettings.enabled := ((s <> psReadOnly) and chkEmoticons.enabled);
@@ -409,6 +421,12 @@ begin
     txtChatMemory.Text := IntToStr(trkChatMemory.Position);
 end;
 
+procedure TfrmPrefDisplay.trkGlueChange(Sender: TObject);
+begin
+    inherited;
+    txtGlue.Text := IntToStr(trkGlue.Position);
+end;
+
 procedure TfrmPrefDisplay.trkSnapChange(Sender: TObject);
 begin
     inherited;
@@ -420,6 +438,15 @@ begin
     inherited;
     try
         trkChatMemory.Position := StrToInt(txtChatMemory.Text);
+    except
+    end;
+end;
+
+procedure TfrmPrefDisplay.txtGlueChange(Sender: TObject);
+begin
+    inherited;
+    try
+        trkGlue.Position := StrToInt(txtGlue.Text);
     except
     end;
 end;
@@ -896,6 +923,13 @@ begin
         btnEmoSettings.Enabled := chkEmoticons.Checked and
                                   (GetPrefState('custom_icondefs') <> psReadOnly);
     end;
+end;
+
+procedure TfrmPrefDisplay.chkGlueClick(Sender: TObject);
+begin
+    inherited;
+    txtGlue.Enabled := chkGlue.Checked;
+    trkGlue.Enabled := chkGlue.Checked;
 end;
 
 procedure TfrmPrefDisplay.chkRTEnabledClick(Sender: TObject);

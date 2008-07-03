@@ -243,8 +243,8 @@ begin
     _layoutAWOnly();
 
     // Determine glue range
-    if (MainSession.Prefs.getBool('brand_glue_activity_window')) then begin
-        _glueRange := MainSession.Prefs.getInt('brand_glue_activity_window_range');
+    if (MainSession.Prefs.getBool('glue_activity_window')) then begin
+        _glueRange := MainSession.Prefs.getInt('glue_activity_window_range');
     end
     else begin
         _glueRange := -1;
@@ -1035,8 +1035,15 @@ begin
     end
     else if (event = '/session/dockwindow/enableshow') then begin
         _suppressShow := false;
+    end
+    else if (event ='/session/prefs') then begin
+        if (MainSession.Prefs.getBool('glue_activity_window')) then begin
+            _glueRange := MainSession.Prefs.getInt('glue_activity_window_range');
+        end
+        else begin
+            _glueRange := -1;
+        end;
     end;
-
 end;
 
 {---------------------------------------}

@@ -152,6 +152,12 @@
     <edge_snap value="15" control="txtSnap" state="rw">
         <control name="trkSnap"/>
     </edge_snap>
+
+    <glue_activity_window value="1" control="chkGlue" state="rw"/>
+    <glue_activity_window_range value="10" control="txtGlue" state="rw">
+    	<control name="trkGlue"/>
+    </glue_activity_window_range>
+
     <richtext_ignored_font_styles value="font-size;font-family;" state="rw"/>
     <warn_closebusy value="1" control="chkBusy" state="rw"/>
     <esc_close value="1" control="chkEscClose" state="rw"/>
@@ -412,10 +418,6 @@
     <!-- Minimum Activty Window Item Unread Msg Count to show.  Usually 0 or 1 -->
     <lowest_unread_msg_cnt value="0"/>
     <lowest_unread_msg_cnt_color_change value="1"/>
-    
-    <!-- Should the activity window and the roster snap together -->
-    <brand_glue_activity_window value="1"/>
-    <brand_glue_activity_window_range value="10"/>
     
     <activity_list_min_width value="30"/>
     
