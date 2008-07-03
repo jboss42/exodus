@@ -20,7 +20,7 @@ inherited frmConnDetails: TfrmConnDetails
     Top = 0
     Width = 368
     Height = 342
-    ActivePage = tbsConnection
+    ActivePage = tbsAcctDetails
     Anchors = [akLeft, akTop, akRight]
     Style = tsButtons
     TabOrder = 0

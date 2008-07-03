@@ -145,15 +145,17 @@ procedure TfrmLoginWindow.LoadProfiles;
 var
     c, i: integer;
     li: TTntListItem;
+    profile: TJabberProfile;
 begin
     c := MainSession.Prefs.Profiles.Count;
 
     lstProfiles.Items.Clear();
 
     for i := 0 to c - 1 do begin
+        profile := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
         li := lstProfiles.Items.Add();
         li.ImageIndex := 1;
-        li.Caption := MainSession.Prefs.Profiles[i];
+        li.Caption := profile.Name;
     end;
 
     lstProfiles.Visible := true;

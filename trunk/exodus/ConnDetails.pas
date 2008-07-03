@@ -356,7 +356,7 @@ begin
         SaveHttp(_profile);
 
     MainSession.Prefs.SaveProfiles();
-    MainSession.Prefs.LoadProfiles();
+    //MainSession.Prefs.LoadProfiles();
 end;
 
 function TfrmConnDetails.encodeCertKey(keyLength: Cardinal; key: Pointer): string;
