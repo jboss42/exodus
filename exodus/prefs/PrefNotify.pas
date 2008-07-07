@@ -308,8 +308,8 @@ begin
         begin
             FoundOne := true;
             chkNotify.AddItem(OneNI._Caption, oneNI);
-            chkNotify.ItemEnabled[i] := not OneNI._IsReadOnly;
-            chkNotify.Checked[i] := (OneNI.IntValue > 0);
+            chkNotify.ItemEnabled[chkNotify.Count - 1] := not OneNI._IsReadOnly;
+            chkNotify.Checked[chkNotify.Count - 1] := (OneNI.IntValue > 0);
         end;
     end;
 
