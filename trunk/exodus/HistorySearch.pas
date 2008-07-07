@@ -428,7 +428,7 @@ var
 begin
     inherited;
 
-    jid := SelectUIDByTypeAny('contact');
+    jid := SelectUIDByTypeAny('contact', '', Self.Handle);
     if (jid <> '') then begin
         _AddContactToContactList(jid);
     end;
@@ -441,7 +441,7 @@ var
 begin
     inherited;
 
-    jid := SelectUIDByTypeAnyRoom('room');
+    jid := SelectUIDByTypeAnyRoom('room', Self.Handle);
     if (jid <> '') then begin
         _AddRoomToRoomList(jid);
     end;

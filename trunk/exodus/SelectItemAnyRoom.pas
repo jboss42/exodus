@@ -34,7 +34,7 @@ type
 
     end;
 
-function SelectUIDByTypeAnyRoom(title: Widestring = ''): Widestring;
+function SelectUIDByTypeAnyRoom(title: Widestring = ''; ownerHWND: HWND = 0): Widestring;
 
 var
   frmSelectItemAnyRoom: TfrmSelectItemAnyRoom;
@@ -47,12 +47,12 @@ uses
 
 {$R *.dfm}
 
-function SelectUIDByTypeAnyRoom(title: Widestring): Widestring;
+function SelectUIDByTypeAnyRoom(title: Widestring; ownerHWND: HWND): Widestring;
 var
     selector: TfrmSelectItemAnyRoom;
 begin
     Result := '';
-    selector := TfrmSelectItemAnyRoom.Create(nil, 'room');
+    selector := TfrmSelectItemAnyRoom.Create(nil, 'room', ownerHWND);
     if (title <> '') then
         selector.Caption := title;
 
