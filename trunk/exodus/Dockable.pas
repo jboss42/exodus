@@ -729,6 +729,10 @@ procedure TfrmDockable.dockAllCallback(event: string; tag: TXMLTag);
 begin
     if ((event = '/session/dock-all-windows') and
         (not _docked)) then begin
+        if (WindowState = wsMinimized) then
+        begin
+            ShowWindow(Self.Handle, SW_RESTORE);
+        end;
         Self.DockForm;
     end;
 end;
