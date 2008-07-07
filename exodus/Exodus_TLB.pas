@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 7/2/2008 2:39:49 PM from Type Library described below.
+// File generated on 7/7/2008 3:46:43 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -650,9 +650,9 @@ type
     function GetPrefAsXML(const key: WideString): WideString; safecall;
     procedure SetPrefAsXML(const XML: WideString); safecall;
     function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
+                        IncludeAnyOption: WordBool; parentHWND: Integer): WideString; safecall;
     function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
-                        IncludeAnyOption: WordBool): WideString; safecall;
+                        IncludeAnyOption: WordBool; parentHWND: Integer): WideString; safecall;
     procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
                                  const eventXML: WideString; ImageIndex: Integer); safecall;
     function Get_MainToolBarImages: IExodusRosterImages; safecall;
@@ -686,9 +686,9 @@ type
     function GetPrefAsXML(const key: WideString): WideString; dispid 229;
     procedure SetPrefAsXML(const XML: WideString); dispid 230;
     function SelectItem(const ItemType: WideString; const Title: WideString; 
-                        IncludeAnyOption: WordBool): WideString; dispid 231;
+                        IncludeAnyOption: WordBool; parentHWND: Integer): WideString; dispid 231;
     function SelectRoom(const Title: WideString; IncludeJoinedRoomList: WordBool; 
-                        IncludeAnyOption: WordBool): WideString; dispid 232;
+                        IncludeAnyOption: WordBool; parentHWND: Integer): WideString; dispid 232;
     procedure ShowToastWithEvent(const message: WideString; const event: WideString; 
                                  const eventXML: WideString; ImageIndex: Integer); dispid 233;
     property MainToolBarImages: IExodusRosterImages readonly dispid 234;

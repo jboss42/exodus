@@ -44,7 +44,7 @@ type
   end;
 
 
-function SelectUIDByTypeAny(itemtype: Widestring; title: Widestring = ''): Widestring;
+function SelectUIDByTypeAny(itemtype: Widestring; title: Widestring = ''; ownerHWND: HWND = 0): Widestring;
 
 var
   frmSelectItemAny: TfrmSelectItemAny;
@@ -56,12 +56,12 @@ implementation
 
 {$R *.dfm}
 
-function SelectUIDByTypeAny(itemtype: Widestring; title: Widestring): Widestring;
+function SelectUIDByTypeAny(itemtype: Widestring; title: Widestring; ownerHWND: HWND): Widestring;
 var
     selector: TfrmSelectItem;
 begin
     Result := '';
-    selector := TfrmSelectItemAny.Create(nil, itemtype);
+    selector := TfrmSelectItemAny.Create(nil, itemtype, ownerHWND);
     if (title <> '') then
         selector.Caption := title;
 

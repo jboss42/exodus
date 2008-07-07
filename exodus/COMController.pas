@@ -148,9 +148,9 @@ type
     function GetPrefAsXML(const key: WideString): WideString; safecall;
     procedure SetPrefAsXML(const xml: WideString); safecall;
     function SelectItem(const ItemType, Title: WideString;
-      IncludeAnyOption: WordBool): WideString; safecall;
+      IncludeAnyOption: WordBool; parentHWND: Integer): WideString; safecall;
     function SelectRoom(const Title: WideString; IncludeJoinedRoomList,
-      IncludeAnyOption: WordBool): WideString; safecall;
+      IncludeAnyOption: WordBool; parentHWND: Integer): WideString; safecall;
     procedure ShowToastWithEvent(const message, event, eventXML: WideString;
       ImageIndex: Integer); safecall;
     function Get_MainToolBarImages: IExodusRosterImages; safecall;
@@ -2235,33 +2235,38 @@ begin
 end;
 
 function TExodusController.SelectItem(const ItemType, Title: WideString;
-  IncludeAnyOption: WordBool): WideString;
+  IncludeAnyOption: WordBool; parentHWND: Integer): WideString;
 begin
+    if (parentHWND < 0) then  parentHWND := 0;
+
     if (IncludeAnyOption) then begin
-        Result := SelectUIDByTypeAny(ItemType, Title);
+        Result := SelectUIDByTypeAny(ItemType, Title, parentHWND);
     end
     else begin
-        Result := SelectUIDByType(ItemType, Title);
+        Result := SelectUIDByType(ItemType, Title, parentHWND);
     end;
 end;
 
 function TExodusController.SelectRoom(const Title: WideString;
-  IncludeJoinedRoomList, IncludeAnyOption: WordBool): WideString;
+  IncludeJoinedRoomList, IncludeAnyOption: WordBool;
+  parentHWND: Integer): WideString;
 begin
+    if (parentHWND < 0) then  parentHWND := 0;
+
     if (IncludeJoinedRoomList) then begin
         if (IncludeAnyOption) then begin
-            Result := SelectUIDByTypeAnyRoom(Title);
+            Result := SelectUIDByTypeAnyRoom(Title, parentHWND);
         end
         else begin
-            Result := SelectUIDByTypeRoom(Title);
+            Result := SelectUIDByTypeRoom(Title, parentHWND);
         end;
     end
     else begin
         if (IncludeAnyOption) then begin
-            Result := SelectUIDByTypeAny('room', Title);
+            Result := SelectUIDByTypeAny('room', Title, parentHWND);
         end
         else begin
-            Result := SelectUIDByType('room', Title);
+            Result := SelectUIDByType('room', Title, parentHWND);
         end;
     end;
 end;
