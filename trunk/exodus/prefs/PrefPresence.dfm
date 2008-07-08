@@ -3,32 +3,31 @@ inherited frmPrefPresence: TfrmPrefPresence
   Top = 167
   Margins.Left = 0
   Caption = 'd'
-  ClientHeight = 524
-  ClientWidth = 518
+  ClientHeight = 426
+  ClientWidth = 421
   OldCreateOrder = True
   OnDestroy = FormDestroy
-  ExplicitWidth = 530
-  ExplicitHeight = 536
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 433
+  ExplicitHeight = 438
+  PixelsPerInch = 96
+  TextHeight = 13
   inherited pnlHeader: TTntPanel
-    Width = 518
-    ExplicitWidth = 518
+    Width = 421
+    ExplicitWidth = 421
     inherited lblHeader: TTntLabel
       Left = 6
-      Width = 69
-      Height = 19
+      Width = 54
       Caption = 'Presence'
-      ExplicitLeft = 7
-      ExplicitWidth = 69
+      ExplicitLeft = 5
+      ExplicitWidth = 54
     end
   end
   object ExBrandPanel1: TExBrandPanel
     AlignWithMargins = True
     Left = 0
-    Top = 31
-    Width = 515
-    Height = 68
+    Top = 26
+    Width = 418
+    Height = 57
     Margins.Left = 0
     Margins.Bottom = 0
     Align = alTop
@@ -41,8 +40,8 @@ inherited frmPrefPresence: TfrmPrefPresence
       AlignWithMargins = True
       Left = 0
       Top = 0
-      Width = 512
-      Height = 20
+      Width = 415
+      Height = 16
       Margins.Left = 0
       Margins.Top = 0
       Align = alTop
@@ -54,9 +53,9 @@ inherited frmPrefPresence: TfrmPrefPresence
     object chkRoomJoins: TTntCheckBox
       AlignWithMargins = True
       Left = 0
-      Top = 23
-      Width = 512
-      Height = 20
+      Top = 19
+      Width = 415
+      Height = 16
       Margins.Left = 0
       Margins.Top = 0
       Align = alTop
@@ -68,9 +67,9 @@ inherited frmPrefPresence: TfrmPrefPresence
     object chkPresenceSync: TTntCheckBox
       AlignWithMargins = True
       Left = 0
-      Top = 46
-      Width = 512
-      Height = 19
+      Top = 38
+      Width = 415
+      Height = 16
       Margins.Left = 0
       Margins.Top = 0
       Align = alTop
@@ -83,14 +82,14 @@ inherited frmPrefPresence: TfrmPrefPresence
   object ExGroupBox1: TExGroupBox
     AlignWithMargins = True
     Left = 0
-    Top = 102
-    Width = 515
-    Height = 75
+    Top = 86
+    Width = 418
+    Height = 66
     Margins.Left = 0
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
-    Caption = 'Presence tracking in chat windows'
+    Caption = 'Presence tracking in one-to-one chat windows'
     ParentColor = True
     TabOrder = 2
     AutoHide = True
@@ -98,8 +97,8 @@ inherited frmPrefPresence: TfrmPrefPresence
       AlignWithMargins = True
       Left = 3
       Top = 18
-      Width = 509
-      Height = 16
+      Width = 412
+      Height = 13
       Margins.Top = 0
       Align = alTop
       Caption = 'Trac&k all presence changes'
@@ -108,9 +107,9 @@ inherited frmPrefPresence: TfrmPrefPresence
     object rbLastPres: TTntRadioButton
       AlignWithMargins = True
       Left = 3
-      Top = 37
-      Width = 509
-      Height = 16
+      Top = 34
+      Width = 412
+      Height = 13
       Margins.Top = 0
       Align = alTop
       Caption = 'Show only &last presence change'
@@ -119,9 +118,9 @@ inherited frmPrefPresence: TfrmPrefPresence
     object rbNoPres: TTntRadioButton
       AlignWithMargins = True
       Left = 3
-      Top = 56
-      Width = 509
-      Height = 16
+      Top = 50
+      Width = 412
+      Height = 13
       Margins.Top = 0
       Align = alTop
       Caption = 'Do &not show any presence changes'
@@ -131,9 +130,9 @@ inherited frmPrefPresence: TfrmPrefPresence
   object ExGroupBox2: TExGroupBox
     AlignWithMargins = True
     Left = 0
-    Top = 183
-    Width = 515
-    Height = 274
+    Top = 158
+    Width = 418
+    Height = 223
     Margins.Left = 0
     Margins.Bottom = 0
     Align = alTop
@@ -146,57 +145,57 @@ inherited frmPrefPresence: TfrmPrefPresence
     object lstCustomPres: TTntListBox
       AlignWithMargins = True
       Left = 0
-      Top = 20
-      Width = 356
-      Height = 112
+      Top = 16
+      Width = 289
+      Height = 91
       Margins.Left = 0
       Margins.Bottom = 0
-      ItemHeight = 16
+      ItemHeight = 13
       TabOrder = 1
       OnClick = lstCustomPresClick
     end
     object btnCustomPresAdd: TTntButton
-      Left = 363
-      Top = 20
-      Width = 81
-      Height = 23
+      Left = 295
+      Top = 16
+      Width = 66
+      Height = 19
       Caption = '&Add'
       TabOrder = 2
       OnClick = btnCustomPresAddClick
     end
     object btnCustomPresRemove: TTntButton
-      Left = 363
-      Top = 49
-      Width = 81
-      Height = 24
+      Left = 295
+      Top = 40
+      Width = 66
+      Height = 19
       Caption = '&Remove'
       TabOrder = 3
       OnClick = btnCustomPresRemoveClick
     end
     object btnCustomPresClear: TTntButton
-      Left = 363
-      Top = 79
-      Width = 81
-      Height = 23
+      Left = 295
+      Top = 64
+      Width = 66
+      Height = 19
       Caption = '&Clear All'
       TabOrder = 4
       OnClick = btnCustomPresClearClick
     end
     object btnDefaults: TTntButton
-      Left = 363
-      Top = 108
-      Width = 81
-      Height = 24
+      Left = 295
+      Top = 88
+      Width = 66
+      Height = 19
       Caption = '&Defaults'
       TabOrder = 5
       OnClick = btnDefaultsClick
     end
     object pnlProperties: TExBrandPanel
       AlignWithMargins = True
-      Left = 6
-      Top = 139
-      Width = 347
-      Height = 132
+      Left = 5
+      Top = 113
+      Width = 282
+      Height = 107
       Margins.Left = 6
       AutoSize = True
       BevelOuter = bvNone
@@ -206,8 +205,8 @@ inherited frmPrefPresence: TfrmPrefPresence
       object Label11: TTntLabel
         Left = 0
         Top = 2
-        Width = 38
-        Height = 16
+        Width = 31
+        Height = 13
         Margins.Left = 6
         Caption = '&Name:'
         FocusControl = txtCPTitle
@@ -215,9 +214,9 @@ inherited frmPrefPresence: TfrmPrefPresence
       end
       object Label12: TTntLabel
         Left = 0
-        Top = 31
-        Width = 41
-        Height = 16
+        Top = 25
+        Width = 35
+        Height = 13
         Margins.Left = 6
         Caption = '&Status:'
         FocusControl = txtCPStatus
@@ -225,9 +224,9 @@ inherited frmPrefPresence: TfrmPrefPresence
       end
       object Label13: TTntLabel
         Left = 0
-        Top = 58
-        Width = 33
-        Height = 16
+        Top = 47
+        Width = 28
+        Height = 13
         Margins.Left = 6
         Caption = '&Type:'
         FocusControl = cboCPType
@@ -235,9 +234,9 @@ inherited frmPrefPresence: TfrmPrefPresence
       end
       object Label14: TTntLabel
         Left = 0
-        Top = 90
-        Width = 45
-        Height = 16
+        Top = 73
+        Width = 38
+        Height = 13
         Margins.Left = 6
         Caption = '&Priority:'
         FocusControl = txtCPPriority
@@ -245,37 +244,37 @@ inherited frmPrefPresence: TfrmPrefPresence
       end
       object lblHotkey: TTntLabel
         Left = 0
-        Top = 113
-        Width = 44
-        Height = 16
+        Top = 92
+        Width = 39
+        Height = 13
         Margins.Left = 6
         Caption = '&HotKey:'
         FocusControl = txtCPHotkey
         Transparent = False
       end
       object txtCPTitle: TTntEdit
-        Left = 89
+        Left = 72
         Top = 0
-        Width = 256
-        Height = 24
+        Width = 208
+        Height = 21
         TabOrder = 0
         OnChange = txtCPTitleChange
       end
       object txtCPStatus: TTntEdit
-        Left = 89
-        Top = 28
-        Width = 256
-        Height = 24
+        Left = 72
+        Top = 23
+        Width = 208
+        Height = 21
         TabOrder = 1
         OnChange = txtCPTitleChange
       end
       object cboCPType: TTntComboBox
-        Left = 89
-        Top = 55
-        Width = 258
-        Height = 24
+        Left = 72
+        Top = 45
+        Width = 210
+        Height = 21
         Style = csDropDownList
-        ItemHeight = 16
+        ItemHeight = 13
         TabOrder = 2
         OnChange = txtCPTitleChange
         Items.Strings = (
@@ -286,10 +285,10 @@ inherited frmPrefPresence: TfrmPrefPresence
           'Do Not Disturb')
       end
       object txtCPPriority: TExNumericEdit
-        Left = 89
-        Top = 84
-        Width = 83
-        Height = 37
+        Left = 72
+        Top = 68
+        Width = 68
+        Height = 21
         Hint = 'Priority of -1 uses current priority.'
         BevelOuter = bvNone
         ParentColor = True
@@ -302,14 +301,14 @@ inherited frmPrefPresence: TfrmPrefPresence
         Max = 127
         OnChange = txtCPTitleChange
         DesignSize = (
-          83
-          37)
+          68
+          21)
       end
       object txtCPHotkey: THotKey
-        Left = 89
-        Top = 110
-        Width = 110
-        Height = 22
+        Left = 72
+        Top = 89
+        Width = 90
+        Height = 18
         HotKey = 32833
         TabOrder = 4
         OnChange = txtCPTitleChange

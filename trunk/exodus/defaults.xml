@@ -303,7 +303,7 @@
     </disconnect_time>
 
     <!-- Presence Preferences -->
-    <client_caps value="1" control="chkClientCaps" state="rw"/>
+    <client_caps value="1" control="chkClientCaps" state="inv"/>
     <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
     
     <room_joins value="0" control="chkRoomJoins" state="rw"/>
