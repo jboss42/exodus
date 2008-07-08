@@ -653,7 +653,7 @@ begin
     end
     else begin
         // This is an action
-        dv := dv + '<span class="action">&nbsp;*&nbsp;' + HTML_EscapeChars(Msg.Nick, false, true) + '&nbsp;' + txt + '</span>';
+        dv := dv + '<span class="action"> * ' + HTML_EscapeChars(Msg.Nick, false, true) + ' ' + txt + '</span>';
     end;
 
     // Close off msgts and line1/2 div tags
