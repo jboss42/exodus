@@ -28,7 +28,7 @@ object frmDockWindow: TfrmDockWindow
     ResizeStyle = rsUpdate
     ExplicitHeight = 398
   end
-  object AWTabControl: TTntPageControl
+  object AWTabControl: TPageControl
     Left = 188
     Top = 0
     Width = 450
@@ -38,6 +38,7 @@ object frmDockWindow: TfrmDockWindow
     OwnerDraw = True
     Style = tsButtons
     TabOrder = 0
+    TabStop = False
     OnDockDrop = AWTabControlDockDrop
     OnUnDock = AWTabControlUnDock
   end
