@@ -580,7 +580,7 @@ begin
     ce := TJabberEntity(_cur[i]);
     Item.Caption := ce.Jid.userDisplay;
     Item.SubItems.Add(ce.jid.domain);
-    Item.SubItems.Add(ce.Jid.userDisplay);
+    //Item.SubItems.Add(ce.Jid.userDisplay);
 end;
 
 {---------------------------------------}

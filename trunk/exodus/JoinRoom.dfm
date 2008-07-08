@@ -9,16 +9,13 @@ inherited frmJoinRoom: TfrmJoinRoom
   OldCreateOrder = True
   Position = poScreenCenter
   OnClose = FormClose
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitWidth = 416
   ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
     Top = 331
     Width = 408
-    ParentColor = True
     TabOrder = 2
     ExplicitTop = 331
     ExplicitWidth = 408
@@ -28,7 +25,6 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
     inherited Panel3: TPanel
       Left = 151
-      ParentColor = True
       ExplicitLeft = 151
       inherited btnBack: TTntButton
         Enabled = False
@@ -46,7 +42,6 @@ inherited frmJoinRoom: TfrmJoinRoom
   end
   inherited Panel1: TPanel
     Width = 408
-    ParentColor = True
     ExplicitWidth = 408
     inherited Bevel2: TBevel
       Width = 408
@@ -68,6 +63,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   inherited Tabs: TPageControl
     Width = 408
     Height = 271
+    ActivePage = TabSheet2
     TabOrder = 0
     ExplicitWidth = 408
     ExplicitHeight = 271
@@ -212,10 +208,6 @@ inherited frmJoinRoom: TfrmJoinRoom
           item
             Caption = 'Server'
             Width = 150
-          end
-          item
-            Caption = 'Description'
-            Width = 100
           end>
         OwnerData = True
         ReadOnly = True
