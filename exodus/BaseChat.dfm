@@ -6,7 +6,7 @@ inherited frmBaseChat: TfrmBaseChat
   OnDestroy = FormDestroy
   OnResize = TntFormResize
   ExplicitWidth = 423
-  ExplicitHeight = 288
+  ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -33,8 +33,6 @@ inherited frmBaseChat: TfrmBaseChat
     ExplicitWidth = 415
     inherited pnlDockTopContainer: TTntPanel
       Width = 413
-      ExplicitLeft = 1
-      ExplicitTop = 1
       ExplicitWidth = 413
       inherited tbDockBar: TToolBar
         Left = 364
@@ -213,7 +211,6 @@ inherited frmBaseChat: TfrmBaseChat
       Height = 23
       Align = alTop
       BevelOuter = bvNone
-      Caption = 'pnlToolbar'
       ParentColor = True
       TabOrder = 1
       object tbMsgOutToolbar: TTntToolBar
