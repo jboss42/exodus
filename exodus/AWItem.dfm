@@ -3,6 +3,7 @@ inherited fAWItem: TfAWItem
   Height = 27
   ParentShowHint = False
   ShowHint = True
+  TabStop = False
   OnClick = TntFrameClick
   ExplicitWidth = 185
   ExplicitHeight = 27

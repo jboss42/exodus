@@ -39,7 +39,7 @@ type
 
   TfrmDockWindow = class(TfrmState, IExodusDockManager)
     splAW: TTntSplitter;
-    AWTabControl: TTntPageControl;
+    AWTabControl: TPageControl;
     pnlActivityList: TPanel;
     timFlasher: TTimer;
     procedure FormCreate(Sender: TObject);

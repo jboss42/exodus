@@ -122,7 +122,6 @@ object frmActivityWindow: TfrmActivityWindow
       ParentColor = True
       PopupMenu = popAWList
       TabOrder = 2
-      TabStop = True
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
