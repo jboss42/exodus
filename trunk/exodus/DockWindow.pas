@@ -215,7 +215,7 @@ end;
 procedure TfrmDockWindow.FormCreate(Sender: TObject);
 begin
     inherited;
-    pnlActivityList.Constraints.MinWidth := MainSession.Prefs.getInt('activity_list_min_width');
+    pnlActivityList.Constraints.MinWidth := MainSession.Prefs.getInt('activity_list_split_min_width');
     
     setWindowCaption('');
     _docked_forms := TList.Create;
@@ -789,6 +789,10 @@ begin
         if (aw <> nil) then begin
             aw.setDockingSpacers(_dockState);
         end;
+
+        // Change Minimum window size
+        Self.Constraints.MinHeight := MainSession.Prefs.getInt('activity_window_with_docked_min_height');
+        Self.Constraints.MinWidth := MainSession.Prefs.getInt('activity_window_with_docked_min_width');
     end;
 end;
 
@@ -817,6 +821,10 @@ begin
         if (aw <> nil) then begin
             aw.setDockingSpacers(_dockState);
         end;
+
+        // Change Minimum window size
+        Self.Constraints.MinHeight := MainSession.Prefs.getInt('activity_window_without_docked_min_height');
+        Self.Constraints.MinWidth := MainSession.Prefs.getInt('activity_window_without_docked_min_width');
     end;
 end;
 

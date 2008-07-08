@@ -165,7 +165,9 @@ object frmActivityWindow: TfrmActivityWindow
         Height = 20
         Align = alClient
         Alignment = taRightJustify
+        AutoSize = False
         Caption = 'Sort By:  Alpha'
+        EllipsisPosition = epEndEllipsis
         Transparent = True
         OnClick = pnlListSortClick
         ExplicitLeft = 94
