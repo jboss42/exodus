@@ -286,7 +286,7 @@ begin
         s := PrefController.getPrefState('autologin');
         chkAutoLogin.Enabled := (s <> psReadOnly) and
                                 (s <> psInvisible) and
-                                MainSession.Profile.SavePasswd and
+                                (MainSession.Profile.SavePasswd or MainSession.Profile.WinLogin or MainSession.Profile.x509Auth) and
                                 MainSession.Authenticated;
         if (s = psInvisible) then begin
           chkAutoLogin.Visible := false;
