@@ -6,7 +6,7 @@ inherited frmRoom: TfrmRoom
   ClientWidth = 606
   OldCreateOrder = True
   ExplicitWidth = 614
-  ExplicitHeight = 545
+  ExplicitHeight = 552
   PixelsPerInch = 120
   TextHeight = 16
   inherited Splitter1: TSplitter
@@ -19,18 +19,32 @@ inherited frmRoom: TfrmRoom
   inherited pnlDock: TTntPanel
     Width = 606
     TabOrder = 1
+    ExplicitWidth = 606
     inherited pnlDockTopContainer: TTntPanel
-      Width = 606
+      Width = 604
+      ExplicitWidth = 604
+      inherited tbDockBar: TToolBar
+        Left = 555
+        Height = 29
+        ExplicitLeft = 555
+        ExplicitHeight = 29
+      end
       inherited pnlDockTop: TTntPanel
+        Width = 552
+        Height = 35
         ExplicitWidth = 552
+        ExplicitHeight = 35
         inherited pnlChatTop: TTntPanel
-          ExplicitWidth = 550
+          Width = 552
+          Height = 35
+          ExplicitWidth = 552
+          ExplicitHeight = 35
           object pnlSubj: TPanel
             AlignWithMargins = True
             Left = 4
             Top = 0
             Width = 433
-            Height = 42
+            Height = 35
             Margins.Left = 4
             Margins.Top = 0
             Margins.Right = 0
@@ -81,21 +95,24 @@ inherited frmRoom: TfrmRoom
       end
     end
     inherited pnlDockControlSite: TTntPanel
-      Width = 606
+      Width = 604
+      Height = 31
+      ExplicitWidth = 604
+      ExplicitHeight = 31
     end
   end
   inherited pnlMsgList: TPanel
     Width = 606
-    Height = 330
+    Height = 359
     Constraints.MinHeight = 31
     TabOrder = 2
     ExplicitWidth = 606
-    ExplicitHeight = 330
+    ExplicitHeight = 359
     object Splitter2: TSplitter
       Left = 469
       Top = 4
       Width = 5
-      Height = 322
+      Height = 351
       Align = alRight
       ResizeStyle = rsUpdate
       ExplicitLeft = 468
@@ -106,7 +123,7 @@ inherited frmRoom: TfrmRoom
       Left = 474
       Top = 4
       Width = 128
-      Height = 322
+      Height = 351
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -116,7 +133,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 126
-        Height = 320
+        Height = 349
         Align = alClient
         Columns = <
           item
@@ -162,7 +179,9 @@ inherited frmRoom: TfrmRoom
       ExplicitWidth = 598
       inherited pnlControlSite: TPanel
         Width = 277
+        ExplicitLeft = 321
         ExplicitWidth = 277
+        ExplicitHeight = 29
       end
     end
   end
@@ -295,10 +314,6 @@ inherited frmRoom: TfrmRoom
     object popRosterSendJID: TTntMenuItem
       Caption = 'Send my JID'
       OnClick = popRosterSendJIDClick
-    end
-    object popRosterBlock: TTntMenuItem
-      Caption = 'Block'
-      OnClick = popRosterBlockClick
     end
     object N7: TTntMenuItem
       Caption = '-'

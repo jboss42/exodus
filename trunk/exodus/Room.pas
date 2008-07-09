@@ -77,7 +77,6 @@ type
     popBan: TTntMenuItem;
     popKick: TTntMenuItem;
     N3: TTntMenuItem;
-    popRosterBlock: TTntMenuItem;
     popRosterSendJID: TTntMenuItem;
     popRosterChat: TTntMenuItem;
     popDestroy: TTntMenuItem;
@@ -115,7 +114,6 @@ type
     procedure popBookmarkClick(Sender: TObject);
     procedure popInviteClick(Sender: TObject);
     procedure mnuOnTopClick(Sender: TObject);
-    procedure popRosterBlockClick(Sender: TObject);
     procedure popRoomRosterPopup(Sender: TObject);
     procedure popShowHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
@@ -1108,7 +1106,6 @@ begin
     end
     else if ((cmd = '/block') or (cmd = '/ignore')) then begin
         selectNicks(wsl);
-        popRosterBlockClick(nil);
         Result := true;
     end
     else if ((cmd = '/part') or (cmd = '/leave')) then begin
@@ -2291,40 +2288,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.popRosterBlockClick(Sender: TObject);
-var
-    e: boolean;
-    rm: TRoomMember;
-begin
-    if (lstRoster.Selected = nil) then
-        rm := nil
-    else begin
-        rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
-        if (rm <> nil) then begin
-           if (rm.show = _(sBlocked)) then begin
-              //unblock
-              rm.show := rm.blockShow;
-              rm.blockShow := '';
-          end
-           else begin
-              //block
-              rm.blockShow := rm.show;
-              rm.show := _(sBlocked);
-          end;
-          lstRoster.Invalidate();
-       end;
-    end;
-
-    e := (rm <> nil);
-    popRosterChat.Enabled := e;
-    popRosterSendJID.Enabled := e;
-    popRosterblock.Enabled := e;
-
-    inherited;
-
-end;
-
-{---------------------------------------}
 procedure TfrmRoom.popRoomPropertiesClick(Sender: TObject);
 begin
     inherited;
@@ -2341,7 +2304,6 @@ begin
 
     popRosterChat.Enabled := e;
     popRosterSendJID.Enabled := e;
-    popRosterblock.Enabled := e;
 
     popRosterSubscribe.Enabled := false;
     popRosterVCard.Enabled := false;
@@ -2356,12 +2318,6 @@ begin
 
     rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
     if (rm <> nil) then begin
-        if (rm.show = _(sBlocked)) then
-            popRosterBlock.Caption := _(sUnblock)
-        else
-            popRosterBlock.Caption := _(sBlock);
-
-
         if (rm.real_jid <> '') then begin
             popRosterSubscribe.Enabled := true;
             popRosterVCard.Enabled := true;
@@ -2372,7 +2328,6 @@ begin
         if (rm.Nick = myNick) then begin
             popRosterChat.Enabled := false;
             popRosterSendJID.Enabled := false;
-            popRosterblock.Enabled := false;
             popRosterSubscribe.Enabled := false;
             popRosterVCard.Enabled := false;
             popRosterBrowse.Enabled := false;
