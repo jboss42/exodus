@@ -52,8 +52,9 @@ type
             // IExodusHistoryResult Interface
             function Get_ResultCount: Integer; safecall;
             function Get_Processing: WordBool; safecall;
-            procedure OnResultItem(SearchHandlerID: Integer; const SearchID: WideString; const Item: IExodusLogMsg); safecall;
-            function GetResult(index: Integer): IExodusLogMsg; safecall;
+    procedure OnResultItem(SearchHandlerID: Integer; const SearchID: WideString;
+      const Item: IExodusMsg); safecall;
+    function GetResult(index: Integer): IExodusMsg; safecall;
             procedure Set_Processing(Value: WordBool); safecall;
             property ResultCount: Integer read Get_ResultCount;
             property Processing: WordBool read Get_Processing write Set_Processing;
@@ -122,7 +123,7 @@ implementation
 uses
     ComServ,
     sysUtils,
-    ComLogMsg,
+    ComExodusMsg,
     JabberUtils,
     XMLTag;
 
@@ -264,17 +265,18 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusHistoryResult.GetResult(index: Integer): IExodusLogMsg;
+function TExodusHistoryResult.GetResult(index: Integer): IExodusMsg;
 begin
     Result := nil;
     if (index < 0) then exit;
     if (index >= _ResultList.Count) then exit;
 
-    Result := TExodusLogMsg.Create(TJabberMessage(_ResultList.Objects[index]));
+    Result := TExodusMsg.Create(TJabberMessage(_ResultList.Objects[index]));
 end;
 
 {---------------------------------------}
-procedure TExodusHistoryResult.OnResultItem(SearchHandlerID: Integer; const SearchID: WideString; const Item: IExodusLogMsg);
+procedure TExodusHistoryResult.OnResultItem(SearchHandlerID: Integer;
+  const SearchID: WideString; const Item: IExodusMsg);
 var
     msg: TJabberMessage;
     ShouldSaveMsg: boolean;

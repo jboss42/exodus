@@ -116,7 +116,7 @@ type
         function RegisterSearchHandler(const Handler: IExodusHistorySearchHandler): Integer; safecall;
         procedure CancelSearch(const SearchID: WideString); safecall;
         procedure UnRegisterSearchHandler(HandlerID: Integer); safecall;
-        procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const LogMsg: IExodusLogMsg); safecall;
+        procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const LogMsg: IExodusMsg); safecall;
 
         // Properties
         property SearchTypeCount: Integer read Get_SearchTypeCount;
@@ -345,7 +345,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusHistorySearchManager.HandlerResult(HandlerID: Integer; const SearchID: WideString; const LogMsg: IExodusLogMsg);
+procedure TExodusHistorySearchManager.HandlerResult(HandlerID: Integer; const SearchID: WideString; const LogMsg: IExodusMsg);
 var
     i: integer;
     j: integer;

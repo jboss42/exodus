@@ -83,7 +83,7 @@ uses
     ComServ,
     sysUtils,
     SQLLogger,
-    COMLogMsg,
+    COMExodusMsg,
     SQLSearchThread,
     SQLUtils,
     IdGlobal,
@@ -304,7 +304,7 @@ end;
 procedure TSQLSearchHandler.OnResult(SearchID: widestring; msg: TJabberMessage);
 var
     i: integer;
-    m: TExodusLogMsg;
+    m: TExodusMsg;
 begin
     if (SearchID = '') then exit;
 
@@ -322,7 +322,7 @@ begin
     end
     else begin
         // Send the result set on to the Search Manager
-        m := TExodusLogMsg.Create(msg);
+        m := TExodusMsg.Create(msg);
         HistorySearchManager.HandlerResult(_handlerID, SearchID, m);
         m.Free();
     end;
