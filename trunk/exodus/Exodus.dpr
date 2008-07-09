@@ -208,6 +208,7 @@ uses
   COMToolbarButton in 'COMToolbarButton.pas' {ExodusToolbarButton: CoClass},
   COMExForm in 'COMGuis\COMExForm.pas',
   COMLogMsg in 'COMLogMsg.pas' {ExodusLogMsg: CoClass},
+  COMExodusMsg in 'COMExodusMsg.pas' {ExodusMsg: CoClass},
   COMLogListener in 'COMLogListener.pas' {ExodusLogListener: CoClass},
   KerbAuth in '..\jopl\KerbAuth.pas',
   NTLMAuth in '..\jopl\NTLMAuth.pas',

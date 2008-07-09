@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 7/7/2008 3:46:43 PM from Type Library described below.
+// File generated on 7/9/2008 11:13:37 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -160,6 +160,8 @@ const
   IID_IExodusControlSite: TGUID = '{B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}';
   CLASS_exodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
   CLASS_MainToolBarImages: TGUID = '{EED39569-B9B7-4888-A591-2640F31B3BC0}';
+  IID_IExodusMsg: TGUID = '{46DFB7CF-1431-4B99-9F07-A427D6F7EE77}';
+  CLASS_ExodusMsg: TGUID = '{26EE3B49-A7E1-4B67-B63B-16F8BBE3B841}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -365,6 +367,8 @@ type
   IExodusPacketControlListenerDisp = dispinterface;
   IExodusControlSite = interface;
   IExodusControlSiteDisp = dispinterface;
+  IExodusMsg = interface;
+  IExodusMsgDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -405,6 +409,7 @@ type
   ExodusPacketDispatcher = IExodusPacketDispatcher;
   exodusController = IExodusController;
   MainToolBarImages = IExodusRosterImages;
+  ExodusMsg = IExodusMsg;
 
 
 // *********************************************************************//
@@ -4272,51 +4277,28 @@ type
 // *********************************************************************//
   IExodusLogMsg = interface(IDispatch)
     ['{2E945876-C2E5-4A24-98B4-0E38BD65D431}']
-    procedure FillLogMsg(const ID: WideString; const Timestamp: WideString; 
-                         const ToJid: WideString; const FromJid: WideString; Priority: Integer; 
-                         const Nick: WideString; const Direction: WideString; 
-                         const MsgType: WideString; const Thread: WideString; 
-                         const Subject: WideString; const Body: WideString; const XML: WideString; 
-                         const RawMsgXML: WideString); safecall;
     function Get_ToJid: WideString; safecall;
-    procedure Set_ToJid(const value: WideString); safecall;
     function Get_FromJid: WideString; safecall;
-    procedure Set_FromJid(const value: WideString); safecall;
     function Get_MsgType: WideString; safecall;
-    procedure Set_MsgType(const value: WideString); safecall;
     function Get_ID: WideString; safecall;
-    procedure Set_ID(const value: WideString); safecall;
     function Get_Nick: WideString; safecall;
-    procedure Set_Nick(const value: WideString); safecall;
     function Get_Body: WideString; safecall;
-    procedure Set_Body(const value: WideString); safecall;
     function Get_Thread: WideString; safecall;
-    procedure Set_Thread(const value: WideString); safecall;
     function Get_Subject: WideString; safecall;
-    procedure Set_Subject(const value: WideString); safecall;
     function Get_Timestamp: WideString; safecall;
-    procedure Set_Timestamp(const value: WideString); safecall;
     function Get_Direction: WideString; safecall;
-    procedure Set_Direction(const value: WideString); safecall;
     function Get_XML: WideString; safecall;
-    procedure Set_XML(const value: WideString); safecall;
-    function Get_RawMsgXML: WideString; safecall;
-    procedure Set_RawMsgXML(const value: WideString); safecall;
-    function Get_Priority: Integer; safecall;
-    procedure Set_Priority(value: Integer); safecall;
-    property ToJid: WideString read Get_ToJid write Set_ToJid;
-    property FromJid: WideString read Get_FromJid write Set_FromJid;
-    property MsgType: WideString read Get_MsgType write Set_MsgType;
-    property ID: WideString read Get_ID write Set_ID;
-    property Nick: WideString read Get_Nick write Set_Nick;
-    property Body: WideString read Get_Body write Set_Body;
-    property Thread: WideString read Get_Thread write Set_Thread;
-    property Subject: WideString read Get_Subject write Set_Subject;
-    property Timestamp: WideString read Get_Timestamp write Set_Timestamp;
-    property Direction: WideString read Get_Direction write Set_Direction;
-    property XML: WideString read Get_XML write Set_XML;
-    property RawMsgXML: WideString read Get_RawMsgXML write Set_RawMsgXML;
-    property Priority: Integer read Get_Priority write Set_Priority;
+    property ToJid: WideString read Get_ToJid;
+    property FromJid: WideString read Get_FromJid;
+    property MsgType: WideString read Get_MsgType;
+    property ID: WideString read Get_ID;
+    property Nick: WideString read Get_Nick;
+    property Body: WideString read Get_Body;
+    property Thread: WideString read Get_Thread;
+    property Subject: WideString read Get_Subject;
+    property Timestamp: WideString read Get_Timestamp;
+    property Direction: WideString read Get_Direction;
+    property XML: WideString read Get_XML;
   end;
 
 // *********************************************************************//
@@ -4326,25 +4308,17 @@ type
 // *********************************************************************//
   IExodusLogMsgDisp = dispinterface
     ['{2E945876-C2E5-4A24-98B4-0E38BD65D431}']
-    procedure FillLogMsg(const ID: WideString; const Timestamp: WideString; 
-                         const ToJid: WideString; const FromJid: WideString; Priority: Integer; 
-                         const Nick: WideString; const Direction: WideString; 
-                         const MsgType: WideString; const Thread: WideString; 
-                         const Subject: WideString; const Body: WideString; const XML: WideString; 
-                         const RawMsgXML: WideString); dispid 212;
-    property ToJid: WideString dispid 201;
-    property FromJid: WideString dispid 202;
-    property MsgType: WideString dispid 203;
-    property ID: WideString dispid 204;
-    property Nick: WideString dispid 205;
-    property Body: WideString dispid 206;
-    property Thread: WideString dispid 207;
-    property Subject: WideString dispid 208;
-    property Timestamp: WideString dispid 209;
-    property Direction: WideString dispid 210;
-    property XML: WideString dispid 211;
-    property RawMsgXML: WideString dispid 213;
-    property Priority: Integer dispid 214;
+    property ToJid: WideString readonly dispid 201;
+    property FromJid: WideString readonly dispid 202;
+    property MsgType: WideString readonly dispid 203;
+    property ID: WideString readonly dispid 204;
+    property Nick: WideString readonly dispid 205;
+    property Body: WideString readonly dispid 206;
+    property Thread: WideString readonly dispid 207;
+    property Subject: WideString readonly dispid 208;
+    property Timestamp: WideString readonly dispid 209;
+    property Direction: WideString readonly dispid 210;
+    property XML: WideString readonly dispid 211;
   end;
 
 // *********************************************************************//
@@ -5092,8 +5066,8 @@ type
     function Get_ResultCount: Integer; safecall;
     function Get_Processing: WordBool; safecall;
     procedure OnResultItem(SearchHandlerID: Integer; const SearchID: WideString; 
-                           const Item: IExodusLogMsg); safecall;
-    function GetResult(index: Integer): IExodusLogMsg; safecall;
+                           const Item: IExodusMsg); safecall;
+    function GetResult(index: Integer): IExodusMsg; safecall;
     procedure Set_Processing(value: WordBool); safecall;
     property ResultCount: Integer read Get_ResultCount;
     property Processing: WordBool read Get_Processing write Set_Processing;
@@ -5109,8 +5083,8 @@ type
     property ResultCount: Integer readonly dispid 201;
     property Processing: WordBool dispid 202;
     procedure OnResultItem(SearchHandlerID: Integer; const SearchID: WideString; 
-                           const Item: IExodusLogMsg); dispid 203;
-    function GetResult(index: Integer): IExodusLogMsg; dispid 204;
+                           const Item: IExodusMsg); dispid 203;
+    function GetResult(index: Integer): IExodusMsg; dispid 204;
   end;
 
 // *********************************************************************//
@@ -5157,8 +5131,7 @@ type
     procedure CancelSearch(const SearchID: WideString); safecall;
     function GetSearchType(index: Integer): WideString; safecall;
     function Get_SearchTypeCount: Integer; safecall;
-    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; 
-                            const LogMsg: IExodusLogMsg); safecall;
+    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const Msg: IExodusMsg); safecall;
     property SearchTypeCount: Integer read Get_SearchTypeCount;
   end;
 
@@ -5176,8 +5149,7 @@ type
     procedure CancelSearch(const SearchID: WideString); dispid 204;
     function GetSearchType(index: Integer): WideString; dispid 205;
     property SearchTypeCount: Integer readonly dispid 206;
-    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; 
-                            const LogMsg: IExodusLogMsg); dispid 207;
+    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const Msg: IExodusMsg); dispid 207;
   end;
 
 // *********************************************************************//
@@ -5632,6 +5604,86 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusMsg
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {46DFB7CF-1431-4B99-9F07-A427D6F7EE77}
+// *********************************************************************//
+  IExodusMsg = interface(IDispatch)
+    ['{46DFB7CF-1431-4B99-9F07-A427D6F7EE77}']
+    procedure FillMsg(const ID: WideString; const Timestamp: WideString; const ToJid: WideString; 
+                      const FromJid: WideString; Priority: Integer; const Nick: WideString; 
+                      const Direction: WideString; const MsgType: WideString; 
+                      const Thread: WideString; const Subject: WideString; const Body: WideString; 
+                      const additionalXML: WideString; const RawMsgXML: WideString); safecall;
+    function Get_ToJid: WideString; safecall;
+    procedure Set_ToJid(const value: WideString); safecall;
+    function Get_FromJid: WideString; safecall;
+    procedure Set_FromJid(const value: WideString); safecall;
+    function Get_MsgType: WideString; safecall;
+    procedure Set_MsgType(const value: WideString); safecall;
+    function Get_ID: WideString; safecall;
+    procedure Set_ID(const value: WideString); safecall;
+    function Get_Nick: WideString; safecall;
+    procedure Set_Nick(const value: WideString); safecall;
+    function Get_Body: WideString; safecall;
+    procedure Set_Body(const value: WideString); safecall;
+    function Get_Thread: WideString; safecall;
+    procedure Set_Thread(const value: WideString); safecall;
+    function Get_Subject: WideString; safecall;
+    procedure Set_Subject(const value: WideString); safecall;
+    function Get_Timestamp: WideString; safecall;
+    procedure Set_Timestamp(const value: WideString); safecall;
+    function Get_Direction: WideString; safecall;
+    procedure Set_Direction(const value: WideString); safecall;
+    function Get_additionalXML: WideString; safecall;
+    procedure Set_additionalXML(const value: WideString); safecall;
+    function Get_RawMsgXML: WideString; safecall;
+    procedure Set_RawMsgXML(const value: WideString); safecall;
+    function Get_Priority: Integer; safecall;
+    procedure Set_Priority(value: Integer); safecall;
+    property ToJid: WideString read Get_ToJid write Set_ToJid;
+    property FromJid: WideString read Get_FromJid write Set_FromJid;
+    property MsgType: WideString read Get_MsgType write Set_MsgType;
+    property ID: WideString read Get_ID write Set_ID;
+    property Nick: WideString read Get_Nick write Set_Nick;
+    property Body: WideString read Get_Body write Set_Body;
+    property Thread: WideString read Get_Thread write Set_Thread;
+    property Subject: WideString read Get_Subject write Set_Subject;
+    property Timestamp: WideString read Get_Timestamp write Set_Timestamp;
+    property Direction: WideString read Get_Direction write Set_Direction;
+    property additionalXML: WideString read Get_additionalXML write Set_additionalXML;
+    property RawMsgXML: WideString read Get_RawMsgXML write Set_RawMsgXML;
+    property Priority: Integer read Get_Priority write Set_Priority;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusMsgDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {46DFB7CF-1431-4B99-9F07-A427D6F7EE77}
+// *********************************************************************//
+  IExodusMsgDisp = dispinterface
+    ['{46DFB7CF-1431-4B99-9F07-A427D6F7EE77}']
+    procedure FillMsg(const ID: WideString; const Timestamp: WideString; const ToJid: WideString; 
+                      const FromJid: WideString; Priority: Integer; const Nick: WideString; 
+                      const Direction: WideString; const MsgType: WideString; 
+                      const Thread: WideString; const Subject: WideString; const Body: WideString; 
+                      const additionalXML: WideString; const RawMsgXML: WideString); dispid 201;
+    property ToJid: WideString dispid 202;
+    property FromJid: WideString dispid 203;
+    property MsgType: WideString dispid 204;
+    property ID: WideString dispid 205;
+    property Nick: WideString dispid 206;
+    property Body: WideString dispid 207;
+    property Thread: WideString dispid 208;
+    property Subject: WideString dispid 209;
+    property Timestamp: WideString dispid 210;
+    property Direction: WideString dispid 211;
+    property additionalXML: WideString dispid 212;
+    property RawMsgXML: WideString dispid 213;
+    property Priority: Integer dispid 214;
+  end;
+
+// *********************************************************************//
 // The Class CoExodusPPDB provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusPPDB exposed by              
 // the CoClass ExodusPPDB. The functions are intended to be used by             
@@ -6051,6 +6103,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusRosterImages;
   end;
 
+// *********************************************************************//
+// The Class CoExodusMsg provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusMsg exposed by              
+// the CoClass ExodusMsg. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusMsg = class
+    class function Create: IExodusMsg;
+    class function CreateRemote(const MachineName: string): IExodusMsg;
+  end;
+
 implementation
 
 uses ComObj;
@@ -6403,6 +6467,16 @@ end;
 class function CoMainToolBarImages.CreateRemote(const MachineName: string): IExodusRosterImages;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_MainToolBarImages) as IExodusRosterImages;
+end;
+
+class function CoExodusMsg.Create: IExodusMsg;
+begin
+  Result := CreateComObject(CLASS_ExodusMsg) as IExodusMsg;
+end;
+
+class function CoExodusMsg.CreateRemote(const MachineName: string): IExodusMsg;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusMsg) as IExodusMsg;
 end;
 
 end.
