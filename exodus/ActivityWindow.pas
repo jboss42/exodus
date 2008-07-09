@@ -82,7 +82,6 @@ type
     timScrollTimer: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure pnlListScrollUpClick(Sender: TObject);
     procedure pnlListScrollDownClick(Sender: TObject);
     procedure mnuAlphaSortClick(Sender: TObject);
@@ -104,6 +103,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure pnlListScrollDownMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure pnlListResize(Sender: TObject);
   private
     { Private declarations }
     _timerScrollUp: boolean;
@@ -402,14 +402,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow.FormResize(Sender: TObject);
-begin
-    imgScrollUp.Left := (pnlListScrollUp.Width div 2) - (imgScrollUp.Width div 2);
-    imgScrollDown.Left := (pnlListScrollDown.Width div 2) - (imgScrollDown.Width div 2);
-    _updateDisplay();
-end;
-
-{---------------------------------------}
 procedure TfrmActivityWindow.mnuAlphaSortClick(Sender: TObject);
 begin
     _sortTrackingList(ssAlpha);
@@ -659,6 +651,15 @@ begin
         activateItem(awitem);
     except
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.pnlListResize(Sender: TObject);
+begin
+    inherited;
+    imgScrollUp.Left := (pnlListScrollUp.Width div 2) - (imgScrollUp.Width div 2);
+    imgScrollDown.Left := (pnlListScrollDown.Width div 2) - (imgScrollDown.Width div 2);
+    _updateDisplay();
 end;
 
 {---------------------------------------}

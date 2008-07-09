@@ -14,7 +14,6 @@ object frmActivityWindow: TfrmActivityWindow
   OldCreateOrder = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object pnlListBase: TExGradientPanel
@@ -122,6 +121,7 @@ object frmActivityWindow: TfrmActivityWindow
       ParentColor = True
       PopupMenu = popAWList
       TabOrder = 2
+      OnResize = pnlListResize
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
