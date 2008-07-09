@@ -469,8 +469,8 @@ begin
     _avails.Free();
 
     if (_stream <> nil) then
-        _stream.Free();
-    Presence_XML.Free();
+        FreeAndNil(_stream);
+    FreeAndNil(Presence_XML);
 
     OnSessionEndProfile();
     OnSessionEndRoomProperties();
@@ -708,8 +708,8 @@ end;
 procedure TJabberSession.handleDisconnect();
 begin
     if ((not _authd) and (_register)) then
-        _auth_agent.CancelRegistration()
-    else if (not _authd) then 
+        _auth_agent.CancelRegistration();
+    if ((not _authd) and (_auth_agent <> nil)) then
         _auth_agent.CancelAuthentication();
 
     // Do this before we invalidate our state
@@ -734,8 +734,7 @@ begin
     //roster.Clear;
     ppdb.Clear;
 
-    _stream.Free();
-    _stream := nil;
+    FreeAndNil(_stream);
 
     // clear the entity cache
     jEntityCache.Clear();
@@ -763,7 +762,7 @@ begin
 
     else if msg = 'disconnected' then
         // We're not connected anymore
-        Self.handleDisconnect()
+        Self.Disconnect()
 
     else if msg = 'commtimeout' then
         // Communications timed out (woops).
