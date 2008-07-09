@@ -1496,6 +1496,9 @@ var
     req_srv, req_a: string;
     pw : WideString;
 begin
+    btnConnect.Enabled := false;
+    mnuFile_Connect.Enabled := false;
+
     // Hack to deal with fact that the first time IE gets started
     // it has a noticible delay.  By doing the reset here,
     // the delay is "hidden" amongst other login steps
