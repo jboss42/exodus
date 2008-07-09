@@ -2851,7 +2851,7 @@ begin
     else if rm.show = 'xa' then Item.ImageIndex := RosterTreeImages.Find('xa')
     else if rm.show = 'dnd' then Item.ImageIndex := RosterTreeImages.Find('dnd')
     else if rm.show = 'chat' then Item.ImageIndex := RosterTreeImages.Find('chat')
-    else if rm.show = 'offline' then Item.ImageIndex := RosterTreeImages.Find('offline')
+    else if rm.show = 'offline' then Item.ImageIndex := RosterTreeImages.Find(RI_NOT_JOINED_KEY)
     else Item.ImageIndex := RosterTreeImages.Find('available');
 
 end;

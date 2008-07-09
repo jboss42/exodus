@@ -229,6 +229,8 @@ const
     RI_MAIN_TAB_INDEX       : Integer = 95;
     RI_VIEW_HISTORY_KEY     : Widestring = 'view_history';
     RI_VIEW_HISTORY_INDEX   : Integer = 96;
+    RI_NOT_JOINED_KEY     : Widestring = 'not_joined_member';
+    RI_NOT_JOINED_INDEX   : Integer = 97;
 
 {$ENDIF}
 
@@ -342,6 +344,7 @@ begin
     _ids.Insert(RI_ROOMS_TAB_INDEX, RI_ROOMS_TAB_KEY);
     _ids.Insert(RI_MAIN_TAB_INDEX, RI_MAIN_TAB_KEY);
     _ids.Insert(RI_VIEW_HISTORY_INDEX, RI_VIEW_HISTORY_KEY);
+    _ids.Insert(RI_NOT_JOINED_INDEX, RI_NOT_JOINED_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;
