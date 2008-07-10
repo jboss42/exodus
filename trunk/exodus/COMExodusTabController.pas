@@ -29,7 +29,8 @@ uses
 type
   TExodusTabController = class(TAutoObject, IExodusTabController)
   protected
-      function AddTab(const ActiveX_GUID, Name: WideString): IExodusTab; safecall;
+    function AddTab(const ActiveX_GUID, Name, Type_: WideString): IExodusTab;
+      safecall;
       function Get_Tab(Index: Integer): IExodusTab; safecall;
       function Get_TabCount: Integer; safecall;
       procedure RemoveTab(Index: Integer); safecall;
@@ -83,13 +84,13 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusTabController.AddTab(const ActiveX_GUID,
-  Name: WideString): IExodusTab;
+function TExodusTabController.AddTab(const ActiveX_GUID, Name,
+  Type_: WideString): IExodusTab;
 var
     Tab: TExodusTabWrapper;
     Idx: Integer;
 begin
-   Tab := TExodusTabWrapper.Create(ActiveX_GUID);
+   Tab := TExodusTabWrapper.Create(ActiveX_GUID, Type_);
    _Tabs.Add(Tab);
    Tab.ExodusTab.Name := Name;
    //Hide tab if it is in the list of hidden tabs

@@ -264,8 +264,6 @@ uses
 },
   RoomController in '..\jopl\RoomController.pas',
   IEMsgListUIHandler in 'IEMsgListUIHandler.pas',
-  ExContactsTreeView in 'components\ExContactsTreeView.pas',
-  ExRoomsTreeView in 'components\ExRoomsTreeView.pas',
   ExActions in '..\jopl\actions\ExActions.pas',
   ExActionCtrl in '..\jopl\actions\ExActionCtrl.pas',
   ExActionMap in '..\jopl\actions\ExActionMap.pas',

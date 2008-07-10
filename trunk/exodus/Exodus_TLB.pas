@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 7/10/2008 9:38:32 AM from Type Library described below.
+// File generated on 2008-07-10 3:58:26 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4557,7 +4557,7 @@ type
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const value: WideString); safecall;
     function Get_TabTooltip: WideString; safecall;
-    procedure Set_TabTooltip(const Value: WideString); safecall;
+    procedure Set_TabTooltip(const value: WideString); safecall;
     property AXControl: IUnknown read Get_AXControl;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
@@ -4761,7 +4761,7 @@ type
   IExodusTabController = interface(IDispatch)
     ['{9717635B-FC59-40A9-8282-1902D897BF09}']
     function Get_TabCount: Integer; safecall;
-    function AddTab(const ActiveX_GUID: WideString; const Name: WideString): IExodusTab; safecall;
+    function AddTab(const ActiveX_GUID: WideString; const Name: WideString; const Type_: WideString): IExodusTab; safecall;
     procedure RemoveTab(index: Integer); safecall;
     function Get_Tab(index: Integer): IExodusTab; safecall;
     procedure Clear; safecall;
@@ -4787,7 +4787,7 @@ type
   IExodusTabControllerDisp = dispinterface
     ['{9717635B-FC59-40A9-8282-1902D897BF09}']
     property TabCount: Integer readonly dispid 201;
-    function AddTab(const ActiveX_GUID: WideString; const Name: WideString): IExodusTab; dispid 202;
+    function AddTab(const ActiveX_GUID: WideString; const Name: WideString; const Type_: WideString): IExodusTab; dispid 202;
     procedure RemoveTab(index: Integer); dispid 203;
     property Tab[index: Integer]: IExodusTab readonly dispid 205;
     procedure Clear; dispid 206;
@@ -4824,6 +4824,7 @@ type
     function Get_TabIndex: Integer; safecall;
     function Get_PageIndex: Integer; safecall;
     function GetSelectedItems: IExodusItemList; safecall;
+    function GetTree: Integer; safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Caption: WideString read Get_Caption write Set_Caption;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
@@ -4858,6 +4859,7 @@ type
     property TabIndex: Integer readonly dispid 213;
     property PageIndex: Integer readonly dispid 214;
     function GetSelectedItems: IExodusItemList; dispid 207;
+    function GetTree: Integer; dispid 215;
   end;
 
 // *********************************************************************//

@@ -44,7 +44,7 @@ type
     procedure mnuMoveClick(Sender: TObject); virtual;
     procedure mnuCopyClick(Sender: TObject); virtual;
     procedure mnuDeleteClick(Sender: TObject); virtual;
-
+    procedure SaveGroupsState(); override;
   public
     constructor Create(AOwner: TComponent; Session: TObject); override;
 
@@ -401,4 +401,26 @@ begin
     end;
 end;
 
+{---------------------------------------}
+//Iterates thorugh all the nodes and saves exapanded state for group nodes.
+procedure  TExAllTreeView.SaveGroupsState();
+var
+    i: Integer;
+    item: IExodusItem;
+    Name: WideString;
+begin
+    if (_Filter <> '') then exit;
+    
+    for i := 0 to Items.Count - 1 do
+    begin
+        item := GetNodeItem(Items[i]);
+        if (item = nil) or (item.Type_ <> EI_TYPE_GROUP) then
+            continue;
+        Name := GetNodePath(Items[i]);
+        TJabberSession(_js).ItemController.GroupExpanded[Name] := Items[i].Expanded;
+    end;
+
+    TJabberSession(_js).ItemController.SaveGroups();
+
+end;
 end.
