@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 7/9/2008 11:13:37 AM from Type Library described below.
+// File generated on 7/10/2008 9:38:32 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -4556,6 +4556,8 @@ type
     function NewTitleBarActiveX(const ActiveX_GUID: WideString): IUnknown; safecall;
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const value: WideString); safecall;
+    function Get_TabTooltip: WideString; safecall;
+    procedure Set_TabTooltip(const Value: WideString); safecall;
     property AXControl: IUnknown read Get_AXControl;
     property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
     property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
@@ -4564,6 +4566,7 @@ type
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
     property DockToolbar: IExodusDockToolbar read Get_DockToolbar;
     property Caption: WideString read Get_Caption write Set_Caption;
+    property TabTooltip: WideString read Get_TabTooltip write Set_TabTooltip;
   end;
 
 // *********************************************************************//
@@ -4589,6 +4592,7 @@ type
     property DockToolbar: IExodusDockToolbar readonly dispid 214;
     function NewTitleBarActiveX(const ActiveX_GUID: WideString): IUnknown; dispid 215;
     property Caption: WideString dispid 216;
+    property TabTooltip: WideString dispid 217;
   end;
 
 // *********************************************************************//
@@ -5131,7 +5135,7 @@ type
     procedure CancelSearch(const SearchID: WideString); safecall;
     function GetSearchType(index: Integer): WideString; safecall;
     function Get_SearchTypeCount: Integer; safecall;
-    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const Msg: IExodusMsg); safecall;
+    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const msg: IExodusMsg); safecall;
     property SearchTypeCount: Integer read Get_SearchTypeCount;
   end;
 
@@ -5149,7 +5153,7 @@ type
     procedure CancelSearch(const SearchID: WideString); dispid 204;
     function GetSearchType(index: Integer): WideString; dispid 205;
     property SearchTypeCount: Integer readonly dispid 206;
-    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const Msg: IExodusMsg); dispid 207;
+    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const msg: IExodusMsg); dispid 207;
   end;
 
 // *********************************************************************//

@@ -59,6 +59,8 @@ type
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const value: WideString); safecall;
     function Get_AXControl: IUnknown; safecall;
+    function Get_TabTooltip: WideString; safecall;
+    procedure Set_TabTooltip(const Value: WideString); safecall;
 
   end;
 
@@ -265,6 +267,17 @@ begin
     except
     end;
 end;
+
+function TExodusAXWindow.Get_TabTooltip: WideString;
+begin
+    Result := _frm.Hint;
+end;
+
+procedure TExodusAXWindow.Set_TabTooltip(const Value: WideString);
+begin
+    _frm.Hint := Value;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusAXWindow, Class_ExodusAXWindow,
