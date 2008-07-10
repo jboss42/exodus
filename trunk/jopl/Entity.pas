@@ -951,7 +951,7 @@ begin
     if (js.Active = false) then exit;
 
     _has_info:= true;
-    _disco_info_error := (tag.GetAttribute('type') = 'error');
+    _disco_info_error := (event = 'timeout') or (tag.GetAttribute('type') = 'error');
     if ((event <> 'xml') or _disco_info_error) then
     begin
         //no browse or agents during walk, disco only!
@@ -1105,7 +1105,7 @@ begin
 
     // if we're not connected anymore, just bail.
     if (js.Active = false) then exit;
-    _disco_info_error := (tag.GetAttribute('type') = 'error');
+    _disco_info_error := (event = 'timeout') or (tag.GetAttribute('type') = 'error');
     if ((event <> 'xml') or _disco_info_error) then begin
         if (_fallBack and js.prefs.getBool(BRANDED_ENABLE_FALLBACK)) then
             _startIQAgent(js)
