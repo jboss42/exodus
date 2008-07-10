@@ -24,7 +24,7 @@ unit COMExodusTab;
 interface
 
 uses
-  ComObj, ActiveX, Exodus_TLB, StdVcl, PLUGINCONTROLLib_TLB, TntComCtrls;
+  ComObj, ActiveX, Exodus_TLB, StdVcl, PLUGINCONTROLLib_TLB, TntComCtrls, ExTreeView;
 
 type
   TExodusTab = class(TAutoObject, IExodusTab)
@@ -48,23 +48,28 @@ type
       function Get_PageIndex: Integer; safecall;
       function Get_TabIndex: Integer; safecall;
       function GetSelectedItems: IExodusItemList; safecall;
+    function GetTree: Integer; safecall;
   private
       _AxControl: TAXControl;
       _Page: TTntTabSheet;
       _UID:  WideString;
       _Name: WideString;
       _Desc: WideString;
+      _Type: WideString;
+      _Tree: TExTreeView;
   public
-      constructor Create(ActiveX_GUID: WideString);
+      constructor Create(ActiveX_GUID: WideString; Type_: WideString);
       destructor Destroy; override;
+      //property Tree: TExTreeView read _Tree write _Tree;
   end;
 
 implementation
 
-uses ComServ, RosterForm, SysUtils, Session, Variants, Controls, COMExodusItemList;
+uses ComServ, RosterForm, SysUtils, Session, Variants, Controls, COMExodusItemList,
+COMExodusItem, ExAllTreeView;
 
 {---------------------------------------}
-constructor TExodusTab.Create(ActiveX_GUID: WideString);
+constructor TExodusTab.Create(ActiveX_GUID: WideString; Type_: WideString);
 var
     g: TGUID;
 begin
@@ -73,6 +78,7 @@ begin
     _Page.PageControl :=  GetRosterWindow()._PageControl;
     _Page.TabVisible := true;
     _UID := ActiveX_GUID;
+    _Type := Type_;
     if (_UID <> '') then
     begin
         _AxControl := TAXControl.Create(_Page, StringToGuid(_UID));
@@ -83,6 +89,16 @@ begin
     begin
         CreateGUID(g);
         _UID := GUIDToString(g);
+        if (_Type = EI_TYPE_ALL) then
+           _Type := '';
+
+        _Tree := TExAllTreeView.Create(_Page, MainSession);
+        _Tree.Align := alClient;
+        _Tree.Canvas.Pen.Width := 1;
+        _Tree.SetFontsAndColors();
+        _Tree.parent := _Page;
+        _Tree.Filter := _Type;
+        _Tree.TabIndex := _Page.TabIndex;
     end;
 end;
 
@@ -91,6 +107,9 @@ destructor TExodusTab.Destroy();
 begin
     if (_AxControl <> nil) then
        _AxControl := nil;
+    if (_Tree <> nil) then
+       _Tree.Free;
+
     _Page.Free;
     inherited;
 end;
@@ -225,6 +244,14 @@ begin
    end;
 
    if (Result = nil) then Result := TExodusItemList.Create();
+end;
+
+function TExodusTab.GetTree: Integer;
+begin
+   Result := 0;;
+   if (_Tree <> nil) then
+       Result := Integer(Pointer(_Tree));
+
 end;
 
 initialization

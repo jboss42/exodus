@@ -38,7 +38,7 @@ type
    private
        _Tab: IExodusTab;
    public
-       constructor Create(activeX_GUID: WideString); overload;
+       constructor Create(activeX_GUID: WideString; Type_ : WideString); overload;
        destructor Destroy(); override;
        property ExodusTab: IExodusTab read _Tab write _Tab;
    end;
@@ -46,10 +46,10 @@ type
 implementation
 uses TntComCtrls, RosterForm;
 {---------------------------------------}
-constructor TExodusTabWrapper.Create(activeX_GUID: WideString);
+constructor TExodusTabWrapper.Create(activeX_GUID: WideString; Type_ : WideString);
 begin
     inherited Create;
-    _Tab := TExodusTab.Create(activeX_GUID);
+    _Tab := TExodusTab.Create(activeX_GUID, Type_);
 end;
 
 {---------------------------------------}

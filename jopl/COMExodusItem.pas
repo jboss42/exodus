@@ -31,6 +31,7 @@ const
     EI_TYPE_CONTACT = 'contact';
     EI_TYPE_ROOM = 'room';
     EI_TYPE_GROUP = 'group';
+    EI_TYPE_ALL = 'all';
 type
   TExodusItem = class(TAutoObject, IExodusItem)
   {

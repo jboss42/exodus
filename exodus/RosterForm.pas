@@ -5,8 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, XMLTag, ExAllTreeView, Exodus_TLB, LoginWindow, ComCtrls,
-  TntComCtrls, ExContactsTreeView, ExRoomsTreeView, COMExodusTabController,
-  Unicode, AppEvnts, ExItemHoverForm;
+  TntComCtrls, COMExodusTabController,
+  Unicode, AppEvnts, ExItemHoverForm, ExTreeView;
 
 type
   TRosterForm = class(TExForm)
@@ -26,9 +26,9 @@ type
 
       _SessionCB: integer;            // session callback id
       _RosterCB: integer;            // roster callback id
-      _TreeMain: TExAllTreeView;
-      _TreeContacts: TExContactsTreeView;
-      _TreeRooms: TExRoomsTreeView;
+//      _TreeMain: TExAllTreeView;
+//      _TreeContacts: TExContactsTreeView;
+//      _TreeRooms: TExRoomsTreeView;
       _TabController: IExodusTabController;
       _PageControlSaveWinProc: TWndMethod;
       _ActiveTabColor: TColor;
@@ -42,6 +42,8 @@ type
       procedure TntPageControlMouseMove(Sender: TObject; Shift: TShiftState;
                                         X, Y: Integer);
       //procedure _RemovePluginTabs();
+      function _GetRosterTree(): TExTreeView;
+      procedure ClearTreeItems();
   public
       { Public declarations }
       procedure InitControlls();
@@ -50,9 +52,10 @@ type
       function  GetDockParent(): TForm;
       procedure DockWindow(docksite: TWinControl);
       function  SelectionFor(Index: Integer): IExodusItemList;
-      property  RosterTree: TExAllTreeView read _TreeMain;
-      property  ContactsTree: TExContactsTreeView read _TreeContacts;
-      property  RoomsTree: TExRoomsTreeView read _TreeRooms;
+
+      property  RosterTree: TExTreeView read _GetRosterTree;
+//      property  ContactsTree: TExTreeView read _GetTreeByName('Contacts');
+//      property  RoomsTree: TExTreeView read _GetTreeByName('Rooms');
       property  ImageList: TImageList read _GetImages  write _SetImages;
       property  TabController: IExodusTabController read _TabController;
       property  PageControl: TTntPageControl read _PageControl;
@@ -75,10 +78,11 @@ uses
     Session,
     RosterImages,
     gnugettext,
-    ExTreeView,
     Jabber1,
     PrefController,
-    FontConsts;
+    FontConsts,
+    COMExodusTab,
+    COMExodusItem;
 
 {$R *.dfm}
 
@@ -154,19 +158,15 @@ end;
 function TRosterForm._GetTreeByTabIndex(Index: Integer): TTntTreeView;
 begin
    Result := nil;
-   if (_TreeMain.TabIndex = Index) then
-       Result := _TreeMain
-   else if (_TreeContacts.TabIndex = Index) then
-       Result := _TreeContacts
-   else if (_TreeRooms.TabIndex = Index) then
-       Result := _TreeRooms;
-
+   if ((Index >= 0) and (Index < TabController.TabCount)) then
+       Result :=  TTntTreeView(TabController.Tab[Index].GetTree);
 end;
 
 {---------------------------------------}
 procedure TRosterForm.SessionCallback(Event: string; Tag: TXMLTag);
 var
     Idx: Integer;
+    Tree: TExTreeView;
 begin
     // catch session events
     if Event = '/session/disconnected' then
@@ -184,7 +184,7 @@ begin
         if (TabController.VisibleTabCount = 1) then
         begin
             _PageControl.Visible := false;
-            _TreeMain.Parent := Self;
+            RosterTree.Parent := Self;
         end;
     end
     else if Event = '/session/tab/show' then
@@ -194,7 +194,10 @@ begin
             _PageControl.Visible := true;
              Idx := _TabController.GetTabIndexByName('Main');
              if (Idx <> -1) then
-                 _TreeMain.parent := _PageControl.Pages[Idx];
+             begin
+                 Tree := RosterTree;
+                 Tree.parent := _PageControl.Pages[Idx];
+             end;
         end;
     end
     else if Event = '/session/prefs' then
@@ -213,12 +216,12 @@ begin
         UnRegisterCallback(_rostercb);
         UnRegisterCallback(_sessioncb);
    end;
-    _TreeMain.Free();
-    _TreeMain := nil;
-    _TreeContacts.Free();
-    _TreeContacts := nil;
-    _TreeRooms.Free();
-    _TreeRooms := nil;
+//    _TreeMain.Free();
+//    _TreeMain := nil;
+//    _TreeContacts.Free();
+//    _TreeContacts := nil;
+//    _TreeRooms.Free();
+//    _TreeRooms := nil;
     _TabController := nil;
     _HoverWindow.Free;
 end;
@@ -228,58 +231,58 @@ end;
 procedure TRosterForm.InitControlls();
 var
     ITab: IExodusTab;
-    Idx: Integer;
+//    Idx: Integer;
 begin
     _PageControlSaveWinProc := _PageControl.WindowProc;
     _PageControl.WindowProc := _PageControlNewWndProc;
     _TabController := TExodusTabController.Create();
     _ActiveTabColor := TColor(MainSession.prefs.getInt(P_ROSTER_BG));
-    _TreeMain := TExAllTreeView.Create(Self, MainSession);
-    _TreeMain.Align := alClient;
-    _TreeMain.Canvas.Pen.Width := 1;
-    _TreeMain.SetFontsAndColors();
+//    _TreeMain := TExAllTreeView.Create(Self, MainSession);
+//    _TreeMain.Align := alClient;
+//    _TreeMain.Canvas.Pen.Width := 1;
+//    _TreeMain.SetFontsAndColors();
 
     _Rostercb := MainSession.RegisterCallback(RosterCallback, '/item');
     _SessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
 
 
-    _TreeContacts := TExContactsTreeView.Create(Self, MainSession);
-    _TreeContacts.Align := alClient;
-    _TreeContacts.Canvas.Pen.Width := 1;
-    _TreeContacts.SetFontsAndColors();
+//    _TreeContacts := TExContactsTreeView.Create(Self, MainSession);
+//    _TreeContacts.Align := alClient;
+//    _TreeContacts.Canvas.Pen.Width := 1;
+//    _TreeContacts.SetFontsAndColors();
+//
+//    _TreeRooms := TExRoomsTreeView.Create(Self, MainSession);
+//    _TreeRooms.Align := alClient;
+//    _TreeRooms.Canvas.Pen.Width := 1;
+//    _TreeRooms.SetFontsAndColors();
 
-    _TreeRooms := TExRoomsTreeView.Create(Self, MainSession);
-    _TreeRooms.Align := alClient;
-    _TreeRooms.Canvas.Pen.Width := 1;
-    _TreeRooms.SetFontsAndColors();
-
-    ITab := _tabController.AddTab('', 'Main');
+    ITab := _tabController.AddTab('', 'Main', EI_TYPE_ALL);
     ITab.ImageIndex := RI_MAIN_TAB_INDEX;
-    Idx := _TabController.GetTabIndexByUid(ITab.UID);
-    if (Idx > -1) then
-    begin
-        _treeMain.parent := _PageControl.Pages[Idx];
-        _treeMain.TabIndex := Idx;
-    end;
+//    Idx := _TabController.GetTabIndexByUid(ITab.UID);
+//    if (Idx > -1) then
+//    begin
+//        _treeMain.parent := _PageControl.Pages[Idx];
+//        _treeMain.TabIndex := Idx;
+//    end;
 
-    ITab := _TabController.AddTab('', _('Contacts'));
+    ITab := _TabController.AddTab('', 'Contacts', EI_TYPE_CONTACT);
     ITab.Description := _('Tab containing contacts only. ');
     ITab.ImageIndex := RI_CONTACTS_TAB_INDEX;
-    Idx := _TabController.GetTabIndexByUid(ITab.UID);
-    if (Idx > -1) then
-    begin
-        _TreeContacts.parent := _PageControl.Pages[Idx];
-        _TreeContacts.TabIndex := Idx;
-    end;
-    ITab := _TabController.AddTab('', _('Rooms'));
+//    Idx := _TabController.GetTabIndexByUid(ITab.UID);
+//    if (Idx > -1) then
+//    begin
+//        _TreeContacts.parent := _PageControl.Pages[Idx];
+//        _TreeContacts.TabIndex := Idx;
+//    end;
+    ITab := _TabController.AddTab('', 'Rooms', EI_TYPE_ROOM);
     ITab.ImageIndex := RI_ROOMS_TAB_INDEX;
     ITab.Description := _('Tab containing rooms only. ');
-    Idx := _TabController.GetTabIndexByUid(ITab.UID);
-    if (Idx > -1) then
-    begin
-        _TreeRooms.parent := _PageControl.Pages[Idx];
-        _TreeRooms.TabIndex := Idx;
-    end;
+//    Idx := _TabController.GetTabIndexByUid(ITab.UID);
+//    if (Idx > -1) then
+//    begin
+//        _TreeRooms.parent := _PageControl.Pages[Idx];
+//        _TreeRooms.TabIndex := Idx;
+//    end;
 
     AssignUnicodeFont(Self, 9);
     Application.HintPause := MainSession.prefs.getInt('roster_hint_delay');
@@ -303,9 +306,8 @@ begin
     if (State = lgsDisconnected) then
     begin
        Self.Visible := false;
-       _TreeMain.Items.Clear();
-       _TreeContacts.Items.Clear();
-       _TreeRooms.Items.Clear();
+       //Change code to clear items for all tree tabs
+       ClearTreeItems();
     end;
 
 end;
@@ -410,4 +412,30 @@ begin
 
 end;
 
+function TRosterForm._GetRosterTree() : TExTreeView;
+var
+    Idx: Integer;
+    Tab: IExodusTab;
+begin
+    Result := nil;
+    Idx := TabController.GetTabIndexByName('Main');
+    if (Idx <> -1) then
+    begin
+       Tab := TabController.Tab[Idx];
+       Result :=  TExTreeView(Tab.GetTree);
+    end;
+
+end;
+
+procedure TRosterForm.ClearTreeItems();
+var
+    i: Integer;
+begin
+  for i := 0 to TabController.TabCount - 1 do
+  begin
+      if (TExTreeView(TabController.Tab[i].GetTree) <> nil) then
+          TExTreeView(TabController.Tab[i].GetTree).Items.Clear();
+  end;
+    
+end;
 end.
