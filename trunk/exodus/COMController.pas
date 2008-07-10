@@ -2213,6 +2213,7 @@ begin
     if (tag <> nil) then begin
         Result := tag.XML();
     end;
+    tag.Free();
 end;
 
 procedure TExodusController.SetPrefAsXML(const xml: WideString);
