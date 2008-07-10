@@ -111,7 +111,7 @@ initialization
     XP_MSGDELAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_DELAY + '"]');
     XP_MSGDELAY_203 := TXPLite.Create('/message/delay[@xmlns="' + XMLNS_DELAY_203 + '"]');
     XP_XOOB := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XOOB + '"]');
-    XP_XDELIVER := TXPLIte.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/delivered');
+    XP_XDELIVER := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/delivered');
     XP_XDISPLAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/displayed');
     XP_XROSTER := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XROSTER + '"]');
     XP_XHTMLIM := TXPLite.Create('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]');

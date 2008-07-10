@@ -52,7 +52,7 @@ type
 
             // Methods
             constructor Create();
-            destructor Destroy();
+            destructor Destroy(); override;
 
             procedure OnResult(SearchID: widestring; msg: TJabberMessage);
             procedure SessionCallback(event: string; tag:TXMLTag);
@@ -102,6 +102,7 @@ begin
     _handlerID := HistorySearchManager.RegisterSearchHandler(Self);
     _sessionCB := MainSession.RegisterCallback(SessionCallback,'/session/history/search');
 end;
+
 {---------------------------------------}
 destructor TSQLSearchHandler.Destroy();
 var
@@ -125,6 +126,8 @@ begin
     _CurrentSearches.Free();
 
     MainSession.UnRegisterCallback(_sessionCB);
+
+    inherited;
 end;
 
 {---------------------------------------}

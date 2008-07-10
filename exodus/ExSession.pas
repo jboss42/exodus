@@ -655,8 +655,8 @@ begin
         HistorySearchManager := TExodusHistorySearchManager.Create();
         HistorySearchManager.ObjAddRef();
         SQLSearch := TSQLSearchHandler.Create();
+        SQLSearch.ObjAddRef(); // Prevent early releases of this object
     except
-        //???dda - if not successful, we are in a world of hurt.
         DataStore := nil;
         MsgLogger := nil;
         HistorySearchManager := nil;
@@ -833,6 +833,7 @@ begin
     OutputDebugString('TeardownSession');
 
     SQLSearch.Free();
+    SQLSearch := nil;
     HistorySearchManager.Free();
     MsgLogger.Free();
     DataStore.Free();

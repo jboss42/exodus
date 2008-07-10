@@ -3546,6 +3546,7 @@ finalization
     xp_muc_item.Free();
     xp_muc_status.Free();
     xp_muc_presence.Free();
+    xp_muc_destroy_reason.Free();
     
     room_list.Free();
 

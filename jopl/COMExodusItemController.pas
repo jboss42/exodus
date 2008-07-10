@@ -828,4 +828,9 @@ initialization
     ciMultiInstance, tmApartment);
 
   xp_group := TXPLite.Create('//storage[@xmlns="' + XMLNS_GROUPS + '"]');
+
+finalization
+  xp_group.Free();
+
+
 end.
