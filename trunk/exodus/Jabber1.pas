@@ -4135,6 +4135,8 @@ var
     w,d: HWND;
     wSize: TRect;
     mon: TMonitor;
+    bounds: TRect;
+    winfo: TWindowInfo;
 begin
     if ((_windows_ver < cWIN_NT) or (_windows_ver = cWIN_ME)) then begin
         result := DT_UNKNOWN;
@@ -4163,7 +4165,15 @@ begin
         d := FindWindow('Progman', nil);
         if (w <> d) then begin
             // Got a window and it is NOT the program manager (desktop).
-            Windows.GetClientRect(w, wSize);
+            winfo.cbSize := SizeOf(TWindowInfo);
+            Windows.GetWindowInfo(w, winfo);
+            wSize := winfo.rcWindow;
+            //Adjust wSize by window border
+            wSize.Top := wSize.Top + winfo.cyWindowBorders;
+            wSize.Bottom := wSize.Bottom - winfo.cyWindowBorders;
+            wSize.Left := wSize.Left + winfo.cxWindowBorders;
+            wSize.Right := wSize.Right - winfo.cxWindowBorders;
+
             mon := Screen.MonitorFromWindow(w, mdNearest);
             //If window gets destroyed in between calls, returned
             //monitor could be nil which is causing crash, added check for this.
@@ -4171,10 +4181,12 @@ begin
               result := DT_UNKNOWN;
               exit;
             end;
-            if((mon.BoundsRect.Left = wSize.Left) and
-               (mon.BoundsRect.Right = wSize.Right) and
-               (mon.BoundsRect.Top = wSize.Top) and
-               (mon.BoundsRect.Bottom = wSize.Bottom) and
+
+            bounds := mon.WorkareaRect;
+            if((bounds.Left = wSize.Left) and
+               (bounds.Right = wSize.Right) and
+               (bounds.Top = wSize.Top) and
+               (bounds.Bottom = wSize.Bottom) and
                (MainSession.Prefs.getBool('auto_away')) and
                (MainSession.Prefs.getBool('away_full_screen'))) then begin
                result := DT_FULLSCREEN;
