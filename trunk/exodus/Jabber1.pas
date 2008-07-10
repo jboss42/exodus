@@ -3157,11 +3157,10 @@ begin
     if (not _cleanupComplete) then
         cleanup();
 
-    try
-        _hiddenIEMsgList.Free();
-        _dockWindow.Free();
-    except
-    end;
+    _hiddenIEMsgList.Free();
+    _dockWindow.Free();
+    _hiddenIEMsgList := nil;
+    _dockWindow := nil;
     if (_mnuRegisterUD <> nil) then
     begin
         if (_mnuRegisterUD.Tag <> 0) then

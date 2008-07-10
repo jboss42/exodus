@@ -254,13 +254,12 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.FormDestroy(Sender: TObject);
 begin
-    try
-        inherited;
-        _docked_forms.Free;
-        MainSession.UnRegisterCallback(_sessionCB);
-        UnHookWindowsHookEx(dockWindowKBHook) ;
-    except
-    end;
+    inherited;
+    _docked_forms.Free;
+    _docked_forms := nil;
+    MainSession.UnRegisterCallback(_sessionCB);
+    _sessionCB := -1;
+    UnHookWindowsHookEx(dockWindowKBHook) ;
 end;
 
 {---------------------------------------}
