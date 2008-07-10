@@ -810,8 +810,11 @@ begin
         Ready();
     end;
 
-    dateTo.DateTime := Now();
-    dateFrom.DateTime := IncMonth(dateTo.DateTime, DEFAULT_DATE_GAP_MONTHS);
+    // Set the date range
+    dateTo.DateTime := Now(); // "to" date is today
+    dateFrom.DateTime := IncMonth(dateTo.DateTime, DEFAULT_DATE_GAP_MONTHS); // "From" date is x months ago
+    dateTo.MaxDate := DateTo.DateTime; // Don't allow future dates
+    dateFrom.MaxDate := DateTo.DateTime; // Don't allow future dates.
 
     btnRemoveContact.Enabled := false;
     btnRemoveRoom.Enabled := false;
