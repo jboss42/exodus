@@ -3158,9 +3158,8 @@ begin
         cleanup();
 
     _hiddenIEMsgList.Free();
-    _dockWindow.Free();
     _hiddenIEMsgList := nil;
-    _dockWindow := nil;
+    _dockWindow := nil; // Don't free here as form is "owned" by application
     if (_mnuRegisterUD <> nil) then
     begin
         if (_mnuRegisterUD.Tag <> 0) then
