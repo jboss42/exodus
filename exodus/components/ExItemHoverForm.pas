@@ -42,7 +42,7 @@ type
   end;
 
 implementation
-uses COMExodusItem, ExTreeView, Jabber1, Presence, Session, RosterForm;
+uses COMExodusItem, ExTreeView, Jabber1, Presence, Session, RosterForm, XMLTag;
 
 procedure TExItemHoverForm._NewWndProc(var Message: TMessage);
 begin
@@ -77,7 +77,7 @@ begin
          exit;
     end;
     _CalcHoverPosition(Point);
-
+  
     Self.Show;
     HoverHide.Enabled := true;
     HoverReenter.Enabled := false;
@@ -88,19 +88,31 @@ begin
     _AXHover := nil;
     Result := true;
     Caption := Item.Text;
-    if (_CurrentFrame <> nil) then
-        _CurrentFrame.Parent := nil;
-    AutoSize := false;
+
     if (Item.Type_ = EI_TYPE_CONTACT) then
     begin
-        _CurrentFrame := _ContactFrame;
-        _ContactFrame.Parent := Self;
+        if (_CurrentFrame <> _ContactFrame) then
+        begin
+            AutoSize := false;
+            if (_CurrentFrame <> nil) then
+                _CurrentFrame.Parent := nil;
+            _CurrentFrame := _ContactFrame;
+            _CurrentFrame.Parent := Self;
+            AutoSize := true;
+        end;
         _ContactFrame.InitControls(Item);
     end
     else if (Item.Type_ = EI_TYPE_ROOM) then
     begin
-        _CurrentFrame := _RoomFrame;
-        _RoomFrame.Parent := Self;
+        if (_CurrentFrame <> _RoomFrame) then
+        begin
+            AutoSize := false;
+            if (_CurrentFrame <> nil) then
+                _CurrentFrame.Parent := nil;
+            _CurrentFrame := _RoomFrame;
+            _CurrentFrame.Parent := Self;
+            AutoSize := true;
+        end;
         _RoomFrame.InitControls(Item);
     end
     else
@@ -114,7 +126,7 @@ begin
           exit;
         end;
     end;
-    AutoSize := true;
+
 end;
 
 procedure TExItemHoverForm.CancelHover();
@@ -212,13 +224,15 @@ begin
     if Point.X < CurMonitor.Left then
         Point.X := Point.X + GetRosterWindow().Width + Width;
 
-    SetWindowPos(Handle, HWND_TOPMOST, Point.X, Point.Y, Width, Height,
-      0);
+
+    SetWindowPos(Handle, HWND_BOTTOM, Point.X, Point.Y, Width, Height,
+     0);
 end;
 
 function TExItemHoverForm._HideForm(): boolean;
 var
     canHide: boolean;
+    Tag: TXMLTag;
 begin
     canHide := true;
     if (_AXHover <> nil) then
@@ -240,6 +254,8 @@ begin
     end;
 
     Result := canHide;
+    Tag := TXMLTag.Create();
+    MainSession.FireEvent('/session/hover/clear', Tag);
 end;
 
 
