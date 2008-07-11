@@ -286,13 +286,16 @@ begin
     inherited;
     _normalImageIndex := RosterImages.RI_AVAILABLE_INDEX;
     _docked := false;
-    _initiallyDocked := true;
-    SnapBuffer := MainSession.Prefs.getInt('edge_snap');
+    with MainSession do
+    begin
+        _initiallyDocked := Prefs.getBool('start_docked');
+        SnapBuffer := Prefs.getInt('edge_snap');
 
-    _prefs_callback_id := MainSession.RegisterCallback(prefsCallback, '/session/prefs');
-    _session_close_all_callback := MainSession.RegisterCallback(closeAllCallback, '/session/close-all-windows');
-    _session_dock_all_callback := MainSession.RegisterCallback(dockAllCallback, '/session/dock-all-windows');
-    _session_float_all_callback := MainSession.RegisterCallback(floatAllCallback, '/session/float-all-windows');
+        _prefs_callback_id := RegisterCallback(prefsCallback, '/session/prefs');
+        _session_close_all_callback := RegisterCallback(closeAllCallback, '/session/close-all-windows');
+        _session_dock_all_callback := RegisterCallback(dockAllCallback, '/session/dock-all-windows');
+        _session_float_all_callback := RegisterCallback(floatAllCallback, '/session/float-all-windows');
+    end;
 
     _unreadmsg := -1;
     _unreadMessages := TWidestringList.create();
@@ -630,7 +633,13 @@ end;
 procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/prefs') then
-        SnapBuffer := MainSession.Prefs.getInt('edge_snap');
+    begin
+        with MainSession.Prefs do
+        begin
+            SnapBuffer := getInt('edge_snap');
+            _initiallyDocked := getBool('start_docked');
+        end;
+    end;
 end;
 
 function TfrmDockable.getUID(): Widestring;

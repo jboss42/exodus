@@ -378,6 +378,7 @@ begin
             reg.Free();
         end;
 
+        SetBool('start_docked', rbDocked.Checked);
     end;
 end;
 
