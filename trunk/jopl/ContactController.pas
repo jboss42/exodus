@@ -602,9 +602,13 @@ begin
         exit;
 
     //If my user own presence, ignore
-    Tmp := TJabberID.Create(Pres.FromJid);
-    if (Tmp.jid = TJabberSession(_JS).BareJid) then
-        exit;
+    try
+        Tmp := TJabberID.Create(Pres.FromJid);
+        if (Tmp.jid = TJabberSession(_JS).BareJid) then
+            exit;
+    finally
+        tmp.Free();
+    end;
 
     Item := TJabberSession(_js).ItemController.GetItem(Pres.fromJid.jid);
 

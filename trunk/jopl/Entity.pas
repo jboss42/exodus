@@ -873,6 +873,7 @@ var
     id, nid: Widestring;
     cj: TJabberID;
     ce: TJabberEntity;
+    tjid: TJabberID;
 begin
     {
     <iq
@@ -920,11 +921,13 @@ begin
 
         if (newitems.indexOf(id) = -1) then
         begin
-            ce := TJabberEntity.Create(TJabberID.create(cj)); //entity owns jid
+            tjid := TJabberID.create(cj);
+            ce := TJabberEntity.Create(tjid); //entity owns jid
             ce._parent := parent;
             ce._name := iset[i].getAttribute('name');
             ce._node := nid;
             newItems.AddObject(cj.full, ce);
+            tjid.Free();
         end;  //ignore dups
         cj.Free();
     end;
