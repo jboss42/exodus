@@ -731,6 +731,7 @@ begin
         for idx := 0 to path.Count - 1 do begin
             ModifyGroupExpanded(_GetItemRetainer(path[idx]));
         end;
+        path.Free();
     end;
 
     ModifyGroupExpanded(Wrapper);

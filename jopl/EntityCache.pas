@@ -318,12 +318,16 @@ end;
 {---------------------------------------}
 function TJabberEntityCache.fetch(jid: Widestring; js: TJabberSession;
     items_limit: boolean; node: Widestring): TJabberEntity;
+var
+    tjid: TJabberID;
 begin
     Result := getByJid(jid, node);
     if (Result <> nil) then
         Result.Free();
 
-    Result := TJabberEntity.Create(TJabberID.Create(jid), node);
+    tjid := TJabberID.Create(jid);
+    Result := TJabberEntity.Create(tjid, node);
+    tjid.Free();
     _cache.AddObject(Result.Jid.full, Result);
 
     Result.discoWalk(js, items_limit);

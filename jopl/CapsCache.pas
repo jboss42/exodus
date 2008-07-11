@@ -306,6 +306,7 @@ var
     iq, cache: TXMLTag;
     iqs: TXMLTagList;
     capid, from, hash: Widestring;
+    tjid: TJabberID;
 begin
     parser := TXMLTagParser.Create();
 
@@ -340,8 +341,10 @@ begin
             e := nil;
         end;
         if (e = nil) then begin
-            e := TJabberCapsEntity.Create(TJabberID.Create(from), capid, hash);
+            tjid := TJabberID.Create(from);
+            e := TJabberCapsEntity.Create(tjid, capid, hash);
             jEntityCache.Add(from, e);
+            tjid.Free();
         end;
         e.LoadInfo(iq);
         AddCached(TJabberCapsEntity(e));
@@ -420,6 +423,7 @@ var
     from: TJabberID;
     node, cid, capid, ver, hash: Widestring;
     ids: TWidestringlist;
+    tjid: TJabberID;
 begin
     if (event <> 'xml') then exit;
 
@@ -463,8 +467,10 @@ begin
     begin
         e := jEntityCache.getByJid(from.full);
         if (e = nil) then begin
-            e := TJabberEntity.Create(TJabberID.Create(from));
+            tjid := TJabberID.Create(from);
+            e := TJabberEntity.Create(tjid);
             jEntityCache.Add(from.full, e);
+            tjid.Free();
         end;
 
         e.ClearReferences(); //refs will be rebuilt here
@@ -667,8 +673,12 @@ end;
 {--------------------------}
 {--------------------------}
 constructor TJabberSelfEntity.Create();
+var
+    tjid: TJabberID;
 begin
-    inherited Create(TJabberID.Create('self-caps'), '', 'sha-1');
+    tjid := TJabberID.Create('self-caps');
+    inherited Create(tjid, '', 'sha-1');
+    tjid.Free();
 
     // no node or uri#ver
     addFeature(XMLNS_AGENTS);
@@ -722,6 +732,7 @@ var
     ref: TJabberCapsEntity;
     uri: Widestring;
     capid: Widestring;
+    tjid: TJabberID;
 begin
     session := TJabberSession(_js);
     uri := session.Prefs.getString('client_caps_uri');
@@ -750,7 +761,9 @@ begin
         capid := Self.Node;
         ref := jCapsCache.find(capid);
         if (ref = nil) then begin
-            ref := TJabberCapsEntity.Create(TJabberID.Create('caps-cache'), capid, Hash);
+            tjid := TJabberID.Create('caps-cache');
+            ref := TJabberCapsEntity.Create(tjid, capid, Hash);
+            tjid.Free();
             jCapsCache.AddCached(ref);
         end;
         ref.AddReference(Self);

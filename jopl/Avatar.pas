@@ -671,55 +671,57 @@ var
     x2: TXMLTag;
 begin
     // we got an avatar enabled presence
-    fetch := false;
-    fjid := TJabberID.Create(tag.getAttribute('from'));
+    try
+        fetch := false;
+        fjid := TJabberID.Create(tag.getAttribute('from'));
 
-    x1 := tag.QueryXPTag(_xp1);
-    x2 := tag.QueryXPTag(_xp2);
+        x1 := tag.QueryXPTag(_xp1);
+        x2 := tag.QueryXPTag(_xp2);
 
-    if (x2 <> nil) then
-        // iChat mode
-        hash := x2.GetBasicText('photo')
-    else
-        // old iq:avatar mode
-        hash := x1.GetBasicText('hash');
-
-    // bail if we have no hash value
-    if (Trim(hash) = '') then exit;
-
-    assert((x1 <> nil) or (x2 <> nil));
-
-    {$ifdef Exodus}
-    tmps := 'AVATAR: ' + fjid.jid + ', HASH: ' + hash;
-    Log(tmps);
-    {$endif}
-
-    a := find(fjid.jid);
-    if (a = nil) then begin
-        fetch := true;
-        a := TAvatar.Create();
-        a.jid := fjid.jid;
-        _cache.AddObject(fjid.jid, a);
-    end
-    else begin
-        // compare hashes
-        if (a.Pending) then
-            fetch := false
-        else if (hash <> a.getHash()) then begin
-            fetch := true;
-        end;
-    end;
-
-    if (fetch) then begin
-        a.jid := fjid.full;
         if (x2 <> nil) then
-            a.AvatarType := avCard
+            // iChat mode
+            hash := x2.GetBasicText('photo')
         else
-            a.AvatarType := avOld;
-        a.Fetch(_session);
-    end;
+            // old iq:avatar mode
+            hash := x1.GetBasicText('hash');
 
-    fjid.Free();
+        // bail if we have no hash value
+        if (Trim(hash) = '') then exit;
+
+        assert((x1 <> nil) or (x2 <> nil));
+
+        {$ifdef Exodus}
+        tmps := 'AVATAR: ' + fjid.jid + ', HASH: ' + hash;
+        Log(tmps);
+        {$endif}
+
+        a := find(fjid.jid);
+        if (a = nil) then begin
+            fetch := true;
+            a := TAvatar.Create();
+            a.jid := fjid.jid;
+            _cache.AddObject(fjid.jid, a);
+        end
+        else begin
+            // compare hashes
+            if (a.Pending) then
+                fetch := false
+            else if (hash <> a.getHash()) then begin
+                fetch := true;
+            end;
+        end;
+
+        if (fetch) then begin
+            a.jid := fjid.full;
+            if (x2 <> nil) then
+                a.AvatarType := avCard
+            else
+                a.AvatarType := avOld;
+            a.Fetch(_session);
+        end;
+    finally
+        fjid.Free();
+    end;
 end;
 
 {---------------------------------------}
