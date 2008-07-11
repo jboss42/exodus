@@ -87,6 +87,9 @@ body {
 .alert {
 	color:/*color_alert*/;
 }
+.error {
+	color:/*color_error*/;
+}
 
 .action {
 	color:/*color_action*/;

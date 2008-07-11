@@ -524,10 +524,11 @@ function TIEMsgListProcessor.ProcessDisplayMsg(const Msg: TJabberMessage; var id
 var
     dv: widestring;
     txt: widestring;
+    tmp: Widestring;
     cleanXIM: TXmlTag;
     nodes: TXMLNodeList;
     i: integer;
-    body: TXmlTag;
+    body, err: TXmlTag;
 begin
     Result := '';
     if (Msg = nil) then exit;
@@ -576,7 +577,10 @@ begin
     dv := '<div id="' + id + '" class="' + _getLineClass(Msg) + '">';
 
     // Author Stamp
-    if (Msg.Nick <> '') then begin
+    if (Msg.Nick = '') then begin
+        dv := dv + '<span class="svr">' + HTML_EscapeChars(_('System Message'), false, true) + '</span>';
+    end
+    else begin
         // This is a normal message
         if (not _checkLastNickForMsgGrouping(Msg)) then begin
             if Msg.isMe then begin
@@ -588,10 +592,6 @@ begin
                 dv := dv + '<span class="other">' + HTML_EscapeChars(Msg.Nick, false, true) + '</span>';
             end;
         end;
-
-    end
-    else begin
-        dv := dv + '<span class="svr">' + HTML_EscapeChars(_('System Message'), false, true) + '</span>';
     end;
 
     _lastMsgNick := Msg.Nick;
@@ -615,7 +615,22 @@ begin
     end;
 
     // MSG Content
-    if (Msg.Nick = '') then begin
+    if (Msg.MsgType = 'error') then begin
+        err := Msg.Tag.GetFirstTag('error');
+        if (err <> nil) and (err.getAttribute('code') <> '') then begin
+            tmp := _('Undeliverable message (Error Code: %s): ');
+            tmp := Format(tmp, [err.getAttribute('code')]);
+            txt := HTML_EscapeChars(tmp, false, true) +
+                txt;
+        end
+        else begin
+            tmp := _('Undeliverable message (Unknown Reason): ');
+            txt := HTML_EscapeChars(tmp, false, true) +
+                txt;
+        end;
+        dv := dv + '<span class="error">' + txt + '</span>';
+    end
+    else if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
         dv := dv + '<span class="svr">' + txt + '</span>';
     end

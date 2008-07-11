@@ -968,11 +968,13 @@ begin
 end;
 
 Constructor TErrorDisplay.Create(AOwner: TComponent);
+var
+    info: TTntLabel;
 begin
     inherited;
-    Caption := _('Message Errors');
+    Caption := _('Undeliverable');
     ImageIndex := RI_ERROR_INDEX;
-    Hint := _('Messages returned because of an error');
+    Hint := _('Messages returned because they could not be properly delivered');
 end;
 
 {*******************************************************************************
