@@ -1300,9 +1300,6 @@ begin
         newPresIdx := Item.ImageIndex;
     end;
 
-    _show := show;
-    _status := status;
-
     nickHint := show;
     if ((status <> '') and
         (status <> show)) then begin
@@ -1404,6 +1401,8 @@ begin
     j.Free();
     if ((_show <> show) or (_status <> status)) then begin
         ChangePresImage(Item, show, status);
+        _show := show;
+        _status := status;
 
         if (MainSession.Prefs.getBool('timestamp')) then begin
             dt := Now;
