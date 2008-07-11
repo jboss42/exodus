@@ -58,7 +58,8 @@ uses
 
 const
     sAbout1 = 'Exodus is the creation of Peter Millard.  Checkout the website at http://exodus.googlecode.com for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.';
-    sAbout2 = 'TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si.';
+    sAbout2 = 'TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.indyproject.org/index.html.';
+    sAbout2a = ' This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si.';
     sAbout3 = 'SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de';
     sAbout4 = 'Unicode library is Copyright (c) 1999, 2000 Mike Lischke (public@lischke-online.de) and Portions Copyright (c) 1999, 2000 Azret Botash (az).';
     sAbout5 = 'RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>';
@@ -89,6 +90,7 @@ begin
     InfoBox.WideLines.Add(_(sAbout1));
     InfoBox.WideLines.Add('');
     InfoBox.WideLines.Add(_(sAbout2));
+    InfoBox.WideLines.Add(_(sAbout2a));
     InfoBox.WideLines.Add('');
     InfoBox.WideLines.Add(_(sAbout3));
     InfoBox.WideLines.Add('');
