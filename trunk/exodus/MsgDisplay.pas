@@ -56,7 +56,8 @@ uses
     TypInfo,
     DateUtils,
     PrefController,
-    FontConsts;
+    FontConsts,
+    gnugettext;
 
 const
     MAX_MSG_LENGTH = 512;
@@ -142,10 +143,10 @@ procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: 
                         color_time, color_priority, color_server, color_action, color_me, color_other, font_color: integer);
 var
     len, fvl: integer;
-    txt, body: WideString;
+    txt, body, tmp: WideString;
     at_bottom: boolean;
     is_scrolling: boolean;
-    ximTag: TXMLTag;
+    ximTag, err: TXMLTag;
     hlStartPos: integer;
     offset : integer;
 begin
@@ -199,11 +200,25 @@ begin
 
     len := Length(Msg.Body);
 
-    if (Msg.Nick = '') then begin
+    if (Msg.MsgType = 'error') then begin
+        err := Msg.Tag.GetFirstTag('error');
+        if ((err <> nil) and (err.getAttribute('code') <> '')) then begin
+            tmp := _('Undeliverable message (Error Code: %s): ');
+            tmp := Format(tmp, [err.GetAttribute('code')]);
+            tmp := EscapeRTF(tmp);
+        end
+        else begin
+            tmp := _('Undeliverable message (unknown reason): ');
+            tmp := EscapeRTF(tmp);
+        end;
+
+        // Some sort of error occurred
+        txt := txt + '\cf2 ' + tmp + EscapeRTF(Msg.Body);
+    end
+    else if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
         txt := txt + '\cf2  ' + EscapeRTF(Msg.Body);
     end
-
     else if not Msg.Action then begin
         // This is a normal message
         if Msg.isMe then

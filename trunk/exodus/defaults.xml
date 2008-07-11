@@ -127,6 +127,7 @@
     <color_composing value="$800080"/>
     <color_presence value="$808080"/>
     <color_alert value="$ff0000"/>
+    <color_error value="$ff0000"/>
 
     <!-- other display preferences -->
     <richtext_enabled value="1" control="chkRTEnabled" state="rw"/>
