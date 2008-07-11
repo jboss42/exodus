@@ -228,6 +228,7 @@ begin
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
     TJabberSession(_JS).FireEvent('/roster/end', nil, ''); //legacy event
     TJabberSession(_JS).FireEvent(DEPMOD_READY_EVENT + DEPMOD_ROSTER, nil); //new signal roster is loaded
+    ContactItemTags.Free();
 end;
 
 {---------------------------------------}
@@ -408,6 +409,7 @@ begin
                 session.FireEvent('/item/update', item);
         end;
     end;
+    riList.Free();
 end;
 
 {---------------------------------------}

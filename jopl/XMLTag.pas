@@ -462,6 +462,7 @@ begin
         ftags := Self.QueryXPTags(spath);
         for i := 0 to ftags.Count - 1 do
             Result := Result + ftags.tags[i].Data;
+        ftags.Free();
     end;
 end;
 
