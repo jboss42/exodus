@@ -58,7 +58,7 @@
     <!-- timeout values are in milliseconds -->
     <roster_hint_delay value="750"/>
     <roster_hint_hide_delay value="10000"/>
-    <roster_hint_reentry_delay value="500"/>
+    <roster_hint_reentry_delay value="100"/>
 
     <!-- advanced roster prefs -->
     <inline_color value="$808000" control="cboStatusColor" state="rw">

@@ -26,9 +26,6 @@ type
 
       _SessionCB: integer;            // session callback id
       _RosterCB: integer;            // roster callback id
-//      _TreeMain: TExAllTreeView;
-//      _TreeContacts: TExContactsTreeView;
-//      _TreeRooms: TExRoomsTreeView;
       _TabController: IExodusTabController;
       _PageControlSaveWinProc: TWndMethod;
       _ActiveTabColor: TColor;
@@ -43,7 +40,6 @@ type
                                         X, Y: Integer);
       //procedure _RemovePluginTabs();
       function _GetRosterTree(): TExTreeView;
-      procedure ClearTreeItems();
   public
       { Public declarations }
       procedure InitControlls();
@@ -52,6 +48,7 @@ type
       function  GetDockParent(): TForm;
       procedure DockWindow(docksite: TWinControl);
       function  SelectionFor(Index: Integer): IExodusItemList;
+      procedure ClearTreeItems();
 
       property  RosterTree: TExTreeView read _GetRosterTree;
 //      property  ContactsTree: TExTreeView read _GetTreeByName('Contacts');
@@ -216,12 +213,6 @@ begin
         UnRegisterCallback(_rostercb);
         UnRegisterCallback(_sessioncb);
    end;
-//    _TreeMain.Free();
-//    _TreeMain := nil;
-//    _TreeContacts.Free();
-//    _TreeContacts := nil;
-//    _TreeRooms.Free();
-//    _TreeRooms := nil;
     _TabController := nil;
     _HoverWindow.Free;
 end;
@@ -237,52 +228,22 @@ begin
     _PageControl.WindowProc := _PageControlNewWndProc;
     _TabController := TExodusTabController.Create();
     _ActiveTabColor := TColor(MainSession.prefs.getInt(P_ROSTER_BG));
-//    _TreeMain := TExAllTreeView.Create(Self, MainSession);
-//    _TreeMain.Align := alClient;
-//    _TreeMain.Canvas.Pen.Width := 1;
-//    _TreeMain.SetFontsAndColors();
+
 
     _Rostercb := MainSession.RegisterCallback(RosterCallback, '/item');
     _SessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
 
 
-//    _TreeContacts := TExContactsTreeView.Create(Self, MainSession);
-//    _TreeContacts.Align := alClient;
-//    _TreeContacts.Canvas.Pen.Width := 1;
-//    _TreeContacts.SetFontsAndColors();
-//
-//    _TreeRooms := TExRoomsTreeView.Create(Self, MainSession);
-//    _TreeRooms.Align := alClient;
-//    _TreeRooms.Canvas.Pen.Width := 1;
-//    _TreeRooms.SetFontsAndColors();
-
     ITab := _tabController.AddTab('', 'Main', EI_TYPE_ALL);
     ITab.ImageIndex := RI_MAIN_TAB_INDEX;
-//    Idx := _TabController.GetTabIndexByUid(ITab.UID);
-//    if (Idx > -1) then
-//    begin
-//        _treeMain.parent := _PageControl.Pages[Idx];
-//        _treeMain.TabIndex := Idx;
-//    end;
 
     ITab := _TabController.AddTab('', 'Contacts', EI_TYPE_CONTACT);
     ITab.Description := _('Tab containing contacts only. ');
     ITab.ImageIndex := RI_CONTACTS_TAB_INDEX;
-//    Idx := _TabController.GetTabIndexByUid(ITab.UID);
-//    if (Idx > -1) then
-//    begin
-//        _TreeContacts.parent := _PageControl.Pages[Idx];
-//        _TreeContacts.TabIndex := Idx;
-//    end;
+
     ITab := _TabController.AddTab('', 'Rooms', EI_TYPE_ROOM);
     ITab.ImageIndex := RI_ROOMS_TAB_INDEX;
     ITab.Description := _('Tab containing rooms only. ');
-//    Idx := _TabController.GetTabIndexByUid(ITab.UID);
-//    if (Idx > -1) then
-//    begin
-//        _TreeRooms.parent := _PageControl.Pages[Idx];
-//        _TreeRooms.TabIndex := Idx;
-//    end;
 
     AssignUnicodeFont(Self, 9);
     Application.HintPause := MainSession.prefs.getInt('roster_hint_delay');
@@ -344,6 +305,7 @@ begin
     if (HintInfo.HintControl is TExTreeView) then
     begin
        CanShow := false;
+       if (HoverWindow.Visible) then exit;
        hnd := GetForegroundWindow();
        if (((frmExodus.Handle = hnd) or
             (HoverWindow.Handle = hnd)) and
@@ -436,6 +398,7 @@ begin
       if (TExTreeView(TabController.Tab[i].GetTree) <> nil) then
           TExTreeView(TabController.Tab[i].GetTree).Items.Clear();
   end;
-    
+
 end;
+
 end.
