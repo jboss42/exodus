@@ -231,6 +231,7 @@ var
     Groups:TXMLTag;
     gTag: TXMLTag;
     Group: IExodusItem;
+    tagList: TXMLTagList;
 begin
     Group := nil;
     Groups := nil;
@@ -245,16 +246,18 @@ begin
     end;
 
     if Groups <> nil then begin
+        tagList := Groups.ChildTags;
         for i := 0 to Groups.ChildCount - 1 do
         begin
             //Add will checks for duplicates
-            gTag := Groups.ChildTags[i];
+            gTag := tagList[i];
             Group := AddGroup(gTag.Data);
             if (gTag.GetAttribute('expanded') <> '') then
                 Group.Value['Expanded'] := gTag.GetAttribute('expanded')
             else
                 Group.Value['Expanded'] := 'false';
         end;
+        tagList.Free();
     end;
 
     _GroupsLoaded := true;
