@@ -265,8 +265,28 @@ end;
 
 {---------------------------------------}
 procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer);
+var
+    notifybitmap: integer;
+    temp: integer;
 begin
-    DoNotify(win, MainSession.Prefs.getInt(pref_name), msg, icon, pref_name);
+    notifybitmap := MainSession.Prefs.getInt(pref_name);
+    if ((pref_name = 'notify_online') or
+        (pref_name = 'notify_offline')) then
+    begin
+        // We don't allow anything but toast and sound and tray
+        // for online/offline notifications.
+        temp := 0;
+        if ((notifybitmap and notify_toast) > 0) then
+            temp := temp or notify_toast;
+        if ((notifybitmap and notify_sound) > 0) then
+            temp := temp or notify_sound;
+        if ((notifybitmap and notify_tray) > 0) then
+            temp := temp or notify_tray;
+
+        notifybitmap := temp;
+    end;
+
+    DoNotify(win, notifybitmap, msg, icon, pref_name);
 end;
 
 end.
