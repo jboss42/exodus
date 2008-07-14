@@ -41,9 +41,11 @@ begin
     _ItemType := ItemType;
     try
        _AxControl := TAXControl.Create(nil, StringToGuid(GUID));
+
        _HoverFrame := TExFrame.Create(nil);
+       _HoverFrame.AutoSize := false;
        _AxControl.Parent := _HoverFrame;
-       _AXControl.Align := alClient;
+       _HoverFrame.AutoSize := true;
     except
         _AxControl := nil;
     end;
@@ -72,8 +74,15 @@ end;
 
 procedure TCOMExodusHover.Show(const Item: IExodusItem);
 begin
-    _HoverFrame.Parent := GetRosterWindow().HoverWindow;
-    GetRosterWindow().HoverWindow.CurrentFrame := _HoverFrame;
+   if (GetRosterWindow().HoverWindow.CurrentFrame <> _HoverFrame) then
+   begin
+       GetRosterWindow().HoverWindow.AutoSize := false;
+       if (GetRosterWindow().HoverWindow.CurrentFrame <> nil) then
+            GetRosterWindow().HoverWindow.CurrentFrame.Parent := nil;
+       GetRosterWindow().HoverWindow.CurrentFrame := _HoverFrame;
+       GetRosterWindow().HoverWindow.CurrentFrame.Parent := GetRosterWindow().HoverWindow;
+       GetRosterWindow().HoverWindow.AutoSize := true;
+    end;
     if (_Listener <> nil) then
         _Listener.OnShow(Item);
 end;
