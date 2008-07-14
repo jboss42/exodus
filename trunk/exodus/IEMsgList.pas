@@ -1349,6 +1349,7 @@ begin
         end;
         _msgProcessor.lastLineClass := stag.GetBasicText('lastlineclass');
         _msgProcessor.idCount := StrToInt(stag.GetBasicText('idcount'));
+        stag.Free();
     end;
 
     writeHTML(txt);
