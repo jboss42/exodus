@@ -47,7 +47,7 @@ type
     property Count: integer read _count write setCount;
   end;
 
-  TfrmJud = class(TfrmDockWizard)
+  TfrmJud = class(TfrmWizard)
     lblSelect: TTntLabel;
     cboJID: TTntComboBox;
     TabSheet2: TTabSheet;
@@ -235,7 +235,8 @@ begin
     end;
 
     f.reset();
-    f.ShowDefault();
+    //???dda f.ShowDefault();
+    f.Show();
 
     // either get the fields right away,
     // or pre-select the first item
@@ -268,7 +269,7 @@ begin
     cur_dir := true;
   
     dflt_grp := MainSession.Prefs.getString('roster_default');
-    Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
+    //???dda Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
 
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
@@ -287,7 +288,7 @@ begin
     btnBroadcastMsg.Enabled := false;
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
     lblGroup.Caption := dflt_grp;
-    _windowType := 'jud';
+    //???dda _windowType := 'jud';
 end;
 
 
@@ -437,7 +438,7 @@ begin
     cur_iq := nil;
     aniWait.Active := false;
     btnBack.Enabled := true;
-    btnNext.Enabled := false;
+    btnNext.Enabled := true;
 
     if (event <> 'xml') then begin
         // timeout
