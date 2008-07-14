@@ -6,7 +6,7 @@ inherited frmBaseChat: TfrmBaseChat
   OnDestroy = FormDestroy
   OnResize = TntFormResize
   ExplicitWidth = 423
-  ExplicitHeight = 294
+  ExplicitHeight = 288
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -32,11 +32,13 @@ inherited frmBaseChat: TfrmBaseChat
     TabOrder = 2
     ExplicitWidth = 415
     inherited pnlDockTopContainer: TTntPanel
-      Width = 413
-      ExplicitWidth = 413
+      Width = 415
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 415
       inherited tbDockBar: TToolBar
-        Left = 364
-        ExplicitLeft = 364
+        Left = 366
+        ExplicitLeft = 366
         inherited btnDockToggle: TToolButton
           ParentShowHint = False
           ShowHint = True
@@ -47,13 +49,13 @@ inherited frmBaseChat: TfrmBaseChat
         end
       end
       inherited pnlDockTop: TTntPanel
-        Width = 361
+        Width = 363
         AutoSize = True
-        ExplicitWidth = 361
+        ExplicitWidth = 363
         object pnlChatTop: TTntPanel
           Left = 0
           Top = 0
-          Width = 361
+          Width = 363
           Height = 28
           Align = alClient
           BevelOuter = bvNone
@@ -63,13 +65,11 @@ inherited frmBaseChat: TfrmBaseChat
       end
     end
     inherited pnlDockControlSite: TTntPanel
-      Width = 413
-      AutoSize = True
-      Visible = True
-      ExplicitLeft = 1
-      ExplicitTop = 29
-      ExplicitWidth = 413
-      ExplicitHeight = 25
+      Width = 415
+      ExplicitLeft = 0
+      ExplicitTop = 28
+      ExplicitWidth = 415
+      ExplicitHeight = 27
     end
   end
   object pnlMsgList: TPanel

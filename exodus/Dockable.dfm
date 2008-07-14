@@ -16,27 +16,26 @@ inherited frmDockable: TfrmDockable
     Left = 0
     Top = 0
     Width = 204
-    Height = 55
+    Height = 33
     Align = alTop
-    AutoSize = True
-    BevelOuter = bvLowered
+    BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
     object pnlDockTopContainer: TTntPanel
-      Left = 1
-      Top = 1
-      Width = 202
+      Left = 0
+      Top = 0
+      Width = 204
       Height = 28
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 204
+      ExplicitLeft = 1
+      ExplicitTop = 1
+      ExplicitWidth = 202
       object tbDockBar: TToolBar
         AlignWithMargins = True
-        Left = 153
+        Left = 155
         Top = 3
         Width = 46
         Height = 22
@@ -49,7 +48,7 @@ inherited frmDockable: TfrmDockable
         TabOrder = 0
         Transparent = True
         Wrapable = False
-        ExplicitLeft = 155
+        ExplicitLeft = 153
         object btnDockToggle: TToolButton
           AlignWithMargins = True
           Left = 0
@@ -81,28 +80,24 @@ inherited frmDockable: TfrmDockable
       object pnlDockTop: TTntPanel
         Left = 0
         Top = 0
-        Width = 150
+        Width = 152
         Height = 28
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
-        ExplicitWidth = 152
+        ExplicitWidth = 150
       end
     end
     object pnlDockControlSite: TTntPanel
-      Left = 1
-      Top = 29
-      Width = 202
-      Height = 25
+      Left = 0
+      Top = 28
+      Width = 204
+      Height = 5
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
-      Visible = False
-      ExplicitLeft = 0
-      ExplicitTop = 28
-      ExplicitWidth = 204
       ExplicitHeight = 27
     end
   end
