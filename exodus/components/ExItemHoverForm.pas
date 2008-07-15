@@ -256,6 +256,7 @@ begin
     Result := canHide;
     Tag := TXMLTag.Create();
     MainSession.FireEvent('/session/hover/clear', Tag);
+    Tag.Free();
 end;
 
 

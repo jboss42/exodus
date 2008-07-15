@@ -34,7 +34,7 @@ type
         _verified: Boolean;
 
     protected
-        procedure _processDiscoInfo(tag: TXMLTag); override;
+        procedure _processDiscoInfo(const tag: TXMLTag); override;
         function CalculateHash(): Widestring;
 
         property Version: Widestring read _ver write _ver;
@@ -555,7 +555,7 @@ begin
 end;
 
 {--------------------------}
-procedure TJabberCapsEntity._processDiscoInfo(tag: TXMLTag);
+procedure TJabberCapsEntity._processDiscoInfo(const tag: TXMLTag);
 begin
     inherited _processDiscoInfo(tag);
 
