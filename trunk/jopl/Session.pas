@@ -339,7 +339,7 @@ uses
     RoomProperties,
     StrUtils,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
-    JabberConst, CapPresence, XMLVCard, Windows, JabberUtils;
+    JabberConst, CapPresence, XMLVCard, XMLVCardCache, Windows, JabberUtils;
 
 
 
@@ -408,6 +408,7 @@ begin
 
     // Create all the things which might register w/ the session
     jCapsCache.SetSession(Self);
+    XMLVCardCache.GetVCardCache().SetSession(Self);
 
     //display name cache
     DisplayName.getDisplayNameCache().setSession(Self);
