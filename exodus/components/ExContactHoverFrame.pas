@@ -69,7 +69,7 @@ type
 
 implementation
 uses ExItemHoverForm, ExForm, Session, Jabber1, Presence, COMExodusItemList,
-     ExActionCtrl;
+     ExActionCtrl, TntSysUtils;
 
 {$R *.dfm}
 
@@ -90,6 +90,8 @@ begin
     Separator1.Caption := '';
     Separator2.Caption := '';
     lblDisplayName.Caption := Item.Text;
+    lblDisplayName.Caption := Tnt_WideStringReplace(Item.Text, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
+
     lblDisplayName.Hint := Item.Text;
     lblDisplayName.ShowHint := true;
     lblUID.Hint := Item.UID;
