@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
   Dialogs, ExFrame, StdCtrls, ExtCtrls, ExGraphicButton, Exodus_TLB, ActnList,
-  ExBrandPanel, ExGroupBox, TntStdCtrls, Avatar;
+  ExBrandPanel, ExGroupBox, TntStdCtrls, Avatar, XMLVCard;
 
 type
   TExContactHoverFrame = class(TExFrame)
@@ -48,6 +48,7 @@ type
     procedure imgAvatarPaint(Sender: TObject);
     procedure btnRenameClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
+    procedure vcardCallback(UID: Widestring; vcard: TXMLVCard);
   private
     { Private declarations }
     _Items: IExodusItemList;
@@ -69,7 +70,7 @@ type
 
 implementation
 uses ExItemHoverForm, ExForm, Session, Jabber1, Presence, COMExodusItemList,
-     ExActionCtrl, TntSysUtils;
+     ExActionCtrl, TntSysUtils, XMLVCardCache;
 
 {$R *.dfm}
 
@@ -161,18 +162,26 @@ begin
     if (_UnknownAvatar.Empty) then
         frmExodus.bigImages.GetBitmap(0, _UnknownAvatar);
     _Avatar := nil;
-    Avatar := Avatars.Find(_Items.Item[0].uid);
-    if ((Avatar <> nil) and (Avatar.isValid())) then
-    begin
-        if (Avatar.Height >= 0) then
-        begin
-            _Avatar := Avatar;
-            if (_Avatar.Height > 32) then
-                imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
-            else
-                imgAvatar.Width := _avatar.Width;
-        end;
-    end;
+    GetVCardCache().find(_Items.Item[0].uid, vcardCallback);
+end;
+
+procedure TExContactHoverFrame.vcardCallback(UID: Widestring; vcard: TXMLVCard);
+begin
+   if (vcard = nil) then exit;
+   _Avatar := vcard.Picture;
+   if (_Avatar = nil) then exit;
+   if ((_Avatar.isValid = false) or (_Avatar.Height < 0)) then
+   begin
+       _Avatar := nil;
+       exit;
+   end;
+
+   if (_Avatar.Height > 32) then
+       imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+   else
+       imgAvatar.Width := _Avatar.Width;
+
+
 end;
 
 procedure TExContactHoverFrame.btnChatClick(Sender: TObject);
