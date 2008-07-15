@@ -540,7 +540,7 @@ begin
                 f.sendStartPresence();
             //JJF todo add a displayname listener for dn changes
             f.Caption := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid); //use display name if possible tmp_jid.userDisplay; //no display name here for room names
-            f.Hint := tmp_jid.jid;
+            f.Hint := TJabberID.removeJEP106(tmp_jid.jid);
 
             // setup prefs
             with f do begin
