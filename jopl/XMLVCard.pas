@@ -85,6 +85,8 @@ end;
 
         Picture: TAvatar;
 
+        TimeStamp: TDateTime;
+
         constructor Create;
         destructor Destroy; override;
 
@@ -221,6 +223,8 @@ end;
 constructor TXMLVCard.Create;
 begin
     inherited;
+
+    timestamp := Now();
 
     GivenName := '';
     FamilyName := '';

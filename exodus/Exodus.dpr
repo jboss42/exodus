@@ -302,7 +302,8 @@ uses
   COMExodusHover in 'COMExodusHover.pas' {COMExodusHover: CoClass},
   ExHoverFrame in 'components\ExHoverFrame.pas' {Frame1: TFrame},
   COMExEventData in 'COMExEventData.pas' {ExodusEventXML: CoClass},
-  COMExodusPacketDispatcher in 'COMExodusPacketDispatcher.pas';
+  COMExodusPacketDispatcher in 'COMExodusPacketDispatcher.pas',
+  XMLVCardCache in '..\jopl\XMLVCardCache.pas';
 
 {$R *.TLB}
 
