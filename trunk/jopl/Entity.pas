@@ -132,7 +132,7 @@ type
         function AddForm(form: TXMLTag): Boolean; virtual;
         function RemoveForm(form: TXMLTag): Boolean; virtual;
 
-        procedure _processDiscoInfo(tag: TXMLTag); virtual;
+        procedure _processDiscoInfo(const tag: TXMLTag); virtual;
 
         procedure ItemsCallback(event: string; tag: TXMLTag);
         procedure InfoCallback(event: string; tag: TXMLTag);
@@ -772,7 +772,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberEntity._processDiscoInfo(tag: TXMLTag);
+procedure TJabberEntity._processDiscoInfo(const tag: TXMLTag);
 var
     id, q: TXMLTag;
     fset: TXMLTagList;

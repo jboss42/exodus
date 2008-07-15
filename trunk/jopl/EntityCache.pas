@@ -357,6 +357,7 @@ function TJabberEntityCache.discoInfo(jid: Widestring; js: TJabberSession;
     node: Widestring = ''; timeout: integer = -1): TJabberEntity;
 var
     e: TJabberEntity;
+    tjid: TJabberID;
 begin
     e := getByJid(jid, node);
     if (e <> nil) then begin
@@ -366,7 +367,9 @@ begin
         exit;
     end;
 
-    e := TJabberEntity.Create(TJabberID.Create(jid), node);
+    tjid := TJabberID.Create(jid);
+    e := TJabberEntity.Create(tjid, node);
+    tjid.Free();
     e.fallbackProtocols := false;
     _cache.AddObject(TJabberID.applyJEP106(jid), e);
     if (timeout <> -1) then

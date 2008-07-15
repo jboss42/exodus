@@ -969,6 +969,8 @@ begin
         _queue.Free();
 
         _msgProcessor.Free();
+
+        FreeAndNil(_webBrowserUI);
     except
     end;
 

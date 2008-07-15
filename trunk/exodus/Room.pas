@@ -253,7 +253,7 @@ type
     procedure pluginMenuClick(Sender: TObject); override;
     procedure popupMenuClick(Sender: TObject);
 
-    procedure ShowMsg(tag: TXMLTag);
+    procedure ShowMsg(const tag: TXMLTag);
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
 
     function addRoomUser(jid, nick: Widestring; tag: TXMLTag = nil): TRoomMember;
@@ -653,7 +653,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.showMsg(tag: TXMLTag);
+procedure TfrmRoom.showMsg(const tag: TXMLTag);
 var
     i : integer;
     Msg: TJabberMessage;
@@ -1583,13 +1583,17 @@ begin
         if (member.Nick = myNick) then begin
             if (i < 0) then begin
                 // this is the first time I've joined the room
-                mtag := nil;
-                if (member.Nick = myNick) then begin
-                    if (member.Role = MUC_VISITOR) then
-                        mtag := newRoomMessage(_(sNoVoice))
-                    else if (member.Role = MUC_MOD) then
-                        mtag := newRoomMessage(_(sCurModerator));
-                    if (mtag <> nil) then showMsg(mtag);
+                try
+                    mtag := nil;
+                    if (member.Nick = myNick) then begin
+                        if (member.Role = MUC_VISITOR) then
+                            mtag := newRoomMessage(_(sNoVoice))
+                        else if (member.Role = MUC_MOD) then
+                            mtag := newRoomMessage(_(sCurModerator));
+                        if (mtag <> nil) then showMsg(mtag);
+                    end;
+                finally
+                    mtag.Free();
                 end;
             end;
 
