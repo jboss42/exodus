@@ -64,7 +64,7 @@ type
   end;
 
 implementation
-uses ExItemHoverForm, COMExodusItemList, ExActionCtrl, Room, GnuGetText;
+uses ExItemHoverForm, COMExodusItemList, ExActionCtrl, Room, GnuGetText, TntSysUtils;
 {$R *.dfm}
 
 constructor TExRoomHoverFrame.Create(AOwner: TComponent);
@@ -108,7 +108,7 @@ begin
         //We do not want to invoke OnClick handler at this point
         chkAutoJoin.OnClick := chkAutoJoinClick;
     end;
-    RoomDisplayName.Caption := Item.Text;
+    RoomDisplayName.Caption := Tnt_WideStringReplace(Item.Text, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
     RoomDisplayName.Hint := Item.Text;
     RoomDisplayName.ShowHint := true;
     Separator1.Caption := '';
