@@ -160,7 +160,7 @@ uses
     fGeneric, Session, JabberUtils,
     ExUtils,  XMLUtils, fTopLabel,
     TntClasses, DisplayName, Jabber1,
-    RosterImages, Exodus_TLB;
+    RosterImages, Exodus_TLB, SndBroadcastDlg;
 
 var
     cur_sort: integer;
@@ -1017,7 +1017,7 @@ begin
        end;
      end;
      //Broadcast message and cleanup
-//JJF TODO hmm     BroadcastMsg(jidList);
+     ShowSendBroadcast(jidList, '', '');
      jidList.Free();
  end;
 end;
