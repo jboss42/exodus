@@ -73,11 +73,21 @@ end;
 
 {---------------------------------------}
 destructor TJabberChatList.Destroy;
+var
+    i: integer;
+    c: TChatController;
 begin
     if (_chateventCB <> -1) then
         MainSession.UnRegisterCallback(_chatCB);
     if (_chateventCB <> -1) then
         MainSession.UnRegisterCallback(_chateventCB);
+
+    for i := Count - 1 downto 0 do begin
+        c := TChatController(Self.Objects[i]);
+        Delete(i);
+        c.Free();
+    end;
+
     inherited;
 end;
 

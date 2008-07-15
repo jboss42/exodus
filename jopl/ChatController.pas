@@ -79,7 +79,7 @@ type
         procedure unassignOnMessageEvent();
         procedure unassignOnSendMessageEvent();
 
-        procedure PushMessage(tag: TXMLTag; last_session_queue: boolean = false);
+        procedure PushMessage(const tag: TXMLTag; last_session_queue: boolean = false);
 
         function CreateMessage(): TJabberMessage; overload;
         function CreateMessage(tag: TXMLTag): TJabberMessage; overload;
@@ -273,6 +273,7 @@ end;
 destructor TChatController.Destroy;
 var
     idx: integer;
+    tag: TXMLTag;
 begin
     // Unregister the callback and remove us from the chat list.
     if (MainSession <> nil) then begin
@@ -287,7 +288,14 @@ begin
 
     // Free stuff
     _memory.Free();
+
+    while (msg_queue.AtLeast(1)) do
+    begin
+        tag := TXMLTag(msg_queue.Pop());
+        tag.Free();
+    end;
     msg_queue.Free();
+
     OutputDebugMsg('chat Controller (jid: ' + Self._bareJID + ') removed from memory');
     inherited;
 end;        
@@ -481,7 +489,7 @@ end;
 
 {---------------------------------------}
 //Push a message into the message queue for this chat
-procedure TChatController.PushMessage(tag: TXMLTag; last_session_queue: boolean=false);
+procedure TChatController.PushMessage(const tag: TXMLTag; last_session_queue: boolean=false);
 begin
     msg_queue.Push(TXMLTag.Create(tag));
 end;
@@ -539,7 +547,11 @@ begin
     end;
 
     while (tmp_queue.AtLeast(1)) do
-        PushMessage(tmp_queue.Pop());
+    begin
+        m := TXMLTag(tmp_queue.Pop());
+        PushMessage(m);
+        m.Free();
+    end;
 
     tmp_queue.Free();
 end;
