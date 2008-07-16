@@ -243,7 +243,7 @@ uses
     Jabber1, Profile, MsgDisplay, GnuGetText,
     ContactController, Session, XMLUtils,
     ShellAPI, RosterForm, Emoticons,
-    Entity,
+    Entity, AvatarCache,
     XMLParser,
     RT_XIMConversion,
     EntityCache,

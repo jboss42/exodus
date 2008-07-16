@@ -26,47 +26,37 @@ uses IQ, XMLVCard, XMLTag, Unicode, SysUtils, Classes;
 type
   TXMLVCardEvent = procedure(UID: Widestring; vcard: TXMLVCard) of object;
 
-  TXMLVCardEventItem = class
-  private
-    _cb: TXMLVCardEvent;
-
-  public
-    constructor Create(cb: TXMLVCardEvent);
-    destructor Destroy(); override;
-
-    property Callback: TXMLVCardEvent read _cb;
-  end;
-  
-  TXMLVCardPending = class
+  TXMLVCardPending = class(TXMLVCard)
   private
     _jid: Widestring;
     _callbacks: TList;
     _iq: TJabberIQ;
+    _valid: Boolean;
 
     constructor Create(jid: Widestring);
 
     procedure ResultCallback(event: string; tag: TXMLTag);
+    procedure AddCallback(cb: TXMLVCardEvent);
+
+    property IsValid: Boolean read _valid write _valid;
+
   public
     destructor Destroy(); override;
 
-    procedure Add(cb: TXMLVCardEvent);
+    property Jid: Widestring read _jid;
+
   end;
 
   TXMLVCardCache = class
   private
     _cache: TWidestringList;
-    _pending: TWidestringList;
     _js: TObject;
     _timeout: Integer;
     _ttl: Double;
 
     procedure SessionCallback(event: string; tag: TXMLTag);
 
-    function GetPending(jid: Widestring): TXMLVCardPending;
-    procedure ClearPending(jid: Widestring);
-
     function GetCached(jid: Widestring): TXMLVCard;
-    procedure AddCached(jid: Widestring; vcard: TXMLVCard);
 
     procedure Clear();
     procedure Load(filename: Widestring = '');
@@ -118,9 +108,8 @@ end;
 constructor TXMLVCardCache.Create;
 begin
     _cache := TWidestringList.Create();
-    _pending := TWidestringList.Create();
     _timeout := 20;
-    _ttl := 14;  //24 hours, or one day
+    _ttl := 14;  //14 days
 end;
 
 {---------------------------------------}
@@ -131,7 +120,6 @@ begin
     Clear();
 
     FreeAndNil(_cache);
-    FreeAndNil(_pending);
 end;
 
 {---------------------------------------}
@@ -155,22 +143,17 @@ begin
         TXMLVCard(_cache.Objects[idx]).Free();
     end;
     _cache.Clear();
-
-    for idx := _pending.Count - 1 downto 0 do begin
-        TList(_pending.Objects[idx]).Free();
-    end;
-    _pending.Clear();
 end;
 {---------------------------------------}
 procedure TXMLVCardCache.Load(filename: WideString);
 var
     cache, iq: TXMLTag;
-    vcard: TXMLVCard;
+    vcard: TXMLVCardPending;
     parser: TXMLTagParser;
     tags: TXMLTagList;
     idx: Integer;
     dt, currDT: TDateTime;
-    tstr: Widestring;
+    jid, tstr: Widestring;
 begin
     parser := TXMLTagParser.Create();
 
@@ -187,21 +170,28 @@ begin
 
     cache := parser.popTag();
 
-    currDT := Now();
+    currDT := Now() - _ttl;
     tags := cache.ChildTags;
     for idx := 0 to tags.Count - 1 do begin
         iq := tags[idx];
 
-        vcard := TXMLVCard.Create();
-        vcard.Parse(iq);
+        jid := iq.GetAttribute('from') ;
+        if (jid = '') then Continue;
 
         tstr := iq.getAttribute('timestamp');
         if (tstr <> '') then
-            vcard.TimeStamp := XEP82DateTimeToDateTime(tstr);
-            
-        //TODO:  check Timestamp
-        if ((currDT - _ttl) <= vcard.TimeStamp) then
-            _cache.AddObject(iq.getAttribute('from'), vcard);
+            dt := XEP82DateTimeToDateTime(tstr)
+        else
+            dt := Now();
+
+        if (currDT > dt) then Continue;
+        
+        vcard := TXMLVCardPending.Create(jid);
+        vcard.Parse(iq);
+        vcard.TimeStamp := dt;
+        vcard.IsValid := true;
+
+        _cache.AddObject(iq.getAttribute('from'), vcard);
     end;
 end;
 {---------------------------------------}
@@ -240,45 +230,18 @@ var
     session: TJabberSession;
 begin
     session := TJabberSession(_js);
-    if (event = DEPMOD_READY_SESSION_EVENT) then begin
-        if session.Prefs.getString('vcard_iq_timeout') <> '' then
-            Self._timeout := session.Prefs.getInt('vcard_iq_timeout');
-        if session.Prefs.getString('vcard_cache_ttl') <> '' then
-            Self._ttl := session.Prefs.getDateTime('vcard_cache_ttl');
-
+    if (event = '/session/authenticated') then begin
         Load();
-        session.FireEvent(DEPMOD_READY_EVENT + DEPMOD_VCARD_CACHE, tag);
     end
     else if (event = '/session/disconnected') then begin
         Save();
         Clear();
-    end;
-end;
-
-function TXMLVCardCache.GetPending(jid: WideString): TXMLVCardPending;
-var
-    idx: Integer;
-begin
-    idx := _pending.IndexOf(jid);
-    if (idx <> -1) then begin
-        Result := TXMLVCardPending(_pending.Objects[idx]);
     end
-    else begin
-        Result := TXMLVCardPending.Create(jid);
-        _pending.AddObject(jid, Result);
-    end;
-end;
-{---------------------------------------}
-procedure TXMLVCardCache.ClearPending(jid: WideString);
-var
-    idx: Integer;
-    pending: TXMLVCardPending;
-begin
-    idx := _pending.IndexOf(jid);
-    if (idx <> -1) then begin
-        pending := TXMLVCardPending(_pending.Objects[idx]);
-        _pending.Delete(idx);
-        pending.Free();
+    else if (event = '/session/prefs') then begin
+        if session.Prefs.getString('vcard_iq_timeout') <> '' then
+            Self._timeout := session.Prefs.getInt('vcard_iq_timeout');
+        if session.Prefs.getString('vcard_cache_ttl') <> '' then
+            Self._ttl := session.Prefs.getDateTime('vcard_cache_ttl');
     end;
 end;
 
@@ -286,25 +249,14 @@ end;
 function TXMLVCardCache.GetCached(jid: WideString): TXMLVCard;
 var
     idx: Integer;
+    pending: TXMLVCardPending;
 begin
-    idx := _cache.IndexOf(jid);
-    if (idx <> -1) then
-        Result := TXMLVCard(_cache.Objects[idx])
-    else
-        Result := nil;
-end;
-{---------------------------------------}
-procedure TXMLVCardCache.AddCached(jid: WideString; vcard: TXMLVCard);
-var
-    idx: Integer;
-begin
+    Result := nil;
     idx := _cache.IndexOf(jid);
     if (idx <> -1) then begin
-        _cache.Objects[idx].Free();
-        _cache.Delete(idx);
-    end;
-
-    _cache.AddObject(jid, vcard);
+        pending := TXMLVCardPending(_cache.Objects[idx]);
+        if pending.IsValid then Result := pending;
+    end
 end;
 
 {---------------------------------------}
@@ -313,45 +265,49 @@ var
     session: TJabberSession;
     idx: Integer;
     iq: TJabberIQ;
-    vcard: TXMLVCard;
+    pending: TXMLVCardPending;
 begin
-    vcard := nil;
+    //check the cache
     idx := _cache.IndexOf(jid);
-    if (idx <> -1) then begin
-        vcard := TXMLVCard(_cache.Objects[idx]);
-        if (refresh) then begin
-            _cache.Delete(idx);
-            FreeAndNil(vcard);
-        end;
-    end;
-    
-    if (vcard <> nil) then begin
-        cb(jid, vcard);
+    if (idx = -1) then begin
+        refresh := true;
+        pending := TXMLVCardPending.Create(jid);
+        _cache.AddObject(jid, pending);
     end
-    else if (@cb <> nil) then begin
-        GetPending(jid).Add(cb);
+    else begin
+        pending := TXMLVCardPending(_cache.Objects[idx]);
     end;
 
+    if (refresh) then begin
+        //do (first or another) vcard request, fire callback later
+        pending.IsValid := false;
+        pending.AddCallback(cb);
+    end
+    else if Assigned(cb) then begin
+        //cached result, fire callback now
+        if pending.IsValid then
+            cb(jid, pending)
+        else
+            cb(jid, nil);
+    end;
 end;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TXMLVCardEventItem.Create(cb: TXMLVCardEvent);
-begin
-    _cb := cb;
-end;
-{---------------------------------------}
-destructor TXMLVCardEventItem.Destroy;
-begin
-    inherited;
-end;
+type
+    PXMLVCardEventCallback = ^TXMLVCardEventCallback;
+    TXMLVCardEventCallback = record
+        Callback: TXMLVCardEvent;
+    end;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 constructor TXMLVCardPending.Create(jid: WideString);
 begin
+    inherited Create();
+
     _jid := jid;
     _callbacks := TList.Create();
     _iq := nil;
@@ -360,7 +316,13 @@ end;
 {---------------------------------------}
 destructor TXMLVCardPending.Destroy;
 begin
+    while (_callbacks.Count > 0) do begin
+        Dispose(_callbacks[0]);
+        _callbacks.Delete(0);
+    end;
+
     FreeAndNil(_callbacks);
+    _iq := nil;
 
     inherited;
 end;
@@ -370,42 +332,44 @@ procedure TXMLVCardPending.ResultCallback(event: string; tag: TXMLTag);
 var
     vcard: TXMLVCard;
     idx: Integer;
-    cb: TXMLVCardEventItem;
+    cb: PXMLVCardEventCallback;
 begin
     vcard := nil;
-
+    _valid := false;
+    _iq := nil;
     if (event = 'xml') then begin
-        if (tag.GetAttribute('type') <> 'error') then begin
-            vcard := TXMLVCard.Create();
+        if (tag.GetAttribute('type') = 'result') then begin
+            vcard := Self;
             vcard.Parse(tag);
-            vcard.TimeStamp := Date();
-            GetVCardCache().AddCached(_jid, vcard);
+            vcard.TimeStamp := Now();
+            IsValid := true;
         end;
     end
-    else if (event = 'timeout') then begin
-    end
-    else begin
+    else if (event <> 'timeout') then begin
         exit;
     end;
 
-    for idx := _callbacks.Count - 1 downto 0 do begin
-        cb := TXMLVCardEventItem(_callbacks[idx]);
-        cb.Callback(_jid, vcard);
-        cb.Free();
-        _callbacks.Delete(idx);
+    while (_callbacks.Count > 0) do begin
+        cb := PXMLVCardEventCallback(_callbacks[0]);
+        cb^.Callback(_jid, vcard);
+        Dispose(cb);
+        _callbacks.Delete(0);
     end;
-
-    GetVCardCache().ClearPending(_jid);
 end;
 
 {---------------------------------------}
-procedure TXMLVCardPending.Add(cb: TXMLVCardEvent);
+procedure TXMLVCardPending.AddCallback(cb: TXMLVCardEvent);
 var
     session: TJabberSession;
+    cbe: PXMLVCardEventCallback;
 begin
-    _callbacks.Add(TXMLVCardEventItem.Create(cb));
+    if Assigned(cb) then begin
+        new(cbe);
+        cbe^.Callback := cb;
+        _callbacks.Add(cbe);
+    end;
 
-    if (_iq = nil) then begin
+    if (not IsValid) and (_iq = nil) then begin
         session := TJabberSession(GetVCardCache()._js);
         _iq := TJabberIQ.Create(
                 session,
