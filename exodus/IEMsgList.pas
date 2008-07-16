@@ -100,7 +100,7 @@ type
     constructor Create(controller: IExodusController);
 {$ENDIF}
 
-    function dateSeperator(const msg: TJabberMessage): widestring;
+    function dateSeparator(const msg: TJabberMessage): widestring;
     function ProcessDisplayMsg(const Msg: TJabberMessage): widestring; overload;
     function ProcessDisplayMsg(const Msg: TJabberMessage; var id:widestring): widestring; overload;
     function ProcessPresenceMsg(const nick: widestring; const txt: Widestring; const timestamp: string): widestring;
@@ -706,7 +706,7 @@ begin
 end;
 
 {---------------------------------------}
-function TIEMsgListProcessor.dateSeperator(const msg: TJabberMessage): widestring;
+function TIEMsgListProcessor.dateSeparator(const msg: TJabberMessage): widestring;
 var
     t: TDateTime;
 begin
@@ -720,7 +720,7 @@ begin
                 (msg.Subject = '')) then begin
                 Result := '<div class="date">' +
                        '<span>' +
-                       DateToStr(t) +
+                       HTML_EscapeChars(FormatDateTime(_getPrefString('date_separator_format'), t), false, true) +
                        '</span>' +
                        '</div>';
 
@@ -1110,7 +1110,7 @@ var
 begin
     if (msg = nil) then exit;
 
-    txt := _msgProcessor.dateSeperator(msg);
+    txt := _msgProcessor.dateSeparator(msg);
     if ((_doMessageLimiting) and (txt <> '')) then begin
         Inc(_msgCount);
     end;
@@ -1188,7 +1188,7 @@ begin
             tmsg.Time := dtTimestamp;
             tmsg.Subject := '';
             tmsg.Nick := nick;
-            ds := _msgProcessor.dateSeperator(tmsg);
+            ds := _msgProcessor.dateSeparator(tmsg);
             if (ds <> '') then begin
                 writeHTML(ds);
             end;

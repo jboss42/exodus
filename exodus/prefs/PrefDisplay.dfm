@@ -28,7 +28,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     Top = 23
     Width = 418
     Height = 616
-    VertScrollBar.Position = 243
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -37,9 +36,9 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     object pnlContainer: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = -240
+      Top = 3
       Width = 398
-      Height = 524
+      Height = 566
       Margins.Left = 0
       Margins.Bottom = 0
       Align = alTop
@@ -370,7 +369,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         Left = 0
         Top = 375
         Width = 395
-        Height = 149
+        Height = 191
         Margins.Left = 0
         Margins.Top = 6
         Margins.Bottom = 0
@@ -394,11 +393,12 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Caption = 'Enable &rich text formatting'
           TabOrder = 0
           OnClick = chkRTEnabledClick
+          ExplicitTop = 21
         end
         object pnlTimeStamp: TExBrandPanel
           AlignWithMargins = True
           Left = 3
-          Top = 107
+          Top = 149
           Width = 389
           Height = 42
           Margins.Top = 0
@@ -409,6 +409,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           ParentColor = True
           TabOrder = 4
           AutoHide = True
+          ExplicitTop = 110
           object lblTimestampFmt: TTntLabel
             Left = 26
             Top = 25
@@ -454,6 +455,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Align = alTop
           Caption = 'Show &message priority in chat windows'
           TabOrder = 3
+          ExplicitTop = 89
         end
         object chkChatAvatars: TTntCheckBox
           AlignWithMargins = True
@@ -466,6 +468,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Align = alTop
           Caption = '&Show avatars in chat windows'
           TabOrder = 1
+          ExplicitTop = 42
         end
         object pnlEmoticons: TExBrandPanel
           AlignWithMargins = True
@@ -481,6 +484,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           ParentColor = True
           TabOrder = 2
           AutoHide = True
+          ExplicitTop = 63
           object chkEmoticons: TTntCheckBox
             AlignWithMargins = True
             Left = 0
@@ -502,12 +506,63 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             OnClick = btnEmoSettingsClick
           end
         end
+        object pnlDateSeparator: TExBrandPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 107
+          Width = 389
+          Height = 42
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          AutoSize = True
+          BevelOuter = bvNone
+          ParentColor = True
+          TabOrder = 6
+          AutoHide = True
+          object lblDateSeparatorFmt: TTntLabel
+            Left = 26
+            Top = 25
+            Width = 38
+            Height = 13
+            Caption = 'Forma&t:'
+            FocusControl = txtDateSeparatorFmt
+          end
+          object chkDateSeparator: TTntCheckBox
+            Left = 0
+            Top = 0
+            Width = 389
+            Height = 21
+            Margins.Top = 0
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Show date se&parator with messages'
+            TabOrder = 0
+          end
+          object txtDateSeparatorFmt: TTntComboBox
+            Left = 77
+            Top = 21
+            Width = 177
+            Height = 21
+            ItemHeight = 13
+            TabOrder = 1
+            Text = 'MM/dd/yyyy'
+            Items.Strings = (
+              'M/d/yyyy'
+              'M/d/yy'
+              'MM/dd/yy'
+              'MM/dd/yyyy'
+              'yy/MM/dd'
+              'yyyy-MM-dd'
+              'dd-MMM-yy')
+          end
+        end
       end
     end
     object gbAdvancedPrefs: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 290
+      Top = 575
       Width = 398
       Height = 326
       Margins.Left = 0
@@ -531,8 +586,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 1
         AutoHide = True
-        ExplicitTop = 119
-        ExplicitHeight = 204
         object gbRTIncludes: TExGroupBox
           AlignWithMargins = True
           Left = 0
@@ -720,7 +773,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 2
         AutoHide = True
-        ExplicitTop = 70
         object chkSnap: TTntCheckBox
           Left = 3
           Top = 0
