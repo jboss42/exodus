@@ -1,4 +1,4 @@
- unit COMMsgOutToolbar;
+unit COMMsgOutToolbar;
 {
     Copyright 2008, Estate of Peter Millard
 
@@ -24,21 +24,16 @@
 interface
 
 uses
-    ComObj, Exodus_TLB, COMToolbar, Controls, ComCtrls, StdVcl;
+    ComObj, Exodus_TLB, COMToolbar, StdVcl;
 
 type
-    TExodusMsgOutToolbar = class(TAutoObject, IExodusMsgOutToolbar)
-    private
-        _tbProxy: TToolbarProxy;
+    TExodusMsgOutToolbar = class(TExodusToolbarBase, IExodusMsgOutToolbar)
     protected
-        function AddButton(const ImageID: WideString): IExodusToolbarButton; safecall;
-        function AddControl(const ID: WideString): IExodusToolbarControl; safecall;
-        function Get_Count: Integer; safecall;
-        function GetButton(index: Integer): IExodusToolbarButton; safecall;
-        procedure RemoveButton(const button: WideString); safecall;
-    public
-        constructor Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);reintroduce; overload;
-        destructor Destroy; override;
+        function AddButton(const ImageID: WideString): IExodusToolbarButton; override;
+        function AddControl(const ID: WideString): IExodusToolbarControl; override;
+        function Get_Count: Integer; override;
+        function GetButton(index: Integer): IExodusToolbarButton; override;
+        procedure RemoveButton(const button: WideString); override;
     end;
 
 implementation
@@ -46,39 +41,48 @@ implementation
 uses
     ComServ;
 
-constructor TExodusMsgOutToolbar.Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);
+{
+function TExodusMsgOutToolbar.AddControl(
+  const ID: WideString): IExodusToolbarControl;
 begin
-    _tbProxy := TToolbarProxy.create(btnBar, controlSite, imgList);
+    Result := nil;
+    try
+        if (_controlSite = nil) then exit;
+        Result := TExodusControlSite.Create(_controlSite, _controlSite, StringToGuid(Id));
+        (Result as IExodusControlSite).AlignClient:= false;
+    except
+        on E:Exception do
+        begin
+            DebugMessage('Exception in TExodusMsgOutToolbar.AddControl, ClassID: ' + ID + ', (' + E.Message + ')');
+            Result := nil;
+        end;
+    end;
 end;
-
-destructor TExodusMsgOutToolbar.Destroy;
-begin
-    _tbProxy.Free();
-end;
+}
 
 function TExodusMsgOutToolbar.AddButton(const ImageID: WideString): IExodusToolbarButton;
 begin
-    Result := _tbProxy.AddButton(ImageID);
+    Result := inherited AddButton(ImageID);
 end;
 
 function TExodusMsgOutToolbar.AddControl(const ID: WideString): IExodusToolbarControl;
 begin
-    Result := _tbProxy.AddControl(ID);
+    Result := inherited AddControl(ID);
 end;
 
 function TExodusMsgOutToolbar.Get_Count: Integer;
 begin
-    Result := _tbProxy.Count;
+    Result := inherited Get_Count();
 end;
 
 function TExodusMsgOutToolbar.GetButton(index: Integer): IExodusToolbarButton;
 begin
-    Result := _tbProxy.GetButton(index);
+    Result := inherited GetButton(index);
 end;
 
 procedure TExodusMsgOutToolbar.RemoveButton(const button: WideString);
 begin
-    _tbProxy.RemoveButton(button);
+    inherited;
 end;
 
 initialization

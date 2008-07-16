@@ -29,9 +29,9 @@ uses
 type
     TExodusControlSite = class(TOleControl, IExodusControlSite, IExodusToolbarControl)
     private
+        _control: IDispatch;
         _controlClassID: TGUID;
         _controlName: widestring;
-        _control: IDispatch;
     protected
         //IExodusToolbarControl
         function Get_Enabled: WordBool; virtual; safecall;
@@ -42,16 +42,19 @@ type
         function Get_Control: IDispatch; virtual; safecall;
         function Get_ControlName: WideString; virtual; safecall;
         function Get_ControlGUID: WideString; virtual; safecall;
+        function Get_AlignClient: WordBool; virtual; safecall;
+        procedure Set_AlignClient(value: WordBool); virtual; safecall;
 
         procedure InitControlData; override;
     public
-        constructor Create(AOwner: TComponent; ClassId: TGuid; startAlignment: TAlign = alNone); reintroduce; overload;
+        constructor Create(AOwner: TComponent; Parent: TWinControl; ClassId: TGuid); reintroduce; overload;
         destructor Destroy(); override;
 
         property  ControlInterface: IDispatch read Get_Control;
         property  DefaultInterface: IDispatch read Get_Control;
     published
-        //SIG provided a pretty good group of properties a default site should impl...
+        //Sgood group of properties a default site should impl...
+        //exposed through IDispatch
         property  Anchors;
         property  TabStop;
         property  Align;
@@ -82,7 +85,7 @@ const
     EventIID: '';
     EventCount: 0;
     EventDispIDs: nil;
-    LicenseKey: $00000000;
+    LicenseKey: nil; //$00000000;
     Flags: $00000000;
     Version: 100);
 begin
@@ -90,15 +93,15 @@ begin
   ControlData.ClassID := _controlClassID;
 end;
 
-constructor TExodusControlSite.Create(AOwner: TComponent; ClassId: TGuid; startAlignment: TAlign);
+constructor TExodusControlSite.Create(AOwner: TComponent; Parent: TWinControl; ClassId: TGuid);
 begin
-    _controlClassID := ClassID;
-    _controlName := 'exodus_ole_control_' + IntToStr(_nameCounter);
-    inc(_nameCounter);
+    _control := nil;
+    _controlClassID := ClassID; //overrides CControlData
     inherited create(AOwner);
-    if (AOwner <> nil) and (AOwner.InheritsFrom(TWinControl)) then
-        Self.Parent := TWinCOntrol(AOwner);
-    Self.Align := startAlignment;
+    _controlName := 'excontrol_' + IntToStr(_nameCounter);
+    inc(_nameCounter);
+
+    Self.Parent := Parent;
     Self.Name := _controlName + '_controlsite';
 end;
 
@@ -143,6 +146,19 @@ begin
     if (_control = nil) then
         _control := IUnknown(OleObject) as IDispatch;
     Result := _control;
+end;
+
+function TExodusControlSite.Get_AlignClient: WordBool;
+begin
+    Result := (Align = alClient);
+end;
+
+procedure TExodusControlSite.Set_AlignClient(value: WordBool);
+begin
+    if (value) then
+        Align := alClient
+    else
+        Align := alNone;
 end;
 
 initialization

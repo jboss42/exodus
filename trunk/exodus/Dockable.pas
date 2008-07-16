@@ -25,7 +25,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ImgList, Buttons, ToolWin, Contnrs,
     ExtCtrls, TntComCtrls, StateForm, Unicode, XMLTag, buttonFrame, JabberMsg,
-  Menus, TntMenus, TntExtCtrls;
+    Menus, TntMenus, TntExtCtrls, Exodus_TLB, COMToolbar, COMDockToolbar;
 
   function generateUID(): widestring;
 
@@ -62,7 +62,8 @@ type
     are two different paths that result in this state change One set of events
     has been defined that will fire in either case.
   }
-  TfrmDockable = class(TfrmState)
+  TfrmDockable = class(TfrmState, IControlDelegate)
+    pnlDock: TTntPanel;
     pnlDockTop: TTntPanel;
     pnlDockTopContainer: TTntPanel;
     tbDockBar: TToolBar;
@@ -91,6 +92,7 @@ type
     procedure btnDockToggleClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TntFormDestroy(Sender: TObject);
+    procedure pnlDockResize(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
@@ -114,6 +116,8 @@ type
     _lastActivity: TDateTime; // what was the last activity for this window
     _closing: boolean; // Is the window closing (for updatedocked() call);
 
+    _COMDockbar: IExodusDockToolbar;
+    
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
     procedure prefsCallback(event: string; tag: TXMLTag);
@@ -144,7 +148,8 @@ type
     function GetUnreadMsgCount(): Integer;virtual;
     procedure updateDocked(); virtual;
 
-
+    function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;virtual;
+    function GetDockbar(): IExodusDockToolbar;
   public
     _windowType: widestring; // what kind of dockable window is this
 
@@ -214,6 +219,7 @@ type
     property LastActivity: TDateTime read _lastActivity write _lastActivity;
     property WindowType: widestring read _windowType write _windowType;
     property PersistUnreadMessages: boolean read _persistMessages write _persistMEssages;
+    property Dockbar: IExodusDockToolbar read GetDockbar;
   end;
 
 var
@@ -228,6 +234,7 @@ uses
     PrefController,
     RosterImages,
     JabberConst,
+    ExSession,
     IDGlobal,
     XMLUtils, XMLParser, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
@@ -305,6 +312,18 @@ begin
     activating := false;
 
     _uid := generateUID();
+end;
+
+function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
+begin
+    Result := nil;
+end;
+
+function TfrmDockable.GetDockbar(): IExodusDockToolbar;
+begin
+    if (_COMDockbar = nil) then
+        _COMDockbar := TExodusDockToolbar.create(tbDockbar, ExSession.COMRosterImages, Self, 'dockbar', false);
+    Result := _COMDockbar;
 end;
 
 {---------------------------------------}
@@ -436,6 +455,7 @@ begin
     MainSession.UnRegisterCallback(_session_close_all_callback);
     MainSession.UnRegisterCallback(_session_dock_all_callback);
     MainSession.UnRegisterCallback(_session_float_all_callback);
+    _COMDockbar := nil;
 end;
 
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
@@ -628,6 +648,16 @@ end;
 procedure TfrmDockable.showDockToggleButton(show: boolean);
 begin
     btnDockToggle.Visible := show;
+end;
+
+procedure TfrmDockable.pnlDockResize(Sender: TObject);
+var
+    i: integer;
+begin
+    inherited;
+    //ask parent form to realign, allowing panel to be completely shown
+//    for i := 0 to Self.ControlCount - 1 do
+//        Controls[i].Align := Controls[i].Align;
 end;
 
 procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);

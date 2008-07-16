@@ -1,4 +1,4 @@
-  unit COMDockToolbar;
+unit COMDockToolbar;
 {
     Copyright 2008, Estate of Peter Millard
 
@@ -24,21 +24,16 @@
 interface
 
 uses
-    ComObj, Exodus_TLB, COMToolbar, Controls, ComCtrls, StdVcl;
+    ComObj, Exodus_TLB, COMToolbar, StdVcl;
 
 type
-    TExodusDockToolbar = class(TAutoObject, IExodusDockToolbar)
-    private
-        _tbProxy: TToolbarProxy;
+    TExodusDockToolbar = class(TExodusToolbarBase, IExodusDockToolbar)
     protected
         function AddButton(const ImageID: WideString): ExodusToolbarButton; safecall;
         function AddControl(const ID: WideString): ExodusToolbarControl; safecall;
-        function Get_Count: Integer; safecall;
+        function Get_Count: Integer; override;
         function GetButton(index: Integer): ExodusToolbarButton; safecall;
-        procedure RemoveButton(const button: WideString); safecall;
-    public
-        constructor Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);reintroduce; overload;
-        destructor Destroy; override;
+        procedure RemoveButton(const button: WideString); override;
     end;
 
 implementation
@@ -46,39 +41,56 @@ implementation
 uses
     ComServ;
 
-constructor TExodusDockToolbar.Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);
+
+        {
+    _control := nil; //dec ref count for any old controls, one control at a time
+    try
+        if (_controlSite = nil) then exit;
+        _controlSite.AutoSize := false;
+        _outerPanel.AutoSize := false;
+        _outerPanel.Align := alNone;
+        _controlSite.Visible := true;
+
+        Result := TExodusControlSite.Create(_controlSite, _controlSite, StringToGuid(Id));
+        (Result as IExodusControlSite).AlignClient := true;
+
+        _controlSite.AutoSize := true;
+        _outerPanel.AutoSize := true;
+        _outerPanel.Align := alTop;
+    except
+        on E:Exception do
+        begin
+            DebugMessage('Exception in TExodusDockToolbar.AddControl, ClassID: ' + ID + ', (' + E.Message + ')');
+            Result := nil;
+        end;
+    end;
+    }
+
+function TExodusDockToolbar.AddButton(
+  const ImageID: WideString): ExodusToolbarButton;
 begin
-    _tbProxy := TToolbarProxy.create(btnBar, controlSite, imgList, false); //grow left
+    Result := inherited AddButton(ImageID);
 end;
 
-destructor TExodusDockToolbar.Destroy;
+function TExodusDockToolbar.AddControl(
+  const ID: WideString): ExodusToolbarControl;
 begin
-    _tbProxy.Free();
-end;
-
-function TExodusDockToolbar.AddButton(const ImageID: WideString): ExodusToolbarButton;
-begin
-    Result := _tbProxy.AddButton(ImageID);
-end;
-
-function TExodusDockToolbar.AddControl(const ID: WideString): ExodusToolbarControl;
-begin
-    Result := _tbProxy.AddControl(ID);
+    Result := inherited AddControl(ID);
 end;
 
 function TExodusDockToolbar.Get_Count: Integer;
 begin
-    Result := _tbProxy.Count;
+    Result := inherited Get_Count();
 end;
 
 function TExodusDockToolbar.GetButton(index: Integer): ExodusToolbarButton;
 begin
-    Result := _tbProxy.GetButton(index);
+    Result := inherited GetButton(index);
 end;
 
 procedure TExodusDockToolbar.RemoveButton(const button: WideString);
 begin
-    _tbProxy.RemoveButton(button);
+    inherited;
 end;
 
 initialization
