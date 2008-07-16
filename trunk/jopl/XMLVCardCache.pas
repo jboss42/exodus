@@ -241,7 +241,7 @@ begin
         if session.Prefs.getString('vcard_iq_timeout') <> '' then
             Self._timeout := session.Prefs.getInt('vcard_iq_timeout');
         if session.Prefs.getString('vcard_cache_ttl') <> '' then
-            Self._ttl := session.Prefs.getDateTime('vcard_cache_ttl');
+            Self._ttl := session.Prefs.getInt('vcard_cache_ttl');
     end;
 end;
 
@@ -255,6 +255,7 @@ begin
     idx := _cache.IndexOf(jid);
     if (idx <> -1) then begin
         pending := TXMLVCardPending(_cache.Objects[idx]);
+        if ((Now() - _ttl) > pending.TimeStamp) then pending.IsValid := false;
         if pending.IsValid then Result := pending;
     end
 end;
@@ -276,6 +277,7 @@ begin
     end
     else begin
         pending := TXMLVCardPending(_cache.Objects[idx]);
+        if ((Now() - _ttl) > pending.TimeStamp) then pending.IsValid := false;
     end;
 
     if (refresh) then begin
