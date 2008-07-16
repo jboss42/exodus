@@ -13,6 +13,8 @@ inherited frmRiser: TfrmRiser
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
+  ExplicitWidth = 184
+  ExplicitHeight = 45
   PixelsPerInch = 96
   TextHeight = 13
   object Shape1: TShape
@@ -69,6 +71,7 @@ inherited frmRiser: TfrmRiser
     Height = 26
     Alignment = taCenter
     Caption = 'something really long'
+    ShowAccelChar = False
     Transparent = True
     WordWrap = True
     OnClick = Panel2Click

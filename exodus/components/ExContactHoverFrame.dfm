@@ -13,6 +13,7 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     AutoSize = False
     Caption = '2'
     EllipsisPosition = epWordEllipsis
+    ShowAccelChar = False
     OnMouseEnter = lblDisplayNameMouseEnter
     OnMouseLeave = lblDisplayNameMouseLeave
   end
@@ -43,6 +44,8 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     Top = 162
     Width = 16
     Height = 16
+    OnMouseEnter = imgPresenceMouseEnter
+    OnMouseLeave = imgPresenceMouseLeave
   end
   object lblPresence: TTntLabel
     Left = 60
