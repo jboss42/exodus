@@ -21,7 +21,7 @@ unit XMLVCardCache;
 
 interface
 
-uses IQ, XMLVCard, XMLTag, Unicode, SysUtils, Classes;
+uses XMLVCard, XMLTag, Unicode, SysUtils, Classes;
 
 type
   TXMLVCardEvent = procedure(UID: Widestring; vcard: TXMLVCard) of object;
@@ -30,7 +30,7 @@ type
   private
     _jid: Widestring;
     _callbacks: TList;
-    _iq: TJabberIQ;
+    _iq: TObject;       //avoiding Session circular reference
     _valid: Boolean;
 
     constructor Create(jid: Widestring);
@@ -51,12 +51,15 @@ type
   private
     _cache: TWidestringList;
     _js: TObject;
+    _iqCB: Integer;
     _timeout: Integer;
     _ttl: Double;
 
     procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure FireUpdate(tag: TXMLTag);
 
-    function GetCached(jid: Widestring): TXMLVCard;
+    function ObtainPending(jid: Widestring; create: Boolean; var pending: TXMLVCardPending): Boolean;
+    function GetVCard(jid: Widestring): TXMLVCard;
 
     procedure Clear();
     procedure Load(filename: Widestring = '');
@@ -68,7 +71,7 @@ type
     procedure SetSession(js: TObject);
 
     procedure find(jid: Widestring; cb: TXMLVCardEvent; refresh: Boolean = false);
-    property VCards[Index: Widestring]: TXMLVCard read GetCached;
+    property VCards[Index: Widestring]: TXMLVCard read GetVCard;
 
     property Timeout: Integer read _timeout write _timeout;
   end;
@@ -85,7 +88,7 @@ const
 {---------------------------------------}
 implementation
 
-uses PrefController, Session, Signals, XMLParser, XMLUtils;
+uses IQ, PrefController, Session, Signals, XMLParser, XMLUtils;
 
 var
     gVCardCache: TXMLVCardCache;
@@ -177,6 +180,7 @@ begin
 
         jid := iq.GetAttribute('from') ;
         if (jid = '') then Continue;
+        if (_cache.IndexOf(jid) <> -1) then Continue;
 
         tstr := iq.getAttribute('timestamp');
         if (tstr <> '') then
@@ -198,7 +202,7 @@ end;
 procedure TXMLVCardCache.Save(filename: WideString);
 var
     idx: Integer;
-    vcard: TXMLVCard;
+    vcard: TXMLVCardPending;
     cache, iq: TXMLTag;
     s: TWidestringList;
 begin
@@ -206,10 +210,12 @@ begin
 
     cache := TXMLTag.Create('vcard-cache');
     for idx := 0 to _cache.Count - 1 do begin
+        vcard := TXMLVCardPending(_cache.Objects[idx]);
+        if not vcard.IsValid then continue;
+
         iq := cache.AddTag('iq');
         iq.setAttribute('from', _cache[idx]);
 
-        vcard := TXMLVCard(_cache.Objects[idx]);
         iq.setAttribute('timestamp', DateTimeToXEP82DateTime(vcard.TimeStamp));
         vcard.fillTag(iq);
     end;
@@ -244,41 +250,57 @@ begin
             Self._ttl := session.Prefs.getInt('vcard_cache_ttl');
     end;
 end;
+{---------------------------------------}
+procedure TXMLVCardCache.FireUpdate(tag: TXMLTag);
+begin
+    TJabberSession(_js).FireEvent('/session/vcard/update', tag);
+end;
 
 {---------------------------------------}
-function TXMLVCardCache.GetCached(jid: WideString): TXMLVCard;
+function TXMLVCardCache.ObtainPending(
+        jid: WideString;
+        create: Boolean;
+        var pending: TXMLVCardPending): Boolean;
 var
     idx: Integer;
-    pending: TXMLVCardPending;
 begin
-    Result := nil;
     idx := _cache.IndexOf(jid);
+    pending := nil;
+    Result := false;
     if (idx <> -1) then begin
         pending := TXMLVCardPending(_cache.Objects[idx]);
         if ((Now() - _ttl) > pending.TimeStamp) then pending.IsValid := false;
-        if pending.IsValid then Result := pending;
     end
+    else if create then begin
+        pending := TXMLVCardPending.Create(jid);
+        _cache.AddObject(jid, pending);
+        Result := true;
+    end;
 end;
+
+{---------------------------------------}
+function TXMLVCardCache.GetVCard(jid: WideString): TXMLVCard;
+var
+    pending: TXMLVCardPending;
+begin
+    ObtainPending(jid, false, pending);
+    if (pending <> nil) and (not pending.IsValid) then
+        pending := nil;
+        
+    result := pending;
+end;
+
 
 {---------------------------------------}
 procedure TXMLVCardCache.find(jid: WideString; cb: TXMLVCardEvent; refresh: Boolean);
 var
     session: TJabberSession;
-    idx: Integer;
     iq: TJabberIQ;
     pending: TXMLVCardPending;
 begin
     //check the cache
-    idx := _cache.IndexOf(jid);
-    if (idx = -1) then begin
-        refresh := true;
-        pending := TXMLVCardPending.Create(jid);
-        _cache.AddObject(jid, pending);
-    end
-    else begin
-        pending := TXMLVCardPending(_cache.Objects[idx]);
-        if ((Now() - _ttl) > pending.TimeStamp) then pending.IsValid := false;
-    end;
+    if ObtainPending(jid, true, pending) then
+        refresh := true;    //new pending == refresh
 
     if (refresh) then begin
         //do (first or another) vcard request, fire callback later
@@ -348,14 +370,25 @@ begin
         end;
     end
     else if (event <> 'timeout') then begin
+        //shouldn't happen, but...
         exit;
     end;
 
     while (_callbacks.Count > 0) do begin
         cb := PXMLVCardEventCallback(_callbacks[0]);
-        cb^.Callback(_jid, vcard);
-        Dispose(cb);
         _callbacks.Delete(0);
+
+        try
+            cb^.Callback(_jid, vcard);
+        except
+            //TODO:  loggit
+        end;
+        
+        Dispose(cb);
+    end;
+    
+    if (vcard <> nil) then begin
+        GetVCardCache().FireUpdate(tag);
     end;
 end;
 
@@ -363,6 +396,7 @@ end;
 procedure TXMLVCardPending.AddCallback(cb: TXMLVCardEvent);
 var
     session: TJabberSession;
+    iq: TJabberIQ;
     cbe: PXMLVCardEventCallback;
 begin
     if Assigned(cb) then begin
@@ -373,17 +407,18 @@ begin
 
     if (not IsValid) and (_iq = nil) then begin
         session := TJabberSession(GetVCardCache()._js);
-        _iq := TJabberIQ.Create(
+        iq := TJabberIQ.Create(
                 session,
                 session.generateID,
                 ResultCallback,
                 GetVCardCache().Timeout);
-        _iq.Namespace := 'vcard-temp';
-        _iq.iqType := 'get';
-        _iq.qTag.Name := 'vCard';
-        _iq.toJid := _jid;
+        iq.Namespace := 'vcard-temp';
+        iq.iqType := 'get';
+        iq.qTag.Name := 'vCard';
+        iq.toJid := _jid;
+        _iq := iq;
 
-        _iq.Send();
+        iq.Send();
     end;
 end;
 
