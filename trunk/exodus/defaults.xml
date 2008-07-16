@@ -141,9 +141,12 @@
         <control name="lblTimestampFmt"/>
     </timestamp_format>
 
-    <msglist_type value="0"/>
+    <msglist_type value="1"/>
     <!-- These values only matter if msglist_type has a value of 1 and not 0 -->
-    <display_date_separator value="0" /> <!-- Should the date be displayed between 2 messages that are on different days -->
+    <display_date_separator control="chkDateSeparator" value="0" state="rw"/> <!-- Should the date be displayed between 2 messages that are on different days -->
+    <date_separator_format value="MM/dd/yyyy" control="txtDateSeparatorFmt" state="rw">
+    	<control name="lblDateSeparatorFmt"/>
+    </date_separator_format>
     <maximum_displayed_messages value="0" /> <!-- Maximum number of messages in a history window before cleanup (for memory management).  0 means no maximum -->
     <maximum_displayed_messages_drop_down_to value="0" /> <!-- When messages deleted for memory management (see above), what is the number of messages that should be left in the window -->
     <ie_css value="iemsglist_style"/>

@@ -290,7 +290,15 @@ begin
                 DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
             end;
         except
-            // Not a IExodusChat2 plugin - eat error
+            on e:Exception do
+            begin
+                // If e is a EIntfCastError, that is ok, just eat.
+                if (not (e is EIntfCastError)) then
+                begin
+                    // Not a EIntfCastError so note exception.
+                    DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
+                end;
+            end;
         end;
     end;
 end;
