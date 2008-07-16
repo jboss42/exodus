@@ -1,22 +1,22 @@
 inherited frmDockable: TfrmDockable
   Caption = 'frmDockable'
-  ClientWidth = 204
+  ClientWidth = 251
   DragKind = dkDock
   DragMode = dmAutomatic
   KeyPreview = True
   OnClose = FormClose
-  OnDestroy = TntFormDestroy
+  OnDestroy = FormDestroy
   OnDragDrop = OnDockedDragDrop
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown
-  ExplicitWidth = 212
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 259
+  PixelsPerInch = 120
+  TextHeight = 16
   object pnlDock: TTntPanel
     Left = 0
     Top = 0
-    Width = 204
-    Height = 33
+    Width = 251
+    Height = 41
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
@@ -24,21 +24,18 @@ inherited frmDockable: TfrmDockable
     object pnlDockTopContainer: TTntPanel
       Left = 0
       Top = 0
-      Width = 204
-      Height = 28
+      Width = 251
+      Height = 34
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitTop = 1
-      ExplicitWidth = 202
       object tbDockBar: TToolBar
         AlignWithMargins = True
-        Left = 155
+        Left = 202
         Top = 3
         Width = 46
-        Height = 22
+        Height = 28
         Align = alRight
         AutoSize = True
         EdgeInner = esNone
@@ -48,7 +45,6 @@ inherited frmDockable: TfrmDockable
         TabOrder = 0
         Transparent = True
         Wrapable = False
-        ExplicitLeft = 153
         object btnDockToggle: TToolButton
           AlignWithMargins = True
           Left = 0
@@ -80,25 +76,23 @@ inherited frmDockable: TfrmDockable
       object pnlDockTop: TTntPanel
         Left = 0
         Top = 0
-        Width = 152
-        Height = 28
+        Width = 199
+        Height = 34
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
-        ExplicitWidth = 150
       end
     end
     object pnlDockControlSite: TTntPanel
       Left = 0
-      Top = 28
-      Width = 204
-      Height = 5
+      Top = 34
+      Width = 251
+      Height = 7
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
-      ExplicitHeight = 27
     end
   end
 end
