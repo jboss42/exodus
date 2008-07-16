@@ -23,6 +23,7 @@ uses
     RegExpr,
     Unicode,
     XMLTag,
+    XMLVCard, XMLVCardCache,
     JabberID,
     COMExodusItem,
     Contnrs,
@@ -155,7 +156,7 @@ type
     }
     TContactDisplayNameItem = class(TDisplayNameItem)
     private
-        _VCard: TXMLTag;
+        _VCard: TXMLVCard;
         _jid: TJabberID;
 
         //An item may make a vcard fetch as part of a GetDisplayName call, or
@@ -165,23 +166,23 @@ type
         //want to cache the vcard and profile dn but not event.
         //In both cases we want to fire a Profile fetch result event.
         _fetchFailed: Boolean;
-        _ProfileIQ: TObject; //avoiding circular ref to Session in IQ
+        _fetchPending: Boolean;
         _DNFetch: boolean;
         _StandAloneFetch: boolean;
-        
+
         _profileParser: TProfileParser;
         _HasProfile: Boolean;
     protected
         function ParseVCard(out ProfileDisplayName: WideString): boolean;
-        procedure SetVCard(vcard: TXMLtag);
+        procedure SetVCard(vcard: TXMLVCard);
         function GetBestExistingDisplayName(): WideString; override;
         function FetchProfileDN(out pendingNameChange: boolean; UseCacheOnly: boolean=false): WideString;virtual;
     public
         constructor Create(jid: TJabberID; profileParser: TProfileParser); reintroduce; overload;
         destructor  Destroy();override;
 
-        procedure VCardIQCallback(event: string; tag: TXMLTag);
-        procedure OnVCardResult(vcard: TXMLTag);
+        procedure VCardCallback(jid: Widestring; vcard: TXMLVCard);
+        procedure OnVCardResult(vcard: TXMLVCard);
 
         function getProfileDisplayName(out pendingNameChange: boolean; UseCacheOnly: boolean=false): WideString;virtual;
         function getDisplayName(out pendingNameChange: boolean; UseCacheOnly: boolean=false): WideString; override;
@@ -243,7 +244,6 @@ type
 implementation
 uses
     SysUtils,
-    IQ,     //profile request
     Session;
 var
     _DisplayNameCache: TDisplayNameCache;
@@ -638,7 +638,6 @@ begin
         DisplayName[dntDefault] := _jid.removeJEP106(_jid.user);
     //if service or server or something, default will be set to uid (jid) by parent class
 
-    _ProfileIQ := nil;
     _DNFetch := false;
     _StandAloneFetch := false;
 
@@ -652,8 +651,6 @@ end;
 destructor TContactDisplayNameItem.Destroy();
 begin
     _jid.Free();
-    if (_vCard <> nil) then
-        _vCard.free();
     inherited;
 end;
 
@@ -666,32 +663,50 @@ begin
         Result := DisplayName[dntDefault];
 end;
 
-procedure TContactDisplayNameItem.SetVCard(vcard: TXMLtag);
+procedure TContactDisplayNameItem.SetVCard(vcard: TXMLVCard);
 begin
-    if (_vCard <> nil) then
-        _vCard.Free();
-
-    _vCard := nil;
-
-    if (vcard <> nil) then
-        _vCard := TXMLTag.Create(vcard);
+    _vCard := vcard;
 end;
 
 function TContactDisplayNameItem.ParseVCard(out ProfileDisplayName: WideString): boolean;
+var
+    tag: TXMLTag;
 begin
-    Result := (_vCard <> nil) and
-              _profileParser.parseProfile(_vCard, ProfileDisplayName) and
-              (ProfileDisplayName <> '');
+    Result := false;
+    if (_vCard <> nil) then begin
+        tag := TXMLTag.Create();
+        _vCard.fillTag(tag);
+
+        Result := _profileParser.parseProfile(tag.GetFirstTag('vCard'), ProfileDisplayName) and
+                (ProfileDisplayName <> '');
+
+        tag.Free();
+    end;
 end;
 
-procedure TContactDisplayNameItem.VCardIQCallback(event: string; tag: TXMLTag);
+procedure TContactDisplayNameItem.VCardCallback(jid: Widestring; vcard: TXMLVCard);
+var
+    tstr: Widestring;
+    goodParse: boolean;
 begin
-    //only check for failed results here. Cache will update vcard if successful
-    _fetchFailed := (event <> 'xml') or (tag = nil) or (tag.getAttribute('type') <> 'result');
-    if (_fetchFailed) then
-    begin
+    _fetchPending := false;
+    _fetchFailed := (vcard = nil);
+    SetVCard(vcard);
+
+    if (ParseVCard(tstr)) then begin
+        DisplayName[dntProfile] := tstr;
+        //fire change event if
+        //not using roster, profile DN is enabled and name actually changed
+        if ((DisplayName[dntItemName] = '') and
+            IsProfileEnabled() and
+            (tstr <> CurrentDisplayName)) then
+        begin
+            _CurrentDisplayName := tstr;
+            FireChangeEvent(UID, tstr);
+        end;
+    end
+    else begin
         DisplayName[dntProfile] := '';
-        SetVCard(nil);
 
         //fire failed result event if stand alone fetch
         if (_standAloneFetch) then
@@ -702,7 +717,6 @@ begin
         if (_DNFetch) then
             FireChangeEvent(UID, _CurrentDisplayName);
 
-        _profileIQ := nil; //already freed by class itself
         _DNFetch := false;
         _StandAloneFetch := false;
 
@@ -712,12 +726,13 @@ begin
     end;
 end;
 
-procedure TContactDisplayNameItem.OnVCardResult(vcard: TXMLTag);
+procedure TContactDisplayNameItem.OnVCardResult(vcard: TXMLVCard);
 var
     tstr: Widestring;
     goodParse: boolean;
 begin
-    _FetchFailed := false; //only got here if a vcard was fetched
+    if _fetchPending then exit; //pending fetches will update later
+    _FetchFailed := false;      //only got here if a vcard was fetched
 
     SetVCard(vcard);
 
@@ -753,36 +768,34 @@ begin
     if (_StandAloneFetch) then
         FireProfileFetchResultEvent(UID, DisplayName[dntProfile], not goodParse);
 
-    _profileIQ := nil; //already freed by class itself
     _StandAloneFetch := false;
     _DNFetch := false;
 end;
 
 function TContactDisplayNameItem.FetchProfileDN(out pendingNameChange: boolean; UseCacheOnly: boolean=false): WideString;
-var
-    tiq : TJabberIQ;
 begin
     Result := DisplayName[dntProfile];
 
     if (Result = '') then begin //no current profile name
         Result := DisplayName[dntItemName];
-        
+
         if (Result = '') then
             Result := DisplayName[dntDefault];
 
-        if (not _fetchFailed) and (_profileIQ = nil) and (not UseCacheOnly) then
+        if (not _fetchFailed) and (not _fetchPending) and (not UseCacheOnly) then
         begin
-            tiq := TJabberIQ.Create(DNSession, DNSession.generateID(), VCardIQCallback, MainSession.Prefs.getInt('vcard_iq_timeout'));
-            tiq.Namespace := 'vcard-temp';
-            tiq.qTag.Name := 'vCard';
-            tiq.iqType := 'get';
-            tiq.toJid := _jid.jid;
-            tiq.Send;
-            _profileIQ := tiq;
+            _fetchPending := true;
+            GetVCardCache().find(_jid.jid, VCardCallback);
+        end;
+
+        if (not _fetchPending) and (not UseCacheOnly) then begin
+            //Once more (but cache only), because the callback might have hit synchronously
+            Result := FetchProfileDN(pendingNameChange, true);
         end;
     end;
+
     _currentDisplayName := Result;
-    pendingNameChange := _profileIQ <> nil;
+    pendingNameChange := _fetchPending;
 end;
 
 function TContactDisplayNameItem.getDisplayName(out pendingNameChange: boolean; UseCacheOnly: boolean): WideString;
@@ -899,7 +912,6 @@ begin
     if (_js <> nil) then
     begin
         _sessioncb := TJabberSession(_js).RegisterCallback(SessionCallback, '/session');
-        _VCardResultCB := TJabberSession(_js).RegisterCallback(VCardResultCallback, '/packet/iq[@type="result"]/vCard[@xmlns="vcard-temp"]');
     end;
 end;
 
@@ -987,24 +999,27 @@ begin
             TDisplayNameItem(_dnCache.Objects[idx]).OnPrefChange();
         end;
         }
+    end
+    else if (event = '/session/vcard/update') then begin
+        VCardResultCallback(event, tag);
     end;
 end;
 
 procedure TDisplayNameCache.VCardResultCallback(event: string; tag: TXMLTag);
 var
     JID: TJabberID;
+    uid: Widestring;
     DNI: TDisplayNameItem;
-    vTag: TXMLTag;
+    vcard: TXMLVCard;
 begin
-    vTag := tag.GetFirstTag('vCard');
-    if (vTag = nil) then
-        vTag := tag.GetFirstTag('vcard');
 
     JID := TJabberID.Create(tag.GetAttribute('from'));
     DNI := getOrAddDNItem(JID);
-    JID.Free();
+    
+    vcard := GetVCardCache().VCards[JID.jid];
+    TContactDisplayNameItem(DNI).VCardCallback(JID.jid, vcard);
 
-    TContactDisplayNameItem(DNI).OnVCardResult(vTag);
+    JID.Free();
 end;
 
 function TDisplayNameCache.getDNItem(jid: TJabberID): TDisplayNameItem;
