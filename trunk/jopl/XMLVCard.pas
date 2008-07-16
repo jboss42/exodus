@@ -90,8 +90,8 @@ end;
         constructor Create;
         destructor Destroy; override;
 
-        procedure Parse(tag: TXMLTag);
-        procedure fillTag(tag: TXMLTag);
+        procedure Parse(tag: TXMLTag); virtual;
+        procedure fillTag(tag: TXMLTag); virtual;
 end;
 
 
@@ -337,6 +337,7 @@ begin
     // get picture
     t1 := vtag.GetFirstTag('PHOTO');
     if (t1 <> nil) then begin
+        if (Picture <> nil) then FreeAndNil(Picture);
         Picture := TAvatar.Create();
         Picture.parse(t1);
     end;

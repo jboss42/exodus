@@ -1151,9 +1151,6 @@ begin
             x := p.AddTag('x');
             x.setAttribute('xmlns', 'vcard-temp:x:update');
             x.AddBasicTag('photo', Self.Profile.AvatarHash);
-            x := p.AddTag('x');
-            x.setAttribute('xmlns', 'jabber:x:avatar');
-            x.AddBasicTag('hash', Self.Profile.AvatarHash);
         end;
 
 
