@@ -114,7 +114,7 @@ type
   private
     { Private declarations }
     _vcard: TXMLVCard;
-    procedure Callback(event: string; tag: TXMLTag);
+    procedure Callback(jid: Widestring; vcard: TXMLVCard);
   public
     { Public declarations }
     procedure vCardIQCB(event: string; tag: TXMLTag);
@@ -132,7 +132,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Avatar, JabberUtils, ExUtils,  GnuGetText, IQ, Session;
+    Avatar, JabberUtils, ExUtils,  GnuGetText, IQ, Session, XMLVCardCache;
 const
     sVCardError = 'No vCard response was ever returned.';
     sFailureToSetVCard = 'Could not modify profile.' + #13#10 + 'Either the server is too busy or you do not have permission to change your profile.';
@@ -152,7 +152,6 @@ var
     n: TTntTreeNode;
     i: integer;
     tmps: Widestring;
-    iq: TJabberIQ;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
@@ -179,15 +178,7 @@ begin
     TreeView1.FullExpand();
     MainSession.Prefs.RestorePosition(Self);
 
-    _vcard := TXMLVCard.Create();
-
-    tmps := MainSession.generateID();
-    iq := TJabberIQ.Create(MainSession, tmps, Callback, MainSession.Prefs.getInt('vcard_iq_timeout'));
-    iq.qTag.Name := 'VCARD';
-    iq.Namespace := 'vcard-temp';
-    iq.iqType := 'get';
-    iq.toJid := MainSession.Username + '@' + MainSession.Server;
-    iq.Send();
+    GetVCardCache().find(MainSession.SessionJid.jid, Callback);
 end;
 
 {---------------------------------------}
@@ -198,15 +189,16 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmVCard.Callback(event: string; tag: TXMLTag);
+procedure TfrmVCard.Callback(jid: Widestring; vcard: TXMLVCard);
 begin
     // callback for vcard info
-    if (tag = nil) then begin
+    if (vcard = nil) then begin
         MessageDlgW(_(sVCardError), mtInformation, [mbOK], 0);
+        _vcard := TXMLVCard.Create();
         exit;
     end;
     
-    _vcard.parse(tag);
+    _vcard := vcard;
 
     with _vcard do begin
         txtFirst.Text := GivenName;
@@ -391,7 +383,7 @@ end;
 {---------------------------------------}
 procedure TfrmVCard.FormDestroy(Sender: TObject);
 begin
-    _vcard.Free();
+    //nothing to see here...
 end;
 
 {---------------------------------------}

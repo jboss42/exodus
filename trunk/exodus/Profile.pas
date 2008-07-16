@@ -434,16 +434,6 @@ begin
         if (gridResources.Height < 100) then //designed height
             pnlAllResources.Height := gridResources.Height;
 
-        {
-        tstr := MainSession.generateID();
-        iq := TJabberIQ.Create(MainSession, tstr, vcard, MainSession.Prefs.getInt('vcard_iq_timeout'));
-        iq.Namespace := 'vcard-temp';
-        iq.qTag.Name := 'vCard';
-        iq.iqType := 'get';
-        iq.toJid := _jid.jid;
-        iq.Send;
-        }
-
         TreeView1.Selected := TreeView1.Items[0];
         TreeView1.FullExpand();
         PageControl1.ActivePageIndex := 0;
