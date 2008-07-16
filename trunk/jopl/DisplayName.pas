@@ -687,7 +687,6 @@ end;
 procedure TContactDisplayNameItem.VCardCallback(jid: Widestring; vcard: TXMLVCard);
 var
     tstr: Widestring;
-    goodParse: boolean;
 begin
     _fetchPending := false;
     _fetchFailed := (vcard = nil);
@@ -1008,7 +1007,6 @@ end;
 procedure TDisplayNameCache.VCardResultCallback(event: string; tag: TXMLTag);
 var
     JID: TJabberID;
-    uid: Widestring;
     DNI: TDisplayNameItem;
     vcard: TXMLVCard;
 begin

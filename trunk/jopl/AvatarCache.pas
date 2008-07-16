@@ -305,8 +305,8 @@ begin
                     a.jid := jid;
                     Add(jid, a);
                     {$ifdef Exodus}
-                    //tmps := 'LOAD: ' + jid + ', HASH: ' + a.getHash();
-                    //Log(tmps);
+                    tmps := 'LOAD: ' + jid + ', HASH: ' + a.getHash();
+                    Log(tmps);
                     {$endif}
 
                 end;
