@@ -118,7 +118,7 @@ end;
 
 procedure TExodusToolbarBase.Initialize();
 begin
-     _buttons := TObjectList.create(true); //free buttons on delete etc.
+    _buttons := TObjectList.create(false); //free buttons on delete etc.
     _imgList := nil;
     _btnBar := nil;
     _controlProxy := nil;
@@ -170,7 +170,7 @@ begin
         oldleft := _btnBar.Buttons[_btnBar.ButtonCount - 1].Left + _btnBar.Buttons[_btnBar.ButtonCount - 1].Width;
         _btnBar.AutoSize := false;
 
-        btn := TToolButton.Create(nil); //proxy manages lifetime
+        btn := TToolButton.Create(_btnBar); //proxy manages lifetime
         _buttons.add(btn);
 
         btn.ShowHint := true;

@@ -30,32 +30,6 @@ uses
   function generateUID(): widestring;
 
 type
-
-  TDockNotify = procedure of object;
-
-  TDockbarButton = class
-  private
-    _button: TToolButton;
-    _callback: TDockNotify;
-    _parentForm: TForm;
-
-    function getImageIndex(): integer;
-    procedure setImageIndex(ii: integer);
-    function getHint(): WideString;
-    procedure setHint(hint: Widestring);
-    procedure OnClickEvent(Sender: TObject);
-  protected
-  public
-    constructor create();
-    destructor Destroy();override;
-
-    property Hint: WideString read getHint write setHint;
-    property ImageIndex: integer read getImageIndex write setImageIndex;
-    property OnClick: TDockNotify read _callback write _callback;
-    property Parent: TForm read _parentForm;
-  end;
-
-
   {
     Dockable forms may be docked/undocked either through drag -n- dock operations
     or programatically through their DockForm/FloatForm methods. Because there
@@ -91,7 +65,7 @@ type
     procedure btnCloseDockClick(Sender: TObject);
     procedure btnDockToggleClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure TntFormDestroy(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure pnlDockResize(Sender: TObject);
   private
     { Private declarations }
@@ -184,8 +158,6 @@ type
     procedure OnNotify(notifyEvents: integer);override;
 
     procedure gotActivate();override;
-    procedure addDockbarButton(button: TDockbarButton);
-    procedure removeDockbarButton(button: TDockbarButton);
 
     {
         Get the UID for the window.
@@ -242,50 +214,6 @@ function generateUID(): widestring;
 begin
     Inc(dockable_uid);
     Result := 'dockableUID_' + inttostr(dockable_uid);
-end;
-
-constructor TDockbarButton.create();
-begin
-    inherited create();
-    _button := TToolButton.create(nil);
-    _button.OnClick := OnClickEvent;
-    _button.ShowHint := true;
-    _callback := nil;
-    _parentForm := nil;
-end;
-
-function TDockbarButton.getImageIndex(): integer;
-begin
-    Result := _button.ImageIndex;
-end;
-
-procedure TDockbarButton.setImageIndex(ii: integer);
-begin
-    _button.ImageIndex := ii;
-end;
-
-function TDockbarButton.getHint(): WideString;
-begin
-    Result := _button.Hint;
-end;
-
-procedure TDockbarButton.setHint(hint: Widestring);
-begin
-    _button.Hint := hint;
-end;
-
-procedure TDockbarButton.OnClickEvent(Sender: TObject);
-begin
-    if (Assigned(_callback)) then
-        _callback();
-end;
-
-destructor TDockbarButton.Destroy();
-begin
-    _parentForm := nil;
-    _button.Parent := nil;
-    _button.free();
-    inherited;
 end;
 
 Constructor TfrmDockable.Create(AOwner: TComponent);
@@ -455,7 +383,6 @@ begin
     MainSession.UnRegisterCallback(_session_close_all_callback);
     MainSession.UnRegisterCallback(_session_dock_all_callback);
     MainSession.UnRegisterCallback(_session_float_all_callback);
-    _COMDockbar := nil;
 end;
 
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
@@ -612,18 +539,6 @@ begin
     inherited; //inherited will handle isNotifying and floating window notifications
 end;
 
-procedure TfrmDockable.addDockbarButton(button: TDockbarButton);
-begin
-    button._button.Parent := tbDockbar;
-    button._parentForm := Self;
-end;
-
-procedure TfrmDockable.removeDockbarButton(button: TDockbarButton);
-begin
-    button._button.Parent := nil;
-    button._parentForm := nil;
-end;
-
 procedure TfrmDockable.showDockbar(show: boolean);
 begin
     tbDockBar.Visible := show;
@@ -634,10 +549,11 @@ begin
     pnlDockTop.Visible := show;
 end;
 
-procedure TfrmDockable.TntFormDestroy(Sender: TObject);
+procedure TfrmDockable.FormDestroy(Sender: TObject);
 begin
-    inherited;
     _unreadMessages.free();
+    _COMDockbar := nil;
+    inherited;
 end;
 
 procedure TfrmDockable.showCloseButton(show: boolean);
