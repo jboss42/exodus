@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag, XMLUtils,
-    Buttons, Exodus_TLB, COMMsgOutToolbar, COMDockToolbar, AppEvnts, TntExtCtrls;
+    Buttons, Exodus_TLB, COMMsgOutToolbar, AppEvnts, TntExtCtrls;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -159,12 +159,12 @@ type
               const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
               Headers: OleVariant; var Cancel: WordBool);
     procedure OnFileLinkCallback(event: string; tag: TXMLTag);
+    function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;override;
 
   public
     { Public declarations }
     AutoScroll: boolean;
     MsgOutToolbar: IExodusMsgOutToolbar;
-    DockToolbar: IExodusDockToolbar;
 
     constructor Create(AOwner: TComponent);override;
     procedure SetEmoticon(e: TEmoticon);
@@ -235,6 +235,11 @@ constructor TfrmBaseChat.Create(AOwner: TComponent);
 begin
     inherited;
     UnreadMsgCount := 0;
+end;
+
+function TfrmBaseChat.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
+begin
+    Result := nil;
 end;
 
 {
@@ -554,8 +559,7 @@ begin
         _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
         _filelink_callback := MainSession.RegisterCallback(OnFileLinkCallback, '/session/filelink/click/response');
 
-        MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar, pnlControlSite, COMRosterImages);
-        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar, pnlDockControlSite, COMRosterImages);
+        MsgOutToolbar := TExodusMsgOutToolbar.Create(tbMsgOutToolbar, COMRosterImages, Self, 'composerbar');
 
         updateFromPrefs();
         DragAcceptFiles(Handle, GetActivityWindow().FilesDragAndDrop);
@@ -599,7 +603,6 @@ begin
     _msgHistory.Free();
 
     MsgOutToolbar := nil;
-    DockToolbar := nil;
 
     inherited;
 end;

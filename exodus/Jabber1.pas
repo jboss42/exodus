@@ -25,7 +25,7 @@ uses
     // Exodus stuff
     BaseChat, ExResponders, LoginWindow, RosterForm, Presence, XMLTag,
     ShellAPI, Registry, Emote,
-    Dockable, DisplayName,
+    Dockable, DisplayName, COMToolbar,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
@@ -78,7 +78,7 @@ type
     TInitHooks = procedure; stdcall;
     TStopHooks = procedure; stdcall;
 
-  TfrmExodus = class(TExForm)
+  TfrmExodus = class(TExForm, IControlDelegate)
     MainMenu1: TTntMainMenu;
     ImageList1: TImageList;
     timAutoAway: TTimer;
@@ -570,7 +570,8 @@ type
         layout.
     }
     procedure DoDisconnect();
-
+    //IControlDelegate
+    function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
 published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
@@ -811,7 +812,7 @@ uses
     StateForm, CapsCache,
     RosterImages, ToolbarImages,
     ExodusImageList,
-    COMToolbar, COMToolbarButton, COMToolbarControl, COMExodusItemList,
+    COMExodusItemList,
     NewUser, CommandWizard, Notify,
     About, AutoUpdate, AutoUpdateStatus, Browser, Chat,
     ChatController,
@@ -896,9 +897,13 @@ begin
     end;
 end;
 
-
-
 {---------------------------------------}
+function TfrmExodus.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
+begin
+    Result := nil;
+end;
+
+
 procedure TfrmExodus.Flash();
 begin
 end;
@@ -1192,7 +1197,7 @@ begin
     GetRosterWindow().ImageList := RosterTreeImages.ImageList;
     MainbarImages.setImageList(MainbarImageList);
 
-    Exsession.ExCOMToolbar := TExodusToolbar.Create(toolbar1, toolbar, COMToolbarImages);
+    Exsession.ExCOMToolbar := TExodusToolbar.Create(toolbar1, COMToolbarImages, Self, 'mainbar');
     Exsession.COMToolbar := ExCOMToolbar;
 
     // if we are testing auto-away, then fire the

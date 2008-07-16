@@ -218,7 +218,7 @@ begin
     Result := nil;
     if (_frm <> nil) then
     begin
-        Result := _frm.DockToolbar;
+        Result := _frm.Dockbar;
     end;
 end;
 

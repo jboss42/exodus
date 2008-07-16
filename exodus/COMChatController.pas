@@ -113,7 +113,7 @@ implementation
 
 uses
     COMExControls, ChatWin, Controls, BaseMsgList, RTFMsgList, Forms,
-    ComServ, Menus, SysUtils, Debug, BaseChat;
+    ComServ, Menus, SysUtils, Debug, BaseChat, Dockable;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -833,9 +833,9 @@ function TExodusChat.Get_DockToolbar: IExodusDockToolbar;
 begin
     Result := nil;
     if (_chat <> nil) and (_chat.Window <> nil) then
-        Result := TfrmChat(_chat.Window).DockToolbar
+        Result := TfrmDockable(_chat.Window).Dockbar
     else if (_room <> nil) then
-        Result := _room.DockToolbar;
+        Result := _room.Dockbar;
 end;
 
 {---------------------------------------}
