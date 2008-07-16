@@ -26,24 +26,29 @@ uses XMLVCard, XMLTag, Unicode, SysUtils, Classes;
 type
   TXMLVCardEvent = procedure(UID: Widestring; vcard: TXMLVCard) of object;
 
+  TXMLVCardPendingStatus = (vpsRefresh, vpsError, vpsOK);
   TXMLVCardPending = class(TXMLVCard)
   private
     _jid: Widestring;
     _callbacks: TList;
     _iq: TObject;       //avoiding Session circular reference
-    _valid: Boolean;
+
+    _status: TXMLVCardPendingStatus;
 
     constructor Create(jid: Widestring);
 
     procedure ResultCallback(event: string; tag: TXMLTag);
     procedure AddCallback(cb: TXMLVCardEvent);
 
-    property IsValid: Boolean read _valid write _valid;
-
+    function GetValidity(): Boolean;
+    
   public
     destructor Destroy(); override;
 
+    function Parse(tag: TXMLTag): Boolean; override;
+
     property Jid: Widestring read _jid;
+    property IsValid: Boolean read GetValidity;
 
   end;
 
@@ -190,7 +195,6 @@ begin
         vcard := TXMLVCardPending.Create(jid);
         vcard.Parse(iq);
         vcard.TimeStamp := dt;
-        vcard.IsValid := true;
 
         _cache.AddObject(iq.getAttribute('from'), vcard);
     end;
@@ -233,18 +237,16 @@ var
     session: TJabberSession;
 begin
     session := TJabberSession(_js);
-    if (event = '/session/authenticated') then begin
+    if (event = '/session/connected') then begin
+        _timeout := session.Prefs.getInt('vcard_iq_timeout');
+        _ttl := session.Prefs.getInt('vcard_cache_ttl');
+    end
+    else if (event = '/session/authenticated') then begin
         Load();
     end
     else if (event = '/session/disconnected') then begin
         Save();
         Clear();
-    end
-    else if (event = '/session/prefs') then begin
-        if session.Prefs.getString('vcard_iq_timeout') <> '' then
-            Self._timeout := session.Prefs.getInt('vcard_iq_timeout');
-        if session.Prefs.getString('vcard_cache_ttl') <> '' then
-            Self._ttl := session.Prefs.getInt('vcard_cache_ttl');
     end;
 end;
 {---------------------------------------}
@@ -266,7 +268,6 @@ begin
     Result := false;
     if (idx <> -1) then begin
         pending := TXMLVCardPending(_cache.Objects[idx]);
-        if ((Now() - _ttl) > pending.TimeStamp) then pending.IsValid := false;
     end
     else if create then begin
         pending := TXMLVCardPending.Create(jid);
@@ -299,7 +300,7 @@ begin
 
     if (refresh) then begin
         //do (first or another) vcard request, fire callback later
-        pending.IsValid := false;
+        pending._status := vpsRefresh;
         pending.AddCallback(cb);
     end
     else if Assigned(cb) then begin
@@ -330,6 +331,7 @@ begin
     _jid := jid;
     _callbacks := TList.Create();
     _iq := nil;
+    _status := vpsRefresh;
 end;
 
 {---------------------------------------}
@@ -347,23 +349,52 @@ begin
 end;
 
 {---------------------------------------}
+function TXMLVCardPending.Parse(tag: TXMLTag): Boolean;
+begin
+    Result := inherited Parse(tag);
+
+    if not Result then
+        _status := vpsError
+    else begin
+        _status := vpsOK;
+        TimeStamp := Now();
+    end;
+end;
+
+{---------------------------------------}
+function TXMLVCardPending.GetValidity(): Boolean;
+begin
+    if (_status = vpsOK) then begin
+        //double-check TTL here
+        if (Now() - GetVCardCache()._ttl) > Self.TimeStamp then
+            _status := vpsRefresh;
+    end;
+
+    Result := (_status = vpsOK);
+end;
+
+{---------------------------------------}
 procedure TXMLVCardPending.ResultCallback(event: string; tag: TXMLTag);
 var
     vcard: TXMLVCard;
     cb: PXMLVCardEventCallback;
 begin
     vcard := nil;
-    _valid := false;
     _iq := nil;
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
+            Parse(tag);
+            _status := vpsOK;
             vcard := Self;
-            vcard.Parse(tag);
-            vcard.TimeStamp := Now();
-            IsValid := true;
+        end
+        else begin
+            _status := vpsError;
         end;
     end
-    else if (event <> 'timeout') then begin
+    else if (event = 'timeout') then begin
+        _status := vpsRefresh;
+    end
+    else begin
         //shouldn't happen, but...
         exit;
     end;
@@ -399,7 +430,7 @@ begin
         _callbacks.Add(cbe);
     end;
 
-    if (not IsValid) and (_iq = nil) then begin
+    if (_status = vpsRefresh) and (_iq = nil) then begin
         session := TJabberSession(GetVCardCache()._js);
         iq := TJabberIQ.Create(
                 session,
