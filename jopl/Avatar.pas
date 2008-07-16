@@ -301,7 +301,6 @@ begin
     for i := 0 to tmps.Count - 1 do begin
         _data := _data + tmps[i];
     end;
-    i := Length(_data);
 
     m := TMemoryStream.Create();
     d := TIdDecoderMime.Create(nil);

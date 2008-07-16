@@ -91,7 +91,6 @@ type
         procedure addPending(ejid, node, caps_jid: Widestring);
         procedure fireCaps(jid, capid: Widestring);
 
-        procedure RemoveCached(e: TJabberCapsEntity);
         procedure AddCached(e: TJabberCapsEntity);
     public
         constructor Create();
@@ -377,17 +376,6 @@ begin
     idx := _cache.IndexOfObject(e);
     if (idx = -1) then
         _cache.AddObject(e.Node, e);
-end;
-{---------------------------------------}
-procedure TJabberCapsCache.RemoveCached(e: TJabberCapsEntity);
-var
-    idx: Integer;
-begin
-    if (e = nil) then exit;
-
-    idx := _cache.IndexOfObject(e);
-    if (idx <> -1) then
-        _cache.Delete(idx);
 end;
 
 {---------------------------------------}
@@ -681,7 +669,6 @@ begin
     tjid.Free();
 
     // no node or uri#ver
-    addFeature(XMLNS_AGENTS);
 
     addFeature(XMLNS_IQOOB);
     addFeature(XMLNS_TIME);
@@ -707,6 +694,7 @@ begin
     addFeature(XMLNS_BYTESTREAMS);
 
 {$IFDEF DEPRICATED_PROTOCOL}
+    addFeature(XMLNS_AGENTS);
     addFeature(XMLNS_BROWSE);
     addFeature(XMLNS_XCONFERENCE);
 {$ENDIF}

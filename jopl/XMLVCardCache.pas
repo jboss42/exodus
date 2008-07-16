@@ -51,7 +51,6 @@ type
   private
     _cache: TWidestringList;
     _js: TObject;
-    _iqCB: Integer;
     _timeout: Integer;
     _ttl: Double;
 
@@ -117,8 +116,6 @@ end;
 
 {---------------------------------------}
 destructor TXMLVCardCache.Destroy;
-var
-    idx: Integer;
 begin
     Clear();
 
@@ -294,8 +291,6 @@ end;
 {---------------------------------------}
 procedure TXMLVCardCache.find(jid: WideString; cb: TXMLVCardEvent; refresh: Boolean);
 var
-    session: TJabberSession;
-    iq: TJabberIQ;
     pending: TXMLVCardPending;
 begin
     //check the cache
@@ -355,7 +350,6 @@ end;
 procedure TXMLVCardPending.ResultCallback(event: string; tag: TXMLTag);
 var
     vcard: TXMLVCard;
-    idx: Integer;
     cb: PXMLVCardEventCallback;
 begin
     vcard := nil;
