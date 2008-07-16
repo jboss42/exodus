@@ -90,7 +90,7 @@ end;
         constructor Create;
         destructor Destroy; override;
 
-        procedure Parse(tag: TXMLTag); virtual;
+        function Parse(tag: TXMLTag): Boolean; virtual;
         procedure fillTag(tag: TXMLTag); virtual;
 end;
 
@@ -295,7 +295,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLVCard.Parse(tag: TXMLTag);
+function TXMLVCard.Parse(tag: TXMLTag): Boolean;
 var
     vtag, t1, t2: TXMLTag;
     a: TXMLVCardAddress;
@@ -303,7 +303,8 @@ var
     tags: TXMLTagList;
     i: integer;
 begin
-    //
+    result := false;
+    
     vtag := tag.GetFirstTag('vcard');
     if (vtag = nil) then
         vtag := tag.GetFirstTag('VCARD');
@@ -405,6 +406,8 @@ begin
     
     t1 := vtag.GetFirstTag('WORKCELL');
     if t1 <> nil then WorkCell.number := t1.Data;
+
+    Result := true;
 end;
 
 {---------------------------------------}
