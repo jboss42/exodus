@@ -599,11 +599,10 @@ begin
     MainSession.UnRegisterCallback(_filelink_callback);
     if (frmExodus <> nil) then
         frmExodus.ActiveChat := nil;
-    TfBaseMsgList(_msgframe).Free();
+
     _msgHistory.Free();
 
     MsgOutToolbar := nil;
-
     inherited;
 end;
 

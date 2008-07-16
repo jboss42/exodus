@@ -619,8 +619,8 @@ begin
 
     ExCOMEntityCache := TExodusEntityCache.Create();
     COMEntityCache := ExCOMEntityCache;
-    ExCOMToolbar := TExodusToolbar.Create();
-    COMToolbar := ExCOMToolbar;
+//    ExCOMToolbar := TExodusToolbar.Create(); //created in jabber1
+//    COMToolbar := ExCOMToolbar;
     ExCOMBookmarkManager := TExodusBookmarkManager.Create();
     COMBookmarkManager := ExCOMBookmarkManager;
 
