@@ -21,7 +21,7 @@ unit Avatar;
 
 interface
 uses
-    Session, IQ, PNGImage,
+    PNGImage,
     Unicode, JabberUtils, SecHash, Graphics, IdCoderMime, GifImage, Jpeg, XMLTag,
     Types, SysUtils, Classes, Dialogs, GnuGetText;
 
@@ -41,14 +41,10 @@ type
         _pic: TGraphic;
         _hash: string;  // contains the sha1 hash
         _data: string;  // contains the base64 encoded image
-        _iq: TJabberIQ;
         _height, _width: integer;
 
         procedure _genData();
         function getMimeType(): string;
-
-    protected
-        procedure fetchCallback(event: string; tag: TXMLTag);
 
     public
         jid: Widestring;
@@ -61,7 +57,6 @@ type
         procedure Draw(c: TCanvas; r: TRect); overload;
         procedure Draw(c: TCanvas); overload;
         procedure parse(tag: TXMLTag);
-        procedure fetch(session: TJabberSession);
 
         function  getHash(): string;
         function  isValid(): boolean;
@@ -86,7 +81,6 @@ constructor TAvatar.Create();
 begin
     inherited;
     _pic := nil;
-    _iq := nil;
     _hash := '';
     _data := '';
     Valid := false;
@@ -386,96 +380,6 @@ begin
 
     m.Free();
     d.Free();
-end;
-
-{---------------------------------------}
-procedure TAvatar.fetch(session: TJabberSession);
-var
-    tmpjid: TJabberID;
-begin
-    //
-    tmpjid := TJabberID.Create(jid);
-    assert(_iq = nil);
-    assert(jid <> '');
-    _iq := TJabberIQ.Create(session, session.generateID(), fetchCallback, MainSession.Prefs.getInt('vcard_iq_timeout'));
-    _iq.iqType := 'get';
-    Pending := true;
-
-    if (AvatarType = avOld) then begin
-        _iq.Namespace := 'jabber:iq:avatar';
-        _iq.toJid := tmpjid.full;
-        _iq.Send();
-    end
-    else begin
-        _iq.qTag.Name := 'vCard';
-        _iq.Namespace := 'vcard-temp';
-        _iq.toJid := tmpjid.jid;
-        _iq.Send();
-    end;
-    tmpjid.Free();
-end;
-
-{---------------------------------------}
-procedure TAvatar.fetchCallback(event: string; tag: TXMLTag);
-var
-    tmps: string;
-    tmpjid: TJabberID;
-    q, d, x: TXMLTag;
-    old: TAvatar;
-begin
-    _iq := nil;
-    Pending := false;
-    if (event <> 'xml') then exit;
-
-    if (AvatarType = avOld) then begin
-        q := tag.GetFirstTag('query');
-        if (q <> nil) then begin
-            d := q.GetFirstTag('data');
-            if (d <> nil) then Parse(d);
-        end;
-    end
-    else begin
-        q := tag.GetFirstTag('vcard');
-        if (q = nil) then
-            q := tag.GetFirstTag('VCARD');
-        if (q = nil) then
-            q := tag.GetFirstTag('vCard');
-        if (q = nil) then
-            q := tag.GetFirstTag('query');
-
-        if (q <> nil) then begin
-            d := q.GetFirstTag('PHOTO');
-            if (d <> nil) then Parse(d);
-        end;
-    end;
-
-    if (Valid) then begin
-        tmpjid := TJabberID.Create(jid);
-        old := Avatars.Find(tmpjid.jid);
-        if (old = Self) then 
-            // do nothing
-        else if (old <> nil) then begin
-            Avatars.Remove(old);
-            old.Free();
-            Avatars.Add(tmpjid.jid, Self);
-        end
-        else
-            Avatars.Add(tmpjid.jid, Self);
-
-        // Save the cache
-        Avatars.Save();
-
-        {$ifdef Exodus}
-        tmps := 'AVATAR CB: ' + tmpjid.jid + ', HASH: ' + getHash();
-        Avatars.Log(tmps);
-        {$endif}
-
-        x := TXMLTag.Create('avatar');
-        x.setAttribute('jid', tmpjid.jid);
-        MainSession.FireEvent('/session/avatars', x);
-
-        tmpjid.Free();
-    end;
 end;
 
 function TAvatar.getMimeType: string;
