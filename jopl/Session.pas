@@ -408,7 +408,6 @@ begin
 
     // Create all the things which might register w/ the session
     jCapsCache.SetSession(Self);
-    XMLVCardCache.GetVCardCache().SetSession(Self);
 
     //display name cache
     DisplayName.getDisplayNameCache().setSession(Self);
