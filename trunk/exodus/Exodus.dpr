@@ -304,7 +304,8 @@ uses
   COMExEventData in 'COMExEventData.pas' {ExodusEventXML: CoClass},
   COMExodusPacketDispatcher in 'COMExodusPacketDispatcher.pas',
   XMLVCardCache in '..\jopl\XMLVCardCache.pas',
-  AvatarCache in '..\jopl\AvatarCache.pas';
+  AvatarCache in '..\jopl\AvatarCache.pas',
+  ExVcardCache in 'ExVcardCache.pas';
 
 {$R *.TLB}
 
