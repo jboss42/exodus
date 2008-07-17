@@ -26,29 +26,31 @@ uses XMLVCard, XMLTag, Unicode, SysUtils, Classes;
 type
   TXMLVCardEvent = procedure(UID: Widestring; vcard: TXMLVCard) of object;
 
-  TXMLVCardPendingStatus = (vpsRefresh, vpsError, vpsOK);
-  TXMLVCardPending = class(TXMLVCard)
+  TXMLVCardCacheStatus = (vpsRefresh, vpsError, vpsOK);
+  TXMLVCardCacheEntry = class(TXMLVCard)
   private
     _jid: Widestring;
     _callbacks: TList;
     _iq: TObject;       //avoiding Session circular reference
 
-    _status: TXMLVCardPendingStatus;
+    _status: TXMLVCardCacheStatus;
 
     constructor Create(jid: Widestring);
 
     procedure ResultCallback(event: string; tag: TXMLTag);
     procedure AddCallback(cb: TXMLVCardEvent);
 
-    function GetValidity(): Boolean;
-    
+    function CheckValidity(): Boolean;
+
+    procedure Save();
+    procedure Delete();
   public
     destructor Destroy(); override;
 
     function Parse(tag: TXMLTag): Boolean; override;
 
     property Jid: Widestring read _jid;
-    property IsValid: Boolean read GetValidity;
+    property IsValid: Boolean read CheckValidity;
 
   end;
 
@@ -56,18 +58,21 @@ type
   private
     _cache: TWidestringList;
     _js: TObject;
+
+    _loaded: Boolean;
     _timeout: Integer;
     _ttl: Double;
 
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure FireUpdate(tag: TXMLTag);
 
-    function ObtainPending(jid: Widestring; create: Boolean; var pending: TXMLVCardPending): Boolean;
+    function ObtainPending(jid: Widestring; create: Boolean; var pending: TXMLVCardCacheEntry): Boolean;
     function GetVCard(jid: Widestring): TXMLVCard;
 
+    procedure Initialize();
     procedure Clear();
-    procedure Load(filename: Widestring = '');
-    procedure Save(filename: Widestring = '');
+    procedure Load();
+    procedure Save();
   public
     constructor Create();
     destructor Destroy(); override;
@@ -84,7 +89,6 @@ type
 function GetVCardCache(): TXMLVCardCache;
 
 const
-    VCARD_CACHE_FILENAME : Widestring = 'vcard-cache.xml';
     DEPMOD_VCARD_CACHE: Widestring = 'vcard-cache';
 
 {---------------------------------------}
@@ -92,7 +96,20 @@ const
 {---------------------------------------}
 implementation
 
-uses IQ, PrefController, Session, Signals, XMLParser, XMLUtils;
+uses ExSession, Exodus_TLB, ComObj,
+    IQ, PrefController, Session, Signals, SqlUtils, XMLParser, XMLUtils;
+
+const
+    VCARD_CACHE_DIR: Widestring = 'vcards';
+    VCARD_SQL_SCHEMA_TABLE: Widestring = 'CREATE TABLE vcard_cache (' +
+            'jid TEXT, ' +
+            'datetime FLOAT, ' +
+            'xml TEXT);';
+    VCARD_SQL_SCHEMA_INDEX: Widestring = 'CREATE INDEX vcard_cache_jid_idx ON vcard_cache (jid);';
+
+    VCARD_SQL_LOAD: Widestring = 'SELECT * FROM vcard_cache;';
+    VCARD_SQL_INSERT: Widestring = 'INSERT INTO vcard_cache (jid,datetime,xml) VALUES (''%s'',%8.6f,''%s'');';
+    VCARD_SQL_DELETE: Widestring = 'DELETE FROM vcard_cache where (jid = ''%s'');';
 
 var
     gVCardCache: TXMLVCardCache;
@@ -149,86 +166,92 @@ begin
     end;
     _cache.Clear();
 end;
+
 {---------------------------------------}
-procedure TXMLVCardCache.Load(filename: WideString);
-var
-    cache, iq: TXMLTag;
-    vcard: TXMLVCardPending;
-    parser: TXMLTagParser;
-    tags: TXMLTagList;
-    idx: Integer;
-    dt, currDT: TDateTime;
-    jid, tstr: Widestring;
+procedure TXMLVCardCache.Initialize();
 begin
-    parser := TXMLTagParser.Create();
+    if DataStore.CheckForTableExistence('vcard_cache') then exit;
 
-    if (filename = '') then
-        filename := getUserDir() + VCARD_CACHE_FILENAME;
-    if (not FileExists(filename)) then exit;
-
-    parser.ParseFile(filename);
-
-    if (parser.Count = 0) then begin
-        parser.Free();
-        exit;
-    end;
-
-    cache := parser.popTag();
-
-    currDT := Now() - _ttl;
-    tags := cache.ChildTags;
-    for idx := 0 to tags.Count - 1 do begin
-        iq := tags[idx];
-
-        jid := iq.GetAttribute('from') ;
-        if (jid = '') then Continue;
-        if (_cache.IndexOf(jid) <> -1) then Continue;
-
-        tstr := iq.getAttribute('timestamp');
-        if (tstr <> '') then
-            dt := XEP82DateTimeToDateTime(tstr)
-        else
-            dt := Now();
-
-        if (currDT > dt) then Continue;
-        
-        vcard := TXMLVCardPending.Create(jid);
-        vcard.Parse(iq);
-        vcard.TimeStamp := dt;
-
-        _cache.AddObject(iq.getAttribute('from'), vcard);
+    try
+        DataStore.ExecSQL(VCARD_SQL_SCHEMA_TABLE);
+        DataStore.ExecSQL(VCARD_SQL_SCHEMA_INDEX);
+    except
+        //TODO:  loggit!!
     end;
 end;
 {---------------------------------------}
-procedure TXMLVCardCache.Save(filename: WideString);
+procedure TXMLVCardCache.Load();
 var
+    tag: TXMLTag;
+    pending: TXMLVCardCacheEntry;
+    parser: TXMLTagParser;
+    dt, currDT: TDateTime;
+    jid, xml, sql: Widestring;
+    rst: IExodusDataTable;
     idx: Integer;
-    vcard: TXMLVCardPending;
-    cache, iq: TXMLTag;
-    s: TWidestringList;
+    skipped: TWidestringList;
+
+    function _queryTable(): Boolean;
+    begin
+        Result := false;
+        if not DataStore.GetTable(VCARD_SQL_LOAD, rst) then exit;
+        if rst.RowCount = 0 then exit;
+        Result := rst.FirstRow();
+    end;
 begin
-    if (_cache.Count = 0) then exit;
+    Initialize();
 
-    cache := TXMLTag.Create('vcard-cache');
-    for idx := 0 to _cache.Count - 1 do begin
-        vcard := TXMLVCardPending(_cache.Objects[idx]);
-        if not vcard.IsValid then continue;
+    currDT := Now() - _ttl;
+    skipped := TWidestringList.Create();
+    parser := TXMLTagParser.Create();
+    rst := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
+    try
+        //query for cache
+        if _queryTable() then begin
+            for idx := 0 to rst.RowCount - 1 do begin
+                jid := rst.GetField(0);
+                dt := rst.GetFieldAsDouble(1);
+                xml := rst.GetField(2);
+                rst.NextRow();
+                skipped.Add(jid);
 
-        iq := cache.AddTag('iq');
-        iq.setAttribute('from', _cache[idx]);
+                if (jid = '') then continue;
+                if (_cache.IndexOf(jid) <> -1) then continue;
+                if (currDT > dt) then continue;
+                if (xml = '') then continue;
 
-        iq.setAttribute('timestamp', DateTimeToXEP82DateTime(vcard.TimeStamp));
-        vcard.fillTag(iq);
+                xml := XML_UnEscapeChars(UTF8Decode(xml));
+                parser.ParseString(xml);
+                if (parser.Count = 0) then continue;
+                tag := parser.popTag();
+
+                pending := TXMLVCardCacheEntry.Create(jid);
+                pending.Parse(tag);
+                pending.TimeStamp := dt;
+                if pending.IsValid then _cache.AddObject(jid, pending);
+
+                skipped.Delete(skipped.Count - 1);
+            end;
+        end;
+
+        //remove stale
+        while (skipped.Count > 0) do begin
+            jid := skipped[0];
+            skipped.Delete(0);
+            sql := Format(VCARD_SQL_DELETE, [str2sql(UTF8Encode(jid))]);
+            DataStore.ExecSQL(sql);
+        end;
+    except
+        //TODO:  loggit!!
     end;
 
-    if (filename = '') then
-        filename := getUserDir() + VCARD_CACHE_FILENAME;
-
-    s := TWidestringList.Create();
-    s.Add(cache.XML);
-
-    s.SaveToFile(filename);
-    s.Free();
+    _loaded := true;
+    skipped.Free();
+    parser.Free();
+end;
+{---------------------------------------}
+procedure TXMLVCardCache.Save();
+begin
 end;
 
 {---------------------------------------}
@@ -240,13 +263,12 @@ begin
     if (event = '/session/connected') then begin
         _timeout := session.Prefs.getInt('vcard_iq_timeout');
         _ttl := session.Prefs.getInt('vcard_cache_ttl');
-    end
-    else if (event = '/session/authenticated') then begin
-        Load();
+        if (not _loaded) then Load();
+        
     end
     else if (event = '/session/disconnected') then begin
-        Save();
-        Clear();
+        //Save();
+        //Clear();
     end;
 end;
 {---------------------------------------}
@@ -259,7 +281,7 @@ end;
 function TXMLVCardCache.ObtainPending(
         jid: WideString;
         create: Boolean;
-        var pending: TXMLVCardPending): Boolean;
+        var pending: TXMLVCardCacheEntry): Boolean;
 var
     idx: Integer;
 begin
@@ -267,10 +289,10 @@ begin
     pending := nil;
     Result := false;
     if (idx <> -1) then begin
-        pending := TXMLVCardPending(_cache.Objects[idx]);
+        pending := TXMLVCardCacheEntry(_cache.Objects[idx]);
     end
     else if create then begin
-        pending := TXMLVCardPending.Create(jid);
+        pending := TXMLVCardCacheEntry.Create(jid);
         _cache.AddObject(jid, pending);
         Result := true;
     end;
@@ -279,7 +301,7 @@ end;
 {---------------------------------------}
 function TXMLVCardCache.GetVCard(jid: WideString): TXMLVCard;
 var
-    pending: TXMLVCardPending;
+    pending: TXMLVCardCacheEntry;
 begin
     ObtainPending(jid, false, pending);
     if (pending <> nil) and (not pending.IsValid) then
@@ -292,7 +314,7 @@ end;
 {---------------------------------------}
 procedure TXMLVCardCache.find(jid: WideString; cb: TXMLVCardEvent; refresh: Boolean);
 var
-    pending: TXMLVCardPending;
+    pending: TXMLVCardCacheEntry;
 begin
     //check the cache
     if ObtainPending(jid, true, pending) then
@@ -324,7 +346,7 @@ type
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TXMLVCardPending.Create(jid: WideString);
+constructor TXMLVCardCacheEntry.Create(jid: WideString);
 begin
     inherited Create();
 
@@ -335,7 +357,7 @@ begin
 end;
 
 {---------------------------------------}
-destructor TXMLVCardPending.Destroy;
+destructor TXMLVCardCacheEntry.Destroy;
 begin
     while (_callbacks.Count > 0) do begin
         Dispose(_callbacks[0]);
@@ -349,7 +371,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLVCardPending.Parse(tag: TXMLTag): Boolean;
+function TXMLVCardCacheEntry.Parse(tag: TXMLTag): Boolean;
 begin
     Result := inherited Parse(tag);
 
@@ -362,7 +384,41 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLVCardPending.GetValidity(): Boolean;
+procedure TXMLVCardCacheEntry.Save();
+var
+    tag: TXMLTag;
+    sql: Widestring;
+begin
+    tag := TXMLTag.Create('iq');
+    tag.setAttribute('from', Jid);
+    fillTag(tag);
+
+    try
+        sql := Format(VCARD_SQL_INSERT, [
+                str2sql(UTF8Encode(Jid)),
+                Timestamp,
+                str2sql(UTF8Encode(XML_EscapeChars(tag.XML)))
+        ]);
+        DataStore.ExecSQL(sql);
+    except
+    end;
+
+    tag.Free();
+end;
+{---------------------------------------}
+procedure TXMLVCardCacheEntry.Delete();
+var
+    sql: Widestring;
+begin
+    try
+        sql := Format(VCARD_SQL_DELETE, [str2sql(UTF8Encode(Jid))]);
+        DataStore.ExecSQL(sql);
+    except
+    end;
+end;
+
+{---------------------------------------}
+function TXMLVCardCacheEntry.CheckValidity(): Boolean;
 begin
     if (_status = vpsOK) then begin
         //double-check TTL here
@@ -371,10 +427,11 @@ begin
     end;
 
     Result := (_status = vpsOK);
+    if not Result then Delete();
 end;
 
 {---------------------------------------}
-procedure TXMLVCardPending.ResultCallback(event: string; tag: TXMLTag);
+procedure TXMLVCardCacheEntry.ResultCallback(event: string; tag: TXMLTag);
 var
     vcard: TXMLVCard;
     cb: PXMLVCardEventCallback;
@@ -384,14 +441,17 @@ begin
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
             Parse(tag);
+            Save();
             _status := vpsOK;
             vcard := Self;
         end
         else begin
+            Delete();
             _status := vpsError;
         end;
     end
     else if (event = 'timeout') then begin
+        Delete();
         _status := vpsRefresh;
     end
     else begin
@@ -418,7 +478,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLVCardPending.AddCallback(cb: TXMLVCardEvent);
+procedure TXMLVCardCacheEntry.AddCallback(cb: TXMLVCardEvent);
 var
     session: TJabberSession;
     iq: TJabberIQ;
