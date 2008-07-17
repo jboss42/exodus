@@ -29,6 +29,7 @@ inherited fAWItem: TfAWItem
       Top = 3
       Width = 136
       Height = 16
+      Margins.Left = 29
       Align = alClient
       AutoSize = False
       Caption = 'item name'
@@ -64,16 +65,6 @@ inherited fAWItem: TfAWItem
       OnClick = imgPresenceClick
       ExplicitTop = 5
     end
-    object LeftSpacer: TBevel
-      Left = 5
-      Top = 0
-      Width = 21
-      Height = 22
-      Align = alLeft
-      Shape = bsSpacer
-      ExplicitLeft = 0
-      ExplicitHeight = 19
-    end
     object RightLBLSpacer: TBevel
       Left = 168
       Top = 0
@@ -93,14 +84,6 @@ inherited fAWItem: TfAWItem
       Shape = bsSpacer
       ExplicitLeft = 184
       ExplicitTop = 3
-    end
-    object FarLeftSpacer: TBevel
-      Left = 0
-      Top = 0
-      Width = 5
-      Height = 22
-      Align = alLeft
-      Shape = bsSpacer
     end
     object AWItemBevel: TColorBevel
       Left = 0

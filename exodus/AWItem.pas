@@ -50,14 +50,12 @@ type
     lblName: TTntLabel;
     lblCount: TTntLabel;
     imgPresence: TImage;
-    LeftSpacer: TBevel;
     RightLBLSpacer: TBevel;
     AWItemPopupMenu: TTntPopupMenu;
     mnuCloseWindow: TTntMenuItem;
     mnuFloatWindow: TTntMenuItem;
     mnuDockWindow: TTntMenuItem;
     FarRightSpacer: TBevel;
-    FarLeftSpacer: TBevel;
     AWItemBevel: TColorBevel;
     N1: TTntMenuItem;
     mnuAWItem_CloseAll: TTntMenuItem;
