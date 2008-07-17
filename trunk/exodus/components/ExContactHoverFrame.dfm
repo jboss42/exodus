@@ -30,14 +30,14 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     OnMouseEnter = lblUIDMouseEnter
     OnMouseLeave = lblUIDMouseLeave
   end
-  object lblPhoneNumber: TTntLabel
+  object TnTLabel1: TTntLabel
     Left = 10
     Top = 56
     Width = 40
     Height = 16
     Caption = 'Phone:'
-    OnMouseEnter = lblPhoneNumberMouseEnter
-    OnMouseLeave = lblPhoneNumberMouseLeave
+    OnMouseEnter = TnTLabel1MouseEnter
+    OnMouseLeave = TnTLabel1MouseLeave
   end
   object imgPresence: TImage
     Left = 20
@@ -69,14 +69,14 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     OnMouseLeave = imgAvatarMouseLeave
     OnPaint = imgAvatarPaint
   end
-  object TntLabel1: TTntLabel
+  object lblPhone: TTntLabel
     Left = 60
     Top = 56
-    Width = 92
+    Width = 21
     Height = 16
-    Caption = '1-800-111-1111'
-    OnMouseEnter = lblPhoneNumberMouseEnter
-    OnMouseLeave = lblPhoneNumberMouseLeave
+    Caption = 'N/A'
+    OnMouseEnter = TnTLabel1MouseEnter
+    OnMouseLeave = TnTLabel1MouseLeave
   end
   object Separator1: TExGroupBox
     Left = 0
