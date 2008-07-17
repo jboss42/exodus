@@ -29,6 +29,7 @@ type
   TXMLVCardCacheStatus = (vpsRefresh, vpsError, vpsOK);
   TXMLVCardCacheEntry = class(TXMLVCard)
   private
+    _stored: Boolean;
     _jid: Widestring;
     _callbacks: TList;
     _iq: TObject;       //avoiding Session circular reference
@@ -42,6 +43,7 @@ type
 
     function CheckValidity(): Boolean;
 
+    function Load(tag: TXMLTag; saved: Boolean = true): Boolean;
     procedure Save();
     procedure Delete();
   public
@@ -50,6 +52,7 @@ type
     function Parse(tag: TXMLTag): Boolean; override;
 
     property Jid: Widestring read _jid;
+    property Status: TXMLVCardCacheStatus read _status;
     property IsValid: Boolean read CheckValidity;
 
   end;
@@ -226,7 +229,7 @@ begin
                 tag := parser.popTag();
 
                 pending := TXMLVCardCacheEntry.Create(jid);
-                pending.Parse(tag);
+                pending.Load(tag);
                 pending.TimeStamp := dt;
                 if pending.IsValid then _cache.AddObject(jid, pending);
 
@@ -318,7 +321,9 @@ var
 begin
     //check the cache
     if ObtainPending(jid, true, pending) then
-        refresh := true;    //new pending == refresh
+        refresh := true     //new pending == refresh
+    else if (pending.Status = vpsRefresh) then
+        refresh := true;    //stale == refresh
 
     if (refresh) then begin
         //do (first or another) vcard request, fire callback later
@@ -384,11 +389,26 @@ begin
 end;
 
 {---------------------------------------}
+function TXMLVCardCacheEntry.Load(tag: TXMLTag; saved: Boolean): Boolean;
+begin
+    Result := Parse(tag);
+
+    if Result then begin
+        if (not saved) then
+            Save()
+        else
+            _stored := true;
+    end;
+end;
+
+{---------------------------------------}
 procedure TXMLVCardCacheEntry.Save();
 var
     tag: TXMLTag;
     sql: Widestring;
 begin
+    if _stored then exit;
+
     tag := TXMLTag.Create('iq');
     tag.setAttribute('from', Jid);
     fillTag(tag);
@@ -400,6 +420,7 @@ begin
                 str2sql(UTF8Encode(XML_EscapeChars(tag.XML)))
         ]);
         DataStore.ExecSQL(sql);
+        _stored := true;
     except
     end;
 
@@ -410,9 +431,12 @@ procedure TXMLVCardCacheEntry.Delete();
 var
     sql: Widestring;
 begin
+    if not _stored then exit;
+
     try
         sql := Format(VCARD_SQL_DELETE, [str2sql(UTF8Encode(Jid))]);
         DataStore.ExecSQL(sql);
+        _stored := false;
     except
     end;
 end;
