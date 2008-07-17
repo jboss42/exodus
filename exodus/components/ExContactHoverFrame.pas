@@ -11,7 +11,6 @@ type
   TExContactHoverFrame = class(TExFrame)
     lblDisplayName: TTntLabel;
     lblUID: TTntLabel;
-    lblPhoneNumber: TTntLabel;
     btnRename: TExGraphicButton;
     btnDelete: TExGraphicButton;
     btnChat: TExGraphicButton;
@@ -20,7 +19,7 @@ type
     Separator2: TExGroupBox;
     Separator1: TExGroupBox;
     imgAvatar: TPaintBox;
-    TntLabel1: TTntLabel;
+    lblPhone: TTntLabel;
     procedure TntFrameMouseLeave(Sender: TObject);
     procedure TntFrameMouseEnter(Sender: TObject);
     procedure InitControls(Item: IExodusItem);
@@ -29,7 +28,7 @@ type
       Y: Integer);
     procedure imgAvatarMouseEnter(Sender: TObject);
     procedure imgAvatarMouseLeave(Sender: TObject);
-    procedure lblPhoneNumberMouseLeave(Sender: TObject);
+    procedure TnTLabel1MouseLeave(Sender: TObject);
     procedure imgPresenceMouseEnter(Sender: TObject);
     procedure imgPresenceMouseLeave(Sender: TObject);
     procedure lblDisplayNameMouseEnter(Sender: TObject);
@@ -37,7 +36,7 @@ type
     procedure lblPresenceMouseEnter(Sender: TObject);
     procedure lblUIDMouseEnter(Sender: TObject);
     procedure lblUIDMouseLeave(Sender: TObject);
-    procedure lblPhoneNumberMouseEnter(Sender: TObject);
+    procedure TnTLabel1MouseEnter(Sender: TObject);
     procedure lblPresenceMouseLeave(Sender: TObject);
     procedure btnChatMouseEnter(Sender: TObject);
     procedure btnChatMouseLeave(Sender: TObject);
@@ -70,7 +69,7 @@ type
 
 implementation
 uses ExItemHoverForm, ExForm, Session, Jabber1, Presence, COMExodusItemList,
-     ExActionCtrl, TntSysUtils, XMLVCardCache;
+     ExActionCtrl, TntSysUtils, XMLVCardCache, gnugettext;
 
 {$R *.dfm}
 
@@ -166,8 +165,23 @@ begin
 end;
 
 procedure TExContactHoverFrame.vcardCallback(UID: Widestring; vcard: TXMLVCard);
+var
+    number: Widestring;
 begin
    if (vcard = nil) then exit;
+   number := vcard.WorkPhone.number;
+   if (number = '') then
+     number := vcard.WorkCell.number;
+   if (number = '') then
+     number := vcard.HomePhone.number;
+   if (number = '') then
+     number := vcard.HomeCell.number;
+
+   if (number <> '') then
+     lblPhone.Caption := number
+   else
+     lblPhone.Caption := _('N/A');
+
    _Avatar := vcard.Picture;
    if (_Avatar = nil) then exit;
    if ((_Avatar.isValid = false) or (_Avatar.Height < 0)) then
@@ -328,13 +342,13 @@ begin
   TExItemHoverForm(Parent).CancelHover();
 end;
 
-procedure TExContactHoverFrame.lblPhoneNumberMouseEnter(Sender: TObject);
+procedure TExContactHoverFrame.TnTLabel1MouseEnter(Sender: TObject);
 begin
   inherited;
   TExItemHoverForm(Parent).SetHover();
 end;
 
-procedure TExContactHoverFrame.lblPhoneNumberMouseLeave(Sender: TObject);
+procedure TExContactHoverFrame.TnTLabel1MouseLeave(Sender: TObject);
 begin
   inherited;
   TExItemHoverForm(Parent).CancelHover();
