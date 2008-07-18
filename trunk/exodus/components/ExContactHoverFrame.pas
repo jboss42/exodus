@@ -168,6 +168,8 @@ procedure TExContactHoverFrame.vcardCallback(UID: Widestring; vcard: TXMLVCard);
 var
     number: Widestring;
 begin
+   if (UID <> _Items.Item[0].uid) then exit;
+   
    if (vcard = nil) then exit;
    number := vcard.WorkPhone.number;
    if (number = '') then
@@ -195,6 +197,7 @@ begin
    else
        imgAvatar.Width := _Avatar.Width;
 
+   imgAvatar.Invalidate;
 
 end;
 
