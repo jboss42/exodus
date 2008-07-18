@@ -21,14 +21,38 @@ unit ExVcardCache;
 
 interface
 
-uses Exodus_TLB, Unicode, XMLVCardCache;
+uses Classes, Exodus_TLB, Unicode, XMLVCardCache, XMLTag, SyncObjs, Windows;
 
 type
+  TExVCardCache = class;
+
+  TExVCardCacheProc = class(TThread)
+  private
+    _owner: TExVCardCache;
+    _queue: TList;
+    _crit: TCriticalSection;
+
+    constructor Create(cache: TExVCardCache);
+
+  public
+    destructor Destroy(); override;
+
+    function Enque(sql: Widestring): Boolean;
+    procedure Execute(); override;
+
+  end;
   TExVCardCache = class(TXMLVCardCache)
   private
     _loaded: Boolean;
-    
+    _proc: TExVCardCacheProc;
+    _crit: TCriticalSection;
+
+    function GetProc(): TExVCardCacheProc;
+    procedure SetProc(proc: TExVCardCacheProc);
+
   protected
+    procedure SessionCallback(event: string; tag: TXMLTag); override;
+
     procedure Load(cache: TWidestringList); override;
     procedure SaveEntry(vcard: TXMLVCardCacheEntry); override;
     procedure DeleteEntry(vcard: TXMLVCardCacheEntry); override;
@@ -36,14 +60,17 @@ type
   public
     constructor Create(js: TObject); override;
     destructor Destroy(); override;
-    
+
   end;
 
 implementation
 
-uses ComObj, SysUtils, XMLTag, XMLParser, XMLUtils, SQLUtils, ExSession;
+uses ComObj, SysUtils, Session, XMLParser, XMLUtils, SQLUtils, ExSession;
 
 const
+    DEPMOD_READY_EVENT = '/session/ready/';
+    DEPMOD_READY_SESSION_EVENT = DEPMOD_READY_EVENT + DEPMOD_SESSION;
+
     VCARD_SQL_SCHEMA_TABLE: Widestring = 'CREATE TABLE vcard_cache (' +
             'jid TEXT, ' +
             'datetime FLOAT, ' +
@@ -57,16 +84,134 @@ const
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+type
+  PVCardOpEntry = ^TVCardOpEntry;
+  TVCardOpEntry = record
+    SQL: Widestring;
+  end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TExVCardCacheProc.Create(cache: TExVCardCache);
+begin
+    inherited Create(true);
+
+    _owner := cache;
+    _queue := TList.Create();
+    _crit := TCriticalSection.Create();
+end;
+{---------------------------------------}
+destructor TExVCardCacheProc.Destroy;
+begin
+    FreeAndNil(_crit);
+    FreeAndNil(_queue);
+
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TExVCardCacheProc.Execute();
+var
+    sql: Widestring;
+
+    function NextSQL(): Widestring;
+    var
+        ent: PVCardOpEntry;
+    begin
+        Result := '';
+        if (_queue.Count = 0) then begin
+            _owner.SetProc(nil);
+        end;
+
+        ent := PVCardOpEntry(_queue[0]);
+        result := ent^.SQL;
+        _queue.Delete(0);
+        Dispose(ent);
+    end;
+begin
+    while (true) do begin
+        try
+            _crit.Acquire();
+            sql := NextSQL();
+            if (sql = '') then Exit;
+        finally
+            _crit.Release();
+        end;
+
+        try
+            DataStore.ExecSQL(sql);
+        except
+            //TODO:  loggit!!
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TExVCardCacheProc.Enque(sql: Widestring): Boolean;
+var
+    ent: PVCardOpEntry;
+begin
+    Result := false;
+    if (sql = '') then exit;
+
+    _crit.Acquire();
+    New(ent);
+    ent^.SQL := sql;
+    _queue.Add(ent);
+    Result := true;
+    _crit.Release();
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 constructor TExVCardCache.Create(js: TObject);
 begin
     inherited;
+
+    _crit := TCriticalSection.Create();
 end;
 
 {---------------------------------------}
 destructor TExVCardCache.Destroy();
 begin
+    _crit.Free();
+    if (_proc <> nil) then _proc.Terminate();
+
     inherited;
 end;
+
+{---------------------------------------}
+function TExVCardCache.GetProc(): TExVCardCacheProc;
+begin
+    _crit.Acquire();
+    if (_proc = nil) then
+        _proc := TExVCardCacheProc.Create(Self)
+    else
+        _proc.Suspend();
+
+    Result := _proc;
+    _crit.Release();
+end;
+{---------------------------------------}
+procedure TExVCardCache.SetProc(proc: TExVCardCacheProc);
+begin
+    _crit.Acquire();
+    _proc := proc;
+    _crit.Release();
+end;
+
+{---------------------------------------}
+procedure TExVCardCache.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = (DEPMOD_READY_EVENT + DEPMOD_SESSION)) and _loaded then begin
+        MainSession.FireEvent(DEPMOD_READY_EVENT + DEPMOD_VCARD_CACHE, tag);
+    end
+    else
+        inherited;
+end;
+
 {---------------------------------------}
 procedure TExVCardCache.Load(cache: TWidestringList);
 var
@@ -166,8 +311,13 @@ begin
                 vcard.Timestamp,
                 str2sql(UTF8Encode(XML_EscapeChars(tag.XML)))
         ]);
-        DataStore.ExecSQL(sql);
+        //DataStore.ExecSQL(sql);
+        with GetProc() do begin
+            Enque(sql);
+            Resume();
+        end;
     except
+        //TODO:  loggit
     end;
 
     tag.Free();
@@ -181,7 +331,11 @@ begin
 
     try
         sql := Format(VCARD_SQL_DELETE, [str2sql(UTF8Encode(vcard.Jid))]);
-        DataStore.ExecSQL(sql);
+        //DataStore.ExecSQL(sql);
+        with GetProc() do begin
+            Enque(sql);
+            Resume();
+        end;
     except
     end;
 end;
