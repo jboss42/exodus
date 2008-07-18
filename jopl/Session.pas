@@ -299,6 +299,7 @@ type
 
 const
     DEPMOD_SESSION      = 'session';
+    DEPMOD_VCARD_CACHE  = 'vcard-cache';
     DEPMOD_DISPLAYNAME  = 'displayname';
     DEPMOD_ROSTER       = 'roster';
     DEPMOD_BOOKMARKS    = 'bookmarks';
@@ -310,8 +311,9 @@ const
     DEPMOD_READY_EVENT = '/session/ready/';
     DEPMOD_READY_SESSION_EVENT = DEPMOD_READY_EVENT + DEPMOD_SESSION;
 
-    ALL_DEPENDANT_MODULES: array[0..7] of TModuleInfo  = (
+    ALL_DEPENDANT_MODULES: array[0..8] of TModuleInfo  = (
                                                    (module:DEPMOD_SESSION; ready:false),
+                                                   (module:DEPMOD_VCARD_CACHE; ready:false),
                                                    (module:DEPMOD_DISPLAYNAME; ready:false),
                                                    (module:DEPMOD_ROSTER; ready:false),
                                                    (module:DEPMOD_BOOKMARKS; ready:false),

@@ -67,10 +67,11 @@ type
     _timeout: Integer;
     _ttl: Double;
 
-    procedure SessionCallback(event: string; tag: TXMLTag);
     procedure FireUpdate(tag: TXMLTag);
 
   protected
+    procedure SessionCallback(event: string; tag: TXMLTag); virtual;
+
     procedure Load(cache: TWidestringList); virtual;
     procedure SaveEntry(vcard: TXMLVCardCacheEntry); virtual;
     procedure DeleteEntry(vcard: TXMLVCardCacheEntry); virtual;
