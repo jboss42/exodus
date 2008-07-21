@@ -26,6 +26,18 @@ uses Classes, Exodus_TLB, Unicode, XMLVCardCache, XMLTag, SyncObjs, Windows;
 type
   TExVCardCache = class;
 
+  TExVCardCacheLoader = class(TThread)
+  private
+    _owner: TExVCardCache;
+    _list: TWidestringList;
+
+    constructor Create(cache: TExVCardCache; data: TWidestringList);
+
+  public
+    destructor Destroy(); override;
+
+    procedure Execute(); override;
+  end;
   TExVCardCacheProc = class(TThread)
   private
     _owner: TExVCardCache;
@@ -43,13 +55,14 @@ type
   end;
   TExVCardCache = class(TXMLVCardCache)
   private
-    _loaded: Boolean;
+    _loader: TExVCardCacheLoader;
     _proc: TExVCardCacheProc;
     _crit: TCriticalSection;
 
     function GetProc(): TExVCardCacheProc;
     procedure SetProc(proc: TExVCardCacheProc);
 
+    procedure LoadFinished();
   protected
     procedure SessionCallback(event: string; tag: TXMLTag); override;
 
@@ -65,7 +78,7 @@ type
 
 implementation
 
-uses ComObj, SysUtils, Session, XMLParser, XMLUtils, SQLUtils, ExSession;
+uses ComObj, SysUtils, Session, XMLParser, XMLUtils, SQLUtils, COMExodusDataTable, ExSession;
 
 const
     DEPMOD_READY_EVENT = '/session/ready/';
@@ -80,6 +93,107 @@ const
     VCARD_SQL_LOAD: Widestring = 'SELECT * FROM vcard_cache;';
     VCARD_SQL_INSERT: Widestring = 'INSERT INTO vcard_cache (jid,datetime,xml) VALUES (''%s'',%8.6f,''%s'');';
     VCARD_SQL_DELETE: Widestring = 'DELETE FROM vcard_cache where (jid = ''%s'');';
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TExVCardCacheLoader.Create(cache: TExVCardCache; data: TWidestringList);
+begin
+    inherited Create(true);
+
+    _owner := cache;
+    _list := data;
+end;
+{---------------------------------------}
+destructor TExVCardCacheLoader.Destroy;
+begin
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TExVCardCacheLoader.Execute();
+var
+    cache: TWidestringList;
+    tag: TXMLTag;
+    pending: TXMLVCardCacheEntry;
+    parser: TXMLTagParser;
+    dt, currDT: TDateTime;
+    jid, xml, sql: Widestring;
+    rst: IExodusDataTable;
+    idx: Integer;
+    skipped: TWidestringList;
+
+    procedure _initialize();
+    begin
+        if DataStore.CheckForTableExistence('vcard_cache') then exit;
+
+        try
+            DataStore.ExecSQL(VCARD_SQL_SCHEMA_TABLE);
+            DataStore.ExecSQL(VCARD_SQL_SCHEMA_INDEX);
+        except
+            //TODO:  loggit!!
+        end;
+    end;
+    function _queryTable(): Boolean;
+    begin
+        Result := false;
+        if not DataStore.GetTable(VCARD_SQL_LOAD, rst) then exit;
+        if rst.RowCount = 0 then exit;
+        Result := rst.FirstRow();
+    end;
+begin
+    _initialize();
+
+    cache := _list;
+    currDT := Now() - _owner.TimeToLive;
+    skipped := TWidestringList.Create();
+    parser := TXMLTagParser.Create();
+    try
+        //query for cache
+        rst := TExodusDataTable.Create() as IExodusDataTable;
+        if _queryTable() then begin
+            for idx := 0 to rst.RowCount - 1 do begin
+                jid := rst.GetField(0);
+                dt := rst.GetFieldAsDouble(1);
+                xml := rst.GetField(2);
+                rst.NextRow();
+                skipped.Add(jid);
+
+                if (jid = '') then continue;
+                if (cache.IndexOf(jid) <> -1) then continue;
+                if (currDT > dt) then continue;
+                if (xml = '') then continue;
+
+                xml := XML_UnEscapeChars(UTF8Decode(xml));
+                parser.ParseString(xml);
+                if (parser.Count = 0) then continue;
+                tag := parser.popTag();
+
+                pending := TXMLVCardCacheEntry.Create(_owner, jid);
+                pending.Load(tag);
+                pending.TimeStamp := dt;
+                if pending.IsValid then cache.AddObject(jid, pending);
+
+                skipped.Delete(skipped.Count - 1);
+            end;
+        end;
+
+        //remove stale
+        while (skipped.Count > 0) do begin
+            jid := skipped[0];
+            skipped.Delete(0);
+            sql := Format(VCARD_SQL_DELETE, [str2sql(UTF8Encode(jid))]);
+            DataStore.ExecSQL(sql);
+        end;
+    except
+        //TODO:  loggit!!
+    end;
+
+    skipped.Free();
+    parser.Free();
+
+    _owner.LoadFinished();
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -100,6 +214,7 @@ begin
     _owner := cache;
     _queue := TList.Create();
     _crit := TCriticalSection.Create();
+    FreeOnTerminate := true;
 end;
 {---------------------------------------}
 destructor TExVCardCacheProc.Destroy;
@@ -131,10 +246,13 @@ var
     end;
 begin
     while (true) do begin
+        _crit.Acquire();
         try
-            _crit.Acquire();
             sql := NextSQL();
-            if (sql = '') then Exit;
+            if (sql <> '') then begin
+                Terminate();
+                Exit;
+            end;
         finally
             _crit.Release();
         end;
@@ -169,8 +287,6 @@ end;
 constructor TExVCardCache.Create(js: TObject);
 begin
     inherited;
-
-    _crit := TCriticalSection.Create();
 end;
 
 {---------------------------------------}
@@ -204,8 +320,21 @@ end;
 
 {---------------------------------------}
 procedure TExVCardCache.SessionCallback(event: string; tag: TXMLTag);
+var
+    loader: TExVCardCacheLoader;
 begin
-    if (event = (DEPMOD_READY_EVENT + DEPMOD_SESSION)) and _loaded then begin
+    if (event = (DEPMOD_READY_EVENT + DEPMOD_SESSION)) then begin
+        repeat
+            _crit.Acquire();
+            loader := _loader;
+            _crit.Release();
+
+            try
+                if (loader <> nil) then loader.WaitFor();
+            except
+                //catch possible race-to-the-death
+            end;
+        until (loader = nil);
         MainSession.FireEvent(DEPMOD_READY_EVENT + DEPMOD_VCARD_CACHE, tag);
     end
     else
@@ -213,85 +342,18 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExVCardCache.Load(cache: TWidestringList);
-var
-    tag: TXMLTag;
-    pending: TXMLVCardCacheEntry;
-    parser: TXMLTagParser;
-    dt, currDT: TDateTime;
-    jid, xml, sql: Widestring;
-    rst: IExodusDataTable;
-    idx: Integer;
-    skipped: TWidestringList;
-
-    procedure _initialize();
-    begin
-        if DataStore.CheckForTableExistence('vcard_cache') then exit;
-
-        try
-            DataStore.ExecSQL(VCARD_SQL_SCHEMA_TABLE);
-            DataStore.ExecSQL(VCARD_SQL_SCHEMA_INDEX);
-        except
-            //TODO:  loggit!!
-        end;
-    end;
-    function _queryTable(): Boolean;
-    begin
-        Result := false;
-        if not DataStore.GetTable(VCARD_SQL_LOAD, rst) then exit;
-        if rst.RowCount = 0 then exit;
-        Result := rst.FirstRow();
-    end;
+procedure TExVCardCache.LoadFinished();
 begin
-    _initialize();
-
-    currDT := Now() - TimeToLive;
-    skipped := TWidestringList.Create();
-    parser := TXMLTagParser.Create();
-    rst := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
-    try
-        //query for cache
-        if _queryTable() then begin
-            for idx := 0 to rst.RowCount - 1 do begin
-                jid := rst.GetField(0);
-                dt := rst.GetFieldAsDouble(1);
-                xml := rst.GetField(2);
-                rst.NextRow();
-                skipped.Add(jid);
-
-                if (jid = '') then continue;
-                if (cache.IndexOf(jid) <> -1) then continue;
-                if (currDT > dt) then continue;
-                if (xml = '') then continue;
-
-                xml := XML_UnEscapeChars(UTF8Decode(xml));
-                parser.ParseString(xml);
-                if (parser.Count = 0) then continue;
-                tag := parser.popTag();
-
-                pending := TXMLVCardCacheEntry.Create(Self, jid);
-                pending.Load(tag);
-                pending.TimeStamp := dt;
-                if pending.IsValid then cache.AddObject(jid, pending);
-
-                skipped.Delete(skipped.Count - 1);
-            end;
-        end;
-
-        //remove stale
-        while (skipped.Count > 0) do begin
-            jid := skipped[0];
-            skipped.Delete(0);
-            sql := Format(VCARD_SQL_DELETE, [str2sql(UTF8Encode(jid))]);
-            DataStore.ExecSQL(sql);
-        end;
-    except
-        //TODO:  loggit!!
-    end;
-
-    _loaded := true;
-    skipped.Free();
-    parser.Free();
+    _crit.Acquire();
+    _loader := nil;
+    _crit.Release();
+end;
+{---------------------------------------}
+procedure TExVCardCache.Load(cache: TWidestringList);
+begin
+    _crit := TCriticalSection.Create();
+    _loader := TExVCardCacheLoader.Create(Self, cache);
+    _loader.Resume();
 end;
 {---------------------------------------}
 procedure TExVCardCache.SaveEntry(vcard: TXMLVCardCacheEntry);
