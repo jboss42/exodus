@@ -423,11 +423,11 @@
     <lowest_unread_msg_cnt value="0"/>
     <lowest_unread_msg_cnt_color_change value="1"/>
     
-    <activity_list_split_min_width value="30"/>
+    <activity_list_split_min_width value="160"/>
     <activity_window_with_docked_min_height value="250"/>
     <activity_window_with_docked_min_width value="300"/>
     <activity_window_without_docked_min_height value="250"/>
-    <activity_window_without_docked_min_width value="150"/>
+    <activity_window_without_docked_min_width value="160"/>
     
     <!-- /ACTIVITY WINDOW PREFS -->
     
