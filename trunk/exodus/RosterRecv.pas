@@ -59,7 +59,7 @@ type
 implementation
 uses
     JabberUtils, ExUtils,  S10n, ContactController, Session, Jabber1,
-  DisplayName;
+  DisplayName, JabberConst, Exodus_TLB, COMExodusItem;
 
 {$R *.DFM}
 procedure ReceivedRoster(tag: TXMLTag);
@@ -73,42 +73,43 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterRecv.Restore(tag: TXMLTag);
-//var
-//    i, j: integer;
-//    ri: TJabberRosterItem;
-//    n: TListItem;
-//    from: TJabberID;
+var
+    i, j: integer;
+    n: TListItem;
+    from: TJabberID;
 //    noi, noi_label, noi_image_prefix: Widestring;
 //    offset: Cardinal;
+      TmpTag: TXMLTag;
+      Item: IExodusItem;
 begin
-(* JJF moved from TJabberEvent.parse
-            eType := evt_RosterItems;
-            tmp_tag := tag.QueryXPTag(XP_MSGXROSTER);
-            str_content := tag.GetBasicText('body');
-            i_tags := tmp_tag.QueryTags('item');
-            { TODO : Roster refactor }
-//            for j := 0 to i_tags.Count - 1 do begin
-//                ri := TJabberRosterItem.Create(i_tags[j].GetAttribute('jid'));
-//                MainSession.roster.parseItem(ri, i_tags[j]);
-//                _data_list.AddObject(DisplayName.getDisplayNameCache().getDisplayName(ri.Jid), ri);
-//            end;
-            i_tags.Free();
-*)
-
-{ TODO : Roster refactor } 
     // Fill up the GUI based on the event
-//    from := TJabberID.Create(e.from);
-//    txtFrom.Caption := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(from);
-//    from.Free();
-//    txtMsg.Lines.Text := e.str_content;
-//
-//    for i := 0 to e.Data.Count - 1 do begin
-//        ri := TJabberRosterItem(e.Data.Objects[i]);
-//        if ((ri <> nil) and (ri is TJabberRosterItem)) then begin
-//            n := lvContacts.Items.Add();
-//            n.Caption := ri.Text;
-//            n.SubItems.Add(ri.jid.getDisplayFull());
-//            n.Checked := true;
+
+    from := TJabberID.Create(tag.GetAttribute('from'));
+    txtFrom.Caption := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(from);
+    from.Free();
+
+    txtMsg.Lines.Text := tag.GetBasicText('body');
+    TmpTag := tag.QueryXPTag(XP_MSGXROSTER);
+
+    for i := 0 to TmpTag.ChildCount - 1 do
+    begin
+        n := lvContacts.Items.Add();
+        n.Checked := true;
+
+        Item := MainSession.ItemController.GetItem(TmpTag.ChildTags[i].GetAttribute('jid'));
+
+        if (Item <> nil) then
+        begin
+            n.Caption := Item.Text;
+            n.SubItems.Add(Item.UID);
+            //n.ImageIndex := Item.ImageIndex;
+        end
+        else
+        begin
+            n.Caption := TmpTag.ChildTags[i].GetAttribute('name');
+            n.SubItems.Add(TmpTag.ChildTags[i].GetAttribute('jid'));
+            //n.ImageIndex := -1;
+        end;
 //            if (ri.Tag.GetAttribute('noi') <> '') then begin
 //                for j:= 0 to MainSession.Prefs.getStringlistCount('recv_contact_image_prefix') - 1 do begin
 //                    noi := MainSession.Prefs.getStringlistValue('recv_contact_image_prefix', j);
@@ -121,72 +122,57 @@ begin
 //                    end;
 //                end;
 //            end;
-//            n.ImageIndex := ri.getPresenceImage('available');
-//        end;
-//    end;
-//
+
+    end;
+
 //    ShowDefault();
 end;
 
 {---------------------------------------}
 procedure TfrmRosterRecv.FormCreate(Sender: TObject);
+var
+   Groups: IExodusItemList;
+   i, Index: Integer;
+   DefaultGroup: WideString;
 begin
   inherited;
 
     // Fill up the groups drop down
-    //MainSession.Roster.AssignGroups(cboGroup.Items);
-            { TODO : Roster refactor }
-    cboGroup.ItemIndex := 0;
-    cboGroup.Text := MainSession.Prefs.getString('roster_default');
+    Groups := MainSession.ItemController.GetItemsByType('group');
+    for i := 0 to Groups.Count - 1 do
+      cboGroup.Items.Add(Groups.Item[i].uid);
+
+    DefaultGroup := MainSession.Prefs.getString('roster_default');
+    Index := cboGroup.Items.IndexOf(DefaultGroup);
+    if ((Index >= 0) and (Index <= cboGroup.Items.Count)) then
+       cboGroup.ItemIndex := Index;
     _windowType := 'roster_recv';
 end;
 
 {---------------------------------------}
 procedure TfrmRosterRecv.frameButtons1btnOKClick(Sender: TObject);
-//var
-//    i: integer;
-//    l: TListItem;
-//    nick, jid: Widestring;
-//    ri: TJabberRosterItem;
-//    jidObj: TJabberID;
+var
+    i: integer;
+    l: TListItem;
+    nick, jid: Widestring;
+    jidObj: TJabberID;
 begin
-  { TODO : Roster refactor }
-//  inherited;
-//    // Add the selected contacts, then close
-//    for i := 0 to lvContacts.Items.Count - 1 do begin
-//        l := lvContacts.Items[i];
-//        if (l.Checked) then begin
-//            // subscribe
-//            jidObj := TJabberID.Create(l.SubItems[0], false);
-//            jid := jidObj.jid;
-//            nick := l.Caption;
-//
-//            ri := MainSession.Roster.Find(jid);
-//            if (ri <> nil) then begin
-//                if (ri.Subscription = 'to') or (ri.Subscription = 'both') then begin
-//                    DebugMsg('Roster item already in roster: ' + jid);
-//                    jidObj.Free();
-//                    continue;
-//                end;
-//            end;
-//
-//            {
-//            If we don't have a roster item, then create one,
-//            otherwise, make sure the we subscribe to the old one
-//            and modify the nick + group
-//            }
-//            if (ri = nil) then
-//                MainSession.Roster.AddItem(jid, nick, cboGroup.Text, true)
-//            else begin
-//                ri.Text := nick;
-//                ri.ClearGroups();
-//                ri.AddGroup(cboGroup.Text);
-//                SendSubscribe(jid, MainSession);
-//            end;
-//            jidObj.Free();
-//        end;
-//    end;
-//    Self.Close();
+
+  inherited;
+    // Add the selected contacts, then close
+    for i := 0 to lvContacts.Items.Count - 1 do begin
+        l := lvContacts.Items[i];
+        if (l.Checked) then begin
+            // subscribe
+            jidObj := TJabberID.Create(l.SubItems[0], false);
+            jid := jidObj.jid;
+            nick := l.Caption;
+
+            MainSession.Roster.AddItem(jid, nick, cboGroup.Text, true);
+            jidObj.Free();
+        end;
+    end;
+    Self.Close();
 end;
 
 {---------------------------------------}
