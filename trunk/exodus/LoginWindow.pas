@@ -161,16 +161,22 @@ begin
     lstProfiles.Visible := true;
 end;
 procedure TfrmLoginWindow.lstProfilesClick(Sender: TObject);
+var
+    lastIdx: Integer;
 begin
     if (lstProfiles.ItemIndex >= 0) then
         // Item is actively selected OR we have a "last logged in"
         DoLogin(lstProfiles.ItemIndex)
     else if ((lstProfiles.Items.Count > 0) and
-             (Sender <> lstProfiles)) then
+             (Sender <> lstProfiles)) then begin
         // Do NOT have an actively selected item OR a "last logged in"
         // Do NOT have a click on the "whitespace" of profile list
-        // BUT we do have an item (at least default). So, try item 0
-        DoLogin(0);  
+        // BUT we do have an item (at least default). So, try last active (if
+        // any) or 0
+        lastIdx := MainSession.Prefs.getInt('profile_active');
+        if (lastIdx = -1) then lastIdx := 0;
+        DoLogin(lastIdx);
+    end;
 end;
 
 procedure TfrmLoginWindow.mnuDeleteProfileClick(Sender: TObject);
@@ -445,6 +451,9 @@ begin
             mnuDeleteProfile.Visible := false;
         end;
 
+        //"Forget" last active if not auto login
+        if not GetBool('autologin') then
+            setInt('profile_active', -1);
     end;
 
     //Setup the predefined menu
