@@ -63,7 +63,6 @@ type
     _cache: TWidestringList;
     _js: TObject;
     _sessionCB: Integer;
-    _loaded: Boolean;
     _timeout: Integer;
     _ttl: Double;
 
