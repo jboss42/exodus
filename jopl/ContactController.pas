@@ -478,10 +478,17 @@ begin
 
     Show := '';
     Tag := TXMLTag.Create();
-
-    GetDisplayNameCache().UpdateDisplayName(Item);
-    Item.text := GetDisplayNameCache().GetDisplayName(Item.Uid);
-
+    try
+       Subs :=  Item.Value['Subscription'];
+    except
+       Subs := '';
+    end;
+    //Subs = 'none' causes infinite lookup of vcard in display name cache
+    if ((Subs <> 'none') and (Subs <> '')) then
+    begin
+        GetDisplayNameCache().UpdateDisplayName(Item);
+        Item.text := GetDisplayNameCache().GetDisplayName(Item.Uid);
+    end;
     // is contact offline?
     //Set contact unavailable by default
     Pres := TJabberSession(_js).ppdb.FindPres(Item.UID, '');
@@ -527,7 +534,7 @@ begin
 
     // If contact is pending or observer?
     try
-       Subs :=  Item.Value['Subscription'];
+       //Subs :=  Item.Value['Subscription'];
        Ask  :=  Item.Value['Ask'];
        if (Subs = 'none') then
           if (Ask = 'subscribe') then
