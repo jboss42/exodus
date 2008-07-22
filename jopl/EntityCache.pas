@@ -448,8 +448,8 @@ var
 begin
     for i := 0 to _cache.Count - 1 do begin
         e := TJabberEntity(_cache.Objects[i]);
-        if ((AnsiCompareText(icat, e.Category) = 0) and
-            (AnsiCompareText(itype, e.CatType) = 0)) then
+        e := TJabberEntity(_cache.Objects[i]);
+        if e.hasIdentity(icat, itype) then
             jid_list.Add(e.jid.full);
     end;
 end;
@@ -462,8 +462,7 @@ var
 begin
     for i := 0 to _cache.Count - 1 do begin
         e := TJabberEntity(_cache.Objects[i]);
-        if ((AnsiCompareText(icat, e.Category) = 0) and
-            (AnsiCompareText(itype, e.CatType) = 0)) then
+        if e.hasIdentity(icat, itype) then
             jid_list.Add(e.jid.full);
     end;
 end;
