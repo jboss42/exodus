@@ -670,6 +670,8 @@ begin
     if (lasttime > _lastActivity) then begin
         _lastActivity := lasttime;
     end;
+
+    updateDocked();
 end;
 
 procedure TfrmDockable.closeAllCallback(event: string; tag: TXMLTag);
