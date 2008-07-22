@@ -45,6 +45,8 @@ type
     procedure mnuCopyClick(Sender: TObject); virtual;
     procedure mnuDeleteClick(Sender: TObject); virtual;
     procedure SaveGroupsState(); override;
+    procedure MouseDown(Button: TMouseButton;
+                        Shift: TShiftState; X, Y: Integer);  override;
   public
     constructor Create(AOwner: TComponent; Session: TObject); override;
 
@@ -102,7 +104,7 @@ begin
     mi.OnClick := mnuDeleteClick;
     popup.Items.Add(mi);
     _mnuDelete := mi;
-
+    DragMode := dmManual;
     PopupMenu := popup;
 end;
 procedure TExAllTreeView.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
@@ -331,7 +333,13 @@ begin
 end;
 procedure TExAllTreeView.DragDrop(Source: TObject; X: Integer; Y: Integer);
 begin
-    if (_dropSupport <> nil) then _dropSupport.Execute(X, Y);
+    if (_dropSupport <> nil) then
+    begin
+        _dropSupport.Execute(X, Y);
+        EndDrag(true);
+    end
+    else
+        EndDrag(false);
 end;
 
 procedure TExAllTreeView._DragUpdate(Source: TExDroptarget;
@@ -422,5 +430,12 @@ begin
 
     TJabberSession(_js).ItemController.SaveGroups();
 
+end;
+
+procedure TExAllTreeView.MouseDown(Button: TMouseButton;
+                        Shift: TShiftState; X, Y: Integer);
+begin
+   inherited;
+   BeginDrag(false);
 end;
 end.
