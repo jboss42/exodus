@@ -48,7 +48,6 @@ type
       function  GetDockParent(): TForm;
       procedure DockWindow(docksite: TWinControl);
       function  SelectionFor(Index: Integer): IExodusItemList;
-      procedure ClearTreeItems();
 
       property  RosterTree: TExTreeView read _GetRosterTree;
 //      property  ContactsTree: TExTreeView read _GetTreeByName('Contacts');
@@ -268,7 +267,7 @@ begin
     begin
        Self.Visible := false;
        //Change code to clear items for all tree tabs
-       ClearTreeItems();
+       //ClearTreeItems();
     end;
 
 end;
@@ -386,18 +385,6 @@ begin
        Tab := TabController.Tab[Idx];
        Result :=  TExTreeView(Tab.GetTree);
     end;
-
-end;
-
-procedure TRosterForm.ClearTreeItems();
-var
-    i: Integer;
-begin
-  for i := 0 to TabController.TabCount - 1 do
-  begin
-      if (TExTreeView(TabController.Tab[i].GetTree) <> nil) then
-          TExTreeView(TabController.Tab[i].GetTree).Items.Clear();
-  end;
 
 end;
 
