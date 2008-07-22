@@ -4201,8 +4201,8 @@ begin
                (bounds.Bottom = wSize.Bottom) and
                (MainSession.Prefs.getBool('auto_away')) and
                (MainSession.Prefs.getBool('away_full_screen'))) then begin
-               result := DT_FULLSCREEN;
-               //result := DT_UNKNOWN;
+               //result := DT_FULLSCREEN;
+               result := DT_UNKNOWN;
                exit;
             end;
         end;

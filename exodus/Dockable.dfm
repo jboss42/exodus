@@ -1,6 +1,6 @@
 inherited frmDockable: TfrmDockable
   Caption = 'frmDockable'
-  ClientWidth = 251
+  ClientWidth = 204
   DragKind = dkDock
   DragMode = dmAutomatic
   KeyPreview = True
@@ -10,13 +10,14 @@ inherited frmDockable: TfrmDockable
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown
   ExplicitWidth = 259
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitHeight = 240
+  PixelsPerInch = 96
+  TextHeight = 13
   object pnlDock: TTntPanel
     Left = 0
     Top = 0
-    Width = 251
-    Height = 41
+    Width = 204
+    Height = 33
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
@@ -24,8 +25,8 @@ inherited frmDockable: TfrmDockable
     object pnlDockTopContainer: TTntPanel
       Left = 0
       Top = 0
-      Width = 251
-      Height = 34
+      Width = 204
+      Height = 28
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
@@ -76,8 +77,8 @@ inherited frmDockable: TfrmDockable
       object pnlDockTop: TTntPanel
         Left = 0
         Top = 0
-        Width = 199
-        Height = 34
+        Width = 162
+        Height = 28
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
@@ -86,9 +87,9 @@ inherited frmDockable: TfrmDockable
     end
     object pnlDockControlSite: TTntPanel
       Left = 0
-      Top = 34
-      Width = 251
-      Height = 7
+      Top = 28
+      Width = 204
+      Height = 5
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
