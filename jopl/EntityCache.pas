@@ -63,7 +63,12 @@ type
         procedure getByFeature(f: Widestring; jid_list: TWidestringList);
         {$endif}
 
+        {$ifdef Exodus}
+        procedure getByIdentity(icat, itype: Widestring; jid_list: TTntStrings); overload;
+        procedure getByIdentity(icat, itype: Widestring; jid_list: TWidestringlist); overload;
+        {$else}
         procedure getByIdentity(icat, itype: Widestring; jid_list: TWidestringlist);
+        {$endif}
 
         function toString(): widestring;
 
@@ -434,6 +439,21 @@ begin
     end;
 end;
 
+{$ifdef Exodus}
+{---------------------------------------}
+procedure TJabberEntityCache.getByIdentity(icat, itype: WideString; jid_list: TTntStrings);
+var
+    i: integer;
+    e: TJabberEntity;
+begin
+    for i := 0 to _cache.Count - 1 do begin
+        e := TJabberEntity(_cache.Objects[i]);
+        if ((AnsiCompareText(icat, e.Category) = 0) and
+            (AnsiCompareText(itype, e.CatType) = 0)) then
+            jid_list.Add(e.jid.full);
+    end;
+end;
+{$endif}
 {---------------------------------------}
 procedure TJabberEntityCache.getByIdentity(icat, itype: Widestring; jid_list: TWidestringlist);
 var

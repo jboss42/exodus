@@ -27,8 +27,8 @@ uses
 const
 
     // browse stuff
-    FEAT_SEARCH         = 'search';
-    FEAT_REGISTER       = 'register';
+    FEAT_SEARCH         = 'jabber:iq:search';
+    FEAT_REGISTER       = 'jabber:iq:register';
     FEAT_GROUPCHAT      = 'groupchat';
     FEAT_PRIVATE        = 'private';
     FEAT_PUBLIC         = 'gc-public';
@@ -380,9 +380,7 @@ begin
 
             // if we STILL didn't find it, pretend we did for certain ones...
             if (f = FEAT_GROUPCHAT) then
-                Result := hasFeature('gc-1.0') or hasFeature(XMLNS_MUC) or hasFeature('conference')
-            else if (f = FEAT_REGISTER) or (f = FEAT_SEARCH) then
-                Result := true;
+                Result := hasFeature('gc-1.0') or hasFeature(XMLNS_MUC) or hasFeature('conference');
         end;
     end;
 end;
