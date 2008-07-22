@@ -141,12 +141,9 @@
         <control name="lblTimestampFmt"/>
     </timestamp_format>
 
-    <msglist_type value="1"/>
+    <msglist_type value="0"/>
     <!-- These values only matter if msglist_type has a value of 1 and not 0 -->
-    <display_date_separator control="chkDateSeparator" value="0" state="rw"/> <!-- Should the date be displayed between 2 messages that are on different days -->
-    <date_separator_format value="MM/dd/yyyy" control="txtDateSeparatorFmt" state="rw">
-    	<control name="lblDateSeparatorFmt"/>
-    </date_separator_format>
+    <display_date_separator value="0" /> <!-- Should the date be displayed between 2 messages that are on different days -->
     <maximum_displayed_messages value="0" /> <!-- Maximum number of messages in a history window before cleanup (for memory management).  0 means no maximum -->
     <maximum_displayed_messages_drop_down_to value="0" /> <!-- When messages deleted for memory management (see above), what is the number of messages that should be left in the window -->
     <ie_css value="iemsglist_style"/>
@@ -423,11 +420,11 @@
     <lowest_unread_msg_cnt value="0"/>
     <lowest_unread_msg_cnt_color_change value="1"/>
     
-    <activity_list_split_min_width value="160"/>
+    <activity_list_split_min_width value="30"/>
     <activity_window_with_docked_min_height value="250"/>
     <activity_window_with_docked_min_width value="300"/>
     <activity_window_without_docked_min_height value="250"/>
-    <activity_window_without_docked_min_width value="160"/>
+    <activity_window_without_docked_min_width value="150"/>
     
     <!-- /ACTIVITY WINDOW PREFS -->
     
@@ -445,7 +442,6 @@
     <profile_active value="0"/>
     <wrap_input value="1"/>
     <vcard_iq_timeout value="90"/>
-    <vcard_cache_ttl value="14"/>
 
     <!-- temp password used by auth plugins -->
     <temp-pw encoded="yes"/>

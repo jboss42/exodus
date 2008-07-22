@@ -85,13 +85,11 @@ end;
 
         Picture: TAvatar;
 
-        TimeStamp: TDateTime;
-
         constructor Create;
         destructor Destroy; override;
 
-        function Parse(tag: TXMLTag): Boolean; virtual;
-        procedure fillTag(tag: TXMLTag); virtual;
+        procedure Parse(tag: TXMLTag);
+        procedure fillTag(tag: TXMLTag);
 end;
 
 
@@ -224,8 +222,6 @@ constructor TXMLVCard.Create;
 begin
     inherited;
 
-    timestamp := Now();
-
     GivenName := '';
     FamilyName := '';
     MiddleName := '';
@@ -295,7 +291,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLVCard.Parse(tag: TXMLTag): Boolean;
+procedure TXMLVCard.Parse(tag: TXMLTag);
 var
     vtag, t1, t2: TXMLTag;
     a: TXMLVCardAddress;
@@ -303,8 +299,7 @@ var
     tags: TXMLTagList;
     i: integer;
 begin
-    result := false;
-    
+    //
     vtag := tag.GetFirstTag('vcard');
     if (vtag = nil) then
         vtag := tag.GetFirstTag('VCARD');
@@ -338,7 +333,6 @@ begin
     // get picture
     t1 := vtag.GetFirstTag('PHOTO');
     if (t1 <> nil) then begin
-        if (Picture <> nil) then FreeAndNil(Picture);
         Picture := TAvatar.Create();
         Picture.parse(t1);
     end;
@@ -406,8 +400,6 @@ begin
     
     t1 := vtag.GetFirstTag('WORKCELL');
     if t1 <> nil then WorkCell.number := t1.Data;
-
-    Result := true;
 end;
 
 {---------------------------------------}

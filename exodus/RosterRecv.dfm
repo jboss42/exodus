@@ -2,139 +2,111 @@ inherited frmRosterRecv: TfrmRosterRecv
   Left = 228
   Top = 192
   Caption = 'Receiving Contacts'
-  ClientHeight = 353
-  ClientWidth = 460
-  ExplicitWidth = 468
-  ExplicitHeight = 393
-  PixelsPerInch = 120
-  TextHeight = 16
+  ClientHeight = 287
+  ClientWidth = 374
+  ExplicitWidth = 382
+  ExplicitHeight = 321
+  PixelsPerInch = 96
+  TextHeight = 13
   object Splitter1: TSplitter [0]
     Left = 0
-    Top = 116
-    Width = 460
+    Top = 94
+    Width = 374
     Height = 3
     Cursor = crVSplit
     Align = alTop
+    ExplicitTop = 83
   end
-  inherited pnlDock: TTntPanel
-    Width = 460
+  inherited pnlDockTop: TPanel
+    Width = 374
     TabOrder = 4
-    inherited pnlDockTopContainer: TTntPanel
-      Width = 460
-      inherited tbDockBar: TToolBar
-        ExplicitLeft = 411
-        inherited btnCloseDock: TToolButton
-          Visible = False
-        end
-      end
-      inherited pnlDockTop: TTntPanel
-        ExplicitWidth = 408
-        object pnlFrom: TTntPanel
-          Left = 0
-          Top = 0
-          Width = 199
-          Height = 34
-          Align = alClient
-          BevelOuter = bvNone
-          BorderWidth = 2
-          ParentColor = True
-          TabOrder = 0
-          ExplicitWidth = 408
-          object StaticText1: TTntStaticText
-            Left = 2
-            Top = 2
-            Width = 55
-            Height = 30
-            Align = alLeft
-            Caption = 'From:    '
-            TabOrder = 0
-            ExplicitHeight = 20
-          end
-          object txtFrom: TTntStaticText
-            Left = 57
-            Top = 2
-            Width = 140
-            Height = 30
-            Align = alClient
-            Caption = '<JID>'
-            TabOrder = 1
-            ExplicitWidth = 39
-            ExplicitHeight = 20
-          end
-        end
+    ExplicitWidth = 374
+    inherited tbDockBar: TToolBar
+      Left = 325
+      ExplicitLeft = 325
+      inherited btnCloseDock: TToolButton
+        Visible = False
       end
     end
-    inherited pnlDockControlSite: TTntPanel
-      Width = 460
+    object pnlFrom: TTntPanel
+      Left = 0
+      Top = 0
+      Width = 322
+      Height = 32
+      Align = alClient
+      BevelOuter = bvNone
+      BorderWidth = 2
+      ParentColor = True
+      TabOrder = 1
+      object StaticText1: TTntStaticText
+        Left = 2
+        Top = 2
+        Width = 44
+        Height = 17
+        Align = alLeft
+        Caption = 'From:    '
+        TabOrder = 0
+      end
+      object txtFrom: TTntStaticText
+        Left = 46
+        Top = 2
+        Width = 36
+        Height = 17
+        Align = alClient
+        Caption = '<JID>'
+        TabOrder = 1
+      end
     end
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 311
-    Width = 460
-    Height = 42
+    Top = 253
+    Width = 374
+    Height = 34
     Align = alBottom
     Color = 13681583
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -15
+    Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentColor = False
     ParentFont = False
     TabOrder = 0
     TabStop = True
-    ExplicitTop = 311
-    ExplicitWidth = 460
-    ExplicitHeight = 42
+    ExplicitTop = 253
+    ExplicitWidth = 374
+    ExplicitHeight = 34
     inherited Panel2: TPanel
-      Width = 460
-      Height = 42
-      ExplicitWidth = 460
-      ExplicitHeight = 42
+      Width = 374
+      Height = 34
+      ExplicitWidth = 374
+      ExplicitHeight = 34
       inherited Bevel1: TBevel
-        Width = 460
-        Height = 6
-        ExplicitWidth = 460
-        ExplicitHeight = 6
+        Width = 374
+        ExplicitWidth = 374
       end
       inherited Panel1: TPanel
-        Left = 263
-        Top = 6
-        Width = 197
-        Height = 36
-        ExplicitLeft = 263
-        ExplicitTop = 6
-        ExplicitWidth = 197
-        ExplicitHeight = 36
+        Left = 214
+        Height = 29
+        ExplicitLeft = 214
+        ExplicitHeight = 29
         inherited btnOK: TTntButton
-          Left = 5
-          Width = 92
-          Height = 31
           Caption = 'Add Contacts'
           OnClick = frameButtons1btnOKClick
-          ExplicitLeft = 5
-          ExplicitWidth = 92
-          ExplicitHeight = 31
         end
         inherited btnCancel: TTntButton
-          Left = 101
-          Width = 92
-          Height = 31
           Caption = 'Close'
           OnClick = frameButtons1btnCancelClick
-          ExplicitLeft = 101
-          ExplicitWidth = 92
-          ExplicitHeight = 31
         end
       end
     end
   end
   object txtMsg: TExRichEdit
     Left = 0
-    Top = 41
-    Width = 460
-    Height = 75
+    Top = 33
+    Width = 374
+    Height = 61
     Align = alTop
     AutoURLDetect = adNone
     CustomURLs = <
@@ -225,45 +197,52 @@ inherited frmRosterRecv: TfrmRosterRecv
   end
   object lvContacts: TTntListView
     Left = 0
-    Top = 155
-    Width = 460
-    Height = 156
+    Top = 126
+    Width = 374
+    Height = 127
     Align = alClient
     Checkboxes = True
     Columns = <
       item
         Caption = 'Nickname'
-        Width = 123
+        Width = 100
       end
       item
         Caption = 'Jabber ID'
-        Width = 185
+        Width = 150
       end>
     TabOrder = 2
     ViewStyle = vsReport
+    ExplicitTop = 125
+    ExplicitHeight = 128
   end
   object Panel1: TTntPanel
     Left = 0
-    Top = 119
-    Width = 460
-    Height = 36
+    Top = 97
+    Width = 374
+    Height = 29
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 3
+    ExplicitTop = 96
+    DesignSize = (
+      374
+      29)
     object Label2: TTntLabel
-      Left = 4
-      Top = 9
-      Width = 154
-      Height = 16
+      Left = 3
+      Top = 7
+      Width = 131
+      Height = 13
       Caption = 'Add contacts to this group:'
     end
     object cboGroup: TTntComboBox
-      Left = 177
-      Top = 4
-      Width = 257
-      Height = 24
-      ItemHeight = 16
+      Left = 144
+      Top = 3
+      Width = 209
+      Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      ItemHeight = 0
       Sorted = True
       TabOrder = 0
     end

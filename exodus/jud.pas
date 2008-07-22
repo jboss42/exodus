@@ -47,7 +47,7 @@ type
     property Count: integer read _count write setCount;
   end;
 
-  TfrmJud = class(TfrmWizard)
+  TfrmJud = class(TfrmDockWizard)
     lblSelect: TTntLabel;
     cboJID: TTntComboBox;
     TabSheet2: TTabSheet;
@@ -160,7 +160,7 @@ uses
     fGeneric, Session, JabberUtils,
     ExUtils,  XMLUtils, fTopLabel,
     TntClasses, DisplayName, Jabber1,
-    RosterImages, Exodus_TLB, SndBroadcastDlg;
+    RosterImages, Exodus_TLB;
 
 var
     cur_sort: integer;
@@ -235,8 +235,7 @@ begin
     end;
 
     f.reset();
-    //???dda f.ShowDefault();
-    f.Show();
+    f.ShowDefault();
 
     // either get the fields right away,
     // or pre-select the first item
@@ -269,7 +268,7 @@ begin
     cur_dir := true;
   
     dflt_grp := MainSession.Prefs.getString('roster_default');
-    //???dda Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
+    Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
 
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
@@ -288,7 +287,7 @@ begin
     btnBroadcastMsg.Enabled := false;
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
     lblGroup.Caption := dflt_grp;
-    //???dda _windowType := 'jud';
+    _windowType := 'jud';
 end;
 
 
@@ -438,7 +437,7 @@ begin
     cur_iq := nil;
     aniWait.Active := false;
     btnBack.Enabled := true;
-    btnNext.Enabled := true;
+    btnNext.Enabled := false;
 
     if (event <> 'xml') then begin
         // timeout
@@ -1017,7 +1016,7 @@ begin
        end;
      end;
      //Broadcast message and cleanup
-     ShowSendBroadcast(jidList, '', '');
+//JJF TODO hmm     BroadcastMsg(jidList);
      jidList.Free();
  end;
 end;

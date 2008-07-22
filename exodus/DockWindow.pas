@@ -723,12 +723,9 @@ begin
       newState := dsUnDocked;
 
     if (newState <> oldState) then begin
-        // Disable minimum window size while undocking/docking.
-        Self.Constraints.MinHeight := 0;
-        Self.Constraints.MinWidth := 0;
-        if (newState = dsDocked) then
+          if (newState = dsDocked) then
             _layoutDock()
-        else
+          else
             _layoutAWOnly();
     end;
 

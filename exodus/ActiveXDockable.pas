@@ -28,6 +28,7 @@ uses
     BaseMsgList,
     SysUtils,
     Unicode,
+    COMDockToolbar,
     ToolWin,
     ComCtrls,
     ExtCtrls,
@@ -51,6 +52,9 @@ type
     function GetWindowStateKey() : WideString; override;
 
   public
+    { Public declarations }
+    DockToolbar: IExodusDockToolbar;
+
     procedure OnDocked(); override;
     procedure OnFloat(); override;
 
@@ -155,6 +159,8 @@ begin
 
         inherited;
 
+        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar, Self.tbDockBar, ExSession.COMRosterImages);
+
         _windowType := 'activex_dockable';
         _callback := nil;
     except
@@ -164,6 +170,7 @@ end;
 {---------------------------------------}
 procedure TfrmActiveXDockable.FormDestroy(Sender: TObject);
 begin
+    DockToolbar := nil;
     _callback := nil;
 
     inherited;

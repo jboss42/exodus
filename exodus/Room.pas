@@ -253,7 +253,7 @@ type
     procedure pluginMenuClick(Sender: TObject); override;
     procedure popupMenuClick(Sender: TObject);
 
-    procedure ShowMsg(const tag: TXMLTag);
+    procedure ShowMsg(tag: TXMLTag);
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
 
     function addRoomUser(jid, nick: Widestring; tag: TXMLTag = nil): TRoomMember;
@@ -540,7 +540,7 @@ begin
                 f.sendStartPresence();
             //JJF todo add a displayname listener for dn changes
             f.Caption := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid); //use display name if possible tmp_jid.userDisplay; //no display name here for room names
-            f.Hint := TJabberID.removeJEP106(tmp_jid.jid);
+            f.Hint := tmp_jid.jid;
 
             // setup prefs
             with f do begin
@@ -653,7 +653,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.showMsg(const tag: TXMLTag);
+procedure TfrmRoom.showMsg(tag: TXMLTag);
 var
     i : integer;
     Msg: TJabberMessage;
@@ -1583,17 +1583,13 @@ begin
         if (member.Nick = myNick) then begin
             if (i < 0) then begin
                 // this is the first time I've joined the room
-                try
-                    mtag := nil;
-                    if (member.Nick = myNick) then begin
-                        if (member.Role = MUC_VISITOR) then
-                            mtag := newRoomMessage(_(sNoVoice))
-                        else if (member.Role = MUC_MOD) then
-                            mtag := newRoomMessage(_(sCurModerator));
-                        if (mtag <> nil) then showMsg(mtag);
-                    end;
-                finally
-                    mtag.Free();
+                mtag := nil;
+                if (member.Nick = myNick) then begin
+                    if (member.Role = MUC_VISITOR) then
+                        mtag := newRoomMessage(_(sNoVoice))
+                    else if (member.Role = MUC_MOD) then
+                        mtag := newRoomMessage(_(sCurModerator));
+                    if (mtag <> nil) then showMsg(mtag);
                 end;
             end;
 

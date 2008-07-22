@@ -24,7 +24,7 @@ interface
 uses
     Exodus_TLB,
     Session, 
-    XMLTag, IQ, XMLVcard, XMLVCardCache,
+    XMLTag, IQ, XMLVcard,
     ShellAPI,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls, JabberID,
@@ -124,14 +124,14 @@ type
     procedure picBoxPaint(Sender: TObject);
   private
     { Private declarations }
-    //iq: TJabberIQ;
+    iq: TJabberIQ;
     _vcard: TXMLVCard;
     _origSubIdx: integer;
     _jid: TJabberID;
     _isMe: boolean;
   public
     { Public declarations }
-    procedure vcard(jid: Widestring; vcard: TXMLVCard); overload;
+    procedure vcard(event: string; tag: TXMLTag);
   end;
 
 function ShowProfile(jid: Widestring): TfrmProfile;
@@ -434,6 +434,14 @@ begin
         if (gridResources.Height < 100) then //designed height
             pnlAllResources.Height := gridResources.Height;
 
+        tstr := MainSession.generateID();
+        iq := TJabberIQ.Create(MainSession, tstr, vcard, MainSession.Prefs.getInt('vcard_iq_timeout'));
+        iq.Namespace := 'vcard-temp';
+        iq.qTag.Name := 'vCard';
+        iq.iqType := 'get';
+        iq.toJid := _jid.jid;
+        iq.Send;
+
         TreeView1.Selected := TreeView1.Items[0];
         TreeView1.FullExpand();
         PageControl1.ActivePageIndex := 0;
@@ -441,20 +449,23 @@ begin
     f.Show;
     f.aniProfile.Visible := true;
     f.aniProfile.Active := true;
-    GetVCardCache().find(f._jid.jid, f.vcard);
-    
     Result := f;
 end;
 
 {---------------------------------------}
-procedure TfrmProfile.vcard(jid: Widestring; vcard: TXMLVCard);
+procedure TfrmProfile.vcard (event: string; tag: TXMLTag);
 begin
+    // callback for vcard info
+    iq := nil;
     aniProfile.Visible := false;
     aniProfile.Active := false;
 
-    _vcard := vcard;
-    if (_vcard = nil) then exit;
+    if (event <> 'xml') then exit;
+    if (_vcard <> nil) then _vcard.Free();
     
+    _vcard := TXMLVCard.Create;
+    _vcard.parse(tag);
+
     with _vcard do begin
         txtFirst.Text := GivenName;
         txtMiddle.Text := MiddleName;
@@ -516,6 +527,7 @@ begin
     tabSheet4.TabVisible := false;
     tabSheet5.TabVisible := false;
     tabSheet6.TabVisible := false;
+    iq := nil;
 
     // Do this to ensure the nodes are properly translated.
     TreeView1.Items.Clear();
@@ -547,6 +559,8 @@ var
     i: integer;
 begin
 //    MainSession.Prefs.SavePosition(Self);
+    if (iq <> nil) then iq.Free;
+    if (_vcard <> nil) then _vcard.Free();
     i := IndexOf(_jid.jid);
     if (i <> -1) then
         _openWindowList.Delete(i);

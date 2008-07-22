@@ -113,7 +113,7 @@ implementation
 
 uses
     COMExControls, ChatWin, Controls, BaseMsgList, RTFMsgList, Forms,
-    ComServ, Menus, SysUtils, Debug, BaseChat, Dockable;
+    ComServ, Menus, SysUtils, Debug, BaseChat;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -290,15 +290,7 @@ begin
                 DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
             end;
         except
-            on e:Exception do
-            begin
-                // If e is a EIntfCastError, that is ok, just eat.
-                if (not (e is EIntfCastError)) then
-                begin
-                    // Not a EIntfCastError so note exception.
-                    DebugMessage('COM Exception in TExodusChat.fireSentMessageXML');
-                end;
-            end;
+            // Not a IExodusChat2 plugin - eat error
         end;
     end;
 end;
@@ -841,9 +833,9 @@ function TExodusChat.Get_DockToolbar: IExodusDockToolbar;
 begin
     Result := nil;
     if (_chat <> nil) and (_chat.Window <> nil) then
-        Result := TfrmDockable(_chat.Window).Dockbar
+        Result := TfrmChat(_chat.Window).DockToolbar
     else if (_room <> nil) then
-        Result := _room.Dockbar;
+        Result := _room.DockToolbar;
 end;
 
 {---------------------------------------}

@@ -1,4 +1,4 @@
-unit COMToolbar;
+    unit COMToolbar;
 {
     Copyright 2008, Estate of Peter Millard
 
@@ -24,140 +24,89 @@ unit COMToolbar;
 interface
 
 uses
-  ComObj, Contnrs, Exodus_TLB, ComCtrls, COMToolbarButton, StdVcl;
+  ComObj, Controls, Exodus_TLB, ComCtrls, COMToolbarButton, StdVcl;
 
 type
-    IControlDelegate = interface
-        function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
-    end;
-
-    TExodusToolbarBase = class(TAutoObject, IExodusToolbarController)
+    TToolbarProxy = class
     private
         _btnBar: TToolbar;
+        _controlSite: TWinControl;
         _imgList: IExodusRosterImages;
         _growRight: boolean;
-        _controlProxy: IControlDelegate;
-        _tbName: widestring;
-        _buttons: TObjectList;
-    protected
+    public
+        constructor Create(); overload;
+        constructor Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages; growRight: boolean = true);overload;
+        destructor Destroy; override;
 
-        function AddButton(const ImageID: WideString): IExodusToolbarButton; virtual; safecall;
-        function GetButton(index: Integer): IExodusToolbarButton; virtual; safecall;
-        procedure RemoveButton(const Name: WideString); virtual; safecall;
         function Get_Count: Integer; virtual; safecall;
-
-        function AddControl(const ID: WideString): IExodusToolbarControl; virtual; safecall;
-        function GetControl(const Name: widestring): IExodusToolbarControl;virtual; safecall;
-        procedure RemoveControl(const Name: WideString); virtual; safecall;
-        function Get_ControlCount: Integer; virtual; safecall;
-
-        function Get_ImageList: IExodusRosterImages; virtual; safecall;
-        Function Get_Name: widestring; virtual; safecall;
+        function AddButton(const ImageID: WideString): IExodusToolbarButton; virtual; safecall;
+        function GetButton(Index: Integer): IExodusToolbarButton; virtual; safecall;
+        procedure RemoveButton(const button: WideString); virtual; safecall;
+        function AddControl(const ClassId: WideString): IExodusToolbarControl; virtual; safecall;
 
         property Count: integer read Get_Count;
-        property ControlCount: integer read Get_ControlCount;
-        property ImageList: IExodusRosterImages read Get_ImageList;
-        property ButtonBar: TToolbar read _btnBar;
-        property Name: widestring read Get_Name;
-    public
-        constructor Create(btnBar: TToolbar;
-                           imgList: IExodusRosterImages;
-                           controlProxy: IControlDelegate;
-                           Name: widestring;
-                           growRight: boolean = true);reintroduce; overload;
-        destructor Destroy(); override;
-
-        procedure Initialize(); override;
+        property ImageList: IExodusRosterImages read _imgList write _imgList;
+        property ButtonBar: TToolbar read _btnBar write _btnBar;
+        property ControlSite: TWinControl read _controlSite write _controlSite;
     end;
 
-    TExodusToolbar = class(TExodusToolbarBase, IExodusToolbar)
+    TExodusToolbar = class(TAutoObject, IExodusToolbar)
+    private
+        _tbProxy: TToolbarProxy;
     protected
-        function AddButton(const ImageID: WideString): IExodusToolbarButton; override;
-        function AddControl(const ID: WideString): IExodusToolbarControl; override;
-        function Get_Count: Integer; override;
-        function GetButton(index: Integer): IExodusToolbarButton; override;
+        function AddButton(const ImageID: WideString): IExodusToolbarButton; safecall;
+        function AddControl(const ID: WideString): IExodusToolbarControl; safecall;
+        function Get_Count: Integer; safecall;
+        function GetButton(index: Integer): IExodusToolbarButton; safecall;
+    public
+        constructor Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);reintroduce;overload;
+        destructor Destroy(); override;
     end;
-
 
 implementation
 
 uses
-     SysUtils, StrUtils, Debug, COMExodusControlSite, ComServ;
+    Forms, SysUtils, StrUtils, Jabber1, ExSession, Debug,
+    COMToolbarControl, COMExodusControlSite, ComServ;
 
-constructor TExodusToolbarBase.Create(btnBar: TToolbar;
-                                      imgList: IExodusRosterImages;
-                                      controlProxy: IControlDelegate;
-                                      Name: widestring;
-                                      growRight: boolean);
+constructor TToolbarProxy.create();
+begin
+    inherited;
+    _btnBar := nil;
+    _controlSite := nil;
+    _imgList := nil;
+end;
+
+constructor TToolbarProxy.Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages; growRight: boolean);
 begin
     inherited create();
     _btnBar := btnBar;
+    _controlSite := controlSite;
     _imgList := imgList;
     _growRight := growRight;
-    _controlProxy := ControlProxy;
-    _tbName := Name;
 end;
 
-destructor TExodusToolbarBase.Destroy();
+destructor TToolbarProxy.Destroy;
 begin
+    inherited;
+end;
+
+function TToolbarProxy.Get_Count: Integer;
+begin
+    Result := 0;
     try
-        _buttons.free(); //frees buttons
-        _buttons := nil;
-        _imgList := nil;
-        _btnBar := nil;
-        _controlProxy := nil;
-        _tbName := '';
+        if (_btnBar = nil) then exit;
+        Result := _btnBar.ButtonCount;
     except
         on E:Exception do
         begin
-            DebugMessage('Exception in ' + Self.ClassName + '.Destroy, (' + E.Message + ')');
+            DebugMessage('Exception in ' + Self.Classname + '.Get_Count (' + E.Message + ')');
+            Result := 0;
         end;
     end;
-    inherited;
 end;
 
-procedure TExodusToolbarBase.Initialize();
-begin
-    _buttons := TObjectList.create(false); //free buttons on delete etc.
-    _imgList := nil;
-    _btnBar := nil;
-    _controlProxy := nil;
-    _tbName := '';
-
-    inherited;
-end;
-
-function TExodusToolbarBase.Get_ImageList: IExodusRosterImages;
-begin
-    Result := _imgList;
-end;
-
-Function TExodusToolbarBase.Get_Name: widestring;
-begin
-    Result := _tbName;
-end;
-
-function TExodusToolbarBase.Get_Count: Integer;
-begin
-    Result := _buttons.count;
-end;
-
-function TExodusToolbarBase.Get_ControlCount: Integer;
-begin
-    Raise EOleSysError.create(Self.ClassName + '.ControlCount not implemented', E_NOTIMPL, -1);
-end;
-
-function TExodusToolbarBase.GetControl(const Name: widestring): IExodusToolbarControl;
-begin
-    Raise EOleSysError.create(Self.ClassName + '.GetControl not implemented', E_NOTIMPL, -1);
-end;
-
-procedure TExodusToolbarBase.RemoveControl(const Name: WideString);
-begin
-    Raise EOleSysError.create(Self.ClassName + '.RemoveControl not implemented', E_NOTIMPL, -1);
-end;
-
-function TExodusToolbarBase.AddButton(const ImageID: WideString): IExodusToolbarButton;
+function TToolbarProxy.AddButton(const ImageID: WideString): IExodusToolbarButton;
 var
     idx, oldLeft: integer;
     btn: TToolButton;
@@ -169,22 +118,17 @@ begin
         if (_btnBar = nil) then exit;
         oldleft := _btnBar.Buttons[_btnBar.ButtonCount - 1].Left + _btnBar.Buttons[_btnBar.ButtonCount - 1].Width;
         _btnBar.AutoSize := false;
-
-        btn := TToolButton.Create(_btnBar); //proxy manages lifetime
-        _buttons.add(btn);
-
+        btn := TToolButton.Create(Application.MainForm);
         btn.ShowHint := true;
         btn.Top := _btnBar.Buttons[_btnBar.ButtonCount - 1].Top;
         if (_growRight and (_btnBar.ButtonCount > 1)) then
             btn.Left := oldLeft + 1;
         _btnBar.Width := _btnBar.Width + _btnBar.Buttons[_btnBar.ButtonCount - 1].Width + 1;
-        btn.Parent := _btnBar;
         _btnBar.AutoSize := true;
-
+        btn.Parent := _btnBar;
         idx := _imgList.Find(ImageID);
-        if (idx = -1) then
-            idx := 0;
-        btn.ImageIndex := idx;
+        if (idx >= 0) then
+            btn.ImageIndex := idx;
 
         CreateGUID(g);
         guid := GUIDToString(g);
@@ -193,46 +137,50 @@ begin
         btn.Name := _btnBar.Name + '_button_' + guid;
 
         _btnBar.Visible := true; //we have at least one button
-        Result := TExodusToolbarButton.Create(btn, ImageList);
+        Result := TExodusToolbarButton.Create(btn, _imgList);
     except
         on E:Exception do
         begin
-            DebugMessage('Exception in ' + Self.ClassName + '.AddButton, ImageID: ' + imageID + ', (' + E.Message + ')');
+            DebugMessage('Exception in ' + Self.Classname + '.AddButton, ImageID: ' + imageID + ', (' + E.Message + ')');
             Result := nil;
         end;
     end;
 end;
 
-function TExodusToolbarBase.GetButton(Index: Integer): IExodusToolbarButton;
+function TToolbarProxy.GetButton(Index: Integer): IExodusToolbarButton;
+var
+    btn: TToolButton;
 begin
     Result := nil;
     try
         if (_btnBar = nil) then exit;
-        if (Index >= 0) and (Index < _buttons.Count) then
-            Result := TExodusToolbarButton.Create(TToolButton(_buttons[Index]), ImageList);
+
+        Result := nil;
+        if (Index >= 0) and (Index < _btnBar.ButtonCount) then
+        begin
+            btn := _btnBar.Buttons[Index];
+            Result := TExodusToolbarButton.Create(btn, _imgList) as IExodusToolbarButton;
+        end;
     except
         on E:Exception do
         begin
-            DebugMessage('Exception in ' + Self.ClassName + '.GetButton, index: ' + IntToStr(index) + ', (' + E.Message + ')');
+            DebugMessage('Exception in ' + Self.Classname + '.GetButton, index: ' + IntToStr(index) + ', (' + E.Message + ')');
             Result := nil;
         end;
     end;
 end;
 
-procedure TExodusToolbarBase.RemoveButton(const Name: WideString);
+procedure TToolbarProxy.RemoveButton(const button: WideString);
 var
     i: integer;
 begin
     try
         if (_btnBar = nil) then exit;
+
         _btnBar.AutoSize := false;
-        for i := 0 to _buttons.Count - 1 do
-        begin
-            if (TToolButton(_buttons[i]).name = Name) then
-            begin
-                TToolButton(_buttons[i]).parent := nil; //remove from toolbar
-                _buttons.delete(i); //frees button
-                break;
+        for i := _btnBar.ButtonCount - 1 downto 0 do begin
+            if (_btnBar.Buttons[i].Name = button) then begin
+                _btnBar.RemoveControl(_btnBar.Buttons[i]);
             end;
         end;
         _btnBar.AutoSize := true;
@@ -244,35 +192,57 @@ begin
         _btnBar.Visible := (i = _btnBar.ButtonCount);
     except
         on E:Exception do
-            DebugMessage('Exception in ' + Self.ClassName + '.RemoveButton, button: ' + Name + ', (' + E.Message + ')');
+            DebugMessage('Exception in ' + Self.Classname + '.RemoveButton, name: ' + button + ', (' + E.Message + ')');
     end;
 end;
 
-function TExodusToolbarBase.AddControl(const ID: WideString): IExodusToolbarControl;
+function TToolbarProxy.AddControl(const ClassId: WideString): IExodusToolbarControl;
 begin
     Result := nil;
-    if (_controlProxy <> nil) then
-        Result := _controlProxy.AddControl(ID, _tbName);
+    try
+        if (_controlSite = nil) then exit;
+        Result := TExodusControlSite.Create(_controlSite, StringToGuid(ClassId));
+        if (Result <> nil) then
+            _controlSite.Visible := true;
+        _controlSite.Realign();
+        _controlSite.Parent.Realign();
+    except
+        on E:Exception do
+        begin
+            DebugMessage('Exception in ' + Self.Classname + '.AddControl, ClassID: ' + ClassID + ', (' + E.Message + ')');
+            Result := nil;
+        end;
+    end;
+end;
+
+constructor TExodusToolbar.Create(btnBar: TToolbar; controlSite: TWinControl; imgList: IExodusRosterImages);
+begin
+    _tbProxy := TToolbarProxy.create(btnBar, controlSite, imgList);
+end;
+
+destructor TExodusToolbar.Destroy();
+begin
+    _tbProxy.free();
 end;
 
 function TExodusToolbar.AddButton(const ImageID: WideString): IExodusToolbarButton;
 begin
-    Result := inherited AddButton(ImageID);
+    Result := _tbProxy.AddButton(ImageID);
 end;
 
 function TExodusToolbar.AddControl(const ID: WideString): IExodusToolbarControl;
 begin
-    Result := inherited AddControl(ID);
+    Result := _tbProxy.AddControl(ID);
 end;
 
 function TExodusToolbar.Get_Count: Integer;
 begin
-    Result := inherited Get_Count();
+    Result := _tbProxy.Count;
 end;
 
 function TExodusToolbar.GetButton(index: Integer): IExodusToolbarButton;
 begin
-    Result := inherited GetButton(index);
+    Result := _tbProxy.GetButton(index);
 end;
 
 initialization

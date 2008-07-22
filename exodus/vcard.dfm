@@ -5,6 +5,7 @@ inherited frmVCard: TfrmVCard
   ClientHeight = 359
   ClientWidth = 442
   DefaultMonitor = dmDesktop
+  OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -27,10 +28,6 @@ inherited frmVCard: TfrmVCard
     TabOrder = 0
     object TabSheet1: TTntTabSheet
       Caption = 'General'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object TntLabel1: TTntLabel
         Left = 4
         Top = 144
@@ -49,7 +46,7 @@ inherited frmVCard: TfrmVCard
       object Label2: TTntLabel
         Left = 3
         Top = 96
-        Width = 23
+        Width = 25
         Height = 13
         Caption = 'Nick:'
       end
@@ -64,21 +61,21 @@ inherited frmVCard: TfrmVCard
       object Label7: TTntLabel
         Left = 2
         Top = 6
-        Width = 59
+        Width = 56
         Height = 13
         Caption = 'First (Given)'
       end
       object Label5: TTntLabel
         Left = 2
         Top = 64
-        Width = 61
+        Width = 58
         Height = 13
         Caption = 'Last (Family)'
       end
       object lblURL: TTntLabel
         Left = 3
         Top = 181
-        Width = 37
+        Width = 36
         Height = 13
         Cursor = crHandPoint
         Caption = 'Picture:'
@@ -86,7 +83,7 @@ inherited frmVCard: TfrmVCard
       object TntLabel2: TTntLabel
         Left = 2
         Top = 37
-        Width = 30
+        Width = 31
         Height = 13
         Caption = 'Middle'
       end
@@ -168,35 +165,35 @@ inherited frmVCard: TfrmVCard
       object Label6: TTntLabel
         Left = 4
         Top = 35
-        Width = 44
+        Width = 41
         Height = 13
         Caption = 'Birthday:'
       end
       object Label28: TTntLabel
         Left = 92
         Top = 56
-        Width = 139
+        Width = 143
         Height = 13
         Caption = 'Typical Format: YYYY-MM-DD'
       end
       object Label8: TTntLabel
         Left = 1
         Top = 86
-        Width = 46
+        Width = 48
         Height = 13
         Caption = 'Voice Tel:'
       end
       object Label9: TTntLabel
         Left = 1
         Top = 113
-        Width = 39
+        Width = 38
         Height = 13
         Caption = 'Fax Tel:'
       end
       object Label1: TTntLabel
         Left = 1
         Top = 137
-        Width = 57
+        Width = 56
         Height = 13
         Caption = 'Description:'
       end
@@ -205,7 +202,7 @@ inherited frmVCard: TfrmVCard
         Top = 6
         Width = 150
         Height = 21
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 0
         Items.Strings = (
           'Accounting/Finance'
@@ -266,7 +263,7 @@ inherited frmVCard: TfrmVCard
       object Label13: TTntLabel
         Left = 10
         Top = 139
-        Width = 43
+        Width = 39
         Height = 13
         Caption = 'Country:'
       end
@@ -280,28 +277,28 @@ inherited frmVCard: TfrmVCard
       object Label29: TTntLabel
         Left = 10
         Top = 38
-        Width = 52
+        Width = 50
         Height = 13
         Caption = 'Address 2:'
       end
       object Label30: TTntLabel
         Left = 10
         Top = 12
-        Width = 52
+        Width = 50
         Height = 13
         Caption = 'Address 1:'
       end
       object Label31: TTntLabel
         Left = 10
         Top = 61
-        Width = 69
+        Width = 67
         Height = 13
         Caption = 'City / Locality:'
       end
       object Label32: TTntLabel
         Left = 10
         Top = 111
-        Width = 85
+        Width = 86
         Height = 13
         Caption = 'Zip / Postal Code:'
       end
@@ -310,7 +307,7 @@ inherited frmVCard: TfrmVCard
         Top = 137
         Width = 150
         Height = 21
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 5
         Text = 'United States  '
         Items.Strings = (
@@ -601,35 +598,35 @@ inherited frmVCard: TfrmVCard
       object Label22: TTntLabel
         Left = 10
         Top = 9
-        Width = 79
+        Width = 78
         Height = 13
         Caption = 'Company Name:'
       end
       object Label23: TTntLabel
         Left = 10
         Top = 35
-        Width = 82
+        Width = 77
         Height = 13
         Caption = 'Org. Unit (Dept):'
       end
       object Label24: TTntLabel
         Left = 10
         Top = 61
-        Width = 24
+        Width = 23
         Height = 13
         Caption = 'Title:'
       end
       object Label19: TTntLabel
         Left = 10
         Top = 91
-        Width = 46
+        Width = 48
         Height = 13
         Caption = 'Voice Tel:'
       end
       object Label20: TTntLabel
         Left = 10
         Top = 117
-        Width = 39
+        Width = 38
         Height = 13
         Caption = 'Fax Tel:'
       end
@@ -686,35 +683,35 @@ inherited frmVCard: TfrmVCard
       object Label16: TTntLabel
         Left = 10
         Top = 135
-        Width = 43
+        Width = 39
         Height = 13
         Caption = 'Country:'
       end
       object Label17: TTntLabel
         Left = 10
         Top = 36
-        Width = 52
+        Width = 50
         Height = 13
         Caption = 'Address 2:'
       end
       object Label18: TTntLabel
         Left = 10
         Top = 10
-        Width = 52
+        Width = 50
         Height = 13
         Caption = 'Address 1:'
       end
       object Label26: TTntLabel
         Left = 10
         Top = 59
-        Width = 69
+        Width = 67
         Height = 13
         Caption = 'City / Locality:'
       end
       object Label14: TTntLabel
         Left = 10
         Top = 108
-        Width = 85
+        Width = 86
         Height = 13
         Caption = 'Zip / Postal Code:'
       end
@@ -723,7 +720,7 @@ inherited frmVCard: TfrmVCard
         Top = 133
         Width = 150
         Height = 21
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 5
         Text = 'United States  '
         Items.Strings = (

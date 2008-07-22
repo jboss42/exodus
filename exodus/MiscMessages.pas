@@ -90,7 +90,6 @@ uses
     FloatingImage,
     Room,
     Avatar,
-    AvatarCache,
     ChatWin,
     GnuGetText;
 

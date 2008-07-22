@@ -24,7 +24,7 @@ unit COMToolbarButton;
 interface
 
 uses
-  ComCtrls, ComObj, Exodus_TLB, StdVcl;
+  ComCtrls, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusToolbarButton = class(TAutoObject, IExodusToolbarButton, IExodusToolbarButton2)
@@ -32,11 +32,8 @@ type
     _button: TToolButton;
     _menu_listener: IExodusMenuListener;
     _imgList: IExodusRosterImages;
-    _imgID: widestring;
-    _assignedOnClick: boolean;
-    _name: widestring;
   public
-    constructor Create(btn: TToolButton; ImageList: IExodusRosterImages);reintroduce; overload;
+    constructor Create(btn: TToolButton; imgList: IExodusRosterImages = nil);
     destructor Destroy(); override;
   protected
     function Get_ImageID: WideString; safecall;
@@ -50,6 +47,8 @@ type
     function Get_MenuListener: IExodusMenuListener; safecall;
     procedure Set_MenuListener(const Value: IExodusMenuListener); safecall;
     function Get_Name: Widestring; safecall;
+
+    procedure SetImageList(images: IExodusRosterImages);
   public
     procedure OnClick(Sender: TObject);
   end;
@@ -58,37 +57,40 @@ type
 implementation
 
 uses
-    ComServ, Debug, SysUtils;
+    RosterImages, {ExodusImageList, }ComServ, Debug, ExSession;
 
-constructor TExodusToolbarButton.Create(btn: TToolButton; ImageList: IExodusRosterImages);
+constructor TExodusToolbarButton.Create(btn: TToolButton; imgList: IExodusRosterImages);
 begin
     _button := btn;
-    _name := _button.Name;
-    _assignedOnClick := not Assigned(_button.OnClick);
-    if (_assignedOnClick) then
+    if (not Assigned(_button.OnClick)) then
         _button.OnClick := Self.OnClick;
-    _imgList := ImageList;
+
+    if (imgList <> nil) then
+        SetImageList(imgList)
+    else
+        SetImageList(COMRosterImages);
     inherited create();
 end;
 
 destructor TExodusToolbarButton.Destroy();
 begin
-    try
-        _menu_listener := nil;
-        _imgList := nil;
-        if (_assignedOnClick) then
-            _button.OnClick := nil;
-        _button := nil;
-    except
-        On E:Exception do
-            DebugMessage('Exception in TExodusToolbarButton.Destroy Button: ' + _name +', (' + E.message + ')');
-    end;
+    _menu_listener := nil;
+    _imgList := nil;
+    //TODO JJF button may not be valid here, may have already been freed by parent
+    //toolbar. Even so, if we assigned an onlcick handler to the button
+    //we should clear it now.
+    _button := nil;
     inherited;
+end;
+
+procedure TExodusToolbarButton.SetImageList(images: IExodusRosterImages);
+begin
+    _imgList := images;
 end;
 
 function TExodusToolbarButton.Get_ImageID: WideString;
 begin
-    Result := _imgID;
+    Result := RosterTreeImages.GetID(_button.ImageIndex);
 end;
 
 function TExodusToolbarButton.Get_Tooltip: WideString;
@@ -105,12 +107,9 @@ procedure TExodusToolbarButton.Set_ImageID(const Value: WideString);
 var
     idx: integer;
 begin
-    idx := _ImgList.Find(Value);
+    idx := _imgList.Find(Value);
     if (idx >= 0) then
-    begin
-        _imgID := Value;
         _button.ImageIndex := idx;
-    end;
 end;
 
 procedure TExodusToolbarButton.Set_Tooltip(const Value: WideString);
@@ -138,7 +137,8 @@ begin
     Result := _menu_listener;
 end;
 
-procedure TExodusToolbarButton.Set_MenuListener(const Value: IExodusMenuListener);
+procedure TExodusToolbarButton.Set_MenuListener(
+  const Value: IExodusMenuListener);
 begin
     _menu_listener := Value;
 end;
@@ -149,15 +149,14 @@ begin
         try
             _menu_listener.OnMenuItemClick(_button.Name, '');
         except
-            On E:Exception do
-                DebugMessage('Exception in TExodusToolbarButton.OnClick Button: ' + _button.Name +', (' + E.message + ')');
+            DebugMessage('COM Exception in TExodusToolbarButton.OnClick');
         end;
     end;
 end;
 
 function TExodusToolbarButton.Get_Name(): Widestring;
 begin
-    Result := _name;
+    Result := _button.Name;
 end;
 
 initialization

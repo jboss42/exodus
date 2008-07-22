@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 7/16/2008 12:41:03 PM from Type Library described below.
+// File generated on 2008-07-10 3:58:26 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\MomentIM-SCM-build\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -92,7 +92,7 @@ const
   IID_IExodusListener: TGUID = '{28132170-54E2-4BDD-A37D-BE115E68F044}';
   IID_IExodusToolbar: TGUID = '{7949D67E-E287-4643-90DA-E6FE7EDEFA97}';
   IID_IExodusToolbarButton2: TGUID = '{7F9C4FDB-8567-45DF-9E92-8FFB7FA28A34}';
-  IID_IExodusToolbarController: TGUID = '{0EF5DFF4-B59B-4948-983B-3119F6A89E31}';
+  CLASS_ExodusToolbar: TGUID = '{E12A4659-336B-4921-AC6A-771B1DCA5AF8}';
   IID_IExodusToolbarButton: TGUID = '{D4749AC4-6EBE-493B-844C-0455FF0A4A77}';
   IID_IExodusControlForm: TGUID = '{2F60EC05-634D-44B2-BECB-059169BA1459}';
   IID_IExodusLogger: TGUID = '{35542007-5701-4190-AB28-D25EB186CC19}';
@@ -154,6 +154,7 @@ const
   IID_IExodusEventXML: TGUID = '{8FB96A63-DA5C-459A-9B28-A177A6406CBC}';
   CLASS_ExodusEventXML: TGUID = '{34677FDC-B4F5-4DD1-A3C6-B74856AF4CC5}';
   IID_IExodusPacketDispatcher: TGUID = '{96BB23C1-F6BC-4007-8CE6-83107C7D0B29}';
+  CLASS_ExodusPacketDispatcher: TGUID = '{DB860D8B-51E5-479E-A8A0-648288C8D031}';
   IID_IExodusMenuListener2: TGUID = '{046DE4B3-E2B0-4B39-9A55-98541ABFC8FA}';
   IID_IExodusPacketControlListener: TGUID = '{1DDEA354-6FA2-43E1-AE81-8ABE167AB791}';
   IID_IExodusControlSite: TGUID = '{B976BDA3-5BCB-488F-AA45-2818F2FCEE1F}';
@@ -161,8 +162,6 @@ const
   CLASS_MainToolBarImages: TGUID = '{EED39569-B9B7-4888-A591-2640F31B3BC0}';
   IID_IExodusMsg: TGUID = '{46DFB7CF-1431-4B99-9F07-A427D6F7EE77}';
   CLASS_ExodusMsg: TGUID = '{26EE3B49-A7E1-4B67-B63B-16F8BBE3B841}';
-  CLASS_ExodusToolbar: TGUID = '{E12A4659-336B-4921-AC6A-771B1DCA5AF8}';
-  CLASS_ExodusPacketDispatcher: TGUID = '{DB860D8B-51E5-479E-A8A0-648288C8D031}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -290,8 +289,6 @@ type
   IExodusToolbarDisp = dispinterface;
   IExodusToolbarButton2 = interface;
   IExodusToolbarButton2Disp = dispinterface;
-  IExodusToolbarController = interface;
-  IExodusToolbarControllerDisp = dispinterface;
   IExodusToolbarButton = interface;
   IExodusToolbarButtonDisp = dispinterface;
   IExodusControlForm = interface;
@@ -383,6 +380,7 @@ type
   ExodusRosterGroup = IExodusRosterGroup;
   ExodusEntityCache = IExodusEntityCache;
   ExodusEntity = IExodusEntity;
+  ExodusToolbar = IExodusToolbar;
   ExodusLogMsg = IExodusLogMsg;
   ExodusLogListener = IExodusLogListener;
   ExodusBookmarkManager = IExodusBookmarkManager;
@@ -408,11 +406,10 @@ type
   ExodusRosterImages = IExodusRosterImages;
   COMExodusHover = IExodusHover;
   ExodusEventXML = IDispatch;
+  ExodusPacketDispatcher = IExodusPacketDispatcher;
   exodusController = IExodusController;
   MainToolBarImages = IExodusRosterImages;
   ExodusMsg = IExodusMsg;
-  ExodusToolbar = IExodusToolbar;
-  ExodusPacketDispatcher = IExodusPacketDispatcher;
 
 
 // *********************************************************************//
@@ -3971,48 +3968,6 @@ type
   end;
 
 // *********************************************************************//
-// Interface: IExodusToolbarController
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {0EF5DFF4-B59B-4948-983B-3119F6A89E31}
-// *********************************************************************//
-  IExodusToolbarController = interface(IDispatch)
-    ['{0EF5DFF4-B59B-4948-983B-3119F6A89E31}']
-    function AddButton(const ImageID: WideString): IExodusToolbarButton; safecall;
-    procedure RemoveButton(const button: WideString); safecall;
-    function GetButton(index: Integer): IExodusToolbarButton; safecall;
-    function AddControl(const ID: WideString): IExodusToolbarControl; safecall;
-    function Get_ImageList: IExodusRosterImages; safecall;
-    function Get_Count: Integer; safecall;
-    function Get_Name: WideString; safecall;
-    function Get_ControlCount: Integer; safecall;
-    function GetControl(const Name: WideString): IExodusToolbarControl; safecall;
-    procedure RemoveControl(const Name: WideString); safecall;
-    property ImageList: IExodusRosterImages read Get_ImageList;
-    property Count: Integer read Get_Count;
-    property Name: WideString read Get_Name;
-    property ControlCount: Integer read Get_ControlCount;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusToolbarControllerDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {0EF5DFF4-B59B-4948-983B-3119F6A89E31}
-// *********************************************************************//
-  IExodusToolbarControllerDisp = dispinterface
-    ['{0EF5DFF4-B59B-4948-983B-3119F6A89E31}']
-    function AddButton(const ImageID: WideString): IExodusToolbarButton; dispid 201;
-    procedure RemoveButton(const button: WideString); dispid 202;
-    function GetButton(index: Integer): IExodusToolbarButton; dispid 203;
-    function AddControl(const ID: WideString): IExodusToolbarControl; dispid 204;
-    property ImageList: IExodusRosterImages readonly dispid 209;
-    property Count: Integer readonly dispid 205;
-    property Name: WideString readonly dispid 207;
-    property ControlCount: Integer readonly dispid 206;
-    function GetControl(const Name: WideString): IExodusToolbarControl; dispid 208;
-    procedure RemoveControl(const Name: WideString); dispid 210;
-  end;
-
-// *********************************************************************//
 // Interface: IExodusToolbarButton
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {D4749AC4-6EBE-493B-844C-0455FF0A4A77}
@@ -5637,12 +5592,9 @@ type
     function Get_Control: IDispatch; safecall;
     function Get_ControlName: WideString; safecall;
     function Get_ControlGUID: WideString; safecall;
-    function Get_AlignClient: WordBool; safecall;
-    procedure Set_AlignClient(value: WordBool); safecall;
     property Control: IDispatch read Get_Control;
     property ControlName: WideString read Get_ControlName;
     property ControlGUID: WideString read Get_ControlGUID;
-    property AlignClient: WordBool read Get_AlignClient write Set_AlignClient;
   end;
 
 // *********************************************************************//
@@ -5655,7 +5607,6 @@ type
     property Control: IDispatch readonly dispid 201;
     property ControlName: WideString readonly dispid 202;
     property ControlGUID: WideString readonly dispid 203;
-    property AlignClient: WordBool dispid 204;
   end;
 
 // *********************************************************************//
@@ -5808,6 +5759,18 @@ type
   CoExodusEntity = class
     class function Create: IExodusEntity;
     class function CreateRemote(const MachineName: string): IExodusEntity;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusToolbar provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusToolbar exposed by              
+// the CoClass ExodusToolbar. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusToolbar = class
+    class function Create: IExodusToolbar;
+    class function CreateRemote(const MachineName: string): IExodusToolbar;
   end;
 
 // *********************************************************************//
@@ -6111,6 +6074,18 @@ type
   end;
 
 // *********************************************************************//
+// The Class CoExodusPacketDispatcher provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusPacketDispatcher exposed by              
+// the CoClass ExodusPacketDispatcher. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusPacketDispatcher = class
+    class function Create: IExodusPacketDispatcher;
+    class function CreateRemote(const MachineName: string): IExodusPacketDispatcher;
+  end;
+
+// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -6144,30 +6119,6 @@ type
   CoExodusMsg = class
     class function Create: IExodusMsg;
     class function CreateRemote(const MachineName: string): IExodusMsg;
-  end;
-
-// *********************************************************************//
-// The Class CoExodusToolbar provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusToolbar exposed by              
-// the CoClass ExodusToolbar. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoExodusToolbar = class
-    class function Create: IExodusToolbar;
-    class function CreateRemote(const MachineName: string): IExodusToolbar;
-  end;
-
-// *********************************************************************//
-// The Class CoExodusPacketDispatcher provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusPacketDispatcher exposed by              
-// the CoClass ExodusPacketDispatcher. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoExodusPacketDispatcher = class
-    class function Create: IExodusPacketDispatcher;
-    class function CreateRemote(const MachineName: string): IExodusPacketDispatcher;
   end;
 
 implementation
@@ -6232,6 +6183,16 @@ end;
 class function CoExodusEntity.CreateRemote(const MachineName: string): IExodusEntity;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusEntity) as IExodusEntity;
+end;
+
+class function CoExodusToolbar.Create: IExodusToolbar;
+begin
+  Result := CreateComObject(CLASS_ExodusToolbar) as IExodusToolbar;
+end;
+
+class function CoExodusToolbar.CreateRemote(const MachineName: string): IExodusToolbar;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusToolbar) as IExodusToolbar;
 end;
 
 class function CoExodusLogMsg.Create: IExodusLogMsg;
@@ -6484,6 +6445,16 @@ begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusEventXML) as IDispatch;
 end;
 
+class function CoExodusPacketDispatcher.Create: IExodusPacketDispatcher;
+begin
+  Result := CreateComObject(CLASS_ExodusPacketDispatcher) as IExodusPacketDispatcher;
+end;
+
+class function CoExodusPacketDispatcher.CreateRemote(const MachineName: string): IExodusPacketDispatcher;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPacketDispatcher) as IExodusPacketDispatcher;
+end;
+
 class function CoexodusController.Create: IExodusController;
 begin
   Result := CreateComObject(CLASS_exodusController) as IExodusController;
@@ -6512,26 +6483,6 @@ end;
 class function CoExodusMsg.CreateRemote(const MachineName: string): IExodusMsg;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusMsg) as IExodusMsg;
-end;
-
-class function CoExodusToolbar.Create: IExodusToolbar;
-begin
-  Result := CreateComObject(CLASS_ExodusToolbar) as IExodusToolbar;
-end;
-
-class function CoExodusToolbar.CreateRemote(const MachineName: string): IExodusToolbar;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusToolbar) as IExodusToolbar;
-end;
-
-class function CoExodusPacketDispatcher.Create: IExodusPacketDispatcher;
-begin
-  Result := CreateComObject(CLASS_ExodusPacketDispatcher) as IExodusPacketDispatcher;
-end;
-
-class function CoExodusPacketDispatcher.CreateRemote(const MachineName: string): IExodusPacketDispatcher;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPacketDispatcher) as IExodusPacketDispatcher;
 end;
 
 end.

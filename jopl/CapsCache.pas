@@ -34,7 +34,7 @@ type
         _verified: Boolean;
 
     protected
-        procedure _processDiscoInfo(const tag: TXMLTag); override;
+        procedure _processDiscoInfo(tag: TXMLTag); override;
         function CalculateHash(): Widestring;
 
         property Version: Widestring read _ver write _ver;
@@ -91,6 +91,7 @@ type
         procedure addPending(ejid, node, caps_jid: Widestring);
         procedure fireCaps(jid, capid: Widestring);
 
+        procedure RemoveCached(e: TJabberCapsEntity);
         procedure AddCached(e: TJabberCapsEntity);
     public
         constructor Create();
@@ -377,6 +378,17 @@ begin
     if (idx = -1) then
         _cache.AddObject(e.Node, e);
 end;
+{---------------------------------------}
+procedure TJabberCapsCache.RemoveCached(e: TJabberCapsEntity);
+var
+    idx: Integer;
+begin
+    if (e = nil) then exit;
+
+    idx := _cache.IndexOfObject(e);
+    if (idx <> -1) then
+        _cache.Delete(idx);
+end;
 
 {---------------------------------------}
 procedure TJabberCapsCache.PresCallback(event: string; tag: TXMLTag);
@@ -543,7 +555,7 @@ begin
 end;
 
 {--------------------------}
-procedure TJabberCapsEntity._processDiscoInfo(const tag: TXMLTag);
+procedure TJabberCapsEntity._processDiscoInfo(tag: TXMLTag);
 begin
     inherited _processDiscoInfo(tag);
 
@@ -669,6 +681,7 @@ begin
     tjid.Free();
 
     // no node or uri#ver
+    addFeature(XMLNS_AGENTS);
 
     addFeature(XMLNS_IQOOB);
     addFeature(XMLNS_TIME);
@@ -694,7 +707,6 @@ begin
     addFeature(XMLNS_BYTESTREAMS);
 
 {$IFDEF DEPRICATED_PROTOCOL}
-    addFeature(XMLNS_AGENTS);
     addFeature(XMLNS_BROWSE);
     addFeature(XMLNS_XCONFERENCE);
 {$ENDIF}

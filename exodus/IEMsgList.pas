@@ -100,7 +100,7 @@ type
     constructor Create(controller: IExodusController);
 {$ENDIF}
 
-    function dateSeparator(const msg: TJabberMessage): widestring;
+    function dateSeperator(const msg: TJabberMessage): widestring;
     function ProcessDisplayMsg(const Msg: TJabberMessage): widestring; overload;
     function ProcessDisplayMsg(const Msg: TJabberMessage; var id:widestring): widestring; overload;
     function ProcessPresenceMsg(const nick: widestring; const txt: Widestring; const timestamp: string): widestring;
@@ -706,7 +706,7 @@ begin
 end;
 
 {---------------------------------------}
-function TIEMsgListProcessor.dateSeparator(const msg: TJabberMessage): widestring;
+function TIEMsgListProcessor.dateSeperator(const msg: TJabberMessage): widestring;
 var
     t: TDateTime;
 begin
@@ -720,7 +720,7 @@ begin
                 (msg.Subject = '')) then begin
                 Result := '<div class="date">' +
                        '<span>' +
-                       HTML_EscapeChars(FormatDateTime(_getPrefString('date_separator_format'), t), false, true) +
+                       DateToStr(t) +
                        '</span>' +
                        '</div>';
 
@@ -969,8 +969,6 @@ begin
         _queue.Free();
 
         _msgProcessor.Free();
-
-        FreeAndNil(_webBrowserUI);
     except
     end;
 
@@ -1110,7 +1108,7 @@ var
 begin
     if (msg = nil) then exit;
 
-    txt := _msgProcessor.dateSeparator(msg);
+    txt := _msgProcessor.dateSeperator(msg);
     if ((_doMessageLimiting) and (txt <> '')) then begin
         Inc(_msgCount);
     end;
@@ -1188,7 +1186,7 @@ begin
             tmsg.Time := dtTimestamp;
             tmsg.Subject := '';
             tmsg.Nick := nick;
-            ds := _msgProcessor.dateSeparator(tmsg);
+            ds := _msgProcessor.dateSeperator(tmsg);
             if (ds <> '') then begin
                 writeHTML(ds);
             end;
@@ -1351,7 +1349,6 @@ begin
         end;
         _msgProcessor.lastLineClass := stag.GetBasicText('lastlineclass');
         _msgProcessor.idCount := StrToInt(stag.GetBasicText('idcount'));
-        stag.Free();
     end;
 
     writeHTML(txt);

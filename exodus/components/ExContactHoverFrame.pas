@@ -5,12 +5,13 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
   Dialogs, ExFrame, StdCtrls, ExtCtrls, ExGraphicButton, Exodus_TLB, ActnList,
-  ExBrandPanel, ExGroupBox, TntStdCtrls, Avatar, XMLVCard;
+  ExBrandPanel, ExGroupBox, TntStdCtrls, Avatar;
 
 type
   TExContactHoverFrame = class(TExFrame)
     lblDisplayName: TTntLabel;
     lblUID: TTntLabel;
+    lblPhoneNumber: TTntLabel;
     btnRename: TExGraphicButton;
     btnDelete: TExGraphicButton;
     btnChat: TExGraphicButton;
@@ -19,7 +20,7 @@ type
     Separator2: TExGroupBox;
     Separator1: TExGroupBox;
     imgAvatar: TPaintBox;
-    lblPhone: TTntLabel;
+    TntLabel1: TTntLabel;
     procedure TntFrameMouseLeave(Sender: TObject);
     procedure TntFrameMouseEnter(Sender: TObject);
     procedure InitControls(Item: IExodusItem);
@@ -28,7 +29,7 @@ type
       Y: Integer);
     procedure imgAvatarMouseEnter(Sender: TObject);
     procedure imgAvatarMouseLeave(Sender: TObject);
-    procedure TnTLabel1MouseLeave(Sender: TObject);
+    procedure lblPhoneNumberMouseLeave(Sender: TObject);
     procedure imgPresenceMouseEnter(Sender: TObject);
     procedure imgPresenceMouseLeave(Sender: TObject);
     procedure lblDisplayNameMouseEnter(Sender: TObject);
@@ -36,7 +37,7 @@ type
     procedure lblPresenceMouseEnter(Sender: TObject);
     procedure lblUIDMouseEnter(Sender: TObject);
     procedure lblUIDMouseLeave(Sender: TObject);
-    procedure TnTLabel1MouseEnter(Sender: TObject);
+    procedure lblPhoneNumberMouseEnter(Sender: TObject);
     procedure lblPresenceMouseLeave(Sender: TObject);
     procedure btnChatMouseEnter(Sender: TObject);
     procedure btnChatMouseLeave(Sender: TObject);
@@ -47,7 +48,6 @@ type
     procedure imgAvatarPaint(Sender: TObject);
     procedure btnRenameClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
-    procedure vcardCallback(UID: Widestring; vcard: TXMLVCard);
   private
     { Private declarations }
     _Items: IExodusItemList;
@@ -55,7 +55,6 @@ type
     _UnknownAvatar: TBitmap;
     _TypedActs: IExodusTypedActions;
     _ActMap: IExodusActionMap;
-    _Loaded: Boolean;
     
     //
     procedure _BuildActions();
@@ -70,7 +69,7 @@ type
 
 implementation
 uses ExItemHoverForm, ExForm, Session, Jabber1, Presence, COMExodusItemList,
-     ExActionCtrl, TntSysUtils, XMLVCardCache, gnugettext;
+     ExActionCtrl;
 
 {$R *.dfm}
 
@@ -87,13 +86,10 @@ procedure TExContactHoverFrame.InitControls(Item: IExodusItem);
 begin
     _Items.Clear();
     _Items.Add(Item);
-
-    _Loaded := false;
+    
     Separator1.Caption := '';
     Separator2.Caption := '';
     lblDisplayName.Caption := Item.Text;
-    lblDisplayName.Caption := Tnt_WideStringReplace(Item.Text, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
-
     lblDisplayName.Hint := Item.Text;
     lblDisplayName.ShowHint := true;
     lblUID.Hint := Item.UID;
@@ -105,6 +101,8 @@ begin
     _GetAvatar();
     _GetPresence();
     _BuildActions();
+
+
 end;
 
 procedure TExContactHoverFrame._GetPresence();
@@ -161,53 +159,18 @@ begin
     if (_UnknownAvatar.Empty) then
         frmExodus.bigImages.GetBitmap(0, _UnknownAvatar);
     _Avatar := nil;
-    GetVCardCache().find(_Items.Item[0].uid, vcardCallback);
-    if (not _Loaded) then begin
-        lblPhone.Caption := _('N/A');
-        imgAvatar.Invalidate();
+    Avatar := Avatars.Find(_Items.Item[0].uid);
+    if ((Avatar <> nil) and (Avatar.isValid())) then
+    begin
+        if (Avatar.Height >= 0) then
+        begin
+            _Avatar := Avatar;
+            if (_Avatar.Height > 32) then
+                imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+            else
+                imgAvatar.Width := _avatar.Width;
+        end;
     end;
-end;
-
-procedure TExContactHoverFrame.vcardCallback(UID: Widestring; vcard: TXMLVCard);
-var
-    number: Widestring;
-    avatar: TAvatar;
-begin
-   if (UID <> _Items.Item[0].uid) then exit;
-
-   //Assume "nothing"
-   avatar := nil;
-   number := '';
-
-   if (vcard <> nil) then begin
-       number := vcard.WorkPhone.number;
-       if (number = '') then
-         number := vcard.WorkCell.number;
-       if (number = '') then
-         number := vcard.HomePhone.number;
-       if (number = '') then
-         number := vcard.HomeCell.number;
-
-       avatar := vcard.Picture;
-       if (avatar = nil) or (not avatar.isValid) or (avatar.Height < 0) then
-           avatar := nil;
-   end;
-
-   if (number = '') then
-     number := _('N/A');
-
-   _Avatar := avatar;
-   if (avatar <> nil) then begin
-     if (_Avatar.Height > 32) then
-       imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
-     else
-       imgAvatar.Width := _Avatar.Width;
-
-   end;
-
-   lblPhone.Caption := number;
-   imgAvatar.Invalidate;
-   _Loaded := true;
 end;
 
 procedure TExContactHoverFrame.btnChatClick(Sender: TObject);
@@ -354,13 +317,13 @@ begin
   TExItemHoverForm(Parent).CancelHover();
 end;
 
-procedure TExContactHoverFrame.TnTLabel1MouseEnter(Sender: TObject);
+procedure TExContactHoverFrame.lblPhoneNumberMouseEnter(Sender: TObject);
 begin
   inherited;
   TExItemHoverForm(Parent).SetHover();
 end;
 
-procedure TExContactHoverFrame.TnTLabel1MouseLeave(Sender: TObject);
+procedure TExContactHoverFrame.lblPhoneNumberMouseLeave(Sender: TObject);
 begin
   inherited;
   TExItemHoverForm(Parent).CancelHover();

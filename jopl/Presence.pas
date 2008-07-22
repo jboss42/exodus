@@ -345,7 +345,6 @@ var
     p, curp: TJabberPres;
     pi: integer;
     s: TJabberSession;
-    e: TJabberEntity;
 begin
     // we are getting a new pres packet
     curp := TJabberPres.Create(tag);
@@ -363,18 +362,8 @@ begin
             p := FindPres(curp.fromJid.jid, '');
 
             // Update the EntityCache if necessary
-            e := jEntityCache.getByJid(curp.fromJid.jid);
-            if (e <> nil) then
-            begin
-                jEntityCache.Remove(e);
-                e.Free();
-            end;
-            e := jEntityCache.getByJid(curp.fromJid.full);
-            if (e <> nil) then
-            begin
-                jEntityCache.Remove(e);
-                e.Free();
-            end;
+            jEntityCache.RemoveJid(curp.fromJid.jid);
+            jEntityCache.RemoveJid(curp.fromJid.full);
 
             // if there are no more presence packets, they are offline.
             if (p = nil) then begin

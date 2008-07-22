@@ -1042,7 +1042,6 @@ begin
         FreeAndNil(_roster_menus);
         FreeAndNil(_msg_menus);
         FreeAndNil(_parser);
-        FreeAndNil(_caps_exts);
         inherited;
 
     end;

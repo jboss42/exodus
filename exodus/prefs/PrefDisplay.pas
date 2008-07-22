@@ -87,10 +87,6 @@ type
     chkGlue: TTntCheckBox;
     trkGlue: TTrackBar;
     txtGlue: TExNumericEdit;
-    pnlDateSeparator: TExBrandPanel;
-    lblDateSeparatorFmt: TTntLabel;
-    chkDateSeparator: TTntCheckBox;
-    txtDateSeparatorFmt: TTntComboBox;
     procedure btnEmoSettingsClick(Sender: TObject);
     procedure chkEmoticonsClick(Sender: TObject);
     procedure txtChatMemoryChange(Sender: TObject);

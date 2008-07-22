@@ -183,7 +183,7 @@ begin
         lblJID.Caption := _('Disconnected');
     end;
 
-    _windowType := 'console';
+    _windowType := 'debug';
 end;
 
 function TfrmDebug.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;

@@ -258,7 +258,6 @@ begin
                break;
             end;
           end;
-          headerList.Free();
         end;
 
         // Rich text formating XEP-71

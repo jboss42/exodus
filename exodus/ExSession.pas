@@ -125,14 +125,13 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    Avatar, AvatarCache, NewUser, RosterImages, RosterForm,
+    Avatar, NewUser, RosterImages, RosterForm,
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger, DebugManager,
-    XMLVCardCache, ExVCardCache,
     InviteReceived,
     ExForm,
     HistorySearch,
@@ -380,22 +379,6 @@ begin
     // Create our main Session object
     MainSession := TJabberSession.Create(config);
 
-    // Check for a single instance
-    if (MainSession.Prefs.getBool('single_instance')) then begin
-        _mutex := CreateMutex(nil, true, PChar(getAppInfo().ID +
-            ExtractFileName(config)));
-        if (_mutex <> 0) and (GetLastError = 0) then begin
-            // we are good to go..
-        end
-        else begin
-            // We are not good to go..
-            // Send the Windows Msg, and bail.
-            PostMessage(HWND_BROADCAST, sExodusMutex, 0, 0);
-            Result := false;
-            exit;
-        end;
-    end;
-
     //set default font and window color
     tstr := MainSession.Prefs.getString('brand_default_font_name');
     if ((tstr <> '') and (Screen.Fonts.IndexOf(tstr) <> -1)) then begin
@@ -433,44 +416,21 @@ begin
         UseLanguage(tmp_locale);
     end;
 
-    // Setup SQL DB
-    dbfile := MainSession.Prefs.getString('datastore');
-    if (dbfile = '') then begin
-        // No db file specified in prefs/branding/etc.
-        // Default to MyDocs/appname/appname.db
-        dbfile := getUserDir() +
-                  getAppInfo().ID +
-                  '.db';
-    end;
-
-    try
-        DataStore := TExodusDataStore.Create(dbfile);
-        DataStore.ObjAddRef();
-        MsgLogger := TSQLLogger.Create();
-        HistorySearchManager := TExodusHistorySearchManager.Create();
-        HistorySearchManager.ObjAddRef();
-        SQLSearch := TSQLSearchHandler.Create();
-        SQLSearch.ObjAddRef(); // Prevent early releases of this object
-    except
-        DataStore := nil;
-        MsgLogger := nil;
-        HistorySearchManager := nil;
-        SQLSearch := nil;
-    end;
-
-    try
-        if (DataStore <> nil) then begin
-            case MainSession.Prefs.getInt('sqlite_table_synchronous_level') of
-                2: DataStore.ExecSQL('PRAGMA synchronous = FULL;');
-                1: DataStore.ExecSQL('PRAGMA synchronous = NORMAL;');
-                else DataStore.ExecSQL('PRAGMA synchronous = OFF;');
-            end;
+    // Check for a single instance
+    if (MainSession.Prefs.getBool('single_instance')) then begin
+        _mutex := CreateMutex(nil, true, PChar(getAppInfo().ID +
+            ExtractFileName(config)));
+        if (_mutex <> 0) and (GetLastError = 0) then begin
+            // we are good to go..
+        end
+        else begin
+            // We are not good to go..
+            // Send the Windows Msg, and bail.
+            PostMessage(HWND_BROADCAST, sExodusMutex, 0, 0);
+            Result := false;
+            exit;
         end;
-    finally
     end;
-
-    // Caches
-    SetVCardCache(TExVCardCache.Create(MainSession));
 
     // COM Controller
     ExRegController := TRegController.Create();
@@ -659,8 +619,8 @@ begin
 
     ExCOMEntityCache := TExodusEntityCache.Create();
     COMEntityCache := ExCOMEntityCache;
-//    ExCOMToolbar := TExodusToolbar.Create(); //created in jabber1
-//    COMToolbar := ExCOMToolbar;
+    ExCOMToolbar := TExodusToolbar.Create();
+    COMToolbar := ExCOMToolbar;
     ExCOMBookmarkManager := TExodusBookmarkManager.Create();
     COMBookmarkManager := ExCOMBookmarkManager;
 
@@ -677,6 +637,42 @@ begin
     MiscMessages.SetSession(MainSession);
     //create a roster early so all other windows can get east access
     RosterForm.GetRosterWindow().InitControlls();
+
+    // Setup SQL DB
+    dbfile := MainSession.Prefs.getString('datastore');
+    if (dbfile = '') then begin
+        // No db file specified in prefs/branding/etc.
+        // Default to MyDocs/appname/appname.db
+        dbfile := getUserDir() +
+                  getAppInfo().ID +
+                  '.db';
+    end;
+
+    try
+        DataStore := TExodusDataStore.Create(dbfile);
+        DataStore.ObjAddRef();
+        MsgLogger := TSQLLogger.Create();
+        HistorySearchManager := TExodusHistorySearchManager.Create();
+        HistorySearchManager.ObjAddRef();
+        SQLSearch := TSQLSearchHandler.Create();
+        SQLSearch.ObjAddRef(); // Prevent early releases of this object
+    except
+        DataStore := nil;
+        MsgLogger := nil;
+        HistorySearchManager := nil;
+        SQLSearch := nil;
+    end;
+
+    try
+        if (DataStore <> nil) then begin
+            case MainSession.Prefs.getInt('sqlite_table_synchronous_level') of
+                2: DataStore.ExecSQL('PRAGMA synchronous = FULL;');
+                1: DataStore.ExecSQL('PRAGMA synchronous = NORMAL;');
+                else DataStore.ExecSQL('PRAGMA synchronous = OFF;');
+            end;
+        end;
+    finally
+    end;
 
     if (MainSession.Prefs.getBool('brand_history_search')) then begin
         HistoryAction.Enabled := true;

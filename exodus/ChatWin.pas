@@ -243,7 +243,7 @@ uses
     Jabber1, Profile, MsgDisplay, GnuGetText,
     ContactController, Session, XMLUtils,
     ShellAPI, RosterForm, Emoticons,
-    Entity, AvatarCache,
+    Entity,
     XMLParser,
     RT_XIMConversion,
     EntityCache,
@@ -461,13 +461,14 @@ begin
         for i := Count - 1 downto 0 do begin
             c := TChatController(Objects[i]);
             Delete(i);
+            if (c.window = nil) then
+              c.Free();
             if ((c <> nil) and (c.window <> nil)) then begin
                 TfrmChat(c.window)._warn_busyclose := false; //don't warn on all close
                 TfrmChat(c.window).Close();
                 TfrmChat(c.window).Free();
                 //Application.ProcessMessages();
             end;
-            c.Free();
         end;
     end;
 end;

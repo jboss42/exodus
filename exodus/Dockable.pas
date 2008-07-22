@@ -25,19 +25,44 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ImgList, Buttons, ToolWin, Contnrs,
     ExtCtrls, TntComCtrls, StateForm, Unicode, XMLTag, buttonFrame, JabberMsg,
-    Menus, TntMenus, TntExtCtrls, Exodus_TLB, COMToolbar, COMDockToolbar;
+  Menus, TntMenus, TntExtCtrls;
 
   function generateUID(): widestring;
 
 type
+
+  TDockNotify = procedure of object;
+
+  TDockbarButton = class
+  private
+    _button: TToolButton;
+    _callback: TDockNotify;
+    _parentForm: TForm;
+
+    function getImageIndex(): integer;
+    procedure setImageIndex(ii: integer);
+    function getHint(): WideString;
+    procedure setHint(hint: Widestring);
+    procedure OnClickEvent(Sender: TObject);
+  protected
+  public
+    constructor create();
+    destructor Destroy();override;
+
+    property Hint: WideString read getHint write setHint;
+    property ImageIndex: integer read getImageIndex write setImageIndex;
+    property OnClick: TDockNotify read _callback write _callback;
+    property Parent: TForm read _parentForm;
+  end;
+
+
   {
     Dockable forms may be docked/undocked either through drag -n- dock operations
     or programatically through their DockForm/FloatForm methods. Because there
     are two different paths that result in this state change One set of events
     has been defined that will fire in either case.
   }
-  TfrmDockable = class(TfrmState, IControlDelegate)
-    pnlDock: TTntPanel;
+  TfrmDockable = class(TfrmState)
     pnlDockTop: TTntPanel;
     pnlDockTopContainer: TTntPanel;
     tbDockBar: TToolBar;
@@ -65,8 +90,7 @@ type
     procedure btnCloseDockClick(Sender: TObject);
     procedure btnDockToggleClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormDestroy(Sender: TObject);
-    procedure pnlDockResize(Sender: TObject);
+    procedure TntFormDestroy(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
@@ -90,8 +114,6 @@ type
     _lastActivity: TDateTime; // what was the last activity for this window
     _closing: boolean; // Is the window closing (for updatedocked() call);
 
-    _COMDockbar: IExodusDockToolbar;
-    
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
     procedure prefsCallback(event: string; tag: TXMLTag);
@@ -122,8 +144,7 @@ type
     function GetUnreadMsgCount(): Integer;virtual;
     procedure updateDocked(); virtual;
 
-    function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;virtual;
-    function GetDockbar(): IExodusDockToolbar;
+
   public
     _windowType: widestring; // what kind of dockable window is this
 
@@ -158,6 +179,8 @@ type
     procedure OnNotify(notifyEvents: integer);override;
 
     procedure gotActivate();override;
+    procedure addDockbarButton(button: TDockbarButton);
+    procedure removeDockbarButton(button: TDockbarButton);
 
     {
         Get the UID for the window.
@@ -191,7 +214,6 @@ type
     property LastActivity: TDateTime read _lastActivity write _lastActivity;
     property WindowType: widestring read _windowType write _windowType;
     property PersistUnreadMessages: boolean read _persistMessages write _persistMEssages;
-    property Dockbar: IExodusDockToolbar read GetDockbar;
   end;
 
 var
@@ -206,7 +228,6 @@ uses
     PrefController,
     RosterImages,
     JabberConst,
-    ExSession,
     IDGlobal,
     XMLUtils, XMLParser, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
@@ -214,6 +235,50 @@ function generateUID(): widestring;
 begin
     Inc(dockable_uid);
     Result := 'dockableUID_' + inttostr(dockable_uid);
+end;
+
+constructor TDockbarButton.create();
+begin
+    inherited create();
+    _button := TToolButton.create(nil);
+    _button.OnClick := OnClickEvent;
+    _button.ShowHint := true;
+    _callback := nil;
+    _parentForm := nil;
+end;
+
+function TDockbarButton.getImageIndex(): integer;
+begin
+    Result := _button.ImageIndex;
+end;
+
+procedure TDockbarButton.setImageIndex(ii: integer);
+begin
+    _button.ImageIndex := ii;
+end;
+
+function TDockbarButton.getHint(): WideString;
+begin
+    Result := _button.Hint;
+end;
+
+procedure TDockbarButton.setHint(hint: Widestring);
+begin
+    _button.Hint := hint;
+end;
+
+procedure TDockbarButton.OnClickEvent(Sender: TObject);
+begin
+    if (Assigned(_callback)) then
+        _callback();
+end;
+
+destructor TDockbarButton.Destroy();
+begin
+    _parentForm := nil;
+    _button.Parent := nil;
+    _button.free();
+    inherited;
 end;
 
 Constructor TfrmDockable.Create(AOwner: TComponent);
@@ -240,18 +305,6 @@ begin
     activating := false;
 
     _uid := generateUID();
-end;
-
-function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
-begin
-    Result := nil;
-end;
-
-function TfrmDockable.GetDockbar(): IExodusDockToolbar;
-begin
-    if (_COMDockbar = nil) then
-        _COMDockbar := TExodusDockToolbar.create(tbDockbar, ExSession.COMRosterImages, Self, 'dockbar', false);
-    Result := _COMDockbar;
 end;
 
 {---------------------------------------}
@@ -539,6 +592,18 @@ begin
     inherited; //inherited will handle isNotifying and floating window notifications
 end;
 
+procedure TfrmDockable.addDockbarButton(button: TDockbarButton);
+begin
+    button._button.Parent := tbDockbar;
+    button._parentForm := Self;
+end;
+
+procedure TfrmDockable.removeDockbarButton(button: TDockbarButton);
+begin
+    button._button.Parent := nil;
+    button._parentForm := nil;
+end;
+
 procedure TfrmDockable.showDockbar(show: boolean);
 begin
     tbDockBar.Visible := show;
@@ -549,11 +614,10 @@ begin
     pnlDockTop.Visible := show;
 end;
 
-procedure TfrmDockable.FormDestroy(Sender: TObject);
+procedure TfrmDockable.TntFormDestroy(Sender: TObject);
 begin
-    _unreadMessages.free();
-    _COMDockbar := nil;
     inherited;
+    _unreadMessages.free();
 end;
 
 procedure TfrmDockable.showCloseButton(show: boolean);
@@ -564,16 +628,6 @@ end;
 procedure TfrmDockable.showDockToggleButton(show: boolean);
 begin
     btnDockToggle.Visible := show;
-end;
-
-procedure TfrmDockable.pnlDockResize(Sender: TObject);
-var
-    i: integer;
-begin
-    inherited;
-    //ask parent form to realign, allowing panel to be completely shown
-//    for i := 0 to Self.ControlCount - 1 do
-//        Controls[i].Align := Controls[i].Align;
 end;
 
 procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);
