@@ -290,7 +290,7 @@
     <aa_reduce_pri value="1" control="chkAAReducePri" state="rw"/>
     <away_auto_response value="0" control="chkAwayAutoResponse" state="rw"/>
     <away_screen_saver value="1" control="chkAwayScreenSaver" state="rw"/>
-    <away_full_screen value="1" control="chkAwayFullScreen" state="rw"/>
+    <away_full_screen value="0" control="chkAwayFullScreen" state="inv"/>
     <away_status control="txtAway" value="Away as a result of idle" state="rw">
       <control name="lblAwayStatus"/>
     </away_status>

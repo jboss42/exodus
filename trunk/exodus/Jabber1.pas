@@ -1172,6 +1172,14 @@ var
     s: TXMLTag;
     prefstate: TPrefState;
     adVal: Widestring;
+
+    function _GetAppMenuName(): Widestring;
+    begin
+        Result := MainSession.Prefs.getString('brand_application_id');
+        if (Pos('&', Result) = 0) then begin
+            Result := '&' + Result;
+        end;
+    end;
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
 
@@ -1242,7 +1250,7 @@ begin
         Exodus1.Caption := getAppInfo.ID;
         RestorePosition(Self);
 
-        File1.Caption := GetString('brand_application_id');
+        File1.Caption := _GetAppMenuName();
         About1.Caption := _('About ') + getAppInfo.Caption;
 
         menu_list := TWideStringList.Create();
@@ -4194,6 +4202,7 @@ begin
                (MainSession.Prefs.getBool('auto_away')) and
                (MainSession.Prefs.getBool('away_full_screen'))) then begin
                result := DT_FULLSCREEN;
+               //result := DT_UNKNOWN;
                exit;
             end;
         end;
