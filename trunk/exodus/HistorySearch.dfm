@@ -290,15 +290,17 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = btnRemoveRoomClick
         end
         object lstRooms: TTntListBox
-          Left = 3
+          Left = 0
           Top = 19
           Width = 160
           Height = 96
+          Style = lbOwnerDrawFixed
           Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           MultiSelect = True
           TabOrder = 2
           OnClick = lstRoomsClick
+          OnDrawItem = lstRoomsDrawItem
         end
       end
       object grpPriority: TTntGroupBox
