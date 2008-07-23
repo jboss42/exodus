@@ -1787,8 +1787,8 @@ begin
     else begin
         r.Top := 1;
         r.Left := 1;
-        r.Bottom := 28;
-        r.Right := 28;
+        r.Bottom := imgAvatar.Height;
+        r.Right := imgAvatar.Width;
         imgAvatar.Canvas.StretchDraw(r, _unknown_avatar);
     end;
 end;
