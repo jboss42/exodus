@@ -372,14 +372,18 @@ function getDisplayField(fld: string): string;
 begin
     // send back "well formatted" field names
 
-    if (fld = 'nick') then result := _('Nickname:')
-    else if (fld = 'first') then result := _('First Name:')
-    else if (fld = 'last') then result := _('Last Name:')
-    else if (fld = 'email') then result := _('EMail Address:')
+    if (fld = 'nickname') then result := _('Nickname')
+    else if (fld = 'first') then result := _('First Name')
+    else if (fld = 'last') then result := _('Last Name')
+    else if (fld = 'email') then result := _('EMail Address')
     else if (fld = 'password') then result := _('Password')
-    else if (fld = 'username') then result := _('UserName:')
+    else if (fld = 'username') then result := _('UserName')
     else
-        result := fld;
+    begin
+        fld[1] :=  UpCase(fld[1]);
+        result :=  fld;
+    end;
+
 end;
 
 Procedure DebugMsgBox(msg : string);
