@@ -30,7 +30,7 @@ type
     _lastError: Widestring;
     _validated: boolean;
     _itemTextColor: TColor;
-    
+
     function GetIsValid(): boolean;
 
   public
@@ -232,8 +232,8 @@ procedure ShowSendBroadcast(popItems: IExodusItemList;    //initial populated ji
 var
     idx: Integer;
     item: IExodusItem;
-    uids: TWidestringList;
     fullItemList: IExodusItemList;
+    bForm: TdlgSndBroadcast;
 begin
     fullItemList := TExodusItemList.Create(); //released when out of scope
     for idx := 0 to popItems.Count - 1 do
@@ -241,14 +241,13 @@ begin
         item := popItems.Item[idx];
         ExpandAndAddItems(item, fullItemList);
     end;
-    //now walk the fully expanded list and populate uid list
-    uids := TWidestringList.Create;
-    for idx := 0 to fullItemList.Count - 1 do
-    begin
-        uids.Add(fullItemList.Item[idx].UID)
-    end;
-    ShowSendBroadcast(uids, popSubject, popMessage);
-    uids.free();
+    bForm := TdlgSndBroadcast.create(Application);
+    bForm.AddRecipientsByItems(fullItemList);
+
+    bForm.Subject := popSubject;
+    bForm.PlaintextMessage := popMessage;
+    bForm.Show();
+
 end;
 
 {------------------------------------------------------------------------------}
@@ -373,7 +372,7 @@ begin
         else begin
             item := GetExodusItem();
 
-            if (_ITYPE = EI_TYPE_CONTACT) and (item.value['network'] <> '') then
+            if (_ITYPE = EI_TYPE_CONTACT) and (item.value['network'] <> 'xmpp') then
                 _lastError := ESTR_OUT_OF_NETWORK
             else if (_ITYPE = EI_TYPE_ROOM) then
             begin
@@ -675,7 +674,8 @@ end;
 {------------------------------------------------------------------------------}
 procedure TdlgSndBroadcast.AddRecipientByItem(item: IExodusItem);
 begin
-    AddRecipient(TItemInfo.Create(item.UID, item));
+    if (_supportedTypes.IndexOf(item.Type_) <> -1) then
+        AddRecipient(TItemInfo.Create(item.UID, item));
 end;
 
 {------------------------------------------------------------------------------}
