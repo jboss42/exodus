@@ -252,9 +252,9 @@ begin
         _dockbarControl := nil;
         pnlDock.Align := alNone;
         pnlDock.AutoSize := false;
-        pnlDock.Height := pnlDock.Height + 24;
+        pnlDock.Height := pnlDock.Height + 21;
         pnlDockControlSite.AutoSize := false;
-        pnlDockControlSite.Height := 24;
+        pnlDockControlSite.Height := 21;
 
         _dockbarControl := TExodusControlSite.create(nil, pnlDockControlSite, StringToGUID(ID));
         _dockbarControl.AlignClient := true;
