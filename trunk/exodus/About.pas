@@ -63,7 +63,7 @@ const
     sAbout3 = 'SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de';
     sAbout4 = 'Unicode library is Copyright (c) 1999, 2000 Mike Lischke (public@lischke-online.de) and Portions Copyright (c) 1999, 2000 Azret Botash (az).';
     sAbout5 = 'RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>';
-    sAbout6 = 'PNG Delphi is Copyright (c) 2006, Gustavo Huffenbacher Daud. http://pngdelphi.sourceforge.net';
+    sAbout6 = 'PNG Delphi is Copyright (c) 2006, Gustavo Huffenbacher Daud.';
 
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin
