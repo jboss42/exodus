@@ -109,16 +109,14 @@ begin
         _tbName := '';
     except
         on E:Exception do
-        begin
             DebugMessage('Exception in ' + Self.ClassName + '.Destroy, (' + E.Message + ')');
-        end;
     end;
     inherited;
 end;
 
 procedure TExodusToolbarBase.Initialize();
 begin
-    _buttons := TObjectList.create(false); //free buttons on delete etc.
+    _buttons := TObjectList.create(true); //free buttons on delete etc.
     _imgList := nil;
     _btnBar := nil;
     _controlProxy := nil;
@@ -170,7 +168,7 @@ begin
         oldleft := _btnBar.Buttons[_btnBar.ButtonCount - 1].Left + _btnBar.Buttons[_btnBar.ButtonCount - 1].Width;
         _btnBar.AutoSize := false;
 
-        btn := TToolButton.Create(_btnBar); //proxy manages lifetime
+        btn := TToolButton.Create(nil); //proxy manages lifetime
         _buttons.add(btn);
 
         btn.ShowHint := true;
@@ -250,9 +248,17 @@ end;
 
 function TExodusToolbarBase.AddControl(const ID: WideString): IExodusToolbarControl;
 begin
-    Result := nil;
-    if (_controlProxy <> nil) then
-        Result := _controlProxy.AddControl(ID, _tbName);
+    try
+        Result := nil;
+        if (_controlProxy <> nil) then
+            Result := _controlProxy.AddControl(ID, _tbName);
+    except
+        on E:Exception do
+        begin
+            DebugMessage('Exception in ' + Self.ClassName + '.AddControl, ID: ' + ID + ', (' + E.Message + ')');
+            Result := nil;
+        end;
+    end;
 end;
 
 function TExodusToolbar.AddButton(const ImageID: WideString): IExodusToolbarButton;

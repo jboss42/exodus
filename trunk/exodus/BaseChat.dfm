@@ -1,20 +1,20 @@
 inherited frmBaseChat: TfrmBaseChat
   Left = 414
   Top = 474
-  ClientHeight = 260
-  ClientWidth = 415
+  ClientHeight = 320
+  ClientWidth = 511
   OnDestroy = FormDestroy
   OnResize = TntFormResize
-  ExplicitWidth = 423
-  ExplicitHeight = 288
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 519
+  ExplicitHeight = 353
+  PixelsPerInch = 120
+  TextHeight = 16
   object Splitter1: TSplitter [0]
     AlignWithMargins = True
     Left = 4
-    Top = 191
-    Width = 407
-    Height = 4
+    Top = 235
+    Width = 503
+    Height = 5
     Cursor = crVSplit
     Margins.Left = 4
     Margins.Top = 0
@@ -24,18 +24,16 @@ inherited frmBaseChat: TfrmBaseChat
     AutoSnap = False
     Beveled = True
     OnMoved = Splitter1Moved
-    ExplicitLeft = 3
-    ExplicitWidth = 409
+    ExplicitLeft = 5
+    ExplicitWidth = 501
   end
   inherited pnlDock: TTntPanel
-    Width = 415
+    Width = 511
     TabOrder = 2
-    ExplicitWidth = 415
+    ExplicitWidth = 511
     inherited pnlDockTopContainer: TTntPanel
-      Width = 415
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 415
+      Width = 511
+      ExplicitWidth = 511
       inherited tbDockBar: TToolBar
         Left = 366
         ExplicitLeft = 366
@@ -49,14 +47,14 @@ inherited frmBaseChat: TfrmBaseChat
         end
       end
       inherited pnlDockTop: TTntPanel
-        Width = 363
+        Width = 447
         AutoSize = True
-        ExplicitWidth = 363
+        ExplicitWidth = 447
         object pnlChatTop: TTntPanel
           Left = 0
           Top = 0
-          Width = 363
-          Height = 28
+          Width = 447
+          Height = 34
           Align = alClient
           BevelOuter = bvNone
           ParentColor = True
@@ -65,31 +63,30 @@ inherited frmBaseChat: TfrmBaseChat
       end
     end
     inherited pnlDockControlSite: TTntPanel
-      Width = 415
-      ExplicitLeft = 0
-      ExplicitTop = 28
-      ExplicitWidth = 415
-      ExplicitHeight = 27
+      Width = 511
+      ExplicitWidth = 511
     end
   end
   object pnlMsgList: TPanel
     Left = 0
-    Top = 55
-    Width = 415
-    Height = 136
+    Top = 41
+    Width = 511
+    Height = 194
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
-    Constraints.MinHeight = 20
+    Constraints.MinHeight = 25
     ParentColor = True
     TabOrder = 0
+    ExplicitTop = 68
+    ExplicitHeight = 167
   end
   object pnlInput: TPanel
     AlignWithMargins = True
     Left = 2
-    Top = 195
-    Width = 411
-    Height = 65
+    Top = 240
+    Width = 507
+    Height = 80
     Margins.Left = 2
     Margins.Top = 0
     Margins.Right = 2
@@ -101,9 +98,9 @@ inherited frmBaseChat: TfrmBaseChat
     TabOrder = 1
     object MsgOut: TExRichEdit
       Left = 2
-      Top = 25
-      Width = 407
-      Height = 38
+      Top = 31
+      Width = 503
+      Height = 47
       Align = alClient
       AutoURLDetect = adNone
       Ctl3D = True
@@ -207,8 +204,8 @@ inherited frmBaseChat: TfrmBaseChat
     object pnlToolbar: TPanel
       Left = 2
       Top = 2
-      Width = 407
-      Height = 23
+      Width = 503
+      Height = 29
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
@@ -217,7 +214,7 @@ inherited frmBaseChat: TfrmBaseChat
         Left = 0
         Top = 0
         Width = 321
-        Height = 23
+        Height = 29
         Align = alLeft
         AutoSize = True
         ButtonWidth = 25
@@ -363,12 +360,15 @@ inherited frmBaseChat: TfrmBaseChat
       object pnlControlSite: TPanel
         Left = 321
         Top = 0
-        Width = 86
-        Height = 23
+        Width = 182
+        Height = 29
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
+        ExplicitLeft = 395
+        ExplicitWidth = 106
+        ExplicitHeight = 28
       end
     end
   end

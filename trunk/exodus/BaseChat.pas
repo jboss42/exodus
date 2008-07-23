@@ -217,6 +217,7 @@ uses
     RosterImages,
     ActivityWindow,
     ExSession,
+    COMExodusControlSite,
     COMChatController;
 
 const
@@ -240,6 +241,12 @@ end;
 function TfrmBaseChat.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
 begin
     Result := nil;
+    if (ToolbarName = 'composerbar') then
+    begin
+        Result := TExodusControlSite.Create(pnlControlSite, pnlControlSite, StringToGUID(ID));
+    end
+    else
+        Result := inherited AddControl(ID, ToolbarName);
 end;
 
 {
