@@ -7,7 +7,7 @@ inherited frmChat: TfrmChat
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 450
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
@@ -21,19 +21,19 @@ inherited frmChat: TfrmChat
     Width = 492
     ExplicitWidth = 492
     inherited pnlDockTopContainer: TTntPanel
-      Width = 490
+      Width = 492
       AutoSize = True
-      ExplicitWidth = 490
+      ExplicitWidth = 492
       inherited tbDockBar: TToolBar
-        Left = 441
-        ExplicitLeft = 441
+        Left = 443
+        ExplicitLeft = 443
       end
       inherited pnlDockTop: TTntPanel
-        Width = 438
-        ExplicitWidth = 438
+        Width = 440
+        ExplicitWidth = 440
         inherited pnlChatTop: TTntPanel
-          Width = 438
-          ExplicitWidth = 438
+          Width = 440
+          ExplicitWidth = 440
           object pnlJID: TPanel
             Left = 0
             Top = 0
@@ -67,11 +67,11 @@ inherited frmChat: TfrmChat
               Left = 4
               Top = 0
               Width = 35
-              Height = 28
+              Height = 26
               Margins.Left = 4
               Margins.Top = 0
               Margins.Right = 0
-              Margins.Bottom = 0
+              Margins.Bottom = 2
               Align = alLeft
               OnClick = imgAvatarClick
               OnPaint = imgAvatarPaint
@@ -93,16 +93,16 @@ inherited frmChat: TfrmChat
       end
     end
     inherited pnlDockControlSite: TTntPanel
-      Width = 490
-      ExplicitWidth = 490
+      Width = 484
+      ExplicitWidth = 484
     end
   end
   inherited pnlMsgList: TPanel
     Width = 492
-    Height = 292
+    Height = 314
     Constraints.MinHeight = 25
     ExplicitWidth = 492
-    ExplicitHeight = 292
+    ExplicitHeight = 314
   end
   inherited pnlInput: TPanel
     Top = 351
@@ -124,7 +124,9 @@ inherited frmChat: TfrmChat
       end
       inherited pnlControlSite: TPanel
         Width = 163
+        ExplicitLeft = 321
         ExplicitWidth = 163
+        ExplicitHeight = 23
       end
     end
   end
