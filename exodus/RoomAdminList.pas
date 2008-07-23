@@ -134,7 +134,7 @@ begin
             rm.Node := TRoomMember(rlist.Objects[i]).Node;
             rm.status := TRoomMember(rlist.Objects[i]).status;
             rm.show := TRoomMember(rlist.Objects[i]).show;
-            rm.blockShow := TRoomMember(rlist.Objects[i]).blockShow;
+            rm.blocked := TRoomMember(rlist.Objects[i]).blocked;
             rm.role := TRoomMember(rlist.Objects[i]).role;
             rm.affil := TRoomMember(rlist.Objects[i]).affil;
             rm.real_jid := TRoomMember(rlist.Objects[i]).real_jid;
