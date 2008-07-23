@@ -3182,6 +3182,8 @@ begin
             StrDisposeW(Value);
         end;
     end;
+    Exsession.ExCOMToolbar := nil;
+    Exsession.COMToolbar := nil;
 end;
 
 {---------------------------------------}
