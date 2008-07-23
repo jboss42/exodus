@@ -24,8 +24,8 @@ type
     mnuCopyAll: TTntMenuItem;
     mnuClear: TTntMenuItem;
     procedure mnuClick(Sender: TObject);
-    procedure TntFormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormDestroy(Sender: TObject);
   private
     _MsgList: TfBaseMsgList;
     _SessionListener : TSessionListener;
@@ -1021,20 +1021,6 @@ begin
     Result := ((Self.UnreadMsgCount > 0) or inherited CanPersist());
 end;
 
-procedure TfrmSimpleDisplay.TntFormDestroy(Sender: TObject);
-begin
-    //remove ourself from simplewindow list
-    RemoveWindow(Self.UID);
-
-    _SessionListener.Free();
-    if (_jid <> nil) then
-    begin
-        _jid.free();
-        _dnListener.free();
-    end;
-    inherited;
-end;
-
 function TfrmSimpleDisplay.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 begin
     Result := nil;
@@ -1145,6 +1131,20 @@ procedure TfrmSimpleDisplay.FormClose(Sender: TObject;
 begin
     inherited;
     Action := caFree;
+end;
+
+procedure TfrmSimpleDisplay.FormDestroy(Sender: TObject);
+begin
+    //remove ourself from simplewindow list
+    RemoveWindow(Self.UID);
+
+    _SessionListener.Free();
+    if (_jid <> nil) then
+    begin
+        _jid.free();
+        _dnListener.free();
+    end;
+    inherited;
 end;
 
 procedure TfrmSimpleDisplay.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
