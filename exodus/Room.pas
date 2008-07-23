@@ -2293,6 +2293,8 @@ begin
     if (ShowAddBookmark(bm_name, groups)) then
     begin
         MainSession.rooms.AddRoom(Self.jid, bm_name, myNick, false, false, groups);
+        Self.Caption := bm_name;
+        Self.updateDocked();
     end;
     groups.Free();
 end;
