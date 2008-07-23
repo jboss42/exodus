@@ -833,6 +833,7 @@ uses
     DebugManager, TntGraphics, SelectItem,
     HistorySearch,
     FrmUtils,
+    COMExodusControlSite, //TExodusControlSite
     ExActionCtrl;
 
 {$R *.DFM}
@@ -900,9 +901,9 @@ end;
 {---------------------------------------}
 function TfrmExodus.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
 begin
-    Result := nil;
+    Result := TExodusControlSite.create(Toolbar, Toolbar, StringToGuid(Id));
+    Toolbar.Bands.Items[Toolbar.Bands.Count-1].Text := Id;
 end;
-
 
 procedure TfrmExodus.Flash();
 begin

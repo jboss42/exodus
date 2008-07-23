@@ -25,7 +25,8 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ImgList, Buttons, ToolWin, Contnrs,
     ExtCtrls, TntComCtrls, StateForm, Unicode, XMLTag, buttonFrame, JabberMsg,
-    Menus, TntMenus, TntExtCtrls, Exodus_TLB, COMToolbar, COMDockToolbar;
+    Menus, TntMenus, TntExtCtrls, Exodus_TLB, COMToolbar, COMDockToolbar,
+    COMExodusControlSite;
 
   function generateUID(): widestring;
 
@@ -91,7 +92,8 @@ type
     _closing: boolean; // Is the window closing (for updatedocked() call);
 
     _COMDockbar: IExodusDockToolbar;
-    
+    _dockbarControl: IExodusControlSite;
+
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
     procedure prefsCallback(event: string; tag: TXMLTag);
@@ -245,6 +247,24 @@ end;
 function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
 begin
     Result := nil;
+    if (ToolbarName = 'dockbar') then
+    begin
+        _dockbarControl := nil;
+        pnlDock.Align := alNone;
+        pnlDock.AutoSize := false;
+        pnlDock.Height := pnlDock.Height + 24;
+        pnlDockControlSite.AutoSize := false;
+        pnlDockControlSite.Height := 24;
+
+        _dockbarControl := TExodusControlSite.create(nil, pnlDockControlSite, StringToGUID(ID));
+        _dockbarControl.AlignClient := true;
+
+        pnlDockControlSite.AutoSize := true;
+        pnlDockControlSite.Visible := true;
+        pnlDock.AutoSize := true;
+        pnlDock.Align := alTop;
+        Result := _dockbarControl as IExodusToolbarControl;
+    end;
 end;
 
 function TfrmDockable.GetDockbar(): IExodusDockToolbar;
