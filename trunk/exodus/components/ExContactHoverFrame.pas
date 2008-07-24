@@ -154,8 +154,6 @@ begin
 end;
 
 procedure TExContactHoverFrame._GetAvatar();
-var
-    Avatar: TAvatar;
 begin
     if (_UnknownAvatar.Empty) then
         frmExodus.bigImages.GetBitmap(0, _UnknownAvatar);
@@ -164,7 +162,6 @@ begin
     if (not _Loaded) then begin
         lblPhone.Caption := _('N/A');
         imgAvatar.Invalidate();
-        lblPhone.Invalidate;
     end;
 end;
 
@@ -207,7 +204,7 @@ begin
 
    lblPhone.Caption := number;
    imgAvatar.Invalidate;
-   lblPhone.Invalidate;
+   Invalidate;
    _Loaded := true;
 end;
 
