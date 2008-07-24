@@ -1754,7 +1754,6 @@ var
     tabCtrl: IExodusTabController;
     tab: IExodusTab;
     items: IExodusItemList;
-    item: IExodusItem;
     idx: Integer;
 begin
     Result := '';
@@ -1775,7 +1774,6 @@ end;
 function TExodusController.GetActiveContacts(Online: WordBool): OleVariant;
 var
     tabCtrl: IExodusTabController;
-    tab: IExodusTab;
     items: IExodusItemList;
     item: IExodusItem;
     idx: Integer;

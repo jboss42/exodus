@@ -109,7 +109,7 @@ type
     procedure ChatToolbarButtonUnderlineClick(Sender: TObject);
     procedure ChatToolbarButtonColorsClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure TntFormResize(Sender: TObject);
+    procedure FormResize(Sender: TObject);
 
   private
     { Private declarations }
@@ -630,13 +630,15 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.TntFormResize(Sender: TObject);
+procedure TfrmBaseChat.FormResize(Sender: TObject);
+{
 var
     oldHeight: real;
     msglistratio: real;
     pnlinputratio: real;
     real_a: real;
     real_b: real;
+}    
 begin
     // This code exists to try and prevent losing a part of the window due to resize
     // when (un)docking.

@@ -439,8 +439,6 @@ var
     substrprep: widestring;
     mainstrprep: widestring;
 begin
-    Result := 0;
-
     substrprep := jabber_nameprep_variablelen(substr);
     mainstrprep := jabber_nameprep_variablelen(str);
 

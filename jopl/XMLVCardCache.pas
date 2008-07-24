@@ -177,11 +177,9 @@ end;
 {---------------------------------------}
 procedure TXMLVCardCache.SessionCallback(event: string; tag: TXMLTag);
 var
-    session: TJabberSession;
     idx: Integer;
     pending: TXMLVCardCacheEntry;
 begin
-    session := TJabberSession(_js);
     if (event = '/session/disconnected') then begin
         //clear out error-ed vcards, so we can refresh them
          for idx := _cache.Count - 1 downto 0 do begin

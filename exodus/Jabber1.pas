@@ -661,7 +661,7 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
-    function IsShortcut(var Message: TWMKey): Boolean; override;
+    function IsShortCut(var Message: TWMKey): Boolean; override;
     function AppKeyDownHook(var Msg: TMessage): Boolean;
 
     property dockManager:IExodusDockManager read _dockManager;
