@@ -26,7 +26,6 @@ type
     private
     { Private declarations }
         _trackinglist: TWidestringList;
-        _lstJoinedRoomsDefaultColor: TColor;
     public
     { Public declarations }
 

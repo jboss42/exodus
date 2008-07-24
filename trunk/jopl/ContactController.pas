@@ -466,7 +466,6 @@ var
     IsBlocked, IsOffline, IsPending, IsObserver, IsNone: boolean;
     ImagePrefix, Subs, Ask, Show: Widestring;
     Tag: TXMLTag;
-    presIdx: Integer;
 begin
     Item.Active := false;
     Item.IsVisible := true;

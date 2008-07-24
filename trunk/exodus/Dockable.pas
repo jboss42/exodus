@@ -67,7 +67,6 @@ type
     procedure btnDockToggleClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
-    procedure pnlDockResize(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
@@ -584,16 +583,6 @@ end;
 procedure TfrmDockable.showDockToggleButton(show: boolean);
 begin
     btnDockToggle.Visible := show;
-end;
-
-procedure TfrmDockable.pnlDockResize(Sender: TObject);
-var
-    i: integer;
-begin
-    inherited;
-    //ask parent form to realign, allowing panel to be completely shown
-//    for i := 0 to Self.ControlCount - 1 do
-//        Controls[i].Align := Controls[i].Align;
 end;
 
 procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);

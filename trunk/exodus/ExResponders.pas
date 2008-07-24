@@ -688,7 +688,6 @@ procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
 var
     r, q: TXMLTag;
     node: WideString;
-    extension : TWideStringList;
     error: boolean;
     f: TForm;
 begin
@@ -699,7 +698,6 @@ begin
     if (q = nil) then exit;
 
     error := false;
-    extension := nil;
 
     // The disco node should either not be present: "give me all of your features"
     // Be URI#version: "give me the base features for this version" or

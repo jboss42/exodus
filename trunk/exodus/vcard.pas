@@ -151,7 +151,6 @@ procedure TfrmVCard.FormCreate(Sender: TObject);
 var
     n: TTntTreeNode;
     i: integer;
-    tmps: Widestring;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);

@@ -24,15 +24,15 @@ unit COMDockToolbar;
 interface
 
 uses
-    ComObj, Exodus_TLB, COMToolbar;
+    ComObj, Exodus_TLB, COMToolbar, StdVcl;
 
 type
     TExodusDockToolbar = class(TExodusToolbarBase, IExodusDockToolbar)
     protected
-        function AddButton(const ImageID: WideString): ExodusToolbarButton; safecall;
-        function AddControl(const ID: WideString): ExodusToolbarControl; safecall;
+        function AddButton(const ImageID: WideString): ExodusToolbarButton; override; safecall;
+        function AddControl(const ID: WideString): ExodusToolbarControl; override; safecall;
         function Get_Count: Integer; override;
-        function GetButton(index: Integer): ExodusToolbarButton; safecall;
+        function GetButton(index: Integer): ExodusToolbarButton; override;safecall;
         procedure RemoveButton(const button: WideString); override;
     end;
 

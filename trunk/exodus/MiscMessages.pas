@@ -969,8 +969,6 @@ begin
 end;
 
 Constructor TErrorDisplay.Create(AOwner: TComponent);
-var
-    info: TTntLabel;
 begin
     inherited;
     Caption := _('Undeliverable');
