@@ -305,9 +305,11 @@ end;
 { a helper class to set our nickname from profile}
 type
     TMyNickHandler = class(TDisplayNameEventListener)
-        _MyItem: TDisplayNameItem;
-        _MyBareJID: TJabberID;
-
+    private
+        _fired: Boolean;
+        
+    public
+        procedure FireOnDisplayNameChange(UID: Widestring; displayName: WideString); override;
         procedure FireOnProfileResult(BareJID: Widestring; ProfileName: WideString; FetchError: boolean);override;
         procedure GetMyNickFromProfile();
         procedure UpdateRosterName(dname: WideString);
@@ -318,19 +320,23 @@ type
 Constructor TMyNickHandler.Create(MyItem: TDisplayNameItem);
 begin
     inherited Create();
-    _MyBareJID := TJabberID.Create(DNSession.Profile.getJabberID.jid);
-    _MyItem := MyItem;
-    UID := _MyBareJID.jid;
+    UID := myItem.UID;
 end;
 
 Destructor TMyNickHandler.Destroy();
 begin
-    _MyBareJID.Free();
     inherited;
 end;
 
+procedure TMyNickHandler.FireOnDisplayNameChange(UID: WideString; displayName: WideString);
+begin
+    FireOnProfileResult(UID, displayName, false);
+end;
 procedure TMyNickHandler.fireOnProfileResult(BareJID: Widestring; ProfileName: WideString; FetchError: boolean);
 begin
+    if _fired then exit;
+    
+    _fired := true;
     if (not FetchError) then
         UpdateRosterName(ProfileName);
     Self.Free();
@@ -340,21 +346,26 @@ procedure TMyNickHandler.getMyNickFromProfile();
 var
     changePending: boolean;
     dname: WideString;
+    jid: TJabberID;
 begin
-    dName := Self.getProfileDisplayName(_MyBareJID, changePending);
+    jid := TJabberID.Create(UID);
+    dName := Self.getProfileDisplayName(jid, changePending);
 
     if (not changePending) then begin
-        UpdateRosterName(DName);
-        Self.Free();
+        fireOnProfileResult(UID, dName, false);
     end;
+    jid.Free();
 end;
 
 procedure TMyNickHandler.UpdateRosterName(dname: WideString);
+var
+    myself: TDisplayNameItem;
 begin
-    if (_MyItem.DisplayName[dntItemName] <> dname) then
+    myself := getDisplayNameCache().getDNItem(UID);
+    if (myself.DisplayName[dntItemName] <> dname) then
     begin
         DNSession.Prefs.setString('default_nick', dName);
-        _MyItem.DisplayName[dntItemName] := dname;
+        myself.DisplayName[dntItemName] := dname;
         FireChangeEvent(UID, dname);
     end;
 end;
@@ -527,8 +538,8 @@ end;
 
 destructor  TDisplayNameItem.Destroy();
 begin
-    inherited;
     _DisplayNames.Free(); //frees TDisplayName Value objects
+    inherited;
 end;
 
 function TDisplayNameItem.GetBestExistingDisplayName(): WideString;
@@ -955,7 +966,7 @@ begin
     else if (event = DEPMOD_READY_SESSION_EVENT) then begin
         _useProfileDN := useProfileDN(); //initial profile state, used to check pref changes
         //add our jid to the cache
-        dnItem := getOrAddDNItem(DNSession.Profile.getJabberID());
+        dnItem := getOrAddDNItem(DNSession.SessionJid);
 
         _profileParser.setProfileParseMap(getProfileDNMap());
         //at this point our nick is our node.
