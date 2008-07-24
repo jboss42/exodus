@@ -92,7 +92,6 @@ begin
     Separator1.Caption := '';
     Separator2.Caption := '';
     lblDisplayName.Caption := Item.Text;
-    lblDisplayName.Caption := Tnt_WideStringReplace(Item.Text, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
 
     lblDisplayName.Hint := Item.Text;
     lblDisplayName.ShowHint := true;
@@ -165,6 +164,7 @@ begin
     if (not _Loaded) then begin
         lblPhone.Caption := _('N/A');
         imgAvatar.Invalidate();
+        lblPhone.Invalidate;
     end;
 end;
 
@@ -207,6 +207,7 @@ begin
 
    lblPhone.Caption := number;
    imgAvatar.Invalidate;
+   lblPhone.Invalidate;
    _Loaded := true;
 end;
 
