@@ -179,6 +179,8 @@ end;
 {---------------------------------------}
 procedure DebugMessage(txt: Widestring);
 begin
+    if (dbgManager = nil) then exit;
+    
     dbgManager.DebugStatement(txt);
 end;
 

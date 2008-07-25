@@ -83,7 +83,7 @@ uses
     ComServ,
     sysUtils,
     COMExodusDataTable,
-    Debug;
+    DebugManager;
 
 {---------------------------------------}
 constructor TExodusDataStore.Create(filename: widestring);
