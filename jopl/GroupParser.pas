@@ -56,13 +56,13 @@ var
     Found: Boolean;
     sep: Widestring;
     sepoffset: integer;
-    temp: widestring;
+    temp, temp2: widestring;
 begin
-   Result := TWideStringList.Create();
+    Result := TWideStringList.Create();
 
     sep := TJabberSession(_Session).Prefs.getString('group_separator');
 
-    temp := Group;
+    temp := Trim(Group);
     if (TJabberSession(_Session).Prefs.getBool('nested_groups') and
         TJabberSession(_Session).prefs.getBool('branding_nested_subgroup') and
         (sep <> '')) then
@@ -70,12 +70,28 @@ begin
         sepoffset := Pos(sep, temp);
         while (sepoffset > 0) do
         begin
-            Result.Add(LeftStr(temp, sepoffset - 1));
-            temp := MidStr(temp, sepoffset + 1, Length(temp));
+            if (sepoffset = 1) then
+            begin
+                // sep should never be at the start.
+                // usually indicates a double sep which we will silently eat.
+                temp := Trim(MidStr(temp, 2, Length(temp)));
+            end
+            else begin
+                temp2 := Trim(LeftStr(temp, sepoffset - 1));
+                if (temp2 <> '') then
+                begin
+                    Result.Add(temp2);
+                end;
+                temp := Trim(MidStr(temp, sepoffset + 1, Length(temp)));
+            end;
+
             sepoffset := Pos(sep, temp);
         end;
     end;
-    Result.Add(temp);
+    if (temp <> '') then
+    begin
+        Result.Add(temp);
+    end;
 end;
 
 {---------------------------------------}
