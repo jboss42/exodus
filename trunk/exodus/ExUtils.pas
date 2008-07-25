@@ -162,6 +162,7 @@ const
     sNewGroup = 'New Group';
     sNewGroupPrompt = 'Enter new group name: ';
     sNewGroupExists = 'This group already exists!';
+    sInvalidGroup = 'Invalid character sequence in group name:  %s';
 
 var
     presenceToAtom: TStringList;
@@ -1079,6 +1080,7 @@ var
     new_grp: WideString;
     nesting: Boolean;
     grpSeparator: Widestring;
+    temp: Widestring;
 begin
     // Add a roster grp.
     Result := nil;
@@ -1106,7 +1108,15 @@ begin
         MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
     end
     else begin
-        Result := MainSession.ItemController.AddGroup(new_grp);
+        temp := grpSeparator + grpSeparator;
+        if (Pos(temp, new_grp) > 0) then
+        begin
+            temp := Format(_(sInvalidGroup), [temp]);
+            MessageDlgW(temp, mtError, [mbOK], 0);
+        end
+        else begin
+            Result := MainSession.ItemController.AddGroup(new_grp);
+        end;
     end;
 end;
 
