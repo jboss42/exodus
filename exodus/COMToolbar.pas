@@ -82,7 +82,7 @@ type
 implementation
 
 uses
-     SysUtils, StrUtils, Debug, COMExodusControlSite, ComServ;
+     SysUtils, StrUtils, DebugManager, COMExodusControlSite, ComServ;
 
 constructor TExodusToolbarBase.Create(btnBar: TToolbar;
                                       imgList: IExodusRosterImages;
