@@ -266,12 +266,14 @@ begin
         hash := vcard.Picture.getHash()
     else
         hash := '';
-        
+
     tag := TXMLTag.Create('iq');
     tag.setAttribute('from', vcard.Jid);
     vcard.fillTag(tag, false);
 
     try
+        if (hash <> '') then
+            Avatars.Add(vcard.Jid, vcard.Picture);
         sql := Format(VCARD_SQL_INSERT, [
                 str2sql(UTF8Encode(vcard.Jid)),
                 vcard.Timestamp,
@@ -284,6 +286,8 @@ begin
     end;
 
     tag.Free();
+
+    inherited;
 end;
 {---------------------------------------}
 procedure TExVCardCache.DeleteEntry(vcard: TXMLVCardCacheEntry);
@@ -298,6 +302,8 @@ begin
         DataStore.ExecSQL(sql);
     except
     end;
+
+    inherited;
 end;
 
 
