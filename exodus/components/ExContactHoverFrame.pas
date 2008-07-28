@@ -69,7 +69,7 @@ type
 
 
 implementation
-uses ExItemHoverForm, ExForm, Session, Jabber1, Presence, COMExodusItemList,
+uses AvatarCache, ExItemHoverForm, ExForm, Session, Jabber1, Presence, COMExodusItemList,
      ExActionCtrl, TntSysUtils, XMLVCardCache, gnugettext;
 
 {$R *.dfm}
@@ -173,7 +173,6 @@ begin
    if (UID <> _Items.Item[0].uid) then exit;
 
    //Assume "nothing"
-   avatar := nil;
    number := '';
 
    if (vcard <> nil) then begin
@@ -185,10 +184,10 @@ begin
        if (number = '') then
          number := vcard.HomeCell.number;
 
-       avatar := vcard.Picture;
-       if (avatar = nil) or (not avatar.isValid) or (avatar.Height < 0) then
-           avatar := nil;
    end;
+   avatar := Avatars.Find(UID);
+   if (avatar = nil) or (not avatar.isValid) or (avatar.Height < 0) then
+       avatar := nil;
 
    if (number = '') then
      number := _('N/A');
