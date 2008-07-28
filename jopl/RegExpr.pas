@@ -68,7 +68,7 @@ interface
 {$ENDIF}
 
 // ======== Define options for TRegExpr engine
-{.$DEFINE UniCode} // Unicode support
+{$DEFINE UniCode} // Unicode support
 {$DEFINE RegExpPCodeDump} // p-code dumping (see Dump method)
 {$IFNDEF FPC} // the option is not supported in FreePascal
  {$DEFINE reRealExceptionAddr} // exceptions will point to appropriate source line, not to Error procedure
