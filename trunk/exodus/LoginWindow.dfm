@@ -16,6 +16,7 @@ object frmLoginWindow: TfrmLoginWindow
   Padding.Bottom = 6
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 16
