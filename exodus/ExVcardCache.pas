@@ -42,11 +42,11 @@ type
   private
     _loader: TExVCardCacheLoader;
     _crit: TCriticalSection;
+    _depResolver: TObject; //TSimpleDependancyHandler;
 
     procedure LoadFinished();
   protected
-    procedure SessionCallback(event: string; tag: TXMLTag); override;
-
+    procedure OnDependancyReady(tag: TXMLTag);
     procedure Load(cache: TWidestringList); override;
     procedure SaveEntry(vcard: TXMLVCardCacheEntry); override;
     procedure DeleteEntry(vcard: TXMLVCardCacheEntry); override;
@@ -62,9 +62,6 @@ implementation
 uses AvatarCache, ComObj, SysUtils, Session, XMLParser, XMLUtils, SQLUtils, COMExodusDataTable, ExSession;
 
 const
-    DEPMOD_READY_EVENT = '/session/ready/';
-    DEPMOD_READY_SESSION_EVENT = DEPMOD_READY_EVENT + DEPMOD_SESSION;
-
     VCARD_SQL_SCHEMA_TABLE: Widestring = 'CREATE TABLE vcard_cache (' +
             'jid TEXT, ' +
             'datetime FLOAT, ' +
@@ -207,37 +204,33 @@ type
 constructor TExVCardCache.Create(js: TObject);
 begin
     inherited;
+    _depResolver := TSimpleAuthResolver.create(Self.OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(js));
 end;
 
 {---------------------------------------}
 destructor TExVCardCache.Destroy();
 begin
     _crit.Free();
-
+    _depResolver.Free();
     inherited;
 end;
 
-{---------------------------------------}
-procedure TExVCardCache.SessionCallback(event: string; tag: TXMLTag);
+procedure TExVCardCache.OnDependancyReady(tag: TXMLTag);
 var
     loader: TExVCardCacheLoader;
 begin
-    if (event = (DEPMOD_READY_EVENT + DEPMOD_SESSION)) then begin
-        repeat
-            _crit.Acquire();
-            loader := _loader;
-            _crit.Release();
+    repeat
+        _crit.Acquire();
+        loader := _loader;
+        _crit.Release();
 
-            try
-                if (loader <> nil) then loader.WaitFor();
-            except
-                //catch possible race-to-the-death
-            end;
-        until (loader = nil);
-        MainSession.FireEvent(DEPMOD_READY_EVENT + DEPMOD_VCARD_CACHE, tag);
-    end
-    else
-        inherited;
+        try
+            if (loader <> nil) then loader.WaitFor();
+        except
+            //catch possible race-to-the-death
+        end;
+    until (loader = nil);
+    TAuthDependancyResolver.SignalReady(DEPMOD_VCARD_CACHE);
 end;
 
 {---------------------------------------}

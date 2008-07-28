@@ -144,6 +144,7 @@ type
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnViewHistoryClick(Sender: TObject);
     procedure popRoomPropertiesClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
 
   private
     { Private declarations }
@@ -2757,6 +2758,12 @@ begin
     _voice_iq.Free;
     
     inherited;
+end;
+
+procedure TfrmRoom.FormResize(Sender: TObject);
+begin
+  inherited;
+
 end;
 
 {---------------------------------------}

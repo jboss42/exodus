@@ -202,7 +202,8 @@ type
                              //DNCache is initialized in session object
         _profileParser: TProfileParser;
         _useProfileDN: boolean;
-        
+        _depResolver: TObject; //TSimpleDependancyHandler;
+
         function getOrAddDNItem(UID: Widestring): TDisplayNameItem; overload;
         function getOrAddDNItem(JID: TJabberID): TDisplayNameItem; overload;
 
@@ -214,6 +215,8 @@ type
         procedure removeDNItem(dnItem: TDisplayNameItem);
         procedure addDNItem(dnItem: TDisplayNameItem);
         procedure clearDNCache();
+        procedure OnDependancyReady(tag: TXMLTag);
+
     public
         Constructor create();
         Destructor Destroy(); override;
@@ -913,6 +916,7 @@ begin
         if (_VCardResultCB <> -1) then
             TJabberSession(_js).UnRegisterCallback(_VCardResultCB);
         _VCardResultCB := -1;
+        _depResolver.Free();
     end;
 
     clearDNCache();
@@ -921,6 +925,7 @@ begin
     DNSession := TJabberSession(js);
     if (_js <> nil) then
     begin
+        _depResolver := TSimpleAuthResolver.create(OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(_js));
         _sessioncb := TJabberSession(_js).RegisterCallback(SessionCallback, '/session');
     end;
 end;
@@ -951,41 +956,44 @@ begin
     dnItem.UpdateDisplayName(Item, not InCache);
 end;
 
-procedure TDisplayNameCache.SessionCallback(event: string; tag: TXMLTag);
+procedure TDisplayNameCache.OnDependancyReady(tag: TXMLTag);
 var
     dnItem: TDisplayNameItem;
     tstr: WideString;
     locked: boolean;
+begin
+    _useProfileDN := useProfileDN(); //initial profile state, used to check pref changes
+    //add our jid to the cache
+    dnItem := getOrAddDNItem(DNSession.SessionJid);
+
+    _profileParser.setProfileParseMap(getProfileDNMap());
+    //at this point our nick is our node.
+    tstr := DNSession.Prefs.getString('default_nick');
+    locked := DNSession.Prefs.getBool('brand_prevent_change_nick');
+
+    //if nick name is not locked and we have a default nick, make the roster dn name that nickname
+    if ((not locked) and (tstr <> '')) then begin
+        dnItem.DisplayName[dntItemName] := tstr;
+        FireChangeEvent(dnItem.UID, tstr);
+    end
+    else if (locked or (tstr = '')) then begin
+        //if nick name is "locked down" or no default nick is supplied, pull our nick from vcard.
+        TMyNickHandler.Create(dnItem).GetMyNickFromProfile();
+    end;
+
+    //fire a displayname ready event
+    TAuthDependancyResolver.SignalReady(DEPMOD_DISPLAYNAME);
+end;
+
+procedure TDisplayNameCache.SessionCallback(event: string; tag: TXMLTag);
+var
+    tstr: WideString;
     prefChanged : boolean;
     i: integer;
-    
 begin
     if (event = '/session/disconnected') then
         //clear cache on disconnect
         clearDNCache()
-    else if (event = DEPMOD_READY_SESSION_EVENT) then begin
-        _useProfileDN := useProfileDN(); //initial profile state, used to check pref changes
-        //add our jid to the cache
-        dnItem := getOrAddDNItem(DNSession.SessionJid);
-
-        _profileParser.setProfileParseMap(getProfileDNMap());
-        //at this point our nick is our node.
-        tstr := DNSession.Prefs.getString('default_nick');
-        locked := DNSession.Prefs.getBool('brand_prevent_change_nick');
-
-        //if nick name is not locked and we have a default nick, make the roster dn name that nickname
-        if ((not locked) and (tstr <> '')) then begin
-            dnItem.DisplayName[dntItemName] := tstr;
-            FireChangeEvent(dnItem.UID, tstr);
-        end
-        else if (locked or (tstr = '')) then begin
-            //if nick name is "locked down" or no default nick is supplied, pull our nick from vcard.
-            TMyNickHandler.Create(dnItem).GetMyNickFromProfile();
-        end;
-
-        //fire a displayname ready event
-        Mainsession.FireEvent(DEPMOD_READY_EVENT + DEPMOD_DISPLAYNAME, tag);
-    end
     else if (event = '/session/prefs') then begin
         //if we've had a pref change for profile, update accordingly...
         tstr := getProfileDNMap();
