@@ -465,6 +465,7 @@
 
 
     <!-- Branding items -->
+	<brand_changepassword value="1"/>
     <brand_ad />
     <brand_ad_url />
     <!-- application ID is different than caption. It is used for
