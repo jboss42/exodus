@@ -290,6 +290,7 @@ begin
 
     FreeAndNil(_callbacks);
     _iq := nil;
+    Picture := nil;
 
     inherited;
 end;

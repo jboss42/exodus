@@ -46,6 +46,9 @@ type
         procedure _genData();
         function getMimeType(): string;
 
+    protected
+        procedure setHash(hash: string);
+        
     public
         jid: Widestring;
         AvatarType: TAvatarType;
@@ -195,6 +198,11 @@ begin
     Valid := true;
 end;
 
+{---------------------------------------}
+procedure TAvatar.setHash(hash: string);
+begin
+    _hash := hash;
+end;
 {---------------------------------------}
 function TAvatar.getHash(): string;
 var

@@ -91,7 +91,7 @@ end;
         destructor Destroy; override;
 
         function Parse(tag: TXMLTag): Boolean; virtual;
-        procedure fillTag(tag: TXMLTag); virtual;
+        procedure fillTag(tag: TXMLTag; incPicture: Boolean = true); virtual;
 end;
 
 
@@ -411,7 +411,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLVCard.fillTag(tag: TXMLTag);
+procedure TXMLVCard.fillTag(tag: TXMLTag; incPicture: Boolean);
 var
     e, vtag, t1, t2: TXMLTag;
 begin
@@ -461,15 +461,8 @@ begin
     vtag.AddBasicTag('HOMECELL', HomeCell.number);
     
     // Serialize the photo
-    if ((Picture <> nil) and (Picture.Valid)) then begin
+    if (incPicture and (Picture <> nil) and (Picture.Valid)) then begin
         t1 := vtag.AddTag('PHOTO');
-        // This is the "old iChat way"
-        {
-        t1.setAttribute('mime-type', Picture.MimeType);
-        t1.AddCData(Picture.Data);
-        }
-
-        // this is the "new iChat way"
         t2 := t1.AddTag('TYPE');
         t2.AddCData(Picture.MimeType);
 
