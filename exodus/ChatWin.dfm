@@ -7,7 +7,7 @@ inherited frmChat: TfrmChat
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 444
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
@@ -94,6 +94,7 @@ inherited frmChat: TfrmChat
     end
     inherited pnlDockControlSite: TTntPanel
       Width = 484
+      ExplicitLeft = 4
       ExplicitWidth = 484
     end
   end
@@ -124,9 +125,7 @@ inherited frmChat: TfrmChat
       end
       inherited pnlControlSite: TPanel
         Width = 163
-        ExplicitLeft = 321
         ExplicitWidth = 163
-        ExplicitHeight = 23
       end
     end
   end
@@ -196,7 +195,7 @@ inherited frmChat: TfrmChat
       Caption = '-'
     end
     object mnuSendFile: TTntMenuItem
-      Caption = 'Send File ...'
+      Caption = 'Peer to Peer File Transfer ...'
       OnClick = mnuSendFileClick
     end
     object popAddContact: TTntMenuItem

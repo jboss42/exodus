@@ -26,12 +26,13 @@ unit XferManager;
 interface
 
 uses
-    Unicode, XMLTag, SyncObjs, ShellAPI,  
+    Unicode, XMLTag, SyncObjs, ShellAPI,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ExtCtrls, IdCustomHTTPServer, IdHTTPServer, IdSocks,
     IdTCPServer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
     IdHTTP, IdServerIOHandler, IdServerIOHandlerSocket, StdCtrls,
-    TntStdCtrls, Buttons, TntExtCtrls, TntDialogs, ComCtrls, ToolWin, ExFrame;
+    TntStdCtrls, Buttons, TntExtCtrls, TntDialogs, ComCtrls, ToolWin, ExFrame,
+    ExActions, Exodus_TLB;
 
 const
     WM_CLOSE_FRAME = WM_USER + 6005;
@@ -129,14 +130,23 @@ type
     procedure UnServeStream(hash: string);
   end;
 
+  TPeerToPeerFTAction = class(TExBaseAction)
+  private
+    constructor Create;
+  public
+    procedure execute(const items: IExodusItemList); override;
+  end;
+
 var
   frmXferManager: TfrmXferManager;
+  peerFTAction: TPeerToPeerFTAction;
 
 function getXferManager(): TfrmXferManager;
 
 procedure FileSend(tojid: string; fn: string = '');
 procedure FileReceive(tag: TXMLTag);
 procedure SIStart(tag: TXMLTag);
+procedure RegisterActions();
 
 {---------------------------------------}
 {---------------------------------------}
@@ -146,9 +156,11 @@ implementation
 {$R *.dfm}
 uses
     RosterImages,
-    DisplayName, 
+    DisplayName,
     JabberUtils, ExUtils,  Jabber1, JabberConst, JabberID, Presence, InputPassword,
-    GnuGetText, XMLUtils, Notify, RecvStatus, SendStatus, Session;
+    GnuGetText, XMLUtils, Notify, RecvStatus, SendStatus, Session,
+    ExActionCtrl;
+
 const
     sXferNewPort = 'Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?';
     sXferRecv = '%s';
@@ -856,9 +868,48 @@ begin
 end;
 
 
+{
+}
+constructor TPeerToPeerFTAction.Create;
+begin
+    inherited Create('{000-exodus.googlecode.com}-090-peerft');
+
+    Set_Caption(_('Peer to Peer File Transfer...'));
+    Set_Enabled(false);
+end;
+
+procedure TPeerToPeerFTAction.execute(const items: IExodusItemList);
+var
+    i: integer;
+begin
+    for i := 0 to items.Count - 1 do
+    begin
+        FileSend(items.Item[i].UID);
+    end;
+end;
+
+procedure RegisterActions();
+var
+    actctrl: IExodusActionController;
+    act: IExodusAction;
+begin
+    actctrl := GetActionController();
+    act := peerFTAction as IExodusAction;
+
+    actCtrl.registerAction('contact', act);
+    actctrl.addEnableFilter('contact', act.Name, 'selection=single');
+    actctrl.addEnableFilter('contact', act.Name, 'Network=xmpp');
+    actctrl.addDisableFilter('contact', act.Name, 'show=offline');
+end;
+
+
+
 initialization
     xfer_lock := TCriticalSection.Create();
     frmXferManager := nil;
+
+    peerFTAction := TPeerToPeerFTAction.Create();
+    RegisterActions();
 
 finalization
     FreeAndNil(xfer_lock);
