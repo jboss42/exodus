@@ -316,6 +316,15 @@ uses
 
 {$R *.dfm}
 
+type
+  TReplaceURLHandler = class
+  public
+    function Replace(re: TRegExpr): string;
+
+  end;
+var
+    ReplaceURLs: TReplaceURLHandler;
+
 {---------------------------------------}
 function HTMLColor(color_pref: integer) : widestring;
 var
@@ -325,6 +334,21 @@ begin
     Result := IntToHex(GetRValue(color), 2) +
               IntToHex(GetGValue(color), 2) +
               IntToHex(GetBValue(color), 2);
+end;
+
+{---------------------------------------}
+function TReplaceURLHandler.Replace(re: TRegExpr): string;
+var
+    url, val: string;
+begin
+    val :=  Copy(re.InputString, re.MatchPos[0], re.MatchLen[0]);
+
+    if Pos('www.', val) = 1 then
+        url := 'http://' + val
+    else
+        url := val;
+
+    Result := '<a href="' + url + '">' + val + '</a>';
 end;
 
 {---------------------------------------}
@@ -421,8 +445,7 @@ begin
     else if (n.NodeType = xml_CDATA) then begin
         // Check for URLs
         if ((parent = nil) or (parent.Name <> 'a')) then begin
-            str := REGEX_URL.Replace(TXMLCData(n).XML,
-                                     '<a href="$0">$0</a>', true);
+            str := REGEX_URL.ReplaceEx(TXMLCData(n).XML, ReplaceURLs.Replace);
             // Look for and replace &APOS; as HTML doesn't understand this escaping.
             str := Tnt_WideStringReplace(str, '&apos;', '''', [rfReplaceAll]);
             result := result + ProcessIEEmoticons(str);
@@ -568,7 +591,7 @@ begin
         // Change CRLF to HTML equiv
         txt := REGEX_CRLF.Replace(txt, '<br />', true);
         // Detect URLs in text
-        txt := REGEX_URL.Replace(txt, '<a href="$0">$0</a>', true);
+        txt := REGEX_URL.ReplaceEx(txt, ReplaceURLs.Replace);
     end;
 
     // build up a string, THEN call writeHTML, since IE is being "helpful" by
@@ -1845,6 +1868,8 @@ end;
 
 initialization
     TP_GlobalIgnoreClassProperty(TWebBrowser, 'StatusText');
+
+    ReplaceURLs := TReplaceURLHandler.Create();
 
     xp_xhtml := TXPLite.Create('/message/html/body');
 

@@ -119,7 +119,7 @@ initialization
     REGEX_URL := TRegExpr.Create();
     // http://foo, you see
     // http://bar. this is some text
-    REGEX_URL.expression := '(https?|ftp|xmpp)://[^ "'''#$D#$A#$9']+';
+    REGEX_URL.expression := '((https?|ftp|xmpp)://|www\.)[^ "'''#$D#$A#$9']+';
     REGEX_URL.Compile();
 
     REGEX_CRLF := TRegExpr.Create();
