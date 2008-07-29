@@ -1185,8 +1185,7 @@ begin
     wsl.Destroy();
     if (Result) then
     begin
-        MsgOut.SelectAll;
-        MsgOut.ClearSelection();
+        ClearMsgOut();
     end;
 end;
 
@@ -1657,8 +1656,7 @@ begin
             MsgOut.ReadOnly := (member.role = MUC_VISITOR);
             if (MsgOut.Readonly) then
             begin
-                MsgOut.SelectAll;
-                MsgOut.ClearSelection();
+                ClearMsgOut();
             end;
             
             // Who can change subject

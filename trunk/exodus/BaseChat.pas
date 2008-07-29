@@ -160,6 +160,7 @@ type
               Headers: OleVariant; var Cancel: WordBool);
     procedure OnFileLinkCallback(event: string; tag: TXMLTag);
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;override;
+    procedure ClearMsgOut();
 
   public
     { Public declarations }
@@ -447,8 +448,7 @@ begin
     _lastMsg := _msgHistory.Count;
     _pending := '';
 
-    MsgOut.SelectAll;
-    MsgOut.ClearSelection();
+    ClearMsgOut();
     UpdateToolbarState();
     if (MainSession.Prefs.getBool('show_priority')) then
       SetPriorityNormal;
@@ -459,6 +459,19 @@ begin
             // To handle Cannot focus exception
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.ClearMsgOut();
+begin
+    // Clear out the box (DON'T use MsgOut.Clear)
+    // reset text attributes
+    MsgOut.SelectAll;
+    MsgOut.ClearSelection();
+    MsgOut.SelAttributes.Bold := false;
+    MsgOut.SelAttributes.Italic := false;
+    MsgOut.SelAttributes.UnderlineType := ultNone;
+    MsgOut.SelAttributes.Color := MainSession.Prefs.getInt(PREF_FONT_COLOR);
 end;
 
 {---------------------------------------}
