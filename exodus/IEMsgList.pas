@@ -319,7 +319,7 @@ uses
 type
   TReplaceURLHandler = class
   public
-    function Replace(re: TRegExpr): string;
+    function Replace(re: TRegExpr): RegExprString;
 
   end;
 var
@@ -337,7 +337,7 @@ begin
 end;
 
 {---------------------------------------}
-function TReplaceURLHandler.Replace(re: TRegExpr): string;
+function TReplaceURLHandler.Replace(re: TRegExpr): RegExprString;
 var
     url, val: string;
 begin
