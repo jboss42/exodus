@@ -111,9 +111,11 @@ type
     procedure lstJIDSKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btnRemoveRecipientClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     _supportedTypes: TWidestringList;
     _foundError: boolean;
+    _sessionListener: TObject; //TSessionListener
     
     function IndexOfRecipient(itemInfo: TItemInfo): integer;
     procedure ClearRecipients();
@@ -140,6 +142,8 @@ type
     procedure AddRecipientsByItems(items: IExodusItemList);
 
     procedure RemoveSelectedRecipients();
+
+    procedure OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
   public
     constructor Create(AOwner: TComponent);override;
     Destructor Destroy(); override;
@@ -389,9 +393,6 @@ begin
     end;
     _validated := true;
 end;
-{
-
-}
 
 {*******************************************************************************
 ************************* TdlgSndBroadcast *************************************
@@ -404,12 +405,15 @@ begin
     _supportedTypes.add(EI_TYPE_ROOM);
     _supportedTypes.add(EI_TYPE_GROUP); //!?
     _foundError := false;
+    _sessionListener := Session.TSessionListener.Create(nil, OnDisconnected);
+    RTComposer.Font.Size := 10;
 end;
 
 {------------------------------------------------------------------------------}
 Destructor TdlgSndBroadcast.Destroy();
 begin
     _supportedTypes.Free();
+    _sessionListener.Free();
     inherited;
 end;
 
@@ -430,6 +434,12 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
+procedure TdlgSndBroadcast.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    inherited;
+    Action := caFree;
+end;
+
 procedure TdlgSndBroadcast.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
     inherited;
@@ -441,6 +451,11 @@ procedure TdlgSndBroadcast.FormCreate(Sender: TObject);
 begin
     inherited;
     lstJIDs.SmallImages := RosterImages.RosterTreeImages.ImageList;
+end;
+
+procedure TdlgSndBroadcast.OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
+begin
+    Self.Close();
 end;
 
 {------------------------------------------------------------------------------}

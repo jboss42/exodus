@@ -1,21 +1,22 @@
 inherited dlgSndBroadcast: TdlgSndBroadcast
   Caption = 'Broadcast Message'
-  ClientHeight = 471
-  ClientWidth = 653
+  ClientHeight = 288
+  ClientWidth = 549
   Color = clBtnFace
   Position = poScreenCenter
   OnActivate = FormActivate
+  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  ExplicitWidth = 661
-  ExplicitHeight = 499
+  ExplicitWidth = 557
+  ExplicitHeight = 316
   PixelsPerInch = 96
   TextHeight = 13
   object splitter: TTntSplitter
     AlignWithMargins = True
     Left = 4
-    Top = 192
-    Width = 645
+    Top = 150
+    Width = 541
     Height = 3
     Cursor = crVSplit
     Margins.Left = 4
@@ -33,8 +34,8 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
     AlignWithMargins = True
     Left = 4
     Top = 6
-    Width = 645
-    Height = 180
+    Width = 541
+    Height = 138
     Margins.Left = 4
     Margins.Top = 6
     Margins.Right = 4
@@ -43,27 +44,32 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
+    ExplicitWidth = 645
+    ExplicitHeight = 180
     object pnlRecipients: TTntPanel
       AlignWithMargins = True
       Left = 0
       Top = 29
-      Width = 645
-      Height = 148
+      Width = 541
+      Height = 106
       Margins.Left = 0
       Margins.Right = 0
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
+      ExplicitWidth = 645
+      ExplicitHeight = 148
       object Panel1: TPanel
         Left = 0
         Top = 0
         Width = 74
-        Height = 148
+        Height = 106
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitHeight = 148
         object TntLabel1: TTntLabel
           Left = 0
           Top = 0
@@ -152,17 +158,19 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
       object pnlRecipList: TTntPanel
         Left = 74
         Top = 0
-        Width = 571
-        Height = 148
+        Width = 467
+        Height = 106
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
+        ExplicitWidth = 571
+        ExplicitHeight = 148
         object lstJIDS: TTntListView
           Left = 0
           Top = 0
-          Width = 571
-          Height = 124
+          Width = 467
+          Height = 82
           Margins.Left = 4
           Margins.Right = 4
           Margins.Bottom = 0
@@ -192,12 +200,14 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
           OnEnter = lstJIDSEnter
           OnInfoTip = lstJIDSInfoTip
           OnKeyDown = lstJIDSKeyDown
+          ExplicitWidth = 571
+          ExplicitHeight = 124
         end
         object pnlRecipientWarning: TTntPanel
           AlignWithMargins = True
           Left = 0
-          Top = 127
-          Width = 571
+          Top = 85
+          Width = 467
           Height = 18
           Margins.Left = 0
           Margins.Right = 0
@@ -206,8 +216,10 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
           ParentColor = True
           TabOrder = 1
           OnClick = pnlRecipientWarningClick
+          ExplicitTop = 127
+          ExplicitWidth = 571
           DesignSize = (
-            571
+            467
             18)
           object Image1: TImage
             Left = 0
@@ -261,7 +273,7 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
             Caption = 'items can not receive Broadcast Messages.'
           end
           object btnRemoveInvalid: TTntButton
-            Left = 461
+            Left = 357
             Top = 2
             Width = 110
             Height = 16
@@ -269,6 +281,7 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
             Caption = 'Remove &Invalid'
             TabOrder = 0
             OnClick = btnRemoveInvalidClick
+            ExplicitLeft = 461
           end
         end
       end
@@ -276,7 +289,7 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
     object pnlSubject: TPanel
       Left = 0
       Top = 0
-      Width = 645
+      Width = 541
       Height = 26
       Margins.Left = 4
       Margins.Right = 4
@@ -285,6 +298,7 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
+      ExplicitWidth = 645
       object lblSubject: TTntLabel
         Left = 0
         Top = 0
@@ -301,7 +315,7 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         AlignWithMargins = True
         Left = 74
         Top = 3
-        Width = 571
+        Width = 467
         Height = 20
         Margins.Left = 0
         Margins.Right = 0
@@ -309,15 +323,16 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         TabOrder = 0
         WantReturns = False
         WordWrap = False
+        ExplicitWidth = 571
       end
     end
   end
   object pnlSender: TTntPanel
     AlignWithMargins = True
     Left = 4
-    Top = 195
-    Width = 645
-    Height = 276
+    Top = 153
+    Width = 541
+    Height = 135
     Margins.Left = 4
     Margins.Top = 0
     Margins.Right = 4
@@ -326,20 +341,24 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
+    ExplicitTop = 280
+    ExplicitWidth = 645
     object pnlButtons: TTntPanel
       Left = 0
-      Top = 238
-      Width = 645
+      Top = 97
+      Width = 541
       Height = 38
       Align = alBottom
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
+      ExplicitTop = 238
+      ExplicitWidth = 645
       DesignSize = (
-        645
+        541
         38)
       object btnSend: TTntButton
-        Left = 503
+        Left = 399
         Top = 6
         Width = 68
         Height = 28
@@ -348,9 +367,10 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         Default = True
         TabOrder = 0
         OnClick = btnSendClick
+        ExplicitLeft = 503
       end
       object btnCancel: TTntButton
-        Left = 577
+        Left = 473
         Top = 6
         Width = 68
         Height = 28
@@ -359,22 +379,25 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         Caption = 'Cancel'
         TabOrder = 1
         OnClick = btnCancelClick
+        ExplicitLeft = 577
       end
     end
     object pnlComposer: TTntPanel
       Left = 0
       Top = 0
-      Width = 645
-      Height = 238
+      Width = 541
+      Height = 97
       Align = alClient
       AutoSize = True
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
+      ExplicitWidth = 645
+      ExplicitHeight = 238
       object tbMsgOutToolbar: TTntToolBar
         Left = 0
         Top = 0
-        Width = 645
+        Width = 541
         Height = 22
         Margins.Left = 0
         Margins.Top = 1
@@ -386,6 +409,7 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
         TabOrder = 0
         Transparent = True
         Visible = False
+        ExplicitWidth = 645
         object ChatToolbarButtonBold: TTntToolButton
           Left = 0
           Top = 0
@@ -516,8 +540,8 @@ inherited dlgSndBroadcast: TdlgSndBroadcast
       object RTComposer: TExRichEdit
         Left = 0
         Top = 22
-        Width = 645
-        Height = 216
+        Width = 541
+        Height = 75
         Align = alClient
         AutoURLDetect = adNone
         Ctl3D = True
