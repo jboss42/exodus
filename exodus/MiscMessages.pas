@@ -46,10 +46,6 @@ type
     procedure OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
 
     function GetMsgList(): TfBaseMsgList;
-    {
-        persist if we have unread messages
-    }
-    function CanPersist(): boolean;override;
   public
     Constructor Create(AOwner: TComponent);override;
 
@@ -1012,11 +1008,6 @@ begin
     _MsgList.setContextMenu(mnuSimplePopup);
     _MsgList.setDragOver(OnDockedDragOver);
     _MsgList.setDragDrop(OnDragDrop);
-end;
-
-function TfrmSimpleDisplay.CanPersist(): boolean;
-begin
-    Result := ((Self.UnreadMsgCount > 0) or inherited CanPersist());
 end;
 
 function TfrmSimpleDisplay.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
