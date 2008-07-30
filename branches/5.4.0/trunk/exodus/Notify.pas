@@ -191,13 +191,12 @@ begin
     //if suspending on DND and dnd, we are done
     if (MainSession.prefs.getBool('suspend_dnd_notifications') and (MainSession.Show = 'dnd'))  then exit;
 
-    //map nil windows back to the main window
-    if (win = nil) then
-        win := Application.MainForm;
-
     //check active prefs if app is active and we are not bring to front
     if (((notifyEvents and notify_front) = 0) and Application.Active) then
     begin
+        //map nil windows back to the main window
+        if (win = nil) then
+            win := Application.MainForm;
         //notify active app, we are active app -> notify
         //notify active app, we are not active app -> notify
         //do not notify active app, we are not active app -> notify
