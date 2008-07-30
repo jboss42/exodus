@@ -165,8 +165,6 @@ type
     procedure lstRoomsClick(Sender: TObject);
     procedure FormMouseEnter(Sender: TObject);
     procedure FormMouseLeave(Sender: TObject);
-    procedure lstRoomsDrawItem(Control: TWinControl; Index: Integer;
-      Rect: TRect; State: TOwnerDrawState);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
@@ -276,9 +274,7 @@ uses
     TntSysUtils,
     DateUtils,
     SelectItemAny,
-    SelectItemAnyRoom,
-    ExUtils,
-    Room;
+    SelectItemAnyRoom;
 
 {---------------------------------------}
 procedure RegisterActions();
@@ -1319,35 +1315,6 @@ begin
     else begin
         btnRemoveRoom.Enabled := false;
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmHistorySearch.lstRoomsDrawItem(Control: TWinControl;
-  Index: Integer; Rect: TRect; State: TOwnerDrawState);
-var
-    jid: TJabberID;
-    dn: widestring;
-    i: integer;
-begin
-    inherited;
-
-    // Draw joined rooms with black
-    // Draw un-joined rooms with greay
-    dn := lstRooms.Items[index]; // Display Name
-
-    jid := TJabberID(lstRooms.Items.Objects[index]);
-    if (jid <> nil) then
-    begin
-        i := room_list.IndexOf(jid.full);
-        if (i < 0) then
-        begin
-            // room jid is NOT in list so, we must NOT be joined to room
-            lstRooms.Canvas.Font.Color := clGrayText;
-        end;
-    end;
-
-    SetTextColor(lstRooms.Canvas.Handle, ColorToRGB(lstRooms.Canvas.Font.Color));
-    CanvasTextOutW(lstRooms.Canvas, Rect.Left, Rect.Top, dn);
 end;
 
 {---------------------------------------}

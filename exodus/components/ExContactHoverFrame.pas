@@ -69,7 +69,7 @@ type
 
 
 implementation
-uses AvatarCache, ExItemHoverForm, ExForm, Session, Jabber1, Presence, COMExodusItemList,
+uses ExItemHoverForm, ExForm, Session, Jabber1, Presence, COMExodusItemList,
      ExActionCtrl, TntSysUtils, XMLVCardCache, gnugettext;
 
 {$R *.dfm}
@@ -92,6 +92,7 @@ begin
     Separator1.Caption := '';
     Separator2.Caption := '';
     lblDisplayName.Caption := Item.Text;
+    lblDisplayName.Caption := Tnt_WideStringReplace(Item.Text, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
 
     lblDisplayName.Hint := Item.Text;
     lblDisplayName.ShowHint := true;
@@ -154,6 +155,8 @@ begin
 end;
 
 procedure TExContactHoverFrame._GetAvatar();
+var
+    Avatar: TAvatar;
 begin
     if (_UnknownAvatar.Empty) then
         frmExodus.bigImages.GetBitmap(0, _UnknownAvatar);
@@ -173,6 +176,7 @@ begin
    if (UID <> _Items.Item[0].uid) then exit;
 
    //Assume "nothing"
+   avatar := nil;
    number := '';
 
    if (vcard <> nil) then begin
@@ -184,10 +188,10 @@ begin
        if (number = '') then
          number := vcard.HomeCell.number;
 
+       avatar := vcard.Picture;
+       if (avatar = nil) or (not avatar.isValid) or (avatar.Height < 0) then
+           avatar := nil;
    end;
-   avatar := Avatars.Find(UID);
-   if (avatar = nil) or (not avatar.isValid) or (avatar.Height < 0) then
-       avatar := nil;
 
    if (number = '') then
      number := _('N/A');
@@ -203,7 +207,6 @@ begin
 
    lblPhone.Caption := number;
    imgAvatar.Invalidate;
-   Invalidate;
    _Loaded := true;
 end;
 

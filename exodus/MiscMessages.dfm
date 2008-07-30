@@ -3,7 +3,7 @@ inherited frmSimpleDisplay: TfrmSimpleDisplay
   ClientHeight = 219
   ClientWidth = 357
   ExplicitWidth = 365
-  ExplicitHeight = 247
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlDock: TTntPanel
@@ -11,27 +11,30 @@ inherited frmSimpleDisplay: TfrmSimpleDisplay
     TabOrder = 1
     ExplicitWidth = 357
     inherited pnlDockTopContainer: TTntPanel
-      Width = 357
-      ExplicitWidth = 357
+      Width = 355
+      ExplicitWidth = 355
       inherited tbDockBar: TToolBar
-        Left = 308
-        ExplicitLeft = 308
+        Left = 306
+        ExplicitLeft = 306
       end
       inherited pnlDockTop: TTntPanel
-        Width = 305
-        ExplicitWidth = 305
+        Width = 303
+        ExplicitWidth = 303
       end
     end
     inherited pnlDockControlSite: TTntPanel
-      Width = 349
-      ExplicitWidth = 349
+      Width = 355
+      ExplicitLeft = 1
+      ExplicitTop = 29
+      ExplicitWidth = 355
+      ExplicitHeight = 25
     end
   end
   object pnlMsgDisplay: TTntPanel
     Left = 0
-    Top = 33
+    Top = 55
     Width = 357
-    Height = 186
+    Height = 164
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4

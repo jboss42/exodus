@@ -169,34 +169,49 @@ procedure TfRTFMsgList.MsgListKeyPress(Sender: TObject; var Key: Char);
 var
     bc: TfrmBaseChat;
 begin
-    try
     // If typing starts on the MsgList, then bump it to the outgoing
     // text box.
-    if (not (_base is  TfrmBaseChat)) then exit;
-
     bc := TfrmBaseChat(_base);
+    if (not bc.MsgOut.Enabled) then
+        Exit;
 
-    if ((_getPrefBool('esc_close')) and (ord(key) = 27)) then
-        bc.Close()
-    else if (bc.MsgOut.CanFocus()) and (not bc.MsgOut.ReadOnly) then
-    begin
-        if (ord(key) = 22) then
-            bc.MsgOut.PasteFromClipboard()  // paste, Ctrl-V
-        else if (ord(key) >= 32) then
-            bc.MsgOut.WideSelText := WideChar(Key);
-        try
-            bc.MsgOut.SetFocus();
-        except
-            on E:Exception do
-            begin
-                ExUtils.DebugMsg('Exception trying to set focus to composer (' + E.Message + ')', true);
+    if (not bc.Visible) then exit;
+
+    if (Ord(key) = 22) then begin
+        // paste, Ctrl-V
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+            try
+                bc.MsgOut.SetFocus();
+                bc.MsgOut.PasteFromClipboard();
+            except
+                // To handle Cannot focus exception
+            end;
+        end;
+        Key := #0;
+        exit;
+    end;
+
+   if ((MainSession.Prefs.getBool('esc_close')) and (Ord(key) = 27)) then begin
+      if (Self.Parent <> nil) then
+        if (Self.Parent.Parent <> nil) then
+          SendMessage(Self.Parent.Parent.Handle, WM_CLOSE, 0, 0);
+          exit;
+   end;
+
+    if (Ord(key) < 32) then exit;
+
+    if (bc.pnlInput.Visible) then begin
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled and not bc.MsgOut.ReadOnly) then begin
+            try
+                bc.MsgOut.SetFocus();
+                bc.MsgOut.WideSelText := Key;
+            except
+                // To handle Cannot focus exception
             end;
         end;
     end;
-    finally
-        Key := #0;
-    end;
 
+    Key := #0;
 end;
 
 {---------------------------------------}

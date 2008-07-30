@@ -422,8 +422,6 @@ begin
         restoringDesktopFlag := false;
         discovered.Free();
     end;
-
-    prefHelper.Free();
 end;
 
  {wrappers around TPrefController methods, these introduce profiles to prefs}

@@ -661,7 +661,7 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
-    function IsShortCut(var Message: TWMKey): Boolean; override;
+    function IsShortcut(var Message: TWMKey): Boolean; override;
     function AppKeyDownHook(var Msg: TMessage): Boolean;
 
     property dockManager:IExodusDockManager read _dockManager;
@@ -833,7 +833,6 @@ uses
     DebugManager, TntGraphics, SelectItem,
     HistorySearch,
     FrmUtils,
-    COMExodusControlSite, //TExodusControlSite
     ExActionCtrl;
 
 {$R *.DFM}
@@ -901,9 +900,9 @@ end;
 {---------------------------------------}
 function TfrmExodus.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
 begin
-    Result := TExodusControlSite.create(Toolbar, Toolbar, StringToGuid(Id));
-    Toolbar.Bands.Items[Toolbar.Bands.Count-1].Text := Id;
+    Result := nil;
 end;
+
 
 procedure TfrmExodus.Flash();
 begin
@@ -1309,7 +1308,6 @@ begin
         end;
         mnuPeople_Contacts_SendFile.Visible := getBool('brand_ft');
         btnSendFile.Visible := getBool('brand_ft');
-        peerFTAction.Enabled := getBool('brand_ft');
         mnuPeople_Contacts_BlockContact.Visible := getBool('brand_allow_blocking_jids');
         mnuOptions_Plugins.Visible := getBool('brand_plugs');
         mnuFile_ShowDebugXML.Visible := getBool('brand_show_debug_in_menu');
@@ -3183,8 +3181,6 @@ begin
             StrDisposeW(Value);
         end;
     end;
-    Exsession.ExCOMToolbar := nil;
-    Exsession.COMToolbar := nil;
 end;
 
 {---------------------------------------}

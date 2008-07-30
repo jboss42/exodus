@@ -43,7 +43,7 @@ type
     Node: TMemberNode;
     status: Widestring;
     show: Widestring;
-    blocked: boolean;
+    blockShow: Widestring;
     role: WideString;
     affil: WideString;
     hideUnavailable: Boolean;
@@ -144,7 +144,6 @@ type
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnViewHistoryClick(Sender: TObject);
     procedure popRoomPropertiesClick(Sender: TObject);
-    procedure FormResize(Sender: TObject);
 
   private
     { Private declarations }
@@ -258,9 +257,7 @@ type
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
 
     function addRoomUser(jid, nick: Widestring; tag: TXMLTag = nil): TRoomMember;
-    function findRoomUser(jid: widestring): TRoomMember;
     procedure removeRoomUser(jid: Widestring);
-    function IsMemberBlocked(roomMemberJID: widestring): boolean;
     function GetNick(rjid: Widestring): Widestring;
 
     property HintText: Widestring read _hint_text;
@@ -680,12 +677,10 @@ begin
     msgDelayTag := GetDelayTag(Msg.Tag);
     if ((msgDelayTag = nil) and
         (not Msg.IsMe) and
-        (Msg.FromJID <> self.jid) and
-        (not IsMemberBlocked(msg.FromJID))) then begin
+        (Msg.FromJID <> self.jid)) then begin
         // We don't want to update counts on delayed (history) msgs
         // or on msgs from "me"
         // or on msgs that are "system messages"
-        // or on msgs that are from blocked members
         updateMsgCount(Msg);
         updateLastActivity(Msg.Time);
     end;
@@ -748,7 +743,7 @@ begin
     else begin
         rm := TRoomMember(_roster.Objects[i]);
         // if blocked ignore anything they say, even subject changes.
-        if (rm.blocked) then
+        if (rm.Show = _(sBlocked)) then
            exit;
         Msg.Nick := rm.Nick;
         Msg.IsMe := (Msg.Nick = MyNick);
@@ -1185,7 +1180,8 @@ begin
     wsl.Destroy();
     if (Result) then
     begin
-        ClearMsgOut();
+        MsgOut.SelectAll;
+        MsgOut.ClearSelection();
     end;
 end;
 
@@ -1193,9 +1189,6 @@ end;
 procedure TfrmRoom.SessionCallback(event: string; tag: TXMLTag);
 var
     tmps: Widestring;
-    jid1, jid2: TJabberID;
-    i: integer;
-    member: TRoomMember;
 begin
     // session callback...look for our own presence changes
     if (event = '/session/disconnected') then begin
@@ -1246,32 +1239,6 @@ begin
     end
     else if (event = '/session/prefs') then begin
         setupKeywords();
-    end
-    else if ((event = '/session/block') or
-             (event = '/session/unblock')) then
-    begin
-        jid1 := TJabberID.Create(tag.GetAttribute('jid'));
-        if (jid1 <> nil) then
-        begin
-            for i := 0 to _roster.Count - 1 do
-            begin
-                member := TRoomMember(_roster.Objects[i]);
-                if (member <> nil) then
-                begin
-                    jid2 := TJabberID.Create(member.real_jid);
-                    if ((jid2 <> nil) and
-                        (jid1.jid = jid2.jid)) then
-                    begin
-                        member.blocked := (event = '/session/block');
-                        jid2.Free();
-                        lstRoster.Invalidate();
-                        break;
-                    end;
-                    jid2.Free();
-                end;
-            end;
-        end;
-        jid1.Free();
     end;
 end;
 
@@ -1656,7 +1623,8 @@ begin
             MsgOut.ReadOnly := (member.role = MUC_VISITOR);
             if (MsgOut.Readonly) then
             begin
-                ClearMsgOut();
+                MsgOut.SelectAll;
+                MsgOut.ClearSelection();
             end;
             
             // Who can change subject
@@ -1706,22 +1674,6 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRoom.findRoomUser(jid: widestring): TRoomMember;
-var
-    i: integer;
-begin
-    Result := nil;
-    if (Trim(jid) = '') then exit;
-
-    i := _roster.IndexOf(jid);
-
-    if (i >= 0) then
-    begin
-        Result := TRoomMember(_roster.Objects[i]);
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmRoom.removeRoomUser(jid: Widestring);
 var
     i: integer;
@@ -1735,26 +1687,6 @@ begin
     if (i >= 0) then begin
         lstRoster.Items.Count := GetRoomRosterVisibleCount();
         lstRoster.Invalidate();
-    end;
-end;
-
-{---------------------------------------}
-function TfrmRoom.IsMemberBlocked(roomMemberJID: widestring): boolean;
-var
-    i: integer;
-    member: TRoomMember;
-begin
-    Result := false;
-    if (Trim(jid) = '') then exit;
-
-    i := _roster.IndexOf(roomMemberJID);
-    if (i >= 0) then
-    begin
-        member := TRoomMember(_roster.Objects[i]);
-        if (member <> nil) then
-        begin
-            Result := member.blocked;
-        end;
     end;
 end;
 
@@ -1856,7 +1788,6 @@ procedure TfrmRoom.RenderMember(member: TRoomMember; tag: TXMLTag);
 var
     i: integer;
     p: TJabberPres;
-    jid: TJabberID;
 begin
     // show the member
     if member = nil then exit;
@@ -1868,20 +1799,8 @@ begin
         p := TJabberPres.Create(tag);
         p.parse();
 
-        // If in non-anon room, see if member is blocked on roster.
-        // If so, block in room.
-        if (member.real_jid <> '') then
-        begin
-            jid := TJabberID.Create(member.real_jid);
-            if (jid <> nil) then
-            begin
-                member.blocked := MainSession.IsBlocked(jid);
-            end;
-            jid.Free();
-        end;
-
         if (member.show = _(sBlocked)) then
-           member.blocked := true
+           member.blockShow := p.Show
         else begin
             member.show := p.Show;
         end;
@@ -2292,8 +2211,6 @@ begin
     if (ShowAddBookmark(bm_name, groups)) then
     begin
         MainSession.rooms.AddRoom(Self.jid, bm_name, myNick, false, false, groups);
-        Self.Caption := bm_name;
-        Self.updateDocked();
     end;
     groups.Free();
 end;
@@ -2758,12 +2675,6 @@ begin
     inherited;
 end;
 
-procedure TfrmRoom.FormResize(Sender: TObject);
-begin
-  inherited;
-
-end;
-
 {---------------------------------------}
 procedure TfrmRoom.mnuWordwrapClick(Sender: TObject);
 begin
@@ -2894,7 +2805,7 @@ begin
     TTntListItem(Item).Caption := rm.Nick;
     Item.Data := rm;
 
-    if (rm.blocked) then item.ImageIndex := RosterTreeImages.Find('online_blocked')
+    if (rm.show = _(sBlocked)) then item.ImageIndex := RosterTreeImages.Find('online_blocked')
     else if rm.show = 'away' then Item.ImageIndex := RosterTreeImages.Find('away')
     else if rm.show = 'xa' then Item.ImageIndex := RosterTreeImages.Find('xa')
     else if rm.show = 'dnd' then Item.ImageIndex := RosterTreeImages.Find('dnd')

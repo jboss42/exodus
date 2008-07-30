@@ -44,15 +44,12 @@ type
        _DefaultGroup: WideString;
        _PendingItems: IExodusItemList;
        _ContactsLoaded: Boolean;
-       _depResolver: TObject; //TSimpleDependancyHandler;
-
        //Methods
        procedure _GetContacts();
        procedure _ParseContacts(Event: string; Tag: TXMLTag);
        procedure _ParseContact(Contact: IExodusItem; Tag: TXMLTag);
        procedure _IQCallback(Event: String; Tag: TXMLTag);
        procedure _SessionCallback(Event: string; Tag: TXMLTag);
-       procedure _OnDependancyReady(tag: TXMLTag);
        procedure _RemoveCallback(Event: String; ContactItem: IExodusItem);
        procedure _PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
        procedure _SetPresenceImage(Show: Widestring; Item: IExodusItem);
@@ -157,7 +154,6 @@ begin
     _DefaultGroup := '';
     _DNListener := TDisplayNameEventListener.Create();
     _DNListener.OnDisplayNameChange := _OnDisplayNameChange;
-    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS, TJabberSession(_JS));
 
     _PendingItems := TExodusItemList.Create();
 end;
@@ -169,14 +165,11 @@ begin
         UnregisterCallback(_IQCB);
         UnregisterCallback(_RMCB);
         UnregisterCallback(_PresCB);
-        UnregisterCallback(_SessionCB);
     end;
     _DNListener.Free;
 
     _ItemsCB._Release();
     _ItemsCB := nil;
-    _depResolver.Free();
-    inherited;
 end;
 
 {---------------------------------------}
@@ -234,7 +227,7 @@ begin
     TJabberSession(_JS).FireEvent('/item/end', Item);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
     TJabberSession(_JS).FireEvent('/roster/end', nil, ''); //legacy event
-    TAuthDependancyResolver.SignalReady(DEPMOD_ROSTER, nil, TJabberSession(_JS));
+    TJabberSession(_JS).FireEvent(DEPMOD_READY_EVENT + DEPMOD_ROSTER, nil); //new signal roster is loaded
     ContactItemTags.Free();
 end;
 
@@ -277,6 +270,7 @@ begin
             if (Grp <> '') then begin
                 Contact.AddGroup(grp);
             end;
+
         end;
     end;
 
@@ -299,18 +293,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TContactController._OnDependancyReady(tag: TXMLTag);
-begin
-    _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-    _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
-    _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
-    _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
-    _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
-    _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
-    _GetContacts();
-end;
-
-{---------------------------------------}
 procedure TContactController._SessionCallback(Event: string; Tag: TXMLTag);
 var
     uid: Widestring;
@@ -318,7 +300,17 @@ var
     Pres: TJabberPres;
     visible: Boolean;
 begin
-    if Event = '/session/prefs' then
+    if Event = DEPMOD_READY_SESSION_EVENT then
+    begin
+        _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
+        _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
+        _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
+        _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
+        _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+        _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
+        _GetContacts();
+    end
+    else if Event = '/session/prefs' then
     begin
         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
         _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
@@ -474,6 +466,7 @@ var
     IsBlocked, IsOffline, IsPending, IsObserver, IsNone: boolean;
     ImagePrefix, Subs, Ask, Show: Widestring;
     Tag: TXMLTag;
+    presIdx: Integer;
 begin
     Item.Active := false;
     Item.IsVisible := true;

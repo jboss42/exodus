@@ -196,6 +196,7 @@ end;
 {---------------------------------------}
 procedure TXMLHttpStream.MsgHandler(var msg: TJabberMsg);
 var
+    tmps: string;
     tag: TXMLTag;
 begin
     //

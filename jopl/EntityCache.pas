@@ -448,6 +448,7 @@ var
 begin
     for i := 0 to _cache.Count - 1 do begin
         e := TJabberEntity(_cache.Objects[i]);
+        e := TJabberEntity(_cache.Objects[i]);
         if e.hasIdentity(icat, itype) then
             jid_list.Add(e.jid.full);
     end;

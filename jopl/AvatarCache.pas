@@ -171,9 +171,20 @@ end;
 {---------------------------------------}
 procedure TAvatarCache.regCallbacks();
 begin
-    if (_presCB = -1) then begin
-        _presCB := _session.RegisterCallback(presCallback,
-            '/packet/presence/x[@xmlns="vcard-temp:x:update"]');
+    if ((_session.Prefs.getBool('roster_avatars') = false) and
+        (_session.Prefs.getBool('chat_avatars') = false)) then begin
+        // turn off callbacks
+        if (_presCB <> -1) then begin
+            _session.UnRegisterCallback(_presCB);
+            _presCB := -1;
+        end;
+    end
+    else begin
+        // turn on callbacks
+        if (_presCB = -1) then begin
+            _presCB := _session.RegisterCallback(presCallback,
+                '/packet/presence/x[@xmlns="vcard-temp:x:update"]');
+        end;
     end;
 end;
 
@@ -211,15 +222,23 @@ begin
         hash := Trim(hash);
         if (hash = '') then exit;
 
+        assert(x <> nil);
+
         {$ifdef Exodus}
         tmps := 'AVATAR: ' + fjid.jid + ', HASH: ' + hash;
         Log(tmps);
         {$endif}
 
         a := find(fjid.jid);
-        if (a <> nil) then begin
-            if (not a.Pending) and (hash <> a.getHash()) then begin
-                //existing avatar needs a refresh
+        if (a = nil) then begin
+            fetch := true;
+            refresh := false;
+        end
+        else begin
+            // compare hashes
+            if (a.Pending) then
+                fetch := false
+            else if (hash <> a.getHash()) then begin
                 fetch := true;
                 refresh := true;
             end;
@@ -258,10 +277,10 @@ end;
 procedure TAvatarCache.Load();
 var
     tmps: string;
-    a: TAvatarCacheEntry;
+    a: TAvatar;
     i: integer;
     jid: Widestring;
-    name, path, fn, hash: string;
+    name, path, fn: string;
     p: TXMLTagParser;
     root, t: TXMLTag;
     items: TXMLTagList;
@@ -280,11 +299,9 @@ begin
                 t := items[i];
                 name := t.GetAttribute('name');
                 jid := t.GetAttribute('jid');
-                hash := t.GetAttribute('hash');
                 if ((jid <> '') and (name <> '') and (FileExists(name))) then begin
                     a := TAvatarCacheEntry.Create();
                     a.LoadFromFile(name);
-                    a.setHash(hash);
                     a.jid := jid;
                     Add(jid, a);
                     {$ifdef Exodus}
@@ -324,13 +341,15 @@ begin
         if (name = '') then begin
             Continue;
         end;
+        if not (a is TAvatarCacheEntry) then begin
+            Continue;
+        end;
 
         name := path + '\' + name;
         a.SaveToFile(name);
         t := root.AddTag('item');
         t.setAttribute('name', name);
         t.setAttribute('jid', _cache[i]);
-        t.setAttribute('hash', a.getHash());
     end;
 
     s := TWidestringlist.Create();

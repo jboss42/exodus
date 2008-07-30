@@ -9,10 +9,12 @@ uses RegExpr, Unicode;
 type
    TGroupParser = class
    private
+       _NestedGroups : TRegExpr;
        _GroupSeparator: WideString;
        _Session: TObject;
    public
        constructor Create(Session: TObject);
+       destructor Destroy(); override;
        function GetNestedGroups(Group: WideString): TWideStringList;
        function GetGroupName(Group: WideString): WideString;
        function GetGroupParent(Group: WideString): WideString;
@@ -23,18 +25,39 @@ type
    end;
 
 implementation
-
-uses
-    Session,
-    StrUtils,
-    SysUtils;
+uses Session;
 
 {---------------------------------------}
 constructor TGroupParser.Create(Session: TObject);
+var
+    sep: Widestring;
+    i: Integer;
 begin
    _Session := Session;
+   //Spaces are no longer word boundaries, but group separators are.
+   sep := TJabberSession(_Session).Prefs.getString('group_separator');
+   if (TJabberSession(_Session).Prefs.getBool('nested_groups') and
+       TJabberSession(_Session).prefs.getBool('branding_nested_subgroup') and
+       (sep <> '')) then
+   begin
+       _GroupSeparator := sep;
+       _NestedGroups := TRegExpr.Create();
+       _NestedGroups.SpaceChars :=  PWideChar(sep)^;
+       for i := 32 to 126 do
+       begin
+           if (chr(i) = sep) then continue;
+           _NestedGroups.WordChars := _NestedGroups.WordChars + chr(i);
+       end;
 
-   _GroupSeparator := TJabberSession(_Session).Prefs.getString('group_separator');
+       _NestedGroups.Expression := '\b\w+';
+       _NestedGroups.Compile();
+   end;
+end;
+
+{---------------------------------------}
+destructor TGroupParser.Destroy();
+begin
+    _NestedGroups.Free;
 end;
 
 {---------------------------------------}
@@ -54,44 +77,20 @@ end;
 function TGroupParser.ParseGroupName(Group: WideString): TWideStringList;
 var
     Found: Boolean;
-    sep: Widestring;
-    sepoffset: integer;
-    temp, temp2: widestring;
 begin
-    Result := TWideStringList.Create();
+   Result := TWideStringList.Create();
+   if (_NestedGroups = nil) then begin
+       Result.Add(Group);
+       exit;
+   end;
 
-    sep := TJabberSession(_Session).Prefs.getString('group_separator');
-
-    temp := Trim(Group);
-    if (TJabberSession(_Session).Prefs.getBool('nested_groups') and
-        TJabberSession(_Session).prefs.getBool('branding_nested_subgroup') and
-        (sep <> '')) then
-    begin
-        sepoffset := Pos(sep, temp);
-        while (sepoffset > 0) do
-        begin
-            if (sepoffset = 1) then
-            begin
-                // sep should never be at the start.
-                // usually indicates a double sep which we will silently eat.
-                temp := Trim(MidStr(temp, 2, Length(temp)));
-            end
-            else begin
-                temp2 := Trim(LeftStr(temp, sepoffset - 1));
-                if (temp2 <> '') then
-                begin
-                    Result.Add(temp2);
-                end;
-                temp := Trim(MidStr(temp, sepoffset + 1, Length(temp)));
-            end;
-
-            sepoffset := Pos(sep, temp);
-        end;
-    end;
-    if (temp <> '') then
-    begin
-        Result.Add(temp);
-    end;
+   Found := _NestedGroups.Exec(Group);
+   //Continue while finding tokens separated by /
+   while (Found) do
+   begin
+       Result.Add(_NestedGroups.Match[0]);
+       Found := _NestedGroups.ExecNext();
+   end;
 end;
 
 {---------------------------------------}

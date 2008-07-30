@@ -30,7 +30,7 @@ type
     _lastError: Widestring;
     _validated: boolean;
     _itemTextColor: TColor;
-
+    
     function GetIsValid(): boolean;
 
   public
@@ -111,11 +111,9 @@ type
     procedure lstJIDSKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btnRemoveRecipientClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     _supportedTypes: TWidestringList;
     _foundError: boolean;
-    _sessionListener: TObject; //TSessionListener
     
     function IndexOfRecipient(itemInfo: TItemInfo): integer;
     procedure ClearRecipients();
@@ -142,8 +140,6 @@ type
     procedure AddRecipientsByItems(items: IExodusItemList);
 
     procedure RemoveSelectedRecipients();
-
-    procedure OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
   public
     constructor Create(AOwner: TComponent);override;
     Destructor Destroy(); override;
@@ -236,8 +232,8 @@ procedure ShowSendBroadcast(popItems: IExodusItemList;    //initial populated ji
 var
     idx: Integer;
     item: IExodusItem;
+    uids: TWidestringList;
     fullItemList: IExodusItemList;
-    bForm: TdlgSndBroadcast;
 begin
     fullItemList := TExodusItemList.Create(); //released when out of scope
     for idx := 0 to popItems.Count - 1 do
@@ -245,13 +241,14 @@ begin
         item := popItems.Item[idx];
         ExpandAndAddItems(item, fullItemList);
     end;
-    bForm := TdlgSndBroadcast.create(Application);
-    bForm.AddRecipientsByItems(fullItemList);
-
-    bForm.Subject := popSubject;
-    bForm.PlaintextMessage := popMessage;
-    bForm.Show();
-
+    //now walk the fully expanded list and populate uid list
+    uids := TWidestringList.Create;
+    for idx := 0 to fullItemList.Count - 1 do
+    begin
+        uids.Add(fullItemList.Item[idx].UID)
+    end;
+    ShowSendBroadcast(uids, popSubject, popMessage);
+    uids.free();
 end;
 
 {------------------------------------------------------------------------------}
@@ -376,7 +373,7 @@ begin
         else begin
             item := GetExodusItem();
 
-            if (_ITYPE = EI_TYPE_CONTACT) and (item.value['network'] <> 'xmpp') then
+            if (_ITYPE = EI_TYPE_CONTACT) and (item.value['network'] <> '') then
                 _lastError := ESTR_OUT_OF_NETWORK
             else if (_ITYPE = EI_TYPE_ROOM) then
             begin
@@ -393,6 +390,9 @@ begin
     end;
     _validated := true;
 end;
+{
+
+}
 
 {*******************************************************************************
 ************************* TdlgSndBroadcast *************************************
@@ -405,15 +405,12 @@ begin
     _supportedTypes.add(EI_TYPE_ROOM);
     _supportedTypes.add(EI_TYPE_GROUP); //!?
     _foundError := false;
-    _sessionListener := Session.TSessionListener.Create(nil, OnDisconnected);
-    RTComposer.Font.Size := 10;
 end;
 
 {------------------------------------------------------------------------------}
 Destructor TdlgSndBroadcast.Destroy();
 begin
     _supportedTypes.Free();
-    _sessionListener.Free();
     inherited;
 end;
 
@@ -434,12 +431,6 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TdlgSndBroadcast.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-    inherited;
-    Action := caFree;
-end;
-
 procedure TdlgSndBroadcast.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
     inherited;
@@ -451,11 +442,6 @@ procedure TdlgSndBroadcast.FormCreate(Sender: TObject);
 begin
     inherited;
     lstJIDs.SmallImages := RosterImages.RosterTreeImages.ImageList;
-end;
-
-procedure TdlgSndBroadcast.OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
-begin
-    Self.Close();
 end;
 
 {------------------------------------------------------------------------------}
@@ -689,8 +675,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TdlgSndBroadcast.AddRecipientByItem(item: IExodusItem);
 begin
-    if (_supportedTypes.IndexOf(item.Type_) <> -1) then
-        AddRecipient(TItemInfo.Create(item.UID, item));
+    AddRecipient(TItemInfo.Create(item.UID, item));
 end;
 
 {------------------------------------------------------------------------------}

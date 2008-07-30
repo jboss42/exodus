@@ -58,7 +58,7 @@ type
 implementation
 
 uses
-    ComServ, DebugManager, SysUtils;
+    ComServ, Debug, SysUtils;
 
 constructor TExodusToolbarButton.Create(btn: TToolButton; ImageList: IExodusRosterImages);
 begin

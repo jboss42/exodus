@@ -100,6 +100,8 @@ var
     cp: TJabberCustomPres;
 
     procedure BrandShowOption(value: Widestring; brand: boolean);
+    var
+        loc: Integer;
     begin
         if brand then begin
             _show_list.Add(value);

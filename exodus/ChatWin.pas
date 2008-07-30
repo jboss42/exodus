@@ -1138,7 +1138,8 @@ begin
     txt := getInputText(MsgOut);
     if (txt = '/clear') then begin
       Clear1Click(self);
-      ClearMsgOut();
+      MsgOut.SelectAll;
+      MsgOut.ClearSelection();
       exit;
     end;
     xml := '';
@@ -1786,8 +1787,8 @@ begin
     else begin
         r.Top := 1;
         r.Left := 1;
-        r.Bottom := imgAvatar.Height;
-        r.Right := imgAvatar.Width;
+        r.Bottom := 28;
+        r.Right := 28;
         imgAvatar.Canvas.StretchDraw(r, _unknown_avatar);
     end;
 end;

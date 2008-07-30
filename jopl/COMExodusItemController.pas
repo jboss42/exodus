@@ -87,9 +87,7 @@ type
       _GroupParser : TGroupParser;
       _HoverControls: TWideStringList;
       _itemupdateCB: integer;
-      _depResolver: TObject; //TSimpleDependancyHandler;
 
-      procedure _OnDependancyReady(tag: TXMLTag);
       procedure _SessionCallback(Event: string; Tag: TXMLTag);
       procedure _GetGroups();
       procedure _ParseGroups(Event: string; Tag: TXMLTag);
@@ -149,7 +147,7 @@ end;
 {---------------------------------------}
 constructor TExodusItemController.Create(JS: TObject);
 begin
-    inherited create();
+
     _Items := TWideStringList.Create();
     _Items.Duplicates := dupError;
     _JS := JS;
@@ -160,11 +158,12 @@ begin
     _GroupsCB := TExodusGroupCallback.Create(Self);
     _HoverControls := TWideStringList.Create();
     _itemupdateCB := TJabberSession(_JS).RegisterCallback(_ItemUpdateCallback, '/item/update');
-    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(js));
 end;
 
 {---------------------------------------}
 destructor TExodusItemController.Destroy();
+var
+   Hover: TCOMExodusHover;
 begin
 
     ClearItems();
@@ -176,28 +175,27 @@ begin
     _GroupsCB := nil;
 
     while (_HoverControls.Count > 0) do
+    begin
+        Hover := TCOMExodusHover(_HoverControls.Objects[0]);
         _HoverControls.Delete(0);
-
+        //Hover.Free(); hover freed by owner
+    end;
     _HoverControls.Free;
 
     if (_itemupdateCB >= 0) then
     begin
         TJabberSession(_JS).UnRegisterCallback(_itemupdateCB);
     end;
-    _depResolver.Free();
-    inherited;
-end;
-
-procedure TExodusItemController._OnDependancyReady(tag: TXMLTag);
-begin
-   _GroupsLoaded := false;
-   _GetGroups();
 end;
 
 {---------------------------------------}
 procedure TExodusItemController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
-    if Event = '/session/disconnecting' then begin
+    if Event = '/session/ready/session' then begin
+       _GroupsLoaded := false;
+       _GetGroups();
+    end
+    else if Event = '/session/disconnecting' then begin
         _SendGroups();
     end
     else if Event = '/session/disconnected' then begin
@@ -265,7 +263,7 @@ begin
     _GroupsLoaded := true;
     TJabberSession(_JS).FireEvent('/item/end', Group);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
-    TAuthDependancyResolver.SignalReady(DEPMOD_GROUPS, nil, TJabberSession(_JS));
+    TJabberSession(_JS).FireEvent('/session/ready/groups', nil);
 end;
 
 {---------------------------------------}

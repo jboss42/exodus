@@ -87,14 +87,11 @@ type
         _js: TObject;
         _cache: TWidestringlist;
         _pending: TWidestringlist;
-        _depResolver: TObject; //TSimpleDependancyHandler;
 
         procedure addPending(ejid, node, caps_jid: Widestring);
         procedure fireCaps(jid, capid: Widestring);
 
         procedure AddCached(e: TJabberCapsEntity);
-        procedure OnDependancyReady(tag: TXMLTag);
-
     public
         constructor Create();
         destructor Destroy(); override;
@@ -153,7 +150,6 @@ begin
     _pending := TWidestringlist.Create();
     _xp := TXPLite.Create('/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
     _xp_q := TXPLite.Create('/iq/query[@xmlns="' + XMLNS_DISCOINFO + '"]');
-    _depResolver := nil;
 end;
 
 {---------------------------------------}
@@ -165,8 +161,6 @@ begin
     _pending.Free();
     _xp.Free();
     _xp_q.Free();
-    _depResolver.Free();
-    inherited;
 end;
 
 {---------------------------------------}
@@ -182,14 +176,6 @@ begin
         jSelfCaps := TJabberSelfEntity.Create();
 
     jSelfCaps.SetSession(js);
-
-     _depResolver := TSimpleAuthResolver.create(OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(js));
-end;
-
-procedure TJabberCapsCache.OnDependancyReady(tag: TXMLTag);
-begin
-    Load();
-    TAuthDependancyResolver.SignalReady(DEPMOD_CAPS_CACHE);
 end;
 
 {---------------------------------------}
@@ -201,7 +187,12 @@ var
     q: TXMLTag;
 begin
     // Save when we get disconnected, and load when we get auth'd
-    if (event = '/session/disconnected') then
+    if (event = DEPMOD_READY_SESSION_EVENT) then
+    begin
+        Load();
+        TJabberSession(_js).FireEvent(DEPMOD_READY_EVENT + DEPMOD_CAPS_CACHE, tag);
+    end
+    else if (event = '/session/disconnected') then
     begin
         Save();
         jSelfCaps.Version := '';

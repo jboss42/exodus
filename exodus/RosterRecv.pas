@@ -74,7 +74,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterRecv.Restore(tag: TXMLTag);
 var
-    i: integer;
+    i, j: integer;
     n: TListItem;
     from: TJabberID;
 //    noi, noi_label, noi_image_prefix: Widestring;

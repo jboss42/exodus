@@ -3,7 +3,8 @@ inherited frmBaseChat: TfrmBaseChat
   Top = 474
   ClientHeight = 260
   ClientWidth = 415
-  OnResize = FormResize
+  OnDestroy = FormDestroy
+  OnResize = TntFormResize
   ExplicitWidth = 423
   ExplicitHeight = 288
   PixelsPerInch = 96
@@ -32,6 +33,8 @@ inherited frmBaseChat: TfrmBaseChat
     ExplicitWidth = 415
     inherited pnlDockTopContainer: TTntPanel
       Width = 415
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 415
       inherited tbDockBar: TToolBar
         Left = 366
@@ -62,15 +65,18 @@ inherited frmBaseChat: TfrmBaseChat
       end
     end
     inherited pnlDockControlSite: TTntPanel
-      Width = 407
-      ExplicitWidth = 407
+      Width = 415
+      ExplicitLeft = 0
+      ExplicitTop = 28
+      ExplicitWidth = 415
+      ExplicitHeight = 27
     end
   end
   object pnlMsgList: TPanel
     Left = 0
-    Top = 33
+    Top = 55
     Width = 415
-    Height = 158
+    Height = 136
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4

@@ -25,8 +25,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ImgList, Buttons, ToolWin, Contnrs,
     ExtCtrls, TntComCtrls, StateForm, Unicode, XMLTag, buttonFrame, JabberMsg,
-    Menus, TntMenus, TntExtCtrls, Exodus_TLB, COMToolbar, COMDockToolbar,
-    COMExodusControlSite;
+    Menus, TntMenus, TntExtCtrls, Exodus_TLB, COMToolbar, COMDockToolbar;
 
   function generateUID(): widestring;
 
@@ -67,6 +66,7 @@ type
     procedure btnDockToggleClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
+    procedure pnlDockResize(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
@@ -91,8 +91,7 @@ type
     _closing: boolean; // Is the window closing (for updatedocked() call);
 
     _COMDockbar: IExodusDockToolbar;
-    _dockbarControl: IExodusControlSite;
-
+    
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
     procedure prefsCallback(event: string; tag: TXMLTag);
@@ -246,24 +245,6 @@ end;
 function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
 begin
     Result := nil;
-    if (ToolbarName = 'dockbar') then
-    begin
-        _dockbarControl := nil;
-        pnlDock.Align := alNone;
-        pnlDock.AutoSize := false;
-        pnlDock.Height := pnlDock.Height + 21;
-        pnlDockControlSite.AutoSize := false;
-        pnlDockControlSite.Height := 21;
-
-        _dockbarControl := TExodusControlSite.create(nil, pnlDockControlSite, StringToGUID(ID));
-        _dockbarControl.AlignClient := true;
-
-        pnlDockControlSite.AutoSize := true;
-        pnlDockControlSite.Visible := true;
-        pnlDock.AutoSize := true;
-        pnlDock.Align := alTop;
-        Result := _dockbarControl as IExodusToolbarControl;
-    end;
 end;
 
 function TfrmDockable.GetDockbar(): IExodusDockToolbar;
@@ -583,6 +564,16 @@ end;
 procedure TfrmDockable.showDockToggleButton(show: boolean);
 begin
     btnDockToggle.Visible := show;
+end;
+
+procedure TfrmDockable.pnlDockResize(Sender: TObject);
+var
+    i: integer;
+begin
+    inherited;
+    //ask parent form to realign, allowing panel to be completely shown
+//    for i := 0 to Self.ControlCount - 1 do
+//        Controls[i].Align := Controls[i].Align;
 end;
 
 procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);

@@ -65,7 +65,7 @@ type
     procedure txtServerFilterSelect(Sender: TObject);
     procedure lstRoomsData(Sender: TObject; Item: TListItem);
     procedure lstRoomsColumnClick(Sender: TObject; Column: TListColumn);
-    //procedure txtServerFilterChange(Sender: TObject);
+    procedure txtServerFilterChange(Sender: TObject);
     procedure lstRoomsDataFind(Sender: TObject; Find: TItemFind;
       const FindString: WideString; const FindPosition: TPoint;
       FindData: Pointer; StartIndex: Integer; Direction: TSearchDirection;
@@ -373,14 +373,8 @@ end;
 procedure TfrmJoinRoom.btnFetchClick(Sender: TObject);
 var
     tj: TJabberID;
-    i: Integer;
 begin
-    if (txtServerFilter.Text = _('- ALL SERVERS -')) then
-    begin
-        for i := 0 to txtServer.Items.Count - 1 do
-            _fetch(txtServer.Items[i]);
-        exit;
-    end;
+    if (txtServerFilter.Text = _('- ALL SERVERS -')) then exit;
     tj := TJabberID.Create(txtServerFilter.Text);
     if ((not tj.isValid) or (tj.user <> '') or (tj.resource <> '')) then begin
         tj.Free();
@@ -568,7 +562,7 @@ end;
 {---------------------------------------}
 procedure TfrmJoinRoom.txtServerFilterSelect(Sender: TObject);
 begin
-//    btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
+    btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
 
     // Filter on this server.
     _processFilter();
@@ -624,10 +618,10 @@ begin
     _enableNext();
 end;
 
-//procedure TfrmJoinRoom.txtServerFilterChange(Sender: TObject);
-//begin
-//    btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
-//end;
+procedure TfrmJoinRoom.txtServerFilterChange(Sender: TObject);
+begin
+    btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
+end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom.lstRoomsDataFind(Sender: TObject; Find: TItemFind;

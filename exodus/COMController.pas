@@ -172,6 +172,7 @@ type
     _room_logger: IExodusLogger;
     
   public
+    constructor Create();
     procedure Initialize(); override;
     destructor Destroy(); override;
 
@@ -290,6 +291,7 @@ uses
     DockContainer, Profile, CapsCache,
     ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
     Chat, JabberID,
+//    MsgRecv,
     Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
@@ -735,7 +737,6 @@ procedure UnloadPlugins();
 var
     pp: TPlugin;
     i: integer;
-    libname: widestring;
 begin
     try
         // kill all of the various plugins which are loaded.
@@ -751,26 +752,17 @@ begin
         for i := plugs.Count - 1 downto 0 do begin
           try
             pp := TPlugin(plugs.Objects[i]);
-            libname := pp.libName;
             plugs.Delete(i);
             pp.com.Shutdown;
-            pp.com := nil; //last ref to plugin
             pp.Free;
           except
-            On E:Exception do
-            begin
-                DebugMessage('Exception trying to unload plugin: ' + libName + ', (' + E.message + ')');
-                continue;
-            end;
+            DebugMessage('COM Exception in TExodusChat.UnloadPlugins');
+            continue;
           end;
 
         end;
-        plugs.Clear();
+       plugs.Clear();
     except
-        On E:Exception do
-        begin
-            DebugMessage('Exception in UnloadPlugins (' + E.message + ')');
-        end;
     end;
 end;
 
@@ -999,6 +991,10 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+constructor TExodusController.Create();
+begin
+    inherited Create();
+end;
 
 {---------------------------------------}
 procedure TExodusController.Initialize();
@@ -1029,9 +1025,9 @@ end;
 {---------------------------------------}
 destructor TExodusController.Destroy();
 begin
-//   try
+   try
 
-//    if (_menu_items <> nil) then begin
+    if (_menu_items <> nil) then begin
 
         OutputDebugString('Destroying TExodusController');
 
@@ -1047,11 +1043,12 @@ begin
         FreeAndNil(_msg_menus);
         FreeAndNil(_parser);
         FreeAndNil(_caps_exts);
-//    end;
-     inherited;
-//   except
+        inherited;
 
-//   end;
+    end;
+   except
+
+   end;
 end;
 
 {---------------------------------------}
@@ -1066,7 +1063,7 @@ begin
             P.com.NewChat(jid, ExodusChat);
         except
             on E:Exception do begin
-                DebugMessage('Plugin ' + p.libName + ' raised exception (' + E.Message + ') in TExodusController.fireNewChat');
+                DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireNewChat');
                 continue;
             end;
         end;
@@ -1085,7 +1082,7 @@ begin
             p.com.NewOutgoingIM(jid, ExodusChat);
         except
             on E:Exception do begin
-                DebugMessage('Plugin ' + p.libName + ' raised exception (' + E.Message + ') in TExodusController.fireNewOutgoingIM');
+                DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireNewOutgoingIM');
                 continue;
             end;
         end;
@@ -1112,7 +1109,7 @@ begin
                 iep2.NewIncomingIM(jid, ExodusChat);
             except
                 on E:Exception do begin
-                    DebugMessage('Plugin ' + p.libName + ' raised exception (' + E.Message + ') in TExodusController.fireNewOutgoingIM');
+                    DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireNewOutgoingIM');
                     continue;
                 end;
             end;
@@ -1131,7 +1128,7 @@ begin
             p.com.NewRoom(jid, ExodusChat);
         except
             on E:Exception do begin
-                DebugMessage('Plugin ' + p.libName + ' raised exception (' + E.Message + ') in TExodusController.fireNewRoom');
+                DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireNewRoom');
                 continue;
             end;
         end;
@@ -1153,7 +1150,7 @@ begin
             xml := xml + p.com.NewIM(jid, body, subject, xtags);
         except
             on E:Exception do begin
-                DebugMessage('Plugin ' + p.libName + ' raised exception (' + E.Message + ') in TExodusController.fireIM');
+                DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireIM');
                 continue;
             end;
         end;
@@ -1754,6 +1751,7 @@ var
     tabCtrl: IExodusTabController;
     tab: IExodusTab;
     items: IExodusItemList;
+    item: IExodusItem;
     idx: Integer;
 begin
     Result := '';
@@ -1774,6 +1772,7 @@ end;
 function TExodusController.GetActiveContacts(Online: WordBool): OleVariant;
 var
     tabCtrl: IExodusTabController;
+    tab: IExodusTab;
     items: IExodusItemList;
     item: IExodusItem;
     idx: Integer;

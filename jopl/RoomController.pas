@@ -25,16 +25,16 @@ uses XMLTag, DisplayName, Exodus_TLB, Unicode, ComObj;
 type TRoomController = class
      private
          _JS: TObject;
+         _SessionCB: Integer;
          _ItemsCB: IExodusItemCallback;
          _dnListener: TDisplayNameEventListener;
          _RoomsLoaded: Boolean;
-         _depResolver: TObject; //TSimpleDependancyHandler;
 
          //Methods
          procedure _GetRooms();
          procedure _ParseRooms(Event: string; Tag: TXMLTag);
          procedure _ParseRoom(Room: IExodusItem; Tag: TXMLTag);
-         procedure _OnDependancyReady(Tag: TXMLTag);
+         procedure _SessionCallback(Event: string; Tag: TXMLTag);
          procedure _OnDisplayNameChange(bareJID: Widestring; DisplayName: Widestring);
 
      public
@@ -70,19 +70,20 @@ constructor TRoomController.Create(JS: TObject);
 begin
     _JS := JS;
     _ItemsCB := TExodusRoomsCallback.Create(Self);
+    _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
     _dnListener := TDisplayNameEventListener.Create();
     _dnListener.OnDisplayNameChange := _OnDisplayNameChange;
-    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS, TJabberSession(js));
 end;
 
 {---------------------------------------}
 destructor  TRoomController.Destroy();
 begin
+    with TJabberSession(_js) do begin
+        UnregisterCallback(_SessionCB);
+    end;
     _dnListener.Free();
-    _depResolver.Free();
 
     _ItemsCB := nil;
-    inherited;
 end;
 
 {---------------------------------------}
@@ -174,9 +175,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TRoomController._OnDependancyReady(Tag: TXMLTag);
+procedure TRoomController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
-    _GetRooms();
+     if Event = '/session/ready/groups'  then
+     begin
+         _GetRooms();
+     end;
 end;
 
 {---------------------------------------}
@@ -242,7 +246,7 @@ begin
     Item := nil;
     TJabberSession(_JS).FireEvent('/item/end', Item);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
-    TAuthDependancyResolver.SignalReady(DEPMOD_BOOKMARKS, nil, TJabberSession(_JS));
+    TJabberSession(_JS).FireEvent(DEPMOD_READY_EVENT + DEPMOD_BOOKMARKS, nil);
     RoomTags.Free();
 end;
 

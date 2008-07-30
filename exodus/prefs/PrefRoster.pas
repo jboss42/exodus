@@ -190,6 +190,8 @@ begin
 end;
 
 procedure TfrmPrefRoster.SavePrefs();
+var
+   Idx: integer;
 begin
     inherited;
         

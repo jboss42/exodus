@@ -31,7 +31,7 @@ type
         _cb: integer;
         _icb: integer;
         _blockers: TWidestringlist;
-    protected
+    published
         procedure SessionCallback(event: string; tag: TXMLTag);
         procedure SessionItemCallback(event: string; item: IExodusItem);
     public

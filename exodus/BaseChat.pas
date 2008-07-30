@@ -109,7 +109,7 @@ type
     procedure ChatToolbarButtonUnderlineClick(Sender: TObject);
     procedure ChatToolbarButtonColorsClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormResize(Sender: TObject);
+    procedure TntFormResize(Sender: TObject);
 
   private
     { Private declarations }
@@ -129,9 +129,9 @@ type
     _close_shift: TShiftState;
     _msgframe: TObject;
     _session_chat_toolbar_callback: integer;
-//    _filelink_callback: integer;
+    _filelink_callback: integer;
     _msglist_type: integer;
-//    _fileLinkInfo: TFileLinkClickInfo;
+    _fileLinkInfo: TFileLinkClickInfo;
     procedure _scrollBottom();
    {
         Set the left and top properties of the given form.
@@ -155,14 +155,11 @@ type
     procedure SetPriorityNormal();
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     function GetChatController(): TObject; virtual; abstract;
-{
     procedure ProcessNavigate(Sender: TObject;
               const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
               Headers: OleVariant; var Cancel: WordBool);
     procedure OnFileLinkCallback(event: string; tag: TXMLTag);
-}    
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;override;
-    procedure ClearMsgOut();
 
   public
     { Public declarations }
@@ -220,7 +217,6 @@ uses
     RosterImages,
     ActivityWindow,
     ExSession,
-    COMExodusControlSite,
     COMChatController;
 
 const
@@ -244,12 +240,6 @@ end;
 function TfrmBaseChat.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
 begin
     Result := nil;
-    if (ToolbarName = 'composerbar') then
-    begin
-        Result := TExodusControlSite.Create(pnlControlSite, pnlControlSite, StringToGUID(ID));
-    end
-    else
-        Result := inherited AddControl(ID, ToolbarName);
 end;
 
 {
@@ -450,7 +440,8 @@ begin
     _lastMsg := _msgHistory.Count;
     _pending := '';
 
-    ClearMsgOut();
+    MsgOut.SelectAll;
+    MsgOut.ClearSelection();
     UpdateToolbarState();
     if (MainSession.Prefs.getBool('show_priority')) then
       SetPriorityNormal;
@@ -461,19 +452,6 @@ begin
             // To handle Cannot focus exception
         end;
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.ClearMsgOut();
-begin
-    // Clear out the box (DON'T use MsgOut.Clear)
-    // reset text attributes
-    MsgOut.SelectAll;
-    MsgOut.ClearSelection();
-    MsgOut.SelAttributes.Bold := false;
-    MsgOut.SelAttributes.Italic := false;
-    MsgOut.SelAttributes.UnderlineType := ultNone;
-    MsgOut.SelAttributes.Color := MainSession.Prefs.getInt(PREF_FONT_COLOR);
 end;
 
 {---------------------------------------}
@@ -538,8 +516,8 @@ begin
             end;
             HTML_MSGLIST :
             begin
-                _msgframe := TfIEMsgList.Create(Self);
-//                TfIEMsgList(_msgframe).browser.OnBeforeNavigate2 := ProcessNavigate;
+            _msgframe := TfIEMsgList.Create(Self);
+            TfIEMsgList(_msgframe).browser.OnBeforeNavigate2 := ProcessNavigate;
             end
             else begin
                 _msgframe := TfRTFMsgList.Create(Self);
@@ -579,9 +557,8 @@ begin
         tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
 
         _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
-{
         _filelink_callback := MainSession.RegisterCallback(OnFileLinkCallback, '/session/filelink/click/response');
-}
+
         MsgOutToolbar := TExodusMsgOutToolbar.Create(tbMsgOutToolbar, COMRosterImages, Self, 'composerbar');
 
         updateFromPrefs();
@@ -590,14 +567,14 @@ begin
     end;
 end;
 
-{---------------------------------------
+{---------------------------------------}
 procedure TfrmBaseChat.OnFileLinkCallback(event: string; tag: TXMLTag);
 begin
     if (event <> '/session/filelink/click/response') then exit;
     if (_fileLinkInfo.ExtendedURL <> tag.Data) then exit;
     _fileLinkInfo.Handled := true;
 end;
-}
+
 {---------------------------------------}
 procedure TfrmBaseChat.OnSessionCallback(event: string; tag: TXMLTag);
 begin
@@ -619,7 +596,7 @@ begin
     _hotkeys_text_stringlist.Free();
 
     MainSession.UnRegisterCallback(_session_chat_toolbar_callback);
-//    MainSession.UnRegisterCallback(_filelink_callback);
+    MainSession.UnRegisterCallback(_filelink_callback);
     if (frmExodus <> nil) then
         frmExodus.ActiveChat := nil;
 
@@ -646,15 +623,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.FormResize(Sender: TObject);
-{
+procedure TfrmBaseChat.TntFormResize(Sender: TObject);
 var
     oldHeight: real;
     msglistratio: real;
     pnlinputratio: real;
     real_a: real;
     real_b: real;
-}    
 begin
     // This code exists to try and prevent losing a part of the window due to resize
     // when (un)docking.
@@ -1004,7 +979,7 @@ begin
     // let Windows know that you're done
     DragFinish( msg.Drop );
 end;
-{
+
 procedure TfrmBaseChat.ProcessNavigate(Sender: TObject; const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
 Headers: OleVariant; var Cancel: WordBool);
 var
@@ -1028,7 +1003,7 @@ begin
         Tag.Free();
     end;
 end;
-}
+
 
 end.
 

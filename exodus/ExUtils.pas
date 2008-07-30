@@ -162,8 +162,6 @@ const
     sNewGroup = 'New Group';
     sNewGroupPrompt = 'Enter new group name: ';
     sNewGroupExists = 'This group already exists!';
-    sInvalidGroupName = 'Invalid group name:  %s';
-    sInvalidGroupChars = 'Invalid character sequence in group name:  %s';
 
 var
     presenceToAtom: TStringList;
@@ -374,18 +372,14 @@ function getDisplayField(fld: string): string;
 begin
     // send back "well formatted" field names
 
-    if (fld = 'nickname') then result := _('Nickname')
-    else if (fld = 'first') then result := _('First Name')
-    else if (fld = 'last') then result := _('Last Name')
-    else if (fld = 'email') then result := _('EMail Address')
+    if (fld = 'nick') then result := _('Nickname:')
+    else if (fld = 'first') then result := _('First Name:')
+    else if (fld = 'last') then result := _('Last Name:')
+    else if (fld = 'email') then result := _('EMail Address:')
     else if (fld = 'password') then result := _('Password')
-    else if (fld = 'username') then result := _('UserName')
+    else if (fld = 'username') then result := _('UserName:')
     else
-    begin
-        fld[1] :=  UpCase(fld[1]);
-        result :=  fld;
-    end;
-
+        result := fld;
 end;
 
 Procedure DebugMsgBox(msg : string);
@@ -1081,7 +1075,6 @@ var
     new_grp: WideString;
     nesting: Boolean;
     grpSeparator: Widestring;
-    temp: Widestring;
 begin
     // Add a roster grp.
     Result := nil;
@@ -1100,13 +1093,6 @@ begin
         msg := _(sNewGroupPrompt);
     end;
     if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
-    temp := Tnt_WideStringReplace(new_grp, grpSeparator, ' ', [rfReplaceAll]);
-    if (Trim(temp) = '') then
-    begin
-        temp := Format(_(sInvalidGroupName), [new_grp]);
-        MessageDlgW(temp, mtError, [mbOK], 0);
-        exit;
-    end;
 
     // add the new grp.
     if (nesting) and (base_grp <> '') then
@@ -1116,15 +1102,7 @@ begin
         MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
     end
     else begin
-        temp := grpSeparator + grpSeparator;
-        if (Pos(temp, new_grp) > 0) then
-        begin
-            temp := Format(_(sInvalidGroupChars), [temp]);
-            MessageDlgW(temp, mtError, [mbOK], 0);
-        end
-        else begin
-            Result := MainSession.ItemController.AddGroup(new_grp);
-        end;
+        Result := MainSession.ItemController.AddGroup(new_grp);
     end;
 end;
 

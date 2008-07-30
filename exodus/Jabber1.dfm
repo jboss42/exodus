@@ -20,7 +20,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 505
-  ExplicitHeight = 794
+  ExplicitHeight = 801
   PixelsPerInch = 120
   TextHeight = 16
   object imgAd: TImage
@@ -45,7 +45,6 @@ inherited frmExodus: TfrmExodus
     AutoSize = True
     BandBorderStyle = bsNone
     Bands = <>
-    ShowText = False
     Visible = False
   end
   object tbsView: TPageControl
@@ -188,6 +187,8 @@ inherited frmExodus: TfrmExodus
           Width = 446
           Height = 21
           Align = alClient
+          ExplicitLeft = 30
+          ExplicitTop = 4
           ExplicitWidth = 4
           ExplicitHeight = 16
         end
@@ -1097,7 +1098,7 @@ inherited frmExodus: TfrmExodus
     Left = 80
     Top = 146
     Bitmap = {
-      494C010162006400040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010162006300040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000009001000001002000000000000090
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

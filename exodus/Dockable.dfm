@@ -10,7 +10,7 @@ inherited frmDockable: TfrmDockable
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown
   ExplicitWidth = 259
-  ExplicitHeight = 234
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   object pnlDock: TTntPanel
@@ -33,10 +33,10 @@ inherited frmDockable: TfrmDockable
       TabOrder = 0
       object tbDockBar: TToolBar
         AlignWithMargins = True
-        Left = 155
+        Left = 202
         Top = 3
         Width = 46
-        Height = 22
+        Height = 28
         Align = alRight
         AutoSize = True
         EdgeInner = esNone
@@ -77,31 +77,23 @@ inherited frmDockable: TfrmDockable
       object pnlDockTop: TTntPanel
         Left = 0
         Top = 0
-        Width = 152
+        Width = 162
         Height = 28
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
-        ExplicitWidth = 162
       end
     end
     object pnlDockControlSite: TTntPanel
-      AlignWithMargins = True
-      Left = 4
+      Left = 0
       Top = 28
-      Width = 196
+      Width = 204
       Height = 5
-      Margins.Left = 4
-      Margins.Top = 0
-      Margins.Right = 4
-      Margins.Bottom = 0
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
-      ExplicitLeft = 3
-      ExplicitWidth = 198
     end
   end
 end

@@ -41,6 +41,25 @@ implementation
 uses
     ComServ;
 
+{
+function TExodusMsgOutToolbar.AddControl(
+  const ID: WideString): IExodusToolbarControl;
+begin
+    Result := nil;
+    try
+        if (_controlSite = nil) then exit;
+        Result := TExodusControlSite.Create(_controlSite, _controlSite, StringToGuid(Id));
+        (Result as IExodusControlSite).AlignClient:= false;
+    except
+        on E:Exception do
+        begin
+            DebugMessage('Exception in TExodusMsgOutToolbar.AddControl, ClassID: ' + ID + ', (' + E.Message + ')');
+            Result := nil;
+        end;
+    end;
+end;
+}
+
 function TExodusMsgOutToolbar.AddButton(const ImageID: WideString): IExodusToolbarButton;
 begin
     Result := inherited AddButton(ImageID);

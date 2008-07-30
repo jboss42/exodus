@@ -181,8 +181,7 @@
 
     <!-- Notification Preferences -->
     <notify_sounds value="0" control="chkSound" state="rw"/>
-	
-	<suspend_dnd_notifications value="0" control="chkSuspendDND" state="rw"/>
+
     <!-- types of notifications. This section allows branders to hide
          types. NOTE  If a noptification type is not allowed make sure
          the values set for the sources below do not contain that type--> 
@@ -466,7 +465,6 @@
 
 
     <!-- Branding items -->
-	<brand_changepassword value="1"/>
     <brand_ad />
     <brand_ad_url />
     <!-- application ID is different than caption. It is used for

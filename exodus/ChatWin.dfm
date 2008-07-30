@@ -21,19 +21,19 @@ inherited frmChat: TfrmChat
     Width = 492
     ExplicitWidth = 492
     inherited pnlDockTopContainer: TTntPanel
-      Width = 492
+      Width = 490
       AutoSize = True
-      ExplicitWidth = 492
+      ExplicitWidth = 490
       inherited tbDockBar: TToolBar
-        Left = 443
-        ExplicitLeft = 443
+        Left = 441
+        ExplicitLeft = 441
       end
       inherited pnlDockTop: TTntPanel
-        Width = 440
-        ExplicitWidth = 440
+        Width = 438
+        ExplicitWidth = 438
         inherited pnlChatTop: TTntPanel
-          Width = 440
-          ExplicitWidth = 440
+          Width = 438
+          ExplicitWidth = 438
           object pnlJID: TPanel
             Left = 0
             Top = 0
@@ -67,11 +67,11 @@ inherited frmChat: TfrmChat
               Left = 4
               Top = 0
               Width = 35
-              Height = 26
+              Height = 28
               Margins.Left = 4
               Margins.Top = 0
               Margins.Right = 0
-              Margins.Bottom = 2
+              Margins.Bottom = 0
               Align = alLeft
               OnClick = imgAvatarClick
               OnPaint = imgAvatarPaint
@@ -93,17 +93,16 @@ inherited frmChat: TfrmChat
       end
     end
     inherited pnlDockControlSite: TTntPanel
-      Width = 484
-      ExplicitLeft = 4
-      ExplicitWidth = 484
+      Width = 490
+      ExplicitWidth = 490
     end
   end
   inherited pnlMsgList: TPanel
     Width = 492
-    Height = 314
+    Height = 292
     Constraints.MinHeight = 25
     ExplicitWidth = 492
-    ExplicitHeight = 314
+    ExplicitHeight = 292
   end
   inherited pnlInput: TPanel
     Top = 351
@@ -195,7 +194,7 @@ inherited frmChat: TfrmChat
       Caption = '-'
     end
     object mnuSendFile: TTntMenuItem
-      Caption = 'Peer to Peer File Transfer ...'
+      Caption = 'Send File ...'
       OnClick = mnuSendFileClick
     end
     object popAddContact: TTntMenuItem

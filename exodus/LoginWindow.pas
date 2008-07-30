@@ -59,12 +59,10 @@ type
     procedure mnuRenameProfileClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure lblConnectClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
 
   private
     { Private declarations }
     _sessionCB: Integer;
-    _depResolver: TObject; //TSimpleDependancyHandler;
 
     procedure LoadProfiles();
     function LoadLogo(): Integer;
@@ -72,8 +70,6 @@ type
 
   protected
     { Protected declarations }
-    procedure OnDependancyReady(tag: TXMLTag);
-    procedure SessionCallback(event: string; tag: TXMLTag);
 
   public
     { Public declarations }
@@ -82,6 +78,10 @@ type
 
     procedure ToggleGUI(state: TLoginGuiState);
     procedure UpdateReconnect(secs: integer);
+
+  published
+    { Published declarations }
+    procedure SessionCallback(event: string; tag: TXMLTag);
 
   end;
 
@@ -404,7 +404,6 @@ end;
 procedure TfrmLoginWindow.FormCreate(Sender: TObject);
 begin
     inherited;
-    _depResolver := TSimpleAuthResolver.create(OnDependancyReady);
 
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
 
@@ -600,11 +599,6 @@ begin
         DoLogin(0);
 end;
 
-procedure TfrmLoginWindow.FormDestroy(Sender: TObject);
-begin
-    _depResolver.Free();
-end;
-
 procedure TfrmLoginWindow.ToggleGUI(state: TLoginGuiState);
 begin
     case state of
@@ -646,13 +640,6 @@ begin
 
     Self.Invalidate();
 end;
-
-procedure TfrmLoginWindow.OnDependancyReady(tag: TXMLTag);
-begin
-    ToggleGUI(lgsAuthenticated);
-    TAuthDependancyResolver.SignalReady(DEPMOD_UI);
-end;
-
 procedure TfrmLoginWindow.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then begin
@@ -664,6 +651,10 @@ begin
     else if (event = '/session/connected') then begin
         ToggleGUI(lgsConnected);
     end
+    else if (event = DEPMOD_READY_SESSION_EVENT) then begin
+        ToggleGUI(lgsAuthenticated);
+        MainSession.FireEvent(DEPMOD_READY_EVENT + DEPMOD_UI, tag);
+    end;
 end;
 
 procedure TfrmLoginWindow.UpdateReconnect(secs: Integer);

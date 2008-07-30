@@ -29,10 +29,10 @@ uses
 type
     TExodusDockToolbar = class(TExodusToolbarBase, IExodusDockToolbar)
     protected
-        function AddButton(const ImageID: WideString): ExodusToolbarButton; override; safecall;
-        function AddControl(const ID: WideString): ExodusToolbarControl; override; safecall;
+        function AddButton(const ImageID: WideString): ExodusToolbarButton; safecall;
+        function AddControl(const ID: WideString): ExodusToolbarControl; safecall;
         function Get_Count: Integer; override;
-        function GetButton(index: Integer): ExodusToolbarButton; override;safecall;
+        function GetButton(index: Integer): ExodusToolbarButton; safecall;
         procedure RemoveButton(const button: WideString); override;
     end;
 
@@ -41,12 +41,39 @@ implementation
 uses
     ComServ;
 
-function TExodusDockToolbar.AddButton(const ImageID: WideString): ExodusToolbarButton;
+
+        {
+    _control := nil; //dec ref count for any old controls, one control at a time
+    try
+        if (_controlSite = nil) then exit;
+        _controlSite.AutoSize := false;
+        _outerPanel.AutoSize := false;
+        _outerPanel.Align := alNone;
+        _controlSite.Visible := true;
+
+        Result := TExodusControlSite.Create(_controlSite, _controlSite, StringToGuid(Id));
+        (Result as IExodusControlSite).AlignClient := true;
+
+        _controlSite.AutoSize := true;
+        _outerPanel.AutoSize := true;
+        _outerPanel.Align := alTop;
+    except
+        on E:Exception do
+        begin
+            DebugMessage('Exception in TExodusDockToolbar.AddControl, ClassID: ' + ID + ', (' + E.Message + ')');
+            Result := nil;
+        end;
+    end;
+    }
+
+function TExodusDockToolbar.AddButton(
+  const ImageID: WideString): ExodusToolbarButton;
 begin
     Result := inherited AddButton(ImageID);
 end;
 
-function TExodusDockToolbar.AddControl(const ID: WideString): ExodusToolbarControl;
+function TExodusDockToolbar.AddControl(
+  const ID: WideString): ExodusToolbarControl;
 begin
     Result := inherited AddControl(ID);
 end;

@@ -202,8 +202,7 @@ type
                              //DNCache is initialized in session object
         _profileParser: TProfileParser;
         _useProfileDN: boolean;
-        _depResolver: TObject; //TSimpleDependancyHandler;
-
+        
         function getOrAddDNItem(UID: Widestring): TDisplayNameItem; overload;
         function getOrAddDNItem(JID: TJabberID): TDisplayNameItem; overload;
 
@@ -215,8 +214,6 @@ type
         procedure removeDNItem(dnItem: TDisplayNameItem);
         procedure addDNItem(dnItem: TDisplayNameItem);
         procedure clearDNCache();
-        procedure OnDependancyReady(tag: TXMLTag);
-
     public
         Constructor create();
         Destructor Destroy(); override;
@@ -308,11 +305,9 @@ end;
 { a helper class to set our nickname from profile}
 type
     TMyNickHandler = class(TDisplayNameEventListener)
-    private
-        _fired: Boolean;
-        
-    public
-        procedure FireOnDisplayNameChange(UID: Widestring; displayName: WideString); override;
+        _MyItem: TDisplayNameItem;
+        _MyBareJID: TJabberID;
+
         procedure FireOnProfileResult(BareJID: Widestring; ProfileName: WideString; FetchError: boolean);override;
         procedure GetMyNickFromProfile();
         procedure UpdateRosterName(dname: WideString);
@@ -323,23 +318,19 @@ type
 Constructor TMyNickHandler.Create(MyItem: TDisplayNameItem);
 begin
     inherited Create();
-    UID := myItem.UID;
+    _MyBareJID := TJabberID.Create(DNSession.Profile.getJabberID.jid);
+    _MyItem := MyItem;
+    UID := _MyBareJID.jid;
 end;
 
 Destructor TMyNickHandler.Destroy();
 begin
+    _MyBareJID.Free();
     inherited;
 end;
 
-procedure TMyNickHandler.FireOnDisplayNameChange(UID: WideString; displayName: WideString);
-begin
-    FireOnProfileResult(UID, displayName, false);
-end;
 procedure TMyNickHandler.fireOnProfileResult(BareJID: Widestring; ProfileName: WideString; FetchError: boolean);
 begin
-    if _fired then exit;
-    
-    _fired := true;
     if (not FetchError) then
         UpdateRosterName(ProfileName);
     Self.Free();
@@ -349,26 +340,21 @@ procedure TMyNickHandler.getMyNickFromProfile();
 var
     changePending: boolean;
     dname: WideString;
-    jid: TJabberID;
 begin
-    jid := TJabberID.Create(UID);
-    dName := Self.getProfileDisplayName(jid, changePending);
+    dName := Self.getProfileDisplayName(_MyBareJID, changePending);
 
     if (not changePending) then begin
-        fireOnProfileResult(UID, dName, false);
+        UpdateRosterName(DName);
+        Self.Free();
     end;
-    jid.Free();
 end;
 
 procedure TMyNickHandler.UpdateRosterName(dname: WideString);
-var
-    myself: TDisplayNameItem;
 begin
-    myself := getDisplayNameCache().getDNItem(UID);
-    if (myself.DisplayName[dntItemName] <> dname) then
+    if (_MyItem.DisplayName[dntItemName] <> dname) then
     begin
         DNSession.Prefs.setString('default_nick', dName);
-        myself.DisplayName[dntItemName] := dname;
+        _MyItem.DisplayName[dntItemName] := dname;
         FireChangeEvent(UID, dname);
     end;
 end;
@@ -541,8 +527,8 @@ end;
 
 destructor  TDisplayNameItem.Destroy();
 begin
-    _DisplayNames.Free(); //frees TDisplayName Value objects
     inherited;
+    _DisplayNames.Free(); //frees TDisplayName Value objects
 end;
 
 function TDisplayNameItem.GetBestExistingDisplayName(): WideString;
@@ -916,7 +902,6 @@ begin
         if (_VCardResultCB <> -1) then
             TJabberSession(_js).UnRegisterCallback(_VCardResultCB);
         _VCardResultCB := -1;
-        _depResolver.Free();
     end;
 
     clearDNCache();
@@ -925,7 +910,6 @@ begin
     DNSession := TJabberSession(js);
     if (_js <> nil) then
     begin
-        _depResolver := TSimpleAuthResolver.create(OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(_js));
         _sessioncb := TJabberSession(_js).RegisterCallback(SessionCallback, '/session');
     end;
 end;
@@ -956,44 +940,41 @@ begin
     dnItem.UpdateDisplayName(Item, not InCache);
 end;
 
-procedure TDisplayNameCache.OnDependancyReady(tag: TXMLTag);
+procedure TDisplayNameCache.SessionCallback(event: string; tag: TXMLTag);
 var
     dnItem: TDisplayNameItem;
     tstr: WideString;
     locked: boolean;
-begin
-    _useProfileDN := useProfileDN(); //initial profile state, used to check pref changes
-    //add our jid to the cache
-    dnItem := getOrAddDNItem(DNSession.SessionJid);
-
-    _profileParser.setProfileParseMap(getProfileDNMap());
-    //at this point our nick is our node.
-    tstr := DNSession.Prefs.getString('default_nick');
-    locked := DNSession.Prefs.getBool('brand_prevent_change_nick');
-
-    //if nick name is not locked and we have a default nick, make the roster dn name that nickname
-    if ((not locked) and (tstr <> '')) then begin
-        dnItem.DisplayName[dntItemName] := tstr;
-        FireChangeEvent(dnItem.UID, tstr);
-    end
-    else if (locked or (tstr = '')) then begin
-        //if nick name is "locked down" or no default nick is supplied, pull our nick from vcard.
-        TMyNickHandler.Create(dnItem).GetMyNickFromProfile();
-    end;
-
-    //fire a displayname ready event
-    TAuthDependancyResolver.SignalReady(DEPMOD_DISPLAYNAME);
-end;
-
-procedure TDisplayNameCache.SessionCallback(event: string; tag: TXMLTag);
-var
-    tstr: WideString;
     prefChanged : boolean;
     i: integer;
+    
 begin
     if (event = '/session/disconnected') then
         //clear cache on disconnect
         clearDNCache()
+    else if (event = DEPMOD_READY_SESSION_EVENT) then begin
+        _useProfileDN := useProfileDN(); //initial profile state, used to check pref changes
+        //add our jid to the cache
+        dnItem := getOrAddDNItem(DNSession.Profile.getJabberID());
+
+        _profileParser.setProfileParseMap(getProfileDNMap());
+        //at this point our nick is our node.
+        tstr := DNSession.Prefs.getString('default_nick');
+        locked := DNSession.Prefs.getBool('brand_prevent_change_nick');
+
+        //if nick name is not locked and we have a default nick, make the roster dn name that nickname
+        if ((not locked) and (tstr <> '')) then begin
+            dnItem.DisplayName[dntItemName] := tstr;
+            FireChangeEvent(dnItem.UID, tstr);
+        end
+        else if (locked or (tstr = '')) then begin
+            //if nick name is "locked down" or no default nick is supplied, pull our nick from vcard.
+            TMyNickHandler.Create(dnItem).GetMyNickFromProfile();
+        end;
+
+        //fire a displayname ready event
+        Mainsession.FireEvent(DEPMOD_READY_EVENT + DEPMOD_DISPLAYNAME, tag);
+    end
     else if (event = '/session/prefs') then begin
         //if we've had a pref change for profile, update accordingly...
         tstr := getProfileDNMap();
