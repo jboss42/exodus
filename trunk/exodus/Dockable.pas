@@ -385,13 +385,14 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.ClearUnreadMsgCount();
 begin
-    if (_unreadmsg > 0) then
+    //only need to updateDocked if we are changing state
+    if ((_unreadmsg > 0) or _priorityflag or (_unreadMessages.count > 0)) then
+    begin
         _unreadmsg := 0;
-
-    _unreadMessages.clear();
-    _priorityflag := false;
-
-    updateDocked();
+        _unreadMessages.clear();
+        _priorityflag := false;
+        updateDocked();
+    end;
 end;
 
 {---------------------------------------}
