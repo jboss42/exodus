@@ -22,7 +22,7 @@ unit Notify;
 interface
 
 uses
-    XMLTag, Presence, Forms, AppEvnts;
+    XMLTag, Presence, Forms;
 type
     TPresNotifier = class
     private
@@ -45,12 +45,16 @@ procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer
 procedure StartFlash(win: TForm);
 procedure StopFlash(win: TForm);
 
+{check to see if notification should be allowed. notify flags may be changed
+ if only some notifications are allowed}
+function AllowNotifications(win: TForm; notifyType: widestring; var notifyEvents: integer): boolean;
+
 implementation
 uses
     Windows, MMSystem,
-    Sysutils, 
+    Sysutils,
     Exodus_TLB, COMExodusItem,
-    JabberConst, JabberID, Dockable, RosterImages,StateForm, DisplayName,
+    JabberID, Dockable, RosterImages, StateForm, DisplayName,
     ExUtils, GnuGetText, Jabber1, PrefController, RiserWindow, Debug, Session;
 
 const
@@ -58,7 +62,7 @@ const
     sNotifyOffline = ' is now offline.';
 
     IE_PROP_IMAGEPREFIX = 'ImagePrefix';
-    
+
     SOUND_OPTIONS = SND_FILENAME or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT;
 
 {---------------------------------------}
@@ -84,7 +88,7 @@ var
     Item: IExodusItem;
 begin
     //bail if we have not yet received a roster
-    
+
     //bail if the event is one we are notifying about
     if ((event <> '/presence/online') and
         (event <> '/presence/offline')) then
@@ -137,6 +141,7 @@ begin
         tf.Visible := true;
         ShowWindow(tf.Handle, SW_SHOWMINNOACTIVE);
     end;
+
     //check flasher pref to see if tf should be flashed once or flashed until focused
     if (not MainSession.Prefs.getBool('notify_flasher')) then
         FlashWindow(tf.Handle, false)
@@ -163,6 +168,58 @@ begin
     fi.dwTimeout := 0;
     fi.cbSize:=SizeOf(fi);
     FlashWindowEx(fi);
+end;
+
+
+{check to see if notification should be allowed. notify event flags may be changed
+ if only some notifications are allowed (usually type specific)}
+function AllowNotifications(win: TForm; notifyType: widestring; var notifyEvents: integer): boolean;
+begin
+    Result := false;
+
+    //remove all but toast, sound and tray for online/offline
+    if ((notifyType = 'notify_online') or (notifyType = 'notify_offline')) then
+    begin
+        notifyEvents := (notifyEvents and notify_toast) or
+                        (notifyEvents and notify_tray) or
+                        (notifyEvents and notify_sound);
+    end;
+
+    //if we have no notifications, we are done
+    if (notifyEvents = 0) then exit;
+
+    //if suspending on DND and dnd, we are done
+    if (MainSession.prefs.getBool('suspend_dnd_notifications') and (MainSession.Show = 'dnd'))  then exit;
+
+    //map nil windows back to the main window
+    if (win = nil) then
+        win := Application.MainForm;
+
+    //check active prefs if app is active and we are not bring to front
+    if (((notifyEvents and notify_front) = 0) and Application.Active) then
+    begin
+        //notify active app, we are active app -> notify
+        //notify active app, we are not active app -> notify
+        //do not notify active app, we are not active app -> notify
+        //do not notify active app, we are active app -> bail (no notify)
+        if (not MainSession.prefs.getBool('notify_active')) then exit;
+
+        //notify active window, we are active window -> notify
+        //notify active window, we are not active window -> notify
+        //don't notify active window, we aren't active window -> notify
+        //don't notify active window, we are active window -> bail (no notify)
+        if (not MainSession.prefs.getBool('notify_active_win')) then begin
+            if (GetForegroundWindow() = win.handle) then
+                exit;
+
+            if ((GetDockManager().isActive) and
+               (GetDockManager().GetTopDocked() = win) and
+               (GetForegroundWindow() = GetDockManager().getHWND())) then
+                exit;
+        end;
+    end;
+
+    Result := true;
 end;
 
 procedure HandleNotifications(win: TForm;
@@ -214,39 +271,11 @@ procedure DoNotify(win: TForm;
 var
     tn: integer;
 begin
-    //map nil windows back to the main window
-    if (win = nil) then
-        win := Application.MainForm;
-        
-    //if we have no notifications, we are done
-    if (notify = 0) then exit;
-
-    //check active prefs if app is active and we are not bring to front
-    if (((notify and notify_front) = 0) and Application.Active) then
-    begin
-        //notify active app, we are active app -> notify
-        //notify active app, we are not active app -> notify
-        //do not notify active app, we are not active app -> notify
-        //do not notify active app, we are active app -> bail (no notify)
-        if (not MainSession.prefs.getBool('notify_active')) then exit;
-
-        //notify active window, we are active window -> notify
-        //notify active window, we are not active window -> notify
-        //don't notify active window, we aren't active window -> notify
-        //don't notify active window, we are active window -> bail (no notify)
-        if (not MainSession.prefs.getBool('notify_active_win')) then begin
-            if (GetForegroundWindow() = win.handle) then
-                exit;
-
-            if ((GetDockManager().isActive) and
-               (GetDockManager().GetTopDocked() = win) and
-               (GetForegroundWindow() = GetDockManager().getHWND())) then
-                exit;
-        end;
-    end;
+    if (not AllowNotifications(win, sound_name, notify)) then exit;
 
     //pass off bring to front and flash to better handlers if we can
     tn := notify - ((notify and notify_front) or (notify and notify_flash));
+
     //but dockmanager should handle docked
     if (win is TfrmDockable) or (win.Handle = GetDockManager().getHWND) then
     begin
@@ -265,28 +294,8 @@ end;
 
 {---------------------------------------}
 procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer);
-var
-    notifybitmap: integer;
-    temp: integer;
 begin
-    notifybitmap := MainSession.Prefs.getInt(pref_name);
-    if ((pref_name = 'notify_online') or
-        (pref_name = 'notify_offline')) then
-    begin
-        // We don't allow anything but toast and sound and tray
-        // for online/offline notifications.
-        temp := 0;
-        if ((notifybitmap and notify_toast) > 0) then
-            temp := temp or notify_toast;
-        if ((notifybitmap and notify_sound) > 0) then
-            temp := temp or notify_sound;
-        if ((notifybitmap and notify_tray) > 0) then
-            temp := temp or notify_tray;
-
-        notifybitmap := temp;
-    end;
-
-    DoNotify(win, notifybitmap, msg, icon, pref_name);
+    DoNotify(win, MainSession.Prefs.getInt(pref_name), msg, icon, pref_name);
 end;
 
 end.
