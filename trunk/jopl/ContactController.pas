@@ -156,7 +156,7 @@ begin
     _UseDisplayName := false;
     _DefaultGroup := '';
     _DNListener := TDisplayNameEventListener.Create();
-    _DNListener.OnDisplayNameChange := _OnDisplayNameChange;
+    _DNListener.OnDisplayNameUpdate := _OnDisplayNameChange;
     _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS, TJabberSession(_JS));
 
     _PendingItems := TExodusItemList.Create();
@@ -694,6 +694,8 @@ var
 begin
     Item := TJabberSession(_js).ItemController.GetItem(bareJID);
     if (Item = nil) or (Item.Type_ <> EI_TYPE_CONTACT) then exit;
+    if (Item.Text = DisplayName) then exit;
+    
     Item.Text := DisplayName;
     TContactUpdateItemOp.Create(Self, item);
 end;

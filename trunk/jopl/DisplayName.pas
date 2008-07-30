@@ -65,6 +65,7 @@ type
         _ProfileResultCB: Integer;
 
         _OnDisplayNameChange: TDisplayNameChangeEvent;
+        _OnDisplayNameUpdate: TDisplayNameChangeEvent;
         _OnProfileResult: TProfileResultEvent;
 
         _UID: WideString;
@@ -73,6 +74,7 @@ type
         procedure ProfileResultCallBack(event: string; tag: TXMLTag);
 
         procedure FireOnDisplayNameChange(UID: Widestring; displayName: WideString);virtual;
+        procedure FireOnDisplayNameUpdate(UID: Widestring; displayName: WideString);virtual;
         procedure FireOnProfileResult(BareJID: Widestring; ProfileName: WideString; FetchError: boolean);virtual;
     public
         Constructor Create(); virtual;
@@ -85,6 +87,7 @@ type
         class function ProfileEnabled(): Boolean;
 
         property OnDisplayNameChange: TDisplayNameChangeEvent read _OnDisplayNameChange write _OnDisplayNameChange;
+        property OnDisplayNameUpdate: TDisplayNameChangeEvent read _OnDisplayNameUpdate write _OnDisplayNameUpdate;
         property OnProfileResult: TProfileResultEvent read _OnProfileResult write _OnProfileResult;
 
         property UID: WideString read _UID write _UID;
@@ -291,13 +294,15 @@ begin
     ResultTag.Free();
 end;
 
-procedure FireChangeEvent(UID: WideString; dn: widestring);
+procedure FireChangeEvent(UID: WideString; dn: widestring; update: Boolean = false);
 var
     changeTag: TXMLtag;
 begin
     changeTag := TXMLtag.Create('dispname');
     changeTag.setAttribute('uid', UID);
     changeTag.setAttribute('dn', dn);
+    if update then changeTag.setAttribute('update', 'true');
+    
     DNSession.FireEvent(DISPLAYNAME_EVENT_UPDATE, changeTag);
     changeTag.Free();
 end;
@@ -402,6 +407,12 @@ begin
     if (assigned(_OnDisplayNameChange)) then
         _OnDisplayNameChange(UID, DisplayName);
 end;
+procedure TDisplayNameEventListener.fireOnDisplayNameUpdate(UID: Widestring;
+                                                            DisplayName: WideString);
+begin
+    if (assigned(_OnDisplayNameUpdate)) then
+        _OnDisplayNameUpdate(UID, DisplayName);
+end;
 
 procedure TDisplayNameEventListener.fireOnProfileResult(BareJID: Widestring;
                                                         ProfileName: WideString;
@@ -426,11 +437,17 @@ end;
 procedure TDisplayNameEventListener.DNCallback(event: string; tag: TXMLTag);
 var
     eUID: WideString;
+    update: Widestring;
+    dn: Widestring;
 begin
     eUID := tag.GetAttribute('uid');
     if (_UID = '') or (_UID = eUID) then
     begin
-        FireOnDisplayNameChange(eUID, tag.GetAttribute('dn'));
+        update := tag.GetAttribute('update');
+        dn := tag.GetAttribute('dn');
+        if (update = 'true') then
+            FireOnDisplayNameUpdate(eUID, dn);
+        FireOnDisplayNameChange(eUID, dn);
     end;
 end;
 
@@ -626,7 +643,7 @@ begin
         DisplayName[dntItemName] := FoundName;
         if (not InitialUpdate) then begin
             _CurrentDisplayName := DisplayName[dntItemName];
-            FireChangeEvent(UID, _CurrentDisplayName);
+            FireChangeEvent(UID, _CurrentDisplayName, true);
         end;
         Result := true;
     end;
