@@ -60,12 +60,6 @@ type
   		// Constructor/Destructor
 		constructor Create();
         destructor Destroy(); Override;
-
-  	published
-  		// Variables
-
-  		// Methods
-
   	end;
 
 procedure DebugMessage(txt: Widestring);

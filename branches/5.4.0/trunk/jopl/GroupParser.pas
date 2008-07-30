@@ -53,7 +53,6 @@ end;
 //matching the passed string in the above format.
 function TGroupParser.ParseGroupName(Group: WideString): TWideStringList;
 var
-    Found: Boolean;
     sep: Widestring;
     sepoffset: integer;
     temp, temp2: widestring;
