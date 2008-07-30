@@ -174,7 +174,7 @@ begin
                 end;
 
                 if (keyUP) then begin
-                    // Only process KeyUp as we can get many
+                    // Only process on KeyUp as we can get many
                     // KeyDowns, but only one KeyUp per press.
                     case wParam of
                         VK_TAB: begin
@@ -192,6 +192,20 @@ begin
                                 if (aw <> nil) then begin
                                     aw.selectPrevItem();
                                 end;
+                                Result := 1;
+                            end;
+                        end;
+                    end;
+                end
+                else begin
+                    // KeyDown event
+                    // We don't want to do anything here, but we do want to capture event
+                    // so as to possibly not pass onthe key down.
+                    case wParam of
+                        VK_TAB: begin
+                            if (ctrl_down) then begin
+                                // Doing a Ctrl-Tab of some version, so mark as
+                                // handled (non-zero result), don't pass on.
                                 Result := 1;
                             end;
                         end;
