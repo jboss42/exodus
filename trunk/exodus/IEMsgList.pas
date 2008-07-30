@@ -30,6 +30,7 @@ interface
 
 
 uses
+//{$UNDEF EXODUS}
 {$IFNDEF EXODUS}
     Exodus_TLB,
 {$ENDIF}
@@ -68,6 +69,16 @@ uses
   function HTMLColor(color_pref: integer) : widestring;
 
 type
+    TFileLinkClickInfo = record
+    {
+      This record contains inforamtion relevant to error
+      occured during file transfer.
+    }
+        Handled: Boolean;
+        ExtendedURL:  WideString;
+    end;
+
+
   TIEMsgListNavigateHandler = procedure(url: widestring; var handled: boolean) of object;
 
   TIEMsgListProcessor = class
@@ -192,6 +203,9 @@ type
     _InMessageDumpMode: boolean;
     _MessageDumpModeHTML: Widestring;
 
+     _fileLinkInfo: TFileLinkClickInfo;
+     _filelink_callback: integer;
+     
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
 
@@ -204,7 +218,10 @@ type
     procedure _SetInMessageDumpMode(value: boolean);
 
   protected
-
+    procedure ProcessNavigate(Sender: TObject;
+              const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
+              Headers: OleVariant; var Cancel: WordBool);virtual;
+    procedure OnFileLinkCallback(event: string; tag: TXMLTag); virtual;
   public
     { Public declarations }
     NavigateHandler: TIEMsgListNavigateHandler;
@@ -213,7 +230,7 @@ type
 {$IFDEF EXODUS}
     constructor Create(Owner: TComponent); override;
 {$ELSE}
-    constructor Create(Owner: TComponent; controller: IExodusController);
+    constructor Create(Owner: TComponent; controller: IExodusController);reintroduce; overload;
 {$ENDIF}
     destructor Destroy; override;
 
@@ -976,10 +993,16 @@ begin
                 _webBrowserUI := nil;
                 raise Exception.Create('MsgList interface does not support IOleObject');
             end;
+            browser.OnBeforeNavigate2 := ProcessNavigate;
         end;
     except
 
     end;
+{$IFDEF EXODUS}
+    _filelink_callback := MainSession.RegisterCallback(OnFileLinkCallback, '/session/filelink/click/response');
+{$ELSE}
+    _filelink_callback := -1; // TODO, allow plugins to register for file links Controller.RegisterCallback('/session/filelink/click/response', nil);
+{$ENDIF}
 end;
 
 {---------------------------------------}
@@ -988,15 +1011,19 @@ begin
     try
         _ClearingMsgCache.Clear();
         _ClearingMsgCache.Free();
-        
+
         _queue.Free();
 
+{$IFDEF EXODUS}
+        MainSession.UnRegisterCallback(_filelink_callback);
+{$ELSE}
+        _msgProcessor._controller.UnRegisterCallback(_filelink_callback);
+{$ENDIF}
         _msgProcessor.Free();
 
         FreeAndNil(_webBrowserUI);
     except
     end;
-
     inherited;
 end;
 
@@ -1536,44 +1563,29 @@ var
     bc: TfrmBaseChat;
     key: integer;
 begin
+    Result := false;
     // If typing starts on the MsgList, then bump it to the outgoing
     // text box.
-    bc := TfrmBaseChat(_base);
-    if (not bc.MsgOut.Enabled) then exit;
 
-    if (not bc.Visible) then exit;
-
+    if (not (_base is TfrmBaseChat)) then exit;//why not owner here, why "_base", does owner change?
+    
+    bc := TfrmBaseChat(_base); 
     key := pEvtObj.keyCode;
 
-    if (key = 22) then begin
-        // paste, Ctrl-V
-        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
-            try
-                bc.MsgOut.PasteFromClipboard();
-                bc.MsgOut.SetFocus();
-            except
-                // To handle Cannot focus exception
-            end;
-        end;
-    end
-    else if ((_getPrefBool('esc_close')) and (key = 27)) then begin
-        PostMessage(bc.Handle, WM_CLOSE, 0, 0);
-    end
-    else if (key < 32) then begin
-        // Not a "printable" key
+    if ((_getPrefBool('esc_close')) and (key = 27)) then 
+        bc.Close()
+    else if (bc.MsgOut.CanFocus()) and (not bc.MsgOut.ReadOnly) then 
+    begin
+        if (key = 22) then                
+            bc.MsgOut.PasteFromClipboard()  // paste, Ctrl-V
+        else if (key >= 32) then
+            bc.MsgOut.WideSelText := WideChar(Key);
         try
             bc.MsgOut.SetFocus();
         except
-            // To handle Cannot focus exception
-        end;
-    end
-    else if (bc.pnlInput.Visible) then begin
-        if (bc.MsgOut.Visible and bc.MsgOut.Enabled and not bc.MsgOut.ReadOnly) then begin
-            try
-                bc.MsgOut.WideSelText := WideChar(Key);
-                bc.MsgOut.SetFocus();
-            except
-                // To handle Cannot focus exception
+            on E:Exception do
+            begin
+                ExUtils.DebugMsg('Exception trying to set focus to composer (' + E.Message + ')', true);                
             end;
         end;
     end;
@@ -1582,7 +1594,6 @@ begin
     // You would think that the SetFocus() calls above wouldn't be necessary then
     // but for some reason the Post doesn't work if they aren't called?
     PostMessage(bc.Handle, WM_SETFOCUS, 0, 0);
-    Result := false;
 end;
 {$ELSE}
 function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
@@ -1864,6 +1875,39 @@ end;
 procedure TfIEMsgList.DefaultNavHandler(url: widestring; var handled: boolean);
 begin
     handled := false;
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.OnFileLinkCallback(event: string; tag: TXMLTag);
+begin
+    if (event <> '/session/filelink/click/response') then exit;
+    if (_fileLinkInfo.ExtendedURL <> tag.Data) then exit;
+    _fileLinkInfo.Handled := true;
+end;
+
+procedure TfIEMsgList.ProcessNavigate(Sender: TObject; const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
+Headers: OleVariant; var Cancel: WordBool);
+var
+   Tag: TXMLTag;
+begin
+    try
+        _fileLinkInfo.ExtendedURL := URL;
+        _fileLinkInfo.Handled := false;
+
+        Tag := TXMLTag.Create('filelink', _fileLinkInfo.ExtendedURL);
+{$IFDEF EXODUS}
+        MainSession.fireEvent('/session/filelink/click', Tag);
+{$ELSE}
+        _msgProcessor._Controller.fireEvent('/session/filelink/click', Tag.XML, '');
+{$ENDIF}
+
+        if ( _fileLinkInfo.Handled) then
+            Cancel := true
+        else
+            browserBeforeNavigate2(Sender, pDisp, URL, Flags,  TargetFrameName, PostData, Headers, Cancel);
+    finally
+        Tag.Free();
+    end;
 end;
 
 initialization
