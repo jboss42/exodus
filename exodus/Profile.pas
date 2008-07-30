@@ -392,6 +392,7 @@ begin
             _jid := TJabberID.Create(p.fromJID.full)
         else _jid := TJabberID.Create(tjid.jid);
         tjid.free();
+        item := MainSession.ItemController.GetItem(_jid.jid);
         _isMe := (_jid.jid = MainSession.Profile.getJabberID().jid); //bare jids match
 
         frameButtons1.btnOK.visible := _isME;
@@ -405,11 +406,7 @@ begin
         lblJID.Caption := _jid.getDisplayJID();
         txtNick.Text := GetDisplayNameCache().getDisplayName(_jid);
 
-        item := MainSession.ItemController.GetItem(_jid.jid);
-        if Item <> nil then
-            tstr := Item.value['subscription']
-        else
-            tstr := '';
+        tstr := Item.value['subscription'];
 
         if (tstr = 'from') then
             lblSubState.caption := _(sSUB_FROM)

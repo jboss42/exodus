@@ -27,7 +27,7 @@ uses
   ExtCtrls, TntExtCtrls, pngextra, ExGroupBox, TntForms, ExFrame, ExBrandPanel,
   Buttons, TntButtons, TntDialogs,
   Registry,
-  Contnrs, ExCheckGroupBox;
+  Contnrs;
 
 type
     TNotifyInfo = class
@@ -70,6 +70,9 @@ type
 
   TfrmPrefNotify = class(TfrmPrefPanel)
     pnlContainer: TExBrandPanel;
+    pnlSoundEnable: TExBrandPanel;
+    imgSound: TImage;
+    chkSound: TTntCheckBox;
     pnlAlertSources: TExBrandPanel;
     chkNotify: TTntCheckListBox;
     lblNotifySources: TTntLabel;
@@ -92,11 +95,6 @@ type
     pnlToast: TExBrandPanel;
     chkToast: TTntCheckBox;
     btnToastSettings: TTntButton;
-    pnlTop: TExBrandPanel;
-    pnlSoundEnable: TExBrandPanel;
-    imgSound: TImage;
-    chkSound: TTntCheckBox;
-    chkSuspendDND: TTntCheckBox;
     procedure txtSoundFileExit(Sender: TObject);
     procedure btnToastSettingsClick(Sender: TObject);
     procedure TntFormDestroy(Sender: TObject);

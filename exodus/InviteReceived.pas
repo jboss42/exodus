@@ -379,11 +379,11 @@ begin
     end;
 
     _Session := JabberSession;
-
+    
     if (_Session <> nil)  then
     begin
         _InviteCB := _Session.RegisterCallback(InviteCallback,
-                                               '/packet/message[@type<>"error"]/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
+                                               '/packet/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
                                                
     end;
     _SessionListener.Session := JabberSession;

@@ -162,8 +162,7 @@ const
     sNewGroup = 'New Group';
     sNewGroupPrompt = 'Enter new group name: ';
     sNewGroupExists = 'This group already exists!';
-    sInvalidGroupName = 'Invalid group name:  %s';
-    sInvalidGroupChars = 'Invalid character sequence in group name:  %s';
+    sInvalidGroup = 'Invalid character sequence in group name:  %s';
 
 var
     presenceToAtom: TStringList;
@@ -1100,13 +1099,6 @@ begin
         msg := _(sNewGroupPrompt);
     end;
     if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
-    temp := Tnt_WideStringReplace(new_grp, grpSeparator, ' ', [rfReplaceAll]);
-    if (Trim(temp) = '') then
-    begin
-        temp := Format(_(sInvalidGroupName), [new_grp]);
-        MessageDlgW(temp, mtError, [mbOK], 0);
-        exit;
-    end;
 
     // add the new grp.
     if (nesting) and (base_grp <> '') then
@@ -1119,7 +1111,7 @@ begin
         temp := grpSeparator + grpSeparator;
         if (Pos(temp, new_grp) > 0) then
         begin
-            temp := Format(_(sInvalidGroupChars), [temp]);
+            temp := Format(_(sInvalidGroup), [temp]);
             MessageDlgW(temp, mtError, [mbOK], 0);
         end
         else begin

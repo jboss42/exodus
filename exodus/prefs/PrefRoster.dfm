@@ -230,6 +230,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Align = alTop
         Caption = 'Show contact list &popup'
         TabOrder = 4
+        ExplicitTop = 90
       end
       object chkObservers: TTntCheckBox
         Left = 0
@@ -257,6 +258,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 5
       AutoHide = True
+      ExplicitTop = 315
       object chkSort: TTntCheckBox
         Left = 0
         Top = 18
@@ -544,9 +546,9 @@ inherited frmPrefRoster: TfrmPrefRoster
         FocusControl = txtDefaultNick
       end
       object txtDefaultNick: TTntEdit
-        Left = 231
+        Left = 198
         Top = 0
-        Width = 200
+        Width = 209
         Height = 24
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
@@ -573,15 +575,15 @@ inherited frmPrefRoster: TfrmPrefRoster
       object lblDefaultGrp: TTntLabel
         Left = 0
         Top = 4
-        Width = 225
+        Width = 181
         Height = 16
-        Caption = 'Default &group for new contact list items'
+        Caption = 'Default &group for new contacts:'
         FocusControl = txtDefaultGrp
       end
       object txtDefaultGrp: TTntComboBox
-        Left = 231
+        Left = 198
         Top = 0
-        Width = 200
+        Width = 209
         Height = 24
         Anchors = [akLeft, akTop, akRight]
         ItemHeight = 16
