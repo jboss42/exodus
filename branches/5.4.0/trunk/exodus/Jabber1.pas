@@ -1004,6 +1004,12 @@ begin
     // Catch some of the important windows msgs
     // so that we can handle minimizing & stuff properly
     case (msg.CmdType and $FFF0) of
+    SC_MAXIMIZE: begin
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, Self.ClientWidth);
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_HEIGHT, Self.ClientHeight);
+        inherited;
+        msg.Result := 0;
+    end;
     SC_MINIMIZE: begin
         _hidden := true;
         _was_max := (Self.WindowState = wsMaximized);
@@ -1458,14 +1464,24 @@ begin
     // figure out the width of the msg queue
     tab_w := MainSession.Prefs.getInt(P_TAB_WIDTH);
     roster_w := MainSession.Prefs.getInt(P_ROSTER_WIDTH);
+
+    // Check to see if roster was closed in Maximized state
+    // negative width means closed maximized
+    if (roster_w < 0) then begin
+        roster_w := Abs(roster_w);
+        Self.ClientWidth := roster_w;
+        Self.ClientHeight := MainSession.Prefs.getInt(P_ROSTER_HEIGHT);
+        WindowState := wsMaximized;
+    end;
+
     //set to defaults if we don't have widths
     if ((tab_w <= 0) or (roster_w <= 0)) then begin
         tab_w := 2 * (Self.ClientWidth div 3);
         roster_w := Self.ClientWidth - tab_w - 3;
         MainSession.Prefs.setInt(P_TAB_WIDTH, tab_w);
         MainSession.Prefs.setInt(P_ROSTER_WIDTH, roster_w);
+        MainSession.Prefs.setInt(P_ROSTER_HEIGHT, Self.ClientHeight);
     end;
-
 
     updateLayoutPrefChange();
     ShowLogin();
@@ -1836,9 +1852,6 @@ begin
             frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width');
         end;
 
-        _profileScreenLastWidth := Self.Width;
-        Self.Width := MainSession.Prefs.getInt('roster_width');
-
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
@@ -1910,10 +1923,6 @@ begin
             frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
             frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width');
         end;
-
-        if (_profileScreenLastWidth > 0) then
-            //Didn't have a docked window at login so restore to width at that time.
-            Self.Width := _profileScreenLastWidth;
     end
     else if event = '/session/commtimeout' then begin
         timAutoAway.Enabled := false;
@@ -2373,7 +2382,16 @@ begin
     Application.OnException := CatchersMit.gotExceptionNoDlg;
 
     //Save our current width...
-    MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, Self.ClientWidth);
+    if (WindowState <> wsMaximized) then begin
+        // not maximized so go ahead and save our current width
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, Self.ClientWidth);
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_HEIGHT, Self.ClientHeight);
+    end
+    else begin
+        // we are maxmized so pull the last width, and save it as a negative to indicate Maximzed.
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, (-1 * Abs(MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH))));
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_HEIGHT, MainSession.Prefs.getInt(PrefController.P_ROSTER_HEIGHT));
+    end;
 
     // If we are not already disconnected, then
     // disconnect. Once we successfully disconnect,
@@ -2473,7 +2491,6 @@ begin
         if (frmExodus.Height < frmExodus.Constraints.MinHeight) then
             frmExodus.Height := frmExodus.Constraints.MinHeight;
     end;
-//    MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, frmExodus.Width);
 end;
 
 {---------------------------------------}
@@ -4520,7 +4537,10 @@ begin
     //if tabs were being shown, save tab size
     _enforceConstraints := false;
     _noMoveCheck := true;
-    Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+    if (WindowState <> wsMaximized) then begin
+        Self.ClientWidth := Abs(MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH));
+        Self.ClientHeight := Abs(MainSession.Prefs.getInt(PrefController.P_ROSTER_HEIGHT));
+    end;
     _noMoveCheck := false;
     Self.DockSite := false;
 

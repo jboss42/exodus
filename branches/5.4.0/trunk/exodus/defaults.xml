@@ -352,6 +352,7 @@
 
     <event_width value="400"/>
     <roster_width value="215"/>
+    <roster_height value="550"/>
 
     <!-- file xfer Options -->
     <xfer_path control="txtXferPath" state="rw">
