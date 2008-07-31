@@ -709,7 +709,7 @@ end;
 procedure TJabberEntity.refresh(js: TJabberSession);
 begin
     if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
-
+    _stopWalk := false;
     _has_items := false;
 
     ClearStringListObjects(_items);
@@ -721,6 +721,7 @@ end;
 procedure TJabberEntity.refreshInfo(js: TJabberSession);
 begin
     if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
+    _stopWalk := false;
     _has_items := true;
 
     //ClearStringListObjects(_items);
