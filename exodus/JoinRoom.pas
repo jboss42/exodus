@@ -205,18 +205,9 @@ begin
     tmp := TJabberID.Create('');
     for i := 0 to l.Count - 1 do begin
         tmp.ParseJID(l[i]);
-        if (tmp.user <> '') then begin
-            ce := jEntityCache.getByJid(tmp.full);
-            if (ce <> nil) then
-                _addRoomJid(ce);
-        end
-        else begin
+        if (tmp.user = '') then begin
             txtServer.Items.Add(l[i]);
             txtServerFilter.Items.Add(l[i]);
-            {
-            ce := jEntityCache.getByJid(l[i]);
-            ce.getItems(MainSession);
-            }
         end;
     end;
     tmp.Free();
@@ -400,6 +391,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom._fetch(jid: Widestring);
+var
+    Entity: TJabberEntity;
 begin
     if (_wait.IndexOf(jid) >= 0) then exit;
 
@@ -409,8 +402,9 @@ begin
     btnFetch.Visible := false;
     aniWait.Visible := true;
     aniWait.Active := true;
-
-    jEntityCache.fetch(jid, MainSession, true);
+    Entity :=  jEntityCache.getByJid(jid);
+    if (Entity <> nil) then
+       Entity.Refresh(MainSession);
 end;
 
 {---------------------------------------}

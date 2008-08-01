@@ -116,7 +116,7 @@ end;
 
 procedure TExodusToolbarBase.Initialize();
 begin
-    _buttons := TObjectList.create(true); //free buttons on delete etc.
+    _buttons := TObjectList.create(false); //button bar owns buttuns
     _imgList := nil;
     _btnBar := nil;
     _controlProxy := nil;
@@ -228,8 +228,9 @@ begin
         begin
             if (TToolButton(_buttons[i]).name = Name) then
             begin
+                TToolButton(_buttons[i]).Visible := false;
                 TToolButton(_buttons[i]).parent := nil; //remove from toolbar
-                _buttons.delete(i); //frees button
+                _buttons.delete(i); //button freed on toolbar destruction, unparented and hidden until then
                 break;
             end;
         end;

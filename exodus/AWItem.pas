@@ -195,6 +195,7 @@ end;
 constructor TfAWItem.Create(AOwner: TComponent);
 var
     tag: TXMLTag;
+    aoEvent: widestring;
 begin
     inherited;
 
@@ -272,7 +273,8 @@ begin
         _LowestUnreadMsgCntColorChange := Mainsession.Prefs.getInt('lowest_unread_msg_cnt_color_change');
 
         // Set timer for new window notification
-        if (not StateForm.restoringDesktopFlag) then begin
+        aoEvent := TAutoOpenEventManager.GetAutoOpenEvent();
+        if ((aoEvent <> AOE_STARTUP) and (aoEvent <> AOE_AUTHED)) then begin
             _timNewItemTimer := TTimer.Create(Self);
             if (_timNewItemTimer <> nil) then begin
                 _timNewItemTimer.Enabled := true;
@@ -503,9 +505,6 @@ begin
     if (aw <> nil) then begin
         item := aw.findItem(self);
         if (item <> nil) then begin
-            // Force window to show before docking which helps some oddities when
-            // docking a minimized window.
-            ShowWindow(item.frm.Handle, SW_RESTORE);
             item.frm.DockForm();
             aw.activateItem(Self);
         end;

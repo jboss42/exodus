@@ -25,8 +25,9 @@ uses
     Unicode, XMLTag,
     TntCheckLst, TntStdCtrls, StdCtrls, ExodusLabel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Dockable, buttonFrame, Grids, TntGrids, ExtCtrls, fXData, JabberID,
-  ComCtrls, ToolWin, EntityCache, Entity, TntForms, ExFrame, TntExtCtrls;
+    Dialogs, ExForm, buttonFrame, Grids, TntGrids, ExtCtrls, fXData, JabberID,
+  ComCtrls, ToolWin, EntityCache, Entity, TntForms, ExFrame, TntExtCtrls,
+  Dockable, StateForm;
 
 type
 
@@ -69,17 +70,13 @@ type
     property  Visible: boolean read _visible write setVisible;
   end;
 
-  TfrmXData = class(TfrmDockable)
+  TfrmXData = class(TExForm)
     frameButtons1: TframeButtons;
     frameXData: TframeXData;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
-  protected
-    //don't presist position, not sure why this is derived from dockable
-    procedure RestoreWindowState();override;
-    procedure PersistWindowState();override;
   private
     { Private declarations }
     _packet: Widestring;
@@ -133,8 +130,7 @@ begin
         f.Caption := title;
 
     f.Render(tag);
-    f.ShowDefault(true,'f'); //bring to front, always undocked
-    //f.Show();
+    f.Show();
     Result := true;
 end;
 
@@ -621,7 +617,6 @@ end;
 procedure TfrmXData.FormCreate(Sender: TObject);
 begin
   inherited;
-  _windowType := 'xdata';
 end;
 
 {---------------------------------------}
@@ -632,18 +627,6 @@ begin
     Action := caFree;
     if (MainSession <> nil) then
         MainSession.Prefs.SavePosition(Self);
-end;
-
-//don't presist position, not sure why this is derived from dockable
-procedure TfrmXData.RestoreWindowState();
-begin
-    //nop
-    inherited;
-end;
-
-procedure TfrmXData.PersistWindowState();
-begin
-    //nop
 end;
 
 {---------------------------------------}

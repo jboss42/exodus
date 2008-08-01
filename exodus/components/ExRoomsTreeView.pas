@@ -21,8 +21,7 @@ unit ExRoomsTreeView;
 
 interface
 
-uses ExAllTreeView, Exodus_TLB;
-
+uses ExAllTreeView, Classes, Exodus_TLB;
 
 type
    TExRoomsTreeView = class(TExAllTreeView)
@@ -30,12 +29,26 @@ type
    protected
        function  FilterItem(Item: IExodusItem): Boolean; override;
        procedure SaveGroupsState(); override;
+
+   public
+       constructor Create(AOwner: TComponent; Session: TObject); override;
    end;
 
 implementation
 
-uses COMExodusItem;
 
+uses ActionMenus, COMExodusItem;
+
+{---------------------------------------}
+constructor TExRoomsTreeView.Create(AOwner: TComponent; Session: TObject); override;
+begin
+    inherited Create(AOwner, Session);
+
+    if (PopupMenu is TExActionPopupMenu) then with TExActionPopupMenu(PopupMenu) do begin
+        Excludes.Add('{000-exodus.googlecode.com}-090-add-subgroup');
+    end;
+
+end;
 {---------------------------------------}
 function  TExRoomsTreeView.FilterItem(Item: IExodusItem): Boolean;
 begin

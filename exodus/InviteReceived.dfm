@@ -5,7 +5,7 @@ inherited frmInviteReceived: TfrmInviteReceived
   ClientHeight = 160
   ClientWidth = 436
   DefaultMonitor = dmMainForm
-  Position = poMainFormCenter
+  Position = poDefault
   OnClose = TntFormClose
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy

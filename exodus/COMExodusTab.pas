@@ -72,6 +72,7 @@ COMExodusItem, ExAllTreeView;
 constructor TExodusTab.Create(ActiveX_GUID: WideString; Type_: WideString);
 var
     g: TGUID;
+    ftree: TExAllTreeView;
 begin
     _AxControl := nil;
     _Page := TTntTabSheet.Create(GetRosterWindow()._PageControl);
@@ -92,13 +93,14 @@ begin
         if (_Type = EI_TYPE_ALL) then
            _Type := '';
 
-        _Tree := TExAllTreeView.Create(_Page, MainSession);
-        _Tree.Align := alClient;
-        _Tree.Canvas.Pen.Width := 1;
-        _Tree.SetFontsAndColors();
-        _Tree.parent := _Page;
-        _Tree.Filter := _Type;
-        _Tree.TabIndex := _Page.TabIndex;
+        fTree := TExAllTreeView.Create(_Page, MainSession);
+        fTree.Align := alClient;
+        fTree.Canvas.Pen.Width := 1;
+        fTree.SetFontsAndColors();
+        fTree.parent := _Page;
+        fTree.Filter := _Type;
+        fTree.TabIndex := _Page.TabIndex;
+        _Tree := fTree;
     end;
 end;
 

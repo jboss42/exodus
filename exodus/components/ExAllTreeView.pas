@@ -32,6 +32,7 @@ type
     _mnuDelete: TTntMenuItem;
 
     _dropSupport: TExDropTarget;
+    _Filter: WideString;
 
   protected
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
@@ -45,6 +46,9 @@ type
     procedure mnuCopyClick(Sender: TObject); virtual;
     procedure mnuDeleteClick(Sender: TObject); virtual;
     procedure SaveGroupsState(); override;
+
+    function FilterItem(item: IExodusItem): Boolean; override;
+    procedure _SetFilterType(filtertype: Widestring); virtual;
   public
     constructor Create(AOwner: TComponent; Session: TObject); override;
 
@@ -54,6 +58,8 @@ type
             var accept: Boolean); override;
     procedure DragDrop(Source: TObject;
             X, Y: Integer); override;
+
+    property Filter: Widestring read _Filter write _SetFilterType;
   end;
 
 implementation
@@ -104,6 +110,24 @@ begin
     _mnuDelete := mi;
 
     PopupMenu := popup;
+end;
+
+procedure TExAllTreeView._SetFilterType(filtertype: Widestring);
+var
+    idx: Integer;
+    popup: TExActionPopupMenu;
+begin
+    if filtertype = _Filter then exit;
+
+    _Filter := filtertype;
+    if (PopupMenu is TExActionPopupMenu) then begin
+        popup := TExActionPopupMenu(PopupMenu);
+        idx := popup.Excludes.IndexOf('{000-exodus.googlecode.com}-090-add-subgroup');
+        if (_Filter <> '') then
+            popup.Excludes.Add('{000-exodus.googlecode.com}-090-add-subgroup')
+        else if (idx <> -1) then
+             popup.Excludes.Delete(idx);
+    end;
 end;
 procedure TExAllTreeView.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
 var
@@ -422,5 +446,16 @@ begin
 
     TJabberSession(_js).ItemController.SaveGroups();
 
+end;
+
+function TExAllTreeView.FilterItem(item: IExodusItem): Boolean;
+begin
+    Result := inherited FilterItem(item);
+
+    if Result and (_Filter <> '') then
+        Result := (_Filter = Item.Type_);
+
+    if Result then
+        Result := Item.IsVisible or not TJabberSession(_JS).Prefs.getBool('roster_only_online');
 end;
 end.

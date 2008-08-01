@@ -293,7 +293,8 @@ begin
     end;
 
     // send a subscribed and possible add..
-    sjid := _jid.full();
+    //sjid := _jid.full();
+    sjid := _jid.jid();
     snick := txtNickname.Text;
     sgrp := cboGroup.Text;
 

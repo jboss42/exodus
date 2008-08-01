@@ -22,8 +22,7 @@ unit ExContactsTreeView;
 
 interface
 
-uses ExAllTreeView, Exodus_TLB;
-
+uses ExAllTreeView, Classes, Exodus_TLB;
 
 type
    TExContactsTreeView = class(TExAllTreeView)
@@ -31,13 +30,25 @@ type
    protected
        function  FilterItem(Item: IExodusItem): Boolean; override;
        procedure SaveGroupsState(); override;
+   public
+        constructor Create(AOwner: TComponent; Session: TObject); override;
    end;
 
 
 implementation
 
-uses Classes, COMExodusItem;
+uses ActionMenus, COMExodusItem;
 
+{---------------------------------------}
+constructor TExContactsTreeView.Create(AOwner: TComponent; Session: TObject); override;
+begin
+    inherited Create(AOwner, Session);
+
+    if (PopupMenu is TExActionPopupMenu) then with TExActionPopupMenu(PopupMenu) do begin
+        Excludes.Add('{000-exodus.googlecode.com}-090-add-subgroup');
+    end;
+
+end;
 {---------------------------------------}
 function  TExContactsTreeView.FilterItem(Item: IExodusItem): Boolean;
 begin
