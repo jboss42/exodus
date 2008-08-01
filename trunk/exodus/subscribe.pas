@@ -250,7 +250,6 @@ begin
     else begin
         showHandler := TShowHandler.Create();
         TShowHandler(showHandler).getDispNameAndShow(Self, jid);
-        ShowDefault(true);
     end;
 end;
 
