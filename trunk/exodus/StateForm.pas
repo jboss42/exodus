@@ -879,9 +879,8 @@ procedure TfrmState.gotActivate();
 begin
     //this is going to be a problem if tray should flash
     //until *all* notified windows become active
-    if (isNotifying) then    
-        StopFlash(Self);
-     isNotifying := false;
+    StopFlash(Self);
+    isNotifying := false;
 end;
 
 {
