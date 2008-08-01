@@ -777,11 +777,7 @@ begin
                 end;
             end
             else begin
-                // Undocked Window
-                if (trackitem.frm.WindowState = wsMinimized) then begin
-                    ShowWindow(trackitem.frm.Handle, SW_RESTORE);
-                end;
-                trackitem.frm.BringToFront;
+                trackitem.frm.ShowDefault(true);
             end;
         end;
 
