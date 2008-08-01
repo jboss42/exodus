@@ -1602,6 +1602,7 @@ begin
         _Session.UnRegisterCallback(_SessionCB);
         _SessionCB := -1;
     end;
+    _session := nil;
 end;
 
 {------------------------ TDependancyHandler ------------------------------}

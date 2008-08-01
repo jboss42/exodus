@@ -777,11 +777,7 @@ begin
                 end;
             end
             else begin
-                // Undocked Window
-                if (trackitem.frm.WindowState = wsMinimized) then begin
-                    ShowWindow(trackitem.frm.Handle, SW_RESTORE);
-                end;
-                trackitem.frm.BringToFront;
+                trackitem.frm.ShowDefault(true);
             end;
         end;
 
@@ -1266,16 +1262,23 @@ var
 begin
     try
         // Scan through list to find active item.
-        // No need to check last item (count - 1) as
-        // we cannot go to the next item when it is
-        // the last item.
-        for i := 0 to _trackingList.Count - 2 do begin
+        for i := 0 to _trackingList.Count - 1 do begin
             item := TAWTrackerItem(_trackingList.Objects[i]);
             if (item <> nil) then begin
                 if (item.awItem.active) then begin
-                    item := TAWTrackerItem(_trackingList.Objects[i + 1]);
-                    if (item <> nil) then begin
-                        activateItem(item.awItem);
+                    if ((i + 1) < _trackingList.Count) then begin
+                        // Not last item in list
+                        item := TAWTrackerItem(_trackingList.Objects[i + 1]);
+                        if (item <> nil) then begin
+                            activateItem(item.awItem);
+                        end;
+                    end
+                    else begin
+                        // Must be last item in list, go to first item.
+                        item := TAWTrackerItem(_trackingList.Objects[0]);
+                        if (item <> nil) then begin
+                            activateItem(item.awItem);
+                        end;
                     end;
                     break;
                 end;
@@ -1293,17 +1296,24 @@ var
 begin
     try
         // Scan through list to find active item.
-        // No need to check first item (item 0) as
-        // we cannot go to the next item when it is
-        // the last item.
         if (_trackingList.Count > 1) then begin
-            for i := 1 to _trackingList.Count - 1 do begin
+            for i := 0 to _trackingList.Count - 1 do begin
                 item := TAWTrackerItem(_trackingList.Objects[i]);
                 if (item <> nil) then begin
                     if (item.awItem.active) then begin
-                        item := TAWTrackerItem(_trackingList.Objects[i - 1]);
-                        if (item <> nil) then begin
-                            activateItem(item.awItem);
+                        if (i > 0) then begin
+                            // Not the first item, so just activate previous
+                            item := TAWTrackerItem(_trackingList.Objects[i - 1]);
+                            if (item <> nil) then begin
+                                activateItem(item.awItem);
+                            end
+                        end
+                        else begin
+                            // First item, so activate last item in list
+                            item := TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]);
+                            if (item <> nil) then begin
+                                activateItem(item.awItem);
+                            end;
                         end;
                         break;
                     end;

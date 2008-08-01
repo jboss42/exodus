@@ -110,6 +110,7 @@ const
 
     P_TAB_WIDTH    = 'event_width';
     P_ROSTER_WIDTH = 'roster_width';
+    P_ROSTER_HEIGHT = 'roster_height';
     P_ACTIVITY_WINDOW_WIDTH = 'activity_window_width';
     P_ACTIVITY_WINDOW_TAB_WIDTH = 'activity_window_tab_width';
 type

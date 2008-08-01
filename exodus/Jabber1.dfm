@@ -20,7 +20,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 505
-  ExplicitHeight = 794
+  ExplicitHeight = 801
   PixelsPerInch = 120
   TextHeight = 16
   object imgAd: TImage
@@ -57,8 +57,13 @@ inherited frmExodus: TfrmExodus
     Align = alClient
     Style = tsButtons
     TabOrder = 1
+    TabStop = False
     object tabLogin: TTabSheet
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
