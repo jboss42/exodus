@@ -1151,7 +1151,7 @@ procedure TfrmExodus.WMActivate(var msg: TMessage);
     if (Msg.WParamLo <> WA_INACTIVE) then begin
 //        outputdebugMsg('TfrmExodus.WMActivate');
 
-        Notify.StopFlash(Self);
+//        StopFlash(Self);
         stopTrayAlert();
 
         if ((_dockWindow <> nil) and
@@ -3000,8 +3000,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
-    StopFlash(Self); 
-    StopTrayAlert();
+    StopFlash(Self);
+//    StopTrayAlert();
 end;
 
 
@@ -3549,7 +3549,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
-//    Notify.StopFlash(Self);
     StopTrayAlert();
 end;
 
@@ -3612,7 +3611,7 @@ procedure StopTrayAlert();
 begin
     //events might get this called pretty early
     if (frmExodus = nil) or (frmExodus.timTrayAlert = nil) then exit;
-    
+
     if (frmExodus.timTrayAlert.Enabled) then begin
         frmExodus.timTrayAlert.Enabled := false;
         frmExodus._tray_notify := false;
