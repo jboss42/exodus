@@ -1503,9 +1503,6 @@ begin
     // window async since it's a modal dialog.
     with MainSession.Prefs do begin
         if (ExStartup.debug) then begin
-            if (_dockWindow <> nil) then begin
-                getDockManager().ShowDockManagerWindow(true, false);
-            end;
             ShowDebugForm(false);
         end;
         if (ExStartup.auto_login) then begin
