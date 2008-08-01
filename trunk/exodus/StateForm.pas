@@ -110,6 +110,19 @@ type
             the class method
         }
         class procedure onAutoOpenEvent(event: Widestring);
+
+        {
+            Get the event the autoopeneventmanger is currently
+            processing. This can come in handy for controllers
+            that have to deal with the windows opening because of
+            the event. For instance, the dock manager may want
+            to remain hidden or minimized while auto opeing
+            windows are loading.
+
+            @return one of the recognized auto open events or an empty
+                    string if not currently processing an event
+        }
+        class function GetAutoOpenEvent(): widestring;
     end;
 
     {helper class that abstracts window states prefs and uses profiles as part
@@ -149,7 +162,7 @@ type
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-
+    procedure FormDestroy(Sender: TObject);
   private
      _pos: TPos;          //our position
      _persistPos: boolean; //should we persist our current position?
@@ -234,8 +247,6 @@ type
         specific windows (ie always saving unread messaged)
     }
     function CanPersist(): boolean;virtual;
-
-    procedure ClearIsRestored();
   public
     {
         Show the window in its default configuration.
@@ -245,7 +256,7 @@ type
         
         @param bringtofront bring the window to the top of the zorder
     }
-    procedure ShowDefault(bringtofront:boolean=true; dockOverride: string = 'n');virtual;
+    procedure ShowDefault(bringtofront:boolean=true);virtual;
 
     procedure gotActivate(); virtual;
     {
@@ -313,9 +324,6 @@ type
     property IsNotifying: boolean read _isNotifying write _isNotifying;
   end;
 
-var
-  restoringDesktopFlag: boolean;
-
 implementation
 
 {$R *.dfm}
@@ -334,6 +342,10 @@ uses
     ExUtils,
     XMLUtils,
     Dockable;
+
+var
+  currentAutoOpenEvent: widestring;
+
 
 class procedure TAutoOpenEventManager.onAutoOpenEvent(event: Widestring);
 type
@@ -380,6 +392,7 @@ var
     end;
 begin
     prefHelper := TStateFormPrefsHelper.create();
+    CurrentAutoOpenEvent := event;
 
     if ((event = AOE_DISCONNECTED) or (event = AOE_SHUTDOWN)) then begin
         defaultList := TXMLTagList.Create();
@@ -409,8 +422,6 @@ begin
         RestoreDesktop := MainSession.Prefs.getBool('restore_desktop');
         
         discovered := TWideStringList.create();
-        restoringDesktopFlag := true;
-
         if (prefHelper.getAutoOpenEvent(event, profileList, MainSession.Profile.Name)) then
             for i := 0 to profileList.Count - 1 do
                 OpenWindow(profileList[i]);
@@ -418,12 +429,16 @@ begin
         if (prefHelper.getAutoOpenEvent(event, defaultList)) then
             for i := 0 to defaultList.Count - 1 do
                 OpenWindow(defaultList[i]);
-
-        restoringDesktopFlag := false;
         discovered.Free();
     end;
 
     prefHelper.Free();
+    CurrentAutoOpenEvent := '';
+end;
+
+class function TAutoOpenEventManager.GetAutoOpenEvent(): widestring;
+begin
+    Result := CurrentAutoOpenEvent;
 end;
 
  {wrappers around TPrefController methods, these introduce profiles to prefs}
@@ -616,8 +631,6 @@ begin
     end;
 end;
 
-{ TfrmState }
-
 {---------------------------------------}
 procedure TfrmState.CreateParams(var Params: TCreateParams);
 begin
@@ -658,6 +671,11 @@ begin
     _origPos.height := _pos.height;
 end;
 
+procedure TfrmState.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  //nop
+end;
 
 {---------------------------------------}
 function sToWindowState(s : string): TWindowState;
@@ -718,7 +736,7 @@ begin
                          HWND_TOP);
             StartWindowPosEvents();
 
-            if (self.Visible) then
+            if (self.Visible) then 
                 gotActivate();
         end;
     except
@@ -784,9 +802,8 @@ begin
            (prefHelper.getWindowState(key, stateTag))) then
         begin
             StopWindowPosEvents();
-            Self.OnRestoreWindowState(stateTag);
+            OnRestoreWindowState(stateTag);
             StartWindowPosEvents();
-
             stateTag.Free();
         end
         else prefHelper.setWindowState(key, nil); //clear out any persisted state
@@ -794,11 +811,6 @@ begin
         _stateRestored := true;
         prefHelper.free();
     end;
-end;
-
-procedure TfrmState.ClearIsRestored();
-begin
-    _stateRestored := false;
 end;
 
 procedure TfrmState.PersistWindowState();
@@ -826,14 +838,14 @@ end;
     The default implementation is to show the window in its last floating
     position. Override this method to change (ie dock instead of float)
 }
-procedure TfrmState.ShowDefault(bringtofront:boolean; dockOverride: string);
+procedure TfrmState.ShowDefault(bringtofront:boolean);
 begin
     try
         if (Self.Handle = 0) then exit; //nothing to do, we are fubared
 
         RestoreWindowState();
 
-        if (not Self.Showing) then
+        if (not Self.Visible) then
         begin
             StopWindowPosEvents();
 
@@ -846,7 +858,8 @@ begin
             else SetWindowPos(Self.Handle,
                               HWND_BOTTOM,
                               _pos.Left, _pos.Top, _pos.Width, _pos.Height,
-                              SWP_NOMOVE + SWP_NOSIZE + SWP_NOACTIVATE + SWP_NOZORDER + SWP_SHOWWINDOW + SWP_NOSENDCHANGING);
+                              SWP_NOMOVE + SWP_NOSIZE + SWP_NOACTIVATE +
+                              SWP_NOZORDER + SWP_SHOWWINDOW);
             Self.Visible := true;
             StartWindowPosEvents();
         end
@@ -866,7 +879,8 @@ procedure TfrmState.gotActivate();
 begin
     //this is going to be a problem if tray should flash
     //until *all* notified windows become active
-     StopFlash(Self);
+    if (isNotifying) then    
+        StopFlash(Self);
      isNotifying := false;
 end;
 
@@ -922,7 +936,7 @@ begin
     SetWindowPos(Self.Handle,
                  HWND_BOTTOM,
                  _pos.Left, _pos.Top, _pos.Width, _pos.Height,
-                 SWP_NOACTIVATE or SWP_NOOWNERZORDER + SWP_NOSENDCHANGING);
+                 SWP_NOACTIVATE or SWP_NOOWNERZORDER);
 
     //finally cache our initial pos
     _origPos.Left := _pos.Left;
@@ -1016,20 +1030,11 @@ end;
 
 procedure TfrmState.OnNotify(notifyEvents: integer);
 begin
-    //don't handle docked
-    isNotifying := isNotifying or ((notifyEvents and PrefController.notify_flash) <> 0);
-    if (Self.Floating) then
-    begin
-        if ((notifyEvents and notify_front) <> 0) then
-            showDefault(true) //bring us to front
-        else if (isNotifying) then //notify only if not bringtofront
-        begin 
-            if (MainSession.prefs.GetBool('notify_flasher')) then
-                Notify.StartFlash(Self)
-            else
-                FlashWindow(Self.Handle, true);
-        end;
-    end;
+    isNotifying := ((notifyEvents and notify_flash) <> 0);
+    if ((notifyEvents and notify_front) <> 0) then
+        showDefault(true) //bring us to front
+    else if (isNotifying) then //notify only if not bringtofront
+        Notify.StartFlash(Self);
 end;
 
 function TfrmState.CanPersist(): boolean;
@@ -1038,6 +1043,6 @@ begin
 end;
 
 initialization
-    restoringDesktopFlag := false;
+    currentAutoOpenEvent := '';
 
 end.

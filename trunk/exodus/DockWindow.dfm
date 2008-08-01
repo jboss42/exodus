@@ -1,38 +1,28 @@
-object frmDockWindow: TfrmDockWindow
-  Left = 0
-  Top = 0
+inherited frmDockWindow: TfrmDockWindow
   Caption = 'frmDockWindow'
-  ClientHeight = 412
-  ClientWidth = 638
-  Color = 13681583
+  ClientHeight = 507
+  ClientWidth = 785
   DockSite = True
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
-  OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
+  ParentFont = False
   OnDockDrop = FormDockDrop
   OnHide = FormHide
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 793
+  ExplicitHeight = 540
+  PixelsPerInch = 120
+  TextHeight = 16
   object splAW: TTntSplitter
-    Left = 185
+    Left = 228
     Top = 0
-    Height = 412
+    Height = 507
     ResizeStyle = rsUpdate
-    ExplicitHeight = 398
   end
   object AWTabControl: TPageControl
-    Left = 188
+    Left = 231
     Top = 0
-    Width = 450
-    Height = 412
+    Width = 554
+    Height = 507
     Align = alClient
     DockSite = True
     OwnerDraw = True
@@ -45,20 +35,13 @@ object frmDockWindow: TfrmDockWindow
   object pnlActivityList: TPanel
     Left = 0
     Top = 0
-    Width = 185
-    Height = 412
+    Width = 228
+    Height = 507
     Align = alLeft
     BevelOuter = bvNone
-    Constraints.MinWidth = 30
+    Constraints.MinWidth = 37
     ParentColor = True
     TabOrder = 1
     OnDockDrop = FormDockDrop
-  end
-  object timFlasher: TTimer
-    Enabled = False
-    Interval = 500
-    OnTimer = timFlasherTimer
-    Left = 224
-    Top = 40
   end
 end
