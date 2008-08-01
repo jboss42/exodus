@@ -229,7 +229,13 @@ begin
         _session_close_all_callback := RegisterCallback(closeAllCallback, '/session/close-all-windows');
         _session_dock_all_callback := RegisterCallback(dockAllCallback, '/session/dock-all-windows');
         _session_float_all_callback := RegisterCallback(floatAllCallback, '/session/float-all-windows');
-    end;
+        //set initial conditions for dock
+        if (Jabber1.getAllowedDockState() = adsForbidden) then
+            _docked := false  //docking not allowed
+        else 
+            //initial condition, how to handle windows we have no state for
+            _docked := MainSession.Prefs.getBool('start_docked');
+        end;
 
     _unreadmsg := -1;
     _unreadMessages := TWidestringList.create();
@@ -481,8 +487,6 @@ var
     i: integer;
     ttag: TXMLTag;
     txlist: TXMLTagList;
-    ads: TAllowedDockStates;
-    tstr: widestring;
 begin
     inherited;
     if (Jabber1.getAllowedDockState() = adsForbidden) then
