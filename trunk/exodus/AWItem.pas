@@ -641,9 +641,14 @@ end;
 {---------------------------------------}
 procedure TfAWItem._setPnlColors(startColor, endColor: TColor);
 begin
-    pnlAWItemGPanel.GradientProperites.startColor := startColor;
-    pnlAWItemGPanel.GradientProperites.endColor := endColor;
-    pnlAWItemGPanel.Invalidate;
+    if ((pnlAWItemGPanel.GradientProperites.startColor <> startColor) or
+        (pnlAWItemGPanel.GradientProperites.endColor <> endColor)) then
+    begin
+        // only change color when needed to reduce redraw time.
+        pnlAWItemGPanel.GradientProperites.startColor := startColor;
+        pnlAWItemGPanel.GradientProperites.endColor := endColor;
+        pnlAWItemGPanel.Invalidate;
+    end;
 end;
 
 
