@@ -409,7 +409,7 @@ begin
                         else begin
                             DebugMessage('    Activating Flag:  false');
                         end;
-
+                        
                         try
                             DebugMessage('    LastActivity:  ' + DateTimeToStr(LastActivity));
                         except
@@ -418,7 +418,7 @@ begin
 
                         DebugMessage('    Window type:  ' + WindowType);
 
-                        if (Activating) then
+                        if (PersistUnreadMessages) then
                         begin
                             DebugMessage('    Persist Unread Messages:  true');
                         end
