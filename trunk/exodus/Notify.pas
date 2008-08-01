@@ -86,9 +86,9 @@ var
     nick, notifyMessage, notifyType: Widestring;
     tjid: TJabberID;
     Item: IExodusItem;
+    notifyEvents: integer;
 begin
     //bail if we have not yet received a roster
-
     //bail if the event is one we are notifying about
     if ((event <> '/presence/online') and
         (event <> '/presence/offline')) then
@@ -97,12 +97,13 @@ begin
     tjid := TJabberID.Create(tag.GetAttribute('from'));
     try
         //bail if blocked
-        if (MainSession.IsBlocked(tjid.jid)) then exit;
+        if (MainSession.IsBlocked(tjid.jid)) then
+            exit;
 
         Item := MainSession.ItemController.GetItem(tjid.jid);
         //bail if not in roster or not a contact
-        if (Item = nil) or (Item.Type_ <> EI_TYPE_CONTACT) then exit;
-
+        if (Item = nil) or (Item.Type_ <> EI_TYPE_CONTACT) then
+            exit;
         nick := DisplayName.getDisplayNameCache().getDisplayName(tjid);
     finally
         tjid.Free();
@@ -120,8 +121,15 @@ begin
         notifyMessage := sNotifyOffline;
         notifyType := 'notify_offline';
     end;
-    //notify to the roster window (mainform)
-    DoNotify(Application.MainForm, notifyType, nick + _(notifyMessage), ImageIndex);
+    notifyEvents := MainSession.Prefs.getInt(notifyType);
+    //presence notifcations allow only toast, sound and tray flash
+    notifyEvents := (notifyEvents and notify_toast) or
+                    (notifyEvents and notify_tray) or
+                    (notifyEvents and notify_sound);
+
+    debug.DebugMessage('Presence Notify event: ' + event +', from: ' + Item.UID);
+    //let notify route where events should happen
+    DoNotify(nil, notifyEvents, nick + _(notifyMessage), ImageIndex, notifyType);
 end;
 
 
@@ -130,13 +138,16 @@ var
     fi: TFlashWInfo;
     tf: TCustomForm;
 begin
+debug.DebugMessage('StartFlash(' + win.ClassName + ') BEGIN');
     //get the topmost parent form of win
     tf := Forms.GetParentForm(win, true);
     if (tf = nil) then
         tf := win;
+debug.DebugMessage('StartFlash actual form: ' + tf.ClassName);
 
     if (not tf.Showing) then
     begin
+debug.DebugMessage('StartFlash not visible, showing minimized');
         tf.WindowState := wsMinimized;
         tf.Visible := true;
         ShowWindow(tf.Handle, SW_SHOWMINNOACTIVE);
@@ -144,14 +155,19 @@ begin
 
     //check flasher pref to see if tf should be flashed once or flashed until focused
     if (not MainSession.Prefs.getBool('notify_flasher')) then
-        FlashWindow(tf.Handle, false)
+    begin
+debug.DebugMessage('StartFlash flashing "one" time');
+        FlashWindow(tf.Handle, false);
+    end
     else begin
+debug.DebugMessage('StartFlash flashing until focused');
         fi.hwnd:= tf.Handle;
         fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
         fi.dwTimeout := 0;
         fi.cbSize:=SizeOf(fi);
         FlashWindowEx(fi);
     end;
+debug.DebugMessage('StartFlash(' + win.ClassName + ') END');
 end;
 
 procedure StopFlash(win: TForm);
@@ -159,15 +175,19 @@ var
     fi: TFlashWInfo;
     tf: TCustomForm;
 begin
+debug.DebugMessage('StopFlash(' + win.ClassName + ') BEGIN');
     tf := Forms.GetParentForm(win, true);
     if (tf = nil) then
         tf := win;
+
+debug.DebugMessage('StopFlash found parent: ' + tf.ClassName);
 
     fi.hwnd:= tf.Handle;
     fi.dwFlags := FLASHW_STOP;
     fi.dwTimeout := 0;
     fi.cbSize:=SizeOf(fi);
     FlashWindowEx(fi);
+debug.DebugMessage('StopFlash(' + win.ClassName + ') END');
 end;
 
 
@@ -176,15 +196,6 @@ end;
 function AllowNotifications(win: TForm; notifyType: widestring; var notifyEvents: integer): boolean;
 begin
     Result := false;
-
-    //remove all but toast, sound and tray for online/offline
-    if ((notifyType = 'notify_online') or (notifyType = 'notify_offline')) then
-    begin
-        notifyEvents := (notifyEvents and notify_toast) or
-                        (notifyEvents and notify_tray) or
-                        (notifyEvents and notify_sound);
-    end;
-
     //if we have no notifications, we are done
     if (notifyEvents = 0) then exit;
 
@@ -194,9 +205,6 @@ begin
     //check active prefs if app is active and we are not bring to front
     if (((notifyEvents and notify_front) = 0) and Application.Active) then
     begin
-        //map nil windows back to the main window
-        if (win = nil) then
-            win := Application.MainForm;
         //notify active app, we are active app -> notify
         //notify active app, we are not active app -> notify
         //do not notify active app, we are not active app -> notify
@@ -207,17 +215,17 @@ begin
         //notify active window, we are not active window -> notify
         //don't notify active window, we aren't active window -> notify
         //don't notify active window, we are active window -> bail (no notify)
-        if (not MainSession.prefs.getBool('notify_active_win')) then begin
+        if (not MainSession.prefs.getBool('notify_active_win')) then
+        begin
             if (GetForegroundWindow() = win.handle) then
                 exit;
 
-            if ((GetDockManager().isActive) and
+            if ({(GetDockManager().isActive) and}
                (GetDockManager().GetTopDocked() = win) and
                (GetForegroundWindow() = GetDockManager().getHWND())) then
                 exit;
         end;
     end;
-
     Result := true;
 end;
 
@@ -229,6 +237,7 @@ procedure HandleNotifications(win: TForm;
 var
     sndFN: string;
 begin
+
     if ((notify and notify_toast) <> 0) then
         ShowRiserWindow(win, msg, icon);
 
@@ -267,29 +276,33 @@ procedure DoNotify(win: TForm;
                    msg: Widestring;
                    icon: integer;
                    sound_name: string);
-var
-    tn: integer;
 begin
-    if (not AllowNotifications(win, sound_name, notify)) then exit;
+    //map nil windows back to the main window
+    if (win = nil) then
+        win := Application.MainForm;
+        
+debug.DebugMessage('DoNotify BEGIN  win: ' + win.className + ', notifyType: ' + sound_name + ', notifyEvents: ' + inttostr(notify) + ', message: ' + msg + ', imageindex: ' + inttostr(icon));
+try
+    if (not AllowNotifications(win, sound_name, notify)) then
+    begin
+debug.DebugMessage('Notification not allowed');
+        exit;
+    end;
 
     //pass off bring to front and flash to better handlers if we can
-    tn := notify - ((notify and notify_front) or (notify and notify_flash));
-
-    //but dockmanager should handle docked
-    if (win is TfrmDockable) or (win.Handle = GetDockManager().getHWND) then
+    if ((notify and notify_front) or (notify and notify_flash) <> 0) and
+        (win is TfrmState) then
     begin
-        if (win is TfrmDockable) then
-            TfrmDockable(win).OnNotify(notify);
-        GetDockManager().OnNotify(win, notify);
-    end
-    //let stateform have a shot at notifying...
-    else if (win is TfrmState) then
-        TfrmState(win).OnNotify(notify)
-    else tn := notify;  //include front and flash if not handled elsewhere
-
-    HandleNotifications(win, tn, msg, icon, sound_name);
+debug.DebugMessage('DoNotify TStateForm.OnNotify');
+        TfrmState(win).OnNotify((notify and notify_front) or (notify and notify_flash));
+        //remove bring to front and flash, assume stateform took care of them
+        notify := notify - ((notify and notify_front) or (notify and notify_flash));
+    end;
+    HandleNotifications(win, notify, msg, icon, sound_name);
+finally
+debug.DebugMessage('DoNotify END');
 end;
-
+end;
 
 {---------------------------------------}
 procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer);
