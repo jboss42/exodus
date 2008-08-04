@@ -409,19 +409,31 @@ begin
         lblCount.Caption := IntToStr(_count);
         if (_count >= _LowestUnreadMsgCntColorChange) then begin
             if (_priority) then begin
-                lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
+                if (lblCount.Font.Color <> _activity_window_unread_msgs_high_priority_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
+                end;
             end
             else begin
-                lblCount.Font.Color := _activity_window_unread_msgs_font_color;
+                if (lblCount.Font.Color <> _activity_window_unread_msgs_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_unread_msgs_font_color;
+                end;
             end;
             lblCount.Font.Style := lblCount.Font.Style + [fsBold];
         end
         else begin
             if (_active) then begin
-                lblCount.Font.Color := _activity_window_selected_font_color;
+                if (lblCount.Font.Color <> _activity_window_selected_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_selected_font_color;
+                end;
             end
             else begin
-                lblCount.Font.Color := _activity_window_non_selected_font_color;
+                if (lblCount.Font.Color <> _activity_window_non_selected_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_non_selected_font_color;
+                end;
             end;
             lblCount.Font.Style := lblCount.Font.Style - [fsBold];
         end;
@@ -546,7 +558,8 @@ end;
 procedure TfAWItem._setImgIndex(val: Integer);
 begin
     if ((val >= 0) and
-        (val < frmExodus.ImageList1.Count)) then begin
+        (val < frmExodus.ImageList1.Count)and
+        (val <> _imgIndex)) then begin
         _imgIndex := val;
         frmExodus.ImageList1.GetIcon(_imgIndex, imgPresence.Picture.Icon);
       end;
