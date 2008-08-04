@@ -512,11 +512,22 @@ begin
             end;
 
             // Deal with msg count
-            item.awItem.count := frm.UnreadMsgCount;
+            if (item.awItem.count <> frm.UnreadMsgCount) then
+            begin
+                item.awItem.count := frm.UnreadMsgCount;
+                if (aw.currentListSort = ssUnread) then
+                begin
+                    // If this changed, only need to resort
+                    // on unread sort option.
+                    // This helps with eleminating unneccessary
+                    // redraws
+                    aw.needToSortList := true;
+                end;
+            end;
 
             // Deal with change of nickname
             aw.SetItemName(item.awItem, frm.Caption, frm.Hint);
-            
+
             // Deal with undocked window focus
             if (frm.Activating) then begin
                 if ((not Self.Showing) and
@@ -526,7 +537,7 @@ begin
                 aw.activateItem(item.awItem);
             end;
 
-            aw.itemChangeUpdate();
+            aw.itemChangeUpdate(item);
             _needToBeShowingCheck();
         end;
 
