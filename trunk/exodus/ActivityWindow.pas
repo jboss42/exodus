@@ -147,7 +147,7 @@ type
     procedure _clearTrackingList();
     function _findItem(awitem: TfAWItem): TAWTrackerItem;
     procedure _sortTrackingList(sortType: TSortState = ssUnsorted);
-    procedure _updateDisplay(allowPartialVisible: boolean = false);
+    procedure _updateDisplay(allowPartialVisible: boolean = true);
     procedure _activateNextDockedItem(curitemindx: integer);
     procedure _enableScrollUp(doenable: boolean = true);
     procedure _enableScrollDown(doenable: boolean = true);
