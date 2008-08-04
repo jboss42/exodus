@@ -494,7 +494,7 @@
     <brand_profile_show_accountdetails control="imgAcctDetails" value="true"/>
     <brand_profile_show_connection control="imgConnection" value="true"/>
     <brand_profile_show_proxy control="imgProxy" value="true"/>
-    <brand_profile_show_httppolling control="imgHttpPolling" value="true"/>
+    <brand_profile_show_httppolling control="imgHttpPolling" value="false"/>
     <brand_profile_show_advanced control="imgAdvanced" value="true"/>
     
     <brand_profile_allow_rename value="1"/>
@@ -524,10 +524,10 @@
     <brand_profile_socks_user control="pnlSocksUsername" />
     <brand_profile_socks_password control="pnlSocksPassword" />
 
-    <brand_profile_http_allowpolling control="pnlPolling" value="true"/>
-    <brand_profile_http_poll control="pnlTime" value="1000"/>
-    <brand_profile_http_url control="pnlURL" />
-    <brand_profile_num_poll_keys control="pnlKeys" value="256"/>
+    <brand_profile_http_allowpolling control="pnlPolling" state="inv" value="false"/>
+    <brand_profile_http_poll control="pnlTime" state="inv" value="1000"/>
+    <brand_profile_http_url control="pnlURL" state="inv" />
+    <brand_profile_num_poll_keys control="pnlKeys" state="inv" value="256"/>
 
     <brand_profile_resource control="pnlResource" value="Exodus"/>
     <brand_profile_resource_list>
