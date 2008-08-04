@@ -190,14 +190,14 @@ begin
     chkSubscribe.Checked := true;
     chkSubscribe.Enabled := true;
 //
-    if (item <> nil) then begin
-        if ((item.value['Subscription'] = 'to') or (item.value['Subscription'] = 'both')) then begin
-            chkSubscribe.Checked := false;
-            chkSubscribe.Enabled := false;
-        end;
-    end;
+//    if (item <> nil) then begin
+//        if ((item.value['Subscription'] = 'to') or (item.value['Subscription'] = 'both')) then begin
+//            chkSubscribe.Checked := false;
+//            chkSubscribe.Enabled := false;
+//        end;
+//    end;
 //
-    EnableAdd(chkSubscribe.Enabled);
+//    EnableAdd(chkSubscribe.Enabled);
 //
     if (chkSubscribe.Enabled) then begin
         populateGroups();
