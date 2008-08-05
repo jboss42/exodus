@@ -817,6 +817,8 @@ begin
     if (Room.FindRoom(fromJID.jid) <> nil) then exit;
 
     dTag := TXMLTag.create(tag);
+
+    {
     //set a DT stamp if it doesn't exist
     if (GetDelayTag(dtag) = nil) then
     begin
@@ -826,12 +828,12 @@ begin
             setAttribute('stamp', DateTimeToJabber(UTCNow()));
         end;
     end;
-
+    }
     DisplayWin := OpenFactory(TfrmBroadcastDisplay, 'broadcast', fromJID);
     DisplayWin.DisplayMessage(dTag);
 
     //event the notification
-    sstr := DisplayName.getDisplayNameCache().getDisplayName(tag.getAttribute('from'));
+    sstr := DisplayName.getDisplayNameCache().getDisplayName(fromJID);
     Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, 0);
     dTag.free();
     fromJID.free();
