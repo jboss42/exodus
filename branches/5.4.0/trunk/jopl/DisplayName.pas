@@ -736,6 +736,7 @@ begin
         end;
     end
     else begin
+        _fetchFailed := true; //failed to parse, same as actual fetch failing
         DisplayName[dntProfile] := '';
 
         //fire failed result event if stand alone fetch
@@ -781,6 +782,7 @@ begin
         end;
     end
     else begin
+        _FetchFailed := true; //couldn't prase vcard 
         DisplayName[dntProfile] := '';
         //if this fetch was part of DN lookup, fire change event with current DN
         //something might be waiting on the "pendingResults" flag.
