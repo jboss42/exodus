@@ -48,7 +48,7 @@ type
     affil: WideString;
     hideUnavailable: Boolean;
     destructor Destroy(); override;
-  published
+
     property real_jid: WideString read getRealJID write setRealJID;
   end;
 
@@ -1455,7 +1455,7 @@ begin
         if ((from = jid) or (from = jid + '/' + MyNick)) then begin
             if (t <> nil) then
                 ShowStatusCode(t, tag.QueryXPTag(xp_muc_reason))
-            else if (not _pending_destroy) then begin
+            else if (_pending_destroy) then begin
                 // Show destroy reason
                 tmp_jid := TJabberID.Create(from);
                 //don't use display name here for room name
@@ -1616,8 +1616,8 @@ begin
         if (member.Nick = myNick) then begin
             if (i < 0) then begin
                 // this is the first time I've joined the room
+                 mtag := nil;
                 try
-                    mtag := nil;
                     if (member.Nick = myNick) then begin
                         if (member.Role = MUC_VISITOR) then
                             mtag := newRoomMessage(_(sNoVoice))
@@ -2825,19 +2825,20 @@ end;
 {---------------------------------------}
 function TfrmRoom._getSelectedMembers() : TXMLTag;
 var
-   rm: TRoomMember;
-   Item: TListItem;
+    rm: TRoomMember;
+    Item: TListItem;
 begin
-   if (lstRoster.SelCount < 1) then exit;
-   Result := TXMLTag.Create('jids');
+    Result := nil;
+    if (lstRoster.SelCount < 1) then exit;
+    Result := TXMLTag.Create('jids');
 
-   Item := lstRoster.Selected;
-   while (Item <> nil) do
-   begin
-       rm := TRoomMember(Item.Data);
-       Result.AddBasicTag('jid', rm.real_jid);
-       Item := lstRoster.GetNextItem(Item, sdAll, [isSelected]);
-   end;
+    Item := lstRoster.Selected;
+    while (Item <> nil) do
+    begin
+        rm := TRoomMember(Item.Data);
+        Result.AddBasicTag('jid', rm.real_jid);
+        Item := lstRoster.GetNextItem(Item, sdAll, [isSelected]);
+    end;
 end;
 
 {---------------------------------------}
