@@ -288,9 +288,12 @@ end;
 
 procedure TfrmDockable.setImageIndex(idx: integer);
 begin
-    _normalImageIndex := idx;
-    RosterTreeImages.GetIcon(idx, Self.Icon);
-    updateDocked();
+    if (_normalImageIndex <> idx) then
+    begin
+        _normalImageIndex := idx;
+        RosterTreeImages.GetIcon(idx, Self.Icon);
+        updateDocked();
+    end;
 end;
 
 function TfrmDockable.getImageIndex(): Integer;
@@ -300,8 +303,11 @@ end;
 
 procedure TfrmDockable.SetUnreadMsgCount(value : integer);
 begin
-    _unreadmsg := value;
-    updateDocked();
+    if (_unreadMsg <> value) then
+    begin
+        _unreadmsg := value;
+        updateDocked();
+    end;
 end;
 
 function TfrmDockable.GetUnreadMsgCount(): integer;
@@ -372,10 +378,13 @@ end;
 procedure TfrmDockable.gotActivate();
 begin
     inherited;
-    _activating := true;
-    ClearUnreadMsgCount();
-    UpdateDocked();
-    _activating := false;
+    if (not _activating) then
+    begin
+        _activating := true;
+        ClearUnreadMsgCount();
+        UpdateDocked();
+        _activating := false;
+    end;
 end;
 
 {---------------------------------------}
@@ -411,12 +420,16 @@ end;
 
 {---------------------------------------}
 procedure TfrmDockable.ShowDefault(bringtofront:boolean);
+var
+    initVis: boolean;
 begin
+    initVis := Self.Visible;
     RestoreWindowState();
     if (not Docked) then
     begin
         inherited;
-        OnFloat(); //fire float event so windows can fix up
+        if (not initVis) then
+            OnFloat(); //fire float event so windows can fix up
     end
     else begin
         if (not Self.Visible) then
@@ -428,7 +441,9 @@ begin
             GetDockManager().BringDockedToTop(Self);
         end;
     end;
-    updateDocked(); // Make sure activity list is updated.
+
+    if (not initVis) then
+        updateDocked(); // Make sure activity list is updated if we became visible
 end;
 
 {---------------------------------------}
@@ -649,9 +664,8 @@ begin
                 end
                 else _unreadMessages.Add(msgTag.XML);
             end;
+            updateDocked();
         end;
-
-        updateDocked();
     end;
 end;
 
@@ -659,9 +673,8 @@ procedure TfrmDockable.updateLastActivity(lasttime: TDateTime);
 begin
     if (lasttime > _lastActivity) then begin
         _lastActivity := lasttime;
+        updateDocked();
     end;
-
-    updateDocked();
 end;
 
 procedure TfrmDockable.closeAllCallback(event: string; tag: TXMLTag);
