@@ -236,6 +236,7 @@ procedure HandleNotifications(win: TForm;
                               prefKey: string);
 var
     sndFN: string;
+    cdir: widestring;
 begin
 
     if ((notify and notify_toast) <> 0) then
@@ -264,7 +265,13 @@ begin
     begin
         sndFN := MainSession.Prefs.GetSoundFile(prefKey);
         if (sndFN <> '') then
+        begin
+            //set the current directory to applications,
+            //allows relative paths for sound files
+            cdir := ExtractFilePath(Application.EXEName);
+            SetCurrentDirectoryW(PWideChar(cdir));
             PlaySound(pchar(sndFN), 0, SOUND_OPTIONS);
+        end;
     end;
 end;
 
