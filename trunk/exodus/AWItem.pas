@@ -298,6 +298,13 @@ begin
 
         AssignUnicodeFont(lblCount.Font);
         AssignUnicodeFont(lblName.Font);
+
+        if (_count < _LowestUnreadMsgCnt) then
+        begin
+            // Make sure count is not showing if it
+            // isn't supposed to.
+            lblCount.Caption := ' ';
+        end;
     except
     end;
 end;
