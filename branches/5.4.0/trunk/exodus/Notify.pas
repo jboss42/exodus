@@ -54,8 +54,9 @@ uses
     Windows, MMSystem,
     Sysutils,
     Exodus_TLB, COMExodusItem,
+    contnrs, Classes,
     JabberID, Dockable, RosterImages, StateForm, DisplayName,
-    ExUtils, GnuGetText, Jabber1, PrefController, RiserWindow, Debug, Session;
+    ExUtils, GnuGetText, Jabber1, PrefController, RiserWindow, debug, Session;
 
 const
     sNotifyOnline = ' is now online.';
@@ -64,6 +65,9 @@ const
     IE_PROP_IMAGEPREFIX = 'ImagePrefix';
 
     SOUND_OPTIONS = SND_FILENAME or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT;
+
+var
+    _flashList: TStringList;  //list of flashing window handles
 
 {---------------------------------------}
 constructor TPresNotifier.Create();
@@ -127,7 +131,6 @@ begin
                     (notifyEvents and notify_tray) or
                     (notifyEvents and notify_sound);
 
-    debug.DebugMessage('Presence Notify event: ' + event +', from: ' + Item.UID);
     //let notify route where events should happen
     DoNotify(nil, notifyEvents, nick + _(notifyMessage), ImageIndex, notifyType);
 end;
@@ -138,16 +141,15 @@ var
     fi: TFlashWInfo;
     tf: TCustomForm;
 begin
-debug.DebugMessage('StartFlash(' + win.ClassName + ') BEGIN');
     //get the topmost parent form of win
     tf := Forms.GetParentForm(win, true);
     if (tf = nil) then
         tf := win;
-debug.DebugMessage('StartFlash actual form: ' + tf.ClassName);
+
+    if (_flashList.indexOf(inttostr(tf.Handle)) <> -1) then exit; //already flashing this window
 
     if (not tf.Showing) then
     begin
-debug.DebugMessage('StartFlash not visible, showing minimized');
         tf.WindowState := wsMinimized;
         tf.Visible := true;
         ShowWindow(tf.Handle, SW_SHOWMINNOACTIVE);
@@ -155,39 +157,38 @@ debug.DebugMessage('StartFlash not visible, showing minimized');
 
     //check flasher pref to see if tf should be flashed once or flashed until focused
     if (not MainSession.Prefs.getBool('notify_flasher')) then
-    begin
-debug.DebugMessage('StartFlash flashing "one" time');
-        FlashWindow(tf.Handle, false);
-    end
+        FlashWindow(tf.Handle, false)
     else begin
-debug.DebugMessage('StartFlash flashing until focused');
+debug.DebugMessage('start flashing actual window: ' + inttostr(tf.Handle) + ', class: ' + tf.ClassName);
+        _flashList.add(inttostr(tf.Handle));
         fi.hwnd:= tf.Handle;
         fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
         fi.dwTimeout := 0;
         fi.cbSize:=SizeOf(fi);
         FlashWindowEx(fi);
     end;
-debug.DebugMessage('StartFlash(' + win.ClassName + ') END');
 end;
 
 procedure StopFlash(win: TForm);
 var
     fi: TFlashWInfo;
     tf: TCustomForm;
+    idx: integer;
 begin
-debug.DebugMessage('StopFlash(' + win.ClassName + ') BEGIN');
     tf := Forms.GetParentForm(win, true);
-    if (tf = nil) then
-        tf := win;
+    if (tf = nil) then tf := win;
 
-debug.DebugMessage('StopFlash found parent: ' + tf.ClassName);
+    idx := _flashList.indexOf(inttostr(tf.Handle));
+    if (idx = -1) then exit; //not flashing
+
+debug.DebugMessage('stop flashing actual window: ' + inttostr(tf.Handle) + ', class: ' + tf.ClassName);
+    _flashList.Delete(idx);
 
     fi.hwnd:= tf.Handle;
     fi.dwFlags := FLASHW_STOP;
     fi.dwTimeout := 0;
     fi.cbSize:=SizeOf(fi);
     FlashWindowEx(fi);
-debug.DebugMessage('StopFlash(' + win.ClassName + ') END');
 end;
 
 
@@ -288,27 +289,18 @@ begin
     if (win = nil) then
         win := Application.MainForm;
         
-debug.DebugMessage('DoNotify BEGIN  win: ' + win.className + ', notifyType: ' + sound_name + ', notifyEvents: ' + inttostr(notify) + ', message: ' + msg + ', imageindex: ' + inttostr(icon));
-try
     if (not AllowNotifications(win, sound_name, notify)) then
-    begin
-debug.DebugMessage('Notification not allowed');
         exit;
-    end;
 
     //pass off bring to front and flash to better handlers if we can
     if ((notify and notify_front) or (notify and notify_flash) <> 0) and
         (win is TfrmState) then
     begin
-debug.DebugMessage('DoNotify TStateForm.OnNotify');
         TfrmState(win).OnNotify((notify and notify_front) or (notify and notify_flash));
         //remove bring to front and flash, assume stateform took care of them
         notify := notify - ((notify and notify_front) or (notify and notify_flash));
     end;
     HandleNotifications(win, notify, msg, icon, sound_name);
-finally
-debug.DebugMessage('DoNotify END');
-end;
 end;
 
 {---------------------------------------}
@@ -317,4 +309,8 @@ begin
     DoNotify(win, MainSession.Prefs.getInt(pref_name), msg, icon, pref_name);
 end;
 
+initialization
+    _flashList := TStringList.create();
+finalization
+    _flashList.free();
 end.
