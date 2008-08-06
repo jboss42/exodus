@@ -45,8 +45,6 @@ type
     procedure OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
 
     function GetMsgList(): TfBaseMsgList;
-
-    procedure OnFocusGained(); override;
   public
     Constructor Create(AOwner: TComponent);override;
 
@@ -90,6 +88,7 @@ uses
     Avatar,
     AvatarCache,
     ChatWin,
+    SndBroadcastDlg,
     GnuGetText;
 
 const
@@ -119,6 +118,11 @@ const
         </x>
     </message>
 }
+
+procedure Log(msg: widestring);
+begin
+//    Debug.DebugMessage(msg);
+end;
 
 type
     TSimpleDisplayMeta = class of TfrmSimpleDisplay;
@@ -627,8 +631,6 @@ type
         _lblJIDHyperlink: TExJIDHyperlinkLabel;
 
         procedure btnChatClick(Sender: TObject);
-    protected
-        procedure OnFocusGained();override;
     public
         constructor Create(AOwner: TComponent);override;
         procedure DisplayMessage(MsgTag: TXMLTag); override;
@@ -643,7 +645,7 @@ type
 
 constructor TfrmBroadcastDisplay.Create(AOwner: TComponent);
 begin
-debug.DebugMessage(Self.Classname + '.Create BEGIN');
+log(Self.Classname + '.Create BEGIN');
     inherited;
 
     _pnlBottom := TTntPanel.Create(Self);
@@ -683,7 +685,7 @@ debug.DebugMessage(Self.Classname + '.Create BEGIN');
     _pnlBottom.TabStop := True;
 
     _lblJIDHyperlink.Align := alClient;
-debug.DebugMessage(Self.Classname + '.Create END');
+log(Self.Classname + '.Create END');
 end;
 
 class procedure TfrmBroadcastDisplay.AutoOpenFactory(autoOpenInfo: TXMLTag);
@@ -693,14 +695,14 @@ end;
 
 procedure TfrmBroadcastDisplay.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 begin
-debug.DebugMessage(Self.Classname + '.OnDisplayNameChange BEGIN');
+log(Self.Classname + '.OnDisplayNameChange BEGIN');
     if (Self.docked) then
         Caption := _('Messages from ') + displayName
     else
         Caption := _('Broadcast Messages from ') + displayName;
     Hint := _('Broadcast Messages from ') + _jid.getDisplayFull();
     inherited;
-debug.DebugMessage(Self.Classname + '.OnDisplayNameChange END');
+log(Self.Classname + '.OnDisplayNameChange END');
 end;
 
 //Find or create a chat controller/window for the jid/resource
@@ -718,38 +720,29 @@ end;
 
 procedure TfrmBroadcastDisplay.InitializeJID(ijid: TJabberID);
 begin
-debug.DebugMessage(Self.Classname + '.InitializeJID BEGIN');
+log(Self.Classname + '.InitializeJID BEGIN');
     inherited;
     Self.ImageIndex := RI_HEADLINE_INDEX;
     Self._lblJIDHyperlink.SetJID(JID, _('Broadcast Messages from %s'));
-debug.DebugMessage(Self.Classname + '.InitializeJID END');
-end;
-
-procedure TfrmBroadcastDisplay.OnFocusGained();
-begin
-debug.DebugMessage(Self.Classname + '.OnFocusGained BEGIN');
-    inherited;
-    if (_btnChat.CanFocus()) then
-        _btnChat.SetFocus();
-debug.DebugMessage(Self.Classname + '.OnFocusGained END');
+log(Self.Classname + '.InitializeJID END');
 end;
 
 procedure TfrmBroadcastDisplay.OnDocked();
 begin
-debug.DebugMessage(Self.Classname + '.OnDocked BEGIN');
+log(Self.Classname + '.OnDocked BEGIN');
 
     Caption := _('Messages from ') + DNListener.GetDisplayName(_jid.jid);
     inherited;
-debug.DebugMessage(Self.Classname + '.OnDocked END');
+log(Self.Classname + '.OnDocked END');
 end;
 
 procedure TfrmBroadcastDisplay.OnFloat();
 begin
-debug.DebugMessage(Self.Classname + '.OnFloat BEGIN');
+log(Self.Classname + '.OnFloat BEGIN');
 
     Caption := _('Broadcast Messages from ') + DNListener.GetDisplayName(_jid.jid);
     inherited;
-debug.DebugMessage(Self.Classname + '.OnFloat END');
+log(Self.Classname + '.OnFloat END');
 end;
 
 procedure TfrmBroadcastDisplay.DisplayMessage(MsgTag: TXMLTag);
@@ -758,10 +751,10 @@ var
     sTag, mTag: TXMLTag;
     subjectNick: widestring;
 begin
-debug.DebugMessage('TfrmBroadcastDisplay.DisplayMessage BEGIN (' + MsgTag.XML + ')');
+log('TfrmBroadcastDisplay.DisplayMessage BEGIN (' + MsgTag.XML + ')');
     if (_initialMsgQueue = nil) then
     begin
-debug.DebugMessage('TfrmBroadcastDisplay.DisplayMessage displaying message');
+log('TfrmBroadcastDisplay.DisplayMessage displaying message');
     { build new tag, changing body for broadcast presentation}
         mTag := TXMLTag.create(MsgTag);
         sTag := mTag.GetFirstTag('subject');
@@ -789,7 +782,7 @@ debug.DebugMessage('TfrmBroadcastDisplay.DisplayMessage displaying message');
         msg.Free();
     end
     else inherited;
-debug.DebugMessage('TfrmBroadcastDisplay.DisplayMessage END');
+log('TfrmBroadcastDisplay.DisplayMessage END');
 end;
 
 Constructor TBroadcastHandler.Create();
@@ -806,6 +799,27 @@ begin
     inherited;
 end;
 
+
+procedure FormatBroadcastTag(origMessageTag: TXMLTag; var formattedTag: TXMLTag);
+var
+    plainText: widestring;
+    subject: widestring;
+    ttag: TXMLTag;
+    newXHTMLTag: TXMLTag;
+    newPlainText: widestring;
+begin
+    formattedTag := TXMLTag.create(OrigMessageTag);
+    plainText := formattedTag.GetBasicText('body');
+    subject := formattedTag.GetBasicText('subject');
+    newPlainText := sndBroadcastDlg.FormatBroadcastPlainText(plainText, subject);
+    sndBroadcastDlg.FormatBroadcastXHTML(formattedTag, plainText, subject, newXHTMLTag);
+    //replace xhtml in formatted tag with new
+    formattedTag.RemoveTag(formattedTag.GetFirstTag('body'));
+    formattedTag.AddBasicTag('body', newPlainText);
+    formattedTag.RemoveTag(formattedTag.GetFirstTag('subject'));
+    formattedTag.RemoveTag(formattedTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]'));
+    formattedTag.AddTag(newXHTMLTag);
+end;
 
 //add <feature var='http://jabber.org/protocol/address'/> somewhere
 
@@ -860,9 +874,14 @@ begin
     dTag.free();
     fromJID.free();
 
-    m := CreateMessage(tag);
+    //modify original msg tag before we log it to look more like a room's broadcast messages
+    FormatBroadcastTag(tag, dtag);
+    //finally, change the type to chat so history will group them together
+    dtag.setAttribute('type','chat');
+    m := CreateMessage(dtag);
     ExUtils.LogMessage(m);
     m.free();
+    dtag.free();
 end;
 
 type
@@ -1015,7 +1034,7 @@ end;
 *******************************************************************************}
 Constructor TfrmSimpleDisplay.Create(AOwner: TComponent);
 begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').create BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').create BEGIN');
 
     _dnListener := nil;
     _jid := nil;
@@ -1028,12 +1047,7 @@ debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').create BEGIN');
     CloseOnDisconnect := true;
     PersistUnreadMessages := True;
     Self.UnreadMsgCount := 0;
-
-//    _MsgList := BaseMsgList.MsgListFactory(Self, pnlMsgDisplay);
-//    _MsgList.setContextMenu(mnuSimplePopup);
-//    _MsgList.setDragOver(OnDockedDragOver);
-//    _MsgList.setDragDrop(OnDragDrop);
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').create END');
+log('TfrmSimpleDisplay(' + Self.Classname + ').create END');
 end;
 
 function TfrmSimpleDisplay.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
@@ -1057,16 +1071,16 @@ var
     hist: WideString;
     tq: TObjectList;
 begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList BEGIN');
 
     inherited;
     if (_MsgList <> nil) then
     begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList MsgList exists');
+log('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList MsgList exists');
         if (_initialMsgQueue = nil) then
         begin
             hist := _msgList.getHistory();
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList initialMsgQueue = nil, current MsgList history: ' + hist);
+log('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList initialMsgQueue = nil, current MsgList history: ' + hist);
         end;
         try
             _MsgList.Free();
@@ -1075,7 +1089,7 @@ debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList ini
                 Debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList Exception trying to free existing MsgList: ' + E.Message);
         end;
     end;
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList creating new msglist');
+log('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList creating new msglist');
     try
         _MsgList := BaseMsgList.MsgListFactory(Self, pnlMsgDisplay);
     except
@@ -1085,14 +1099,14 @@ debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList cre
     _MsgList.setContextMenu(mnuSimplePopup);
     _MsgList.setDragOver(OnDockedDragOver);
     _MsgList.setDragDrop(OnDragDrop);
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList clearing msglist');
+log('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList clearing msglist');
 
     _MsgList.Clear();
 
     //browser doesn't like to be reparented. recreate and repopluate
     if (_initialMsgQueue <> nil) then
     begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList populating msglist with messages in initialMsgQueue');
+log('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList populating msglist with messages in initialMsgQueue');
         tq := _initialMsgQueue;
         _initialMsgQueue := nil;
         for i := 0 to tq.Count - 1 do
@@ -1102,18 +1116,18 @@ debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList pop
         tq.Free();
     end
     else begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList populating msglist with previous history');
+log('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList populating msglist with previous history');
         _msgList.populate(hist);
     end;
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList END');
+log('TfrmSimpleDisplay(' + Self.Classname + ').RefreshMsgList END');
 end;
 
 procedure TfrmSimpleDisplay.OnPersistedMessage(msg: TXMLTag);
 begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnPersistedMessage BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').OnPersistedMessage BEGIN');
     inherited;
     Self.DisplayMessage(msg);
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnPersistedMessage BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').OnPersistedMessage BEGIN');
 end;
 
 function TfrmSimpleDisplay.GetWindowStateKey() : WideString;
@@ -1139,7 +1153,7 @@ end;
 
 procedure TfrmSimpleDisplay.InitializeJID(ijid: TJabberID = nil);
 begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').InitializeJID BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').InitializeJID BEGIN');
 
     if (ijid <> nil) then
     begin
@@ -1149,22 +1163,22 @@ debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').InitializeJID BEGI
         _dnListener.UID := _jid.jid;
         OnDisplayNameChange(_jid.jid, _dnListener.GetDisplayName(_jid.jid));
     end;
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').InitializeJID END');
+log('TfrmSimpleDisplay(' + Self.Classname + ').InitializeJID END');
 end;
 
 procedure TfrmSimpleDisplay.DisplayMessage(MsgTag: TXMLTag);
 var
     msg: TJabberMessage;
 begin
-debug.DebugMessage('TfrmSimpleDisplay.DisplayMessage BEGIN (' + MsgTag.XML + ')');
+log('TfrmSimpleDisplay.DisplayMessage BEGIN (' + MsgTag.XML + ')');
     if (_initialMsgQueue <> nil) then
     begin
-debug.DebugMessage('TfrmSimpleDisplay.DisplayMessage adding message to _initialMsgQueue');
+log('TfrmSimpleDisplay.DisplayMessage adding message to _initialMsgQueue');
 
         _initialMsgQueue.Add(TXMLTag.Create(MsgTag)) //copy of tag, list will free
     end
     else begin
-debug.DebugMessage('TfrmSimpleDisplay.DisplayMessage displaying message');
+log('TfrmSimpleDisplay.DisplayMessage displaying message');
 
         msg := CreateMessage(MsgTag);
 
@@ -1175,7 +1189,7 @@ debug.DebugMessage('TfrmSimpleDisplay.DisplayMessage displaying message');
 
         msg.Free();
     end;
-debug.DebugMessage('TfrmSimpleDisplay.DisplayMessage END');
+log('TfrmSimpleDisplay.DisplayMessage END');
 end;
 
 procedure TfrmSimpleDisplay.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -1186,7 +1200,7 @@ end;
 
 procedure TfrmSimpleDisplay.FormDestroy(Sender: TObject);
 begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').FormDestroy BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').FormDestroy BEGIN');
 
     //remove ourself from simplewindow list
     RemoveWindow(Self.UID);
@@ -1198,14 +1212,14 @@ debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').FormDestroy BEGIN'
         _dnListener.free();
     end;
     inherited;
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').FormDestroy END');
+log('TfrmSimpleDisplay(' + Self.Classname + ').FormDestroy END');
 end;
 
 procedure TfrmSimpleDisplay.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnDisplayNameChange BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').OnDisplayNameChange BEGIN');
     UpdateDocked();
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnDisplayNameChange END');
+log('TfrmSimpleDisplay(' + Self.Classname + ').OnDisplayNameChange END');
 end;
 
 procedure TfrmSimpleDisplay.Update;
@@ -1214,32 +1228,24 @@ begin
     updateDocked();
 end;
 
-procedure TfrmSimpleDisplay.OnFocusGained();
-begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnFocusGained BEGIN');
-    inherited;
-     updateDocked();
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnFocusGained END');
-end;
-
 procedure TfrmSimpleDisplay.OnDocked();
 begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnDocked BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').OnDocked BEGIN');
 
     inherited;
     //browser doesn't like to be reparented. recreate and repopluate
 
     RefreshMsgList();
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnDocked END');
+log('TfrmSimpleDisplay(' + Self.Classname + ').OnDocked END');
 end;
 
 procedure TfrmSimpleDisplay.OnFloat();
 begin
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnFloat BEGIN');
+log('TfrmSimpleDisplay(' + Self.Classname + ').OnFloat BEGIN');
     inherited;
     //browser doesn't like to be reparented. recreate and repopluate
     RefreshMsgList();
-debug.DebugMessage('TfrmSimpleDisplay(' + Self.Classname + ').OnFloat END');
+log('TfrmSimpleDisplay(' + Self.Classname + ').OnFloat END');
 end;
 
 procedure TfrmSimpleDisplay.OnAuthenticated();
