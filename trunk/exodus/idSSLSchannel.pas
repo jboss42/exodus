@@ -130,6 +130,19 @@ type
     procedure setErrorMessage(errorType:DWORD; var error:WideString);
   end;
 
+  TIdDataBuffer = class
+  private
+    m_Data: Pointer;
+    m_Length: Cardinal;
+
+  public
+    constructor Create();
+    destructor Destroy(); override;
+
+    function Deque(len: Cardinal; limit: Cardinal; var dst): Cardinal;
+    procedure Enque(len: Cardinal; var src);
+    procedure Clear();
+  end;
   TIdSchannelIOHandlerSocket = class(TIdIOHandlerSocket)
   private
     fPassThrough: Boolean;
@@ -153,6 +166,7 @@ type
 
     mServerCert: SChannelX509;
 
+    m_Buffer: TIdDataBuffer;
     m_ExtraData: PByte;
     m_ExtraDataLength: Cardinal;
     skipRecv: Boolean;
@@ -536,6 +550,8 @@ begin
       raise EIdException.Create('The socket must have closed. SSL init failed.');
     end;
 
+    recvLength := m_Buffer.Deque(recvLength, recvBufferSize, recvBuffer^);
+    {
     if (m_ExtraDataLength <> 0) then
     begin
       pTmpLength := m_ExtraDataLength + recvLength;
@@ -552,7 +568,7 @@ begin
       recvLength := pTmpLength;
       recvBufferSize := pTmpLength;
     end;
-
+    }
     inbufferDesc.ulVersion := 0;
     inbufferDesc.cBuffers := 2;
     inbufferDesc.pBuffers := @inbuffer;
@@ -572,17 +588,26 @@ begin
 
     if (Result = SEC_E_INCOMPLETE_MESSAGE) then
     begin
+      m_Buffer.Enque(recvLength, recvBuffer^);
+      {
       freeExtraData;
 
       m_ExtraData := AllocMem(recvLength);
       Move(recvBuffer^, m_ExtraData^, recvLength);
       m_ExtraDataLength := recvLength;
+      }
     end else if (Result < 0) then begin
       raise EIdException.Create('SSL Initialization did not work.');
     end;
 
     if (inbuffer[1].BufferType = SECBUFFER_EXTRA) then
     begin
+      pExtraBuffer := @inbuffer[1];
+      pRecvBuffer := recvBuffer;
+      Inc(pRecvBuffer, recvLength);
+      Dec(pRecvBuffer, pExtraBuffer.cbBuffer);
+      m_Buffer.Enque(pExtraBuffer.cbBuffer, pRecvBuffer^);
+      {
       pExtraBuffer := @inbuffer[1];
       freeExtraData;
       m_ExtraData := AllocMem(pExtraBuffer.cbBuffer);
@@ -593,6 +618,7 @@ begin
 
       Move(pRecvBuffer^, m_ExtraData^, pExtraBuffer.cbBuffer);
       m_ExtraDataLength := pExtraBuffer.cbBuffer;
+      }
     end;
 
     if ((Result = SEC_E_OK) or (Result = SEC_I_CONTINUE_NEEDED)) then
@@ -659,10 +685,13 @@ begin
       dataLength := 0;
     end;
 
+    dataLength := m_Buffer.Deque(dataLength, ALen, ABuf);
+    {
     if (m_ExtraData <> nil) then
     begin
       addExtraData(dataLength, ABuf);
     end;
+    }
     Result := dataLength;
 
     with BuffersDesc do begin
@@ -687,10 +716,13 @@ begin
     ss := mSspiCalls.FunctionTable.DecryptMessage(m_phContext, @BuffersDesc, 0, nil);
 
     if (ss = SEC_E_INCOMPLETE_MESSAGE) then begin
+      {
       freeExtraData();
       m_ExtraData := AllocMem(dataLength);
       Move(ABuf, m_ExtraData^, dataLength);
       m_ExtraDataLength := dataLength;
+      }
+      m_Buffer.Enque(dataLength, ABuf);
       skipRecv := false;
       Continue;
     end;
@@ -747,10 +779,14 @@ begin
 
     if ((pExtraBuffer <> nil) and (pExtraBuffer.cbBuffer > 0)) then
     begin
+      {
       freeExtraData;
       m_ExtraData := AllocMem(pExtraBuffer.cbBuffer);
       Move(pExtraBuffer.pvBuffer^, m_ExtraData^, pExtraBuffer.cbBuffer);
       m_ExtraDataLength := pExtraBuffer.cbBuffer;
+      }
+
+      m_Buffer.Enque(pExtraBuffer.cbBuffer, pExtraBuffer.pvBuffer^);
       mSspiCalls.FunctionTable.FreeContextBuffer(pExtraBuffer.pvBuffer);
 
       skipRecv := True;
@@ -852,6 +888,7 @@ begin
   m_SecExtraBuffer.BufferType := 0;
   m_SecExtraBuffer.pvBuffer := nil;
 
+  m_Buffer := TIdDataBuffer.Create();
   m_ExtraData := nil;
   m_ExtraDataLength := 0;
   skipRecv := False;
@@ -865,6 +902,7 @@ end;
 destructor TIdSchannelIOHandlerSocket.Destroy;
 begin
   freeExtraData;
+  FreeAndNil(m_Buffer);
 
   if (mClientCert <> nil) then
   begin
@@ -1039,6 +1077,88 @@ begin
     DWORD(CERT_E_REVOCATION_FAILURE): error := CERT_E_REVOCATION_FAILURE_STR;
     else error := 'Some unknown error has occurred.';
   End;
+end;
+
+
+constructor TIdDataBuffer.Create;
+begin
+    m_Data := nil;
+    m_Length := 0;
+end;
+destructor TIdDataBuffer.Destroy;
+begin
+    Clear();
+
+    inherited;
+end;
+
+procedure TIdDataBuffer.Clear();
+begin
+    if (m_Data = nil) then exit;
+
+    FreeMem(m_Data, m_Length);
+    m_Data := nil;
+    m_Length := 0;
+end;
+
+function TidDataBuffer.Deque(len: Cardinal; limit: Cardinal; var dst): Cardinal;
+var
+    tmp: Pointer;
+    ptr: PByte;
+    amt, overflow: Cardinal;
+begin
+    Assert (len >= 0);
+    Assert (len <= limit);
+
+    amt := m_Length + len;
+    overflow := Max(amt - limit, 0);
+    tmp := AllocMem(amt);
+    ptr := tmp;
+
+    try
+        //Copy saved (if any)
+        if (m_Data <> nil) then begin
+            Move(m_Data^, ptr^, m_Length);
+            Inc(ptr, m_Length);
+            Clear();
+        end;
+
+        Move(dst, ptr^, len);
+
+        Result := amt - overflow;
+        if (overflow > 0) then begin
+            //copy extra data to saved
+            m_Data := AllocMem(overflow);
+            ptr := tmp;
+            Inc(ptr, Result);
+            Move(ptr^, m_Data^, overflow);
+        end;
+
+        Move(tmp^, dst, Result);
+    finally
+        FreeMem(tmp);
+    end;
+end;
+procedure TIdDataBuffer.Enque(len: Cardinal; var src);
+var
+    tmp: Pointer;
+    ptr: PByte;
+    amt: Cardinal;
+begin
+    Assert (len >= 0);
+    amt := m_Length + len;
+    tmp := AllocMem(amt);
+    ptr := tmp;
+
+    if (m_Data <> nil) then begin
+        //grow buffer by <len>, and add old data to the head
+        Move(m_Data^, ptr^, m_Length);
+        Inc(ptr, m_Length);
+    end;
+
+    Move(src, tmp^, len);
+    m_Data := tmp;
+    m_Length := amt;
 end;
 
 end.
