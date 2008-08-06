@@ -123,7 +123,7 @@ begin
     end;
     
     // create a new instance
-    singleToast := TfrmRiser.Create(Application);
+    singleToast := TfrmRiser.Create(nil);
     animate := true;
 //        AssignDefaultFont(singleToast.Label1.Font);
 
