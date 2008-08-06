@@ -193,6 +193,7 @@ type
     procedure Close; override;
     procedure Open; override;
 
+    function Readable(AMSec: Integer = IdTimeoutDefault): Boolean; override;
     function Recv(var ABuf; ALen: integer): integer; override;
     function Send(var ABuf; ALen: integer): integer; override;
 
@@ -211,7 +212,7 @@ type
 
 implementation
 
-uses IdIOHandler;
+uses IdException, IdIOHandler;
 
 procedure TIdSchannelIOHandlerSocket.freeExtraData;
 begin
@@ -229,11 +230,12 @@ var
   tmpData: Pointer;
   tmpDataPtr: PByte;
 begin
+  if (m_ExtraData = nil) then exit;
+
   tmpDataSize := dataLength + m_ExtraDataLength;
   tmpData := AllocMem(tmpDataSize);
   try
     Move(m_ExtraData^, tmpData^, m_ExtraDataLength);
-    freeExtraData;
 
     tmpDataPtr := tmpData;
     Inc(tmpDataPtr, m_ExtraDataLength);
@@ -242,6 +244,7 @@ begin
     dataLength := tmpDataSize;
     Move(tmpData^, ABuf, dataLength);
   finally
+    freeExtraData;
     FreeMem(tmpData, tmpDataSize);
   end;
 end;
@@ -353,13 +356,13 @@ begin
   if (ss = SEC_E_NO_CREDENTIALS) then
   begin
     exceptionStr := 'Bad Certificate';
-    raise Exception.Create(exceptionStr);
+    raise EIdException.Create(exceptionStr);
   end;
 
   if (ss <> SEC_E_OK) then
   begin
     exceptionStr := 'Something bad happened when starting SChannel.';
-    raise Exception.Create(exceptionStr);
+    raise EIdException.Create(exceptionStr);
   end;
 
   if (mClientCert <> nil) then
@@ -408,7 +411,7 @@ begin
   firstTime := True;
   done := False;
 
-  dwSSPIFlags := ISC_REQ_ALLOCATE_MEMORY;
+  dwSSPIFlags := ISC_REQ_ALLOCATE_MEMORY or ISC_REQ_USE_SUPPLIED_CREDS;
 
   while (not done) do
   begin
@@ -422,10 +425,13 @@ begin
 
     done := ((SEC_I_CONTINUE_NEEDED <> ss) and (SEC_I_COMPLETE_AND_CONTINUE <> ss)
       and (SEC_E_INCOMPLETE_MESSAGE <> ss));
-    if (ss = SEC_E_OK) then
-    begin
+    if (ss = SEC_E_OK) then begin
       getServerCertificate;
     end;
+  end;
+
+  if (ss <> SEC_E_OK) then begin
+      raise EIdException.Create('Could not complete SSL handshaking.');
   end;
 
 end;
@@ -437,11 +443,14 @@ var
 begin
   ss := mSspiCalls.FunctionTable.QueryContextAttributesA(m_phContext,
     SECPKG_ATTR_STREAM_SIZES, @noUsed);
-  if (ss <> SEC_E_OK) then
-  begin
-    raise Exception.Create('Could not get the Chunk Size for SChannel.');
+  if (ss = SEC_E_OK) then begin
+    Result := noUsed.cbMaximumMessage;
+  end
+  else begin
+    //TODO: loggit
+    //raise Exception.Create('Could not get the Chunk Size for SChannel.');
+    result := 16384;    //max possible chunk size
   end;
-  Result := noUsed.cbMaximumMessage;
 end;
 
 function TIdSchannelIOHandlerSocket.getMaxInitialChunkSize;
@@ -460,6 +469,13 @@ end;
 procedure TIdSchannelIOHandlerSocket.OpenEncodedConnection;
 begin
   initializeSchannel;
+end;
+
+function TIdSchannelIOHandlerSocket.Readable(AMSec: Integer): Boolean;
+begin
+    Result := skipRecv;
+    if not Result then
+        Result := inherited Readable(AMSec)
 end;
 
 function TIdSchannelIOHandlerSocket.Recv(var ABuf; ALen: integer): integer;
@@ -517,7 +533,7 @@ begin
     recvLength := inherited Recv(recvBuffer^, recvBufferSize);
     if ((recvLength > recvBufferSize) or (recvLength = 0)) then
     begin
-      raise Exception.Create('The socket must have closed. SSL init failed.');
+      raise EIdException.Create('The socket must have closed. SSL init failed.');
     end;
 
     if (m_ExtraDataLength <> 0) then
@@ -562,7 +578,7 @@ begin
       Move(recvBuffer^, m_ExtraData^, recvLength);
       m_ExtraDataLength := recvLength;
     end else if (Result < 0) then begin
-      raise Exception.Create('SSL Initialization did not work.');
+      raise EIdException.Create('SSL Initialization did not work.');
     end;
 
     if (inbuffer[1].BufferType = SECBUFFER_EXTRA) then
@@ -599,7 +615,7 @@ begin
     SECPKG_ATTR_REMOTE_CERT_CONTEXT, @serverCert);
   if (ss <> SEC_E_OK) then
   begin
-    raise Exception.Create('Could not get the Server Certificate.');
+    raise EIdException.Create('Could not get the Server Certificate.');
   end;
 
   // SChannelX509 takes over ownership of the certificate. No need to release it.
@@ -643,7 +659,7 @@ begin
       dataLength := 0;
     end;
 
-    if (m_ExtraDataLength <> 0) then
+    if (m_ExtraData <> nil) then
     begin
       addExtraData(dataLength, ABuf);
     end;
@@ -670,29 +686,29 @@ begin
 
     ss := mSspiCalls.FunctionTable.DecryptMessage(m_phContext, @BuffersDesc, 0, nil);
 
-    if (ss = SEC_E_INCOMPLETE_MESSAGE) then
-    begin
-      freeExtraData;
+    if (ss = SEC_E_INCOMPLETE_MESSAGE) then begin
+      freeExtraData();
       m_ExtraData := AllocMem(dataLength);
-      Move(ABuf, m_ExtraData, dataLength);
+      Move(ABuf, m_ExtraData^, dataLength);
       m_ExtraDataLength := dataLength;
+      skipRecv := false;
       Continue;
     end;
 
     if (ss = SEC_E_MESSAGE_ALTERED) then
     begin
-      raise Exception.Create('Our SSL message has been altered.');
+      raise EIdException.Create('Our SSL message has been altered.');
     end;
 
     if (ss < 0) then
     begin
-      raise Exception.Create('Decryption of the SSL message failed.');
+      raise EIdException.Create('Decryption of the SSL message failed.');
     end;
 
     if ((ss <> SEC_E_OK) and (ss <> SEC_I_RENEGOTIATE) and
         (ss <> SEC_I_CONTEXT_EXPIRED)) then
     begin
-      raise Exception.Create('SSL Decryption Failed.');
+      raise EIdException.Create('SSL Decryption Failed.');
     end;
 
     if (ss = SEC_I_CONTEXT_EXPIRED) then
@@ -735,7 +751,7 @@ begin
       m_ExtraData := AllocMem(pExtraBuffer.cbBuffer);
       Move(pExtraBuffer.pvBuffer^, m_ExtraData^, pExtraBuffer.cbBuffer);
       m_ExtraDataLength := pExtraBuffer.cbBuffer;
-      //mSspiCalls.FunctionTable.FreeContextBuffer(pExtraBuffer.pvBuffer);
+      mSspiCalls.FunctionTable.FreeContextBuffer(pExtraBuffer.pvBuffer);
 
       skipRecv := True;
     end else begin
@@ -764,7 +780,7 @@ begin
     SECPKG_ATTR_STREAM_SIZES, @sizes);
   if (ss <> SEC_E_OK) then
   begin
-    raise Exception.Create('SSL message size call failed.');
+    raise EIdException.Create('SSL message size call failed.');
   end;
 
   buffersDesc.ulVersion := 0;
@@ -806,7 +822,7 @@ begin
     FreeMem(buffers[0].pvBuffer);
     FreeMem(buffers[2].pvBuffer);
   end else begin
-    raise Exception.Create('SSL encryption failed.');
+    raise EIdException.Create('SSL encryption failed.');
   end;
 end;
 

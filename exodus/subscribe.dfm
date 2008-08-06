@@ -10,7 +10,6 @@ inherited frmSubscribe: TfrmSubscribe
   FormStyle = fsStayOnTop
   Position = poMainFormCenter
   OnClose = FormClose
-  OnDestroy = FormDestroy
   ExplicitWidth = 340
   ExplicitHeight = 247
   PixelsPerInch = 96

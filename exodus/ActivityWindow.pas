@@ -141,6 +141,8 @@ type
     _scrollDownState: TScrollState;
     _currentActivePage: TTntTabSheet;
     _FilesDragAndDropEnabled: Boolean;
+    _needToSortList: boolean;    // Added to try and cut down on sorts as performance is hurt by multiple sorts
+    _lastListActivity: TDateTime;
 
     procedure _clearTrackingList();
     function _findItem(awitem: TfAWItem): TAWTrackerItem;
@@ -175,7 +177,7 @@ type
     function findItemIndex(awitem: TfAWItem): integer;
     procedure scrollToActive();
     procedure setDockingSpacers(dockstate: TDockStates);
-    procedure itemChangeUpdate();
+    procedure itemChangeUpdate(const item: TAWTrackerItem);
     procedure selectNextItem();
     procedure selectPrevItem();
     procedure SetItemName(awitem: TfAWItem; name: widestring; itemhint: widestring);
@@ -185,6 +187,8 @@ type
     property currentActivePage: TTntTabSheet read _currentActivePage;
     property itemCount: integer read _getItemCount;
     property FilesDragAndDrop: Boolean read _FilesDragAndDropEnabled write _SetFilesDragAndDrop;
+    property currentListSort: TSortState read _curListSort;
+    property needToSortList: boolean read _needToSortList write _needToSortList;
 
   end;
 
@@ -272,6 +276,7 @@ begin
     _canScrollUp := false;
     _canScrollDown := false;
     _oldActivateSheet := nil;
+    _needToSortList := true;
 
     case MainSession.Prefs.getInt('activity_window_sort') of
         0: begin
@@ -404,6 +409,7 @@ end;
 {---------------------------------------}
 procedure TfrmActivityWindow.mnuAlphaSortClick(Sender: TObject);
 begin
+    _needToSortList := true;
     _sortTrackingList(ssAlpha);
     _updateDisplay();
 end;
@@ -412,6 +418,7 @@ end;
 procedure TfrmActivityWindow.mnuAW_CloseAllClick(Sender: TObject);
 begin
     inherited;
+    _needToSortList := true;
     MainSession.FireEvent('/session/close-all-windows', nil);
 end;
 
@@ -419,6 +426,7 @@ end;
 procedure TfrmActivityWindow.mnuAW_DockAllClick(Sender: TObject);
 begin
     inherited;
+    _needToSortList := true;
     MainSession.FireEvent('/session/dock-all-windows', nil);
 end;
 
@@ -426,12 +434,14 @@ end;
 procedure TfrmActivityWindow.mnuAW_FloatAllClick(Sender: TObject);
 begin
     inherited;
+    _needToSortList := true;
     MainSession.FireEvent('/session/float-all-windows', nil);
 end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow.mnuRecentSortClick(Sender: TObject);
 begin
+    _needToSortList := true;
     _sortTrackingList(ssRecent);
     _updateDisplay();
 end;
@@ -439,6 +449,7 @@ end;
 {---------------------------------------}
 procedure TfrmActivityWindow.mnuTypeSortClick(Sender: TObject);
 begin
+    _needToSortList := true;
     _sortTrackingList(ssType);
     _updateDisplay();
 end;
@@ -446,6 +457,7 @@ end;
 {---------------------------------------}
 procedure TfrmActivityWindow.mnuUnreadSortClick(Sender: TObject);
 begin
+    _needToSortList := true;
     _sortTrackingList(ssUnread);
     _updateDisplay();
 end;
@@ -473,6 +485,8 @@ var
     i: integer;
 begin
     if (item = nil) then exit;
+
+    _needToSortList := true;
 
     for i := 0 to _trackingList.Count - 1 do
     begin                                                         
@@ -523,6 +537,8 @@ begin
 
     if ((Result = nil) and
         (frm <> nil)) then begin
+        _needToSortList := true;
+
         Result := TAWTrackerItem.Create();
         Result.awItem := TfAWItem.Create(nil);
         Result.frm := frm;
@@ -737,6 +753,8 @@ begin
     if (awitem = nil) then exit;
 
     try
+        _needToSortList := true;
+        
         trackitem := _findItem(awitem);
 
         // Deactivate old item if new item docked
@@ -777,11 +795,7 @@ begin
                 end;
             end
             else begin
-                // Undocked Window
-                if (trackitem.frm.WindowState = wsMinimized) then begin
-                    ShowWindow(trackitem.frm.Handle, SW_RESTORE);
-                end;
-                trackitem.frm.BringToFront;
+                trackitem.frm.ShowDefault(true);
             end;
         end;
 
@@ -815,36 +829,41 @@ begin
     if (sortType = ssUnsorted) then exit;
 
     try
-        _curListSort := sortType;
+        if (_needToSortList) then
+        begin
+            _curListSort := sortType;
 
-        sortstring := _(sSortBy);
+            sortstring := _(sSortBy);
 
-        // Always do an Alpha sort first
-        _sortTrackingListAlpha();
+            // Always do an Alpha sort first
+            _sortTrackingListAlpha();
 
-        if (sortType = ssAlpha) then begin
-            sortstring := sortstring + _(sSortAlpha);
-        end
-        // Refine sort if something other then Alpha
-        else if (sortType = ssRecent) then begin
-            sortstring := sortstring + _(sSortRecent);
-            _sortTrackingListRecentActivity();
-        end
-        else if (sortType = ssType) then begin
-            // Sort by the type of window (room, chat, etc.), then by alpha for tied items
-            sortstring := sortstring + _(sSortType);
-            _sortTrackingListType();
-        end
-        else if (sortType = ssUnread) then begin
-            // Sort by Highest Unread msgs
-            sortstring := sortstring + _(sSortUnread);
-            _sortTrackingListUnread();
-        end
-        else begin
-            // Sort was Alpha which we did above
+            if (sortType = ssAlpha) then begin
+                sortstring := sortstring + _(sSortAlpha);
+            end
+            // Refine sort if something other then Alpha
+            else if (sortType = ssRecent) then begin
+                sortstring := sortstring + _(sSortRecent);
+                _sortTrackingListRecentActivity();
+            end
+            else if (sortType = ssType) then begin
+                // Sort by the type of window (room, chat, etc.), then by alpha for tied items
+                sortstring := sortstring + _(sSortType);
+                _sortTrackingListType();
+            end
+            else if (sortType = ssUnread) then begin
+                // Sort by Highest Unread msgs
+                sortstring := sortstring + _(sSortUnread);
+                _sortTrackingListUnread();
+            end
+            else begin
+                // Sort was Alpha which we did above
+            end;
+
+            lblSort.Caption := sortstring;
+
+            _needToSortList := false;
         end;
-
-        lblSort.Caption := sortstring;
     except
     end;
 end;
@@ -894,7 +913,6 @@ begin
                 if (i < _showingTopItem) then begin
                     // Off the top of the viewable list
                     item.awItem.Visible := false;
-                    _enableScrollUp(true);
                     if ((item.awItem.priority) and
                         (_scrollUpState < ssPriority)) then begin
                         _scrollUpState := ssPriority;
@@ -907,11 +925,11 @@ begin
                         (_scrollUpState < ssNewMessage)) then begin
                         _scrollUpState := ssNewMessage;
                     end;
+                    _enableScrollUp(true);
                 end
                 else if (slotsFilled >= numSlots) then begin
                     // Off the bottom of the viewable list
                     item.awItem.Visible := false;
-                    _enableScrollDown(true);
                     if ((item.awItem.priority) and
                         (_scrollDownState < ssPriority)) then begin
                         _scrollDownState := ssPriority;
@@ -924,6 +942,7 @@ begin
                         (_scrollDownState < ssNewMessage)) then begin
                         _scrollDownState := ssNewMessage;
                     end;
+                    _enableScrollDown(true);
 
                     if ((slotsFilled = numSlots) and
                         (remainder > 0) and
@@ -1034,6 +1053,8 @@ var
     tempitem: TAWTrackerItem;
 begin
     if (_activeitem = nil) then exit; // No active item
+
+    _needToSortList := true;
 
     _updateDisplay(false); // don't want a partial at this instant
 
@@ -1197,65 +1218,87 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow.itemChangeUpdate();
+procedure TfrmActivityWindow.itemChangeUpdate(const item: TAWTrackerItem);
 begin
+    if (item.frm <> nil) then
+    begin
+        if ((_curListSort = ssRecent) and
+            (item.frm.LastActivity > _lastListActivity)) then
+        begin
+            _needToSortList := true;
+        end;
+        if ((_curListSort = ssUnread) and
+            (item.frm.LastActivity > _lastListActivity)) then
+        begin
+            _needToSortList := true;
+        end;
+    end;
+
     _updateDisplay();
 end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow._setScrollUpColor();
+    procedure setcolor(startcolor, endcolor: TColor);
+    begin
+        if ((pnlListScrollUp.GradientProperites.startColor <> startcolor) or
+            (pnlListScrollUp.GradientProperites.endColor <> endcolor)) then
+        begin
+            pnlListScrollUp.GradientProperites.startColor := startcolor;
+            pnlListScrollUp.GradientProperites.endColor := endcolor;
+            pnlListScrollUp.Invalidate();
+        end;
+    end;
 begin
     case _scrollUpState of
         ssDisabled: begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollDefaultStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollDefaultEndColor;
+            setcolor(_scrollDefaultStartColor, _scrollDefaultEndColor);
         end;
         ssEnabled: begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollEnabledStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollEnabledEndColor;
+            setcolor(_scrollEnabledStartColor, _scrollEnabledEndColor);
         end;
         ssPriority: begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollPriorityStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollPriorityEndColor;
+            setcolor(_scrollPriorityStartColor, _scrollPriorityEndColor);
         end;
         ssNewWindow: begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollNewWindowStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollNewWindowEndColor;
+            setcolor(_scrollNewWindowStartColor, _scrollNewWindowEndColor);
         end;
         ssNewMessage: begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollNewMessageStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollNewMessageEndColor;
+            setcolor(_scrollNewMessageStartColor, _scrollNewMessageEndColor);
         end;
     end;
-    pnlListScrollUp.Invalidate();
 end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow._setScrollDownColor();
+    procedure setcolor(startcolor, endcolor: TColor);
+    begin
+        if ((pnlListScrollDown.GradientProperites.startColor <> startcolor) or
+            (pnlListScrollDown.GradientProperites.endColor <> endcolor)) then
+        begin
+            pnlListScrollDown.GradientProperites.startColor := startcolor;
+            pnlListScrollDown.GradientProperites.endColor := endcolor;
+            pnlListScrollDown.Invalidate();
+        end;
+    end;
 begin
     case _scrollDownState of
         ssDisabled: begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollDefaultStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollDefaultEndColor;
+            setColor(_scrollDefaultStartColor, _scrollDefaultEndColor);
         end;
         ssEnabled: begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollEnabledStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollEnabledEndColor;
+            setColor(_scrollEnabledStartColor, _scrollEnabledEndColor);
         end;
         ssPriority: begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollPriorityStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollPriorityEndColor;
+            setColor(_scrollPriorityStartColor, _scrollPriorityEndColor);
         end;
         ssNewWindow: begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollNewWindowStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollNewWindowEndColor;
+            setColor(_scrollNewWindowStartColor, _scrollNewWindowEndColor);
         end;
         ssNewMessage: begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollNewMessageStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollNewMessageEndColor;
+            setColor(_scrollNewMessageStartColor, _scrollNewMessageEndColor);
         end;
     end;
-    pnlListScrollDown.Invalidate();
 end;
 
 {---------------------------------------}
@@ -1265,17 +1308,25 @@ var
     item: TAWTrackerItem;
 begin
     try
+        _needToSortList := true;
         // Scan through list to find active item.
-        // No need to check last item (count - 1) as
-        // we cannot go to the next item when it is
-        // the last item.
-        for i := 0 to _trackingList.Count - 2 do begin
+        for i := 0 to _trackingList.Count - 1 do begin
             item := TAWTrackerItem(_trackingList.Objects[i]);
             if (item <> nil) then begin
                 if (item.awItem.active) then begin
-                    item := TAWTrackerItem(_trackingList.Objects[i + 1]);
-                    if (item <> nil) then begin
-                        activateItem(item.awItem);
+                    if ((i + 1) < _trackingList.Count) then begin
+                        // Not last item in list
+                        item := TAWTrackerItem(_trackingList.Objects[i + 1]);
+                        if (item <> nil) then begin
+                            activateItem(item.awItem);
+                        end;
+                    end
+                    else begin
+                        // Must be last item in list, go to first item.
+                        item := TAWTrackerItem(_trackingList.Objects[0]);
+                        if (item <> nil) then begin
+                            activateItem(item.awItem);
+                        end;
                     end;
                     break;
                 end;
@@ -1292,18 +1343,26 @@ var
     item: TAWTrackerItem;
 begin
     try
+        _needToSortList := true;
         // Scan through list to find active item.
-        // No need to check first item (item 0) as
-        // we cannot go to the next item when it is
-        // the last item.
         if (_trackingList.Count > 1) then begin
-            for i := 1 to _trackingList.Count - 1 do begin
+            for i := 0 to _trackingList.Count - 1 do begin
                 item := TAWTrackerItem(_trackingList.Objects[i]);
                 if (item <> nil) then begin
                     if (item.awItem.active) then begin
-                        item := TAWTrackerItem(_trackingList.Objects[i - 1]);
-                        if (item <> nil) then begin
-                            activateItem(item.awItem);
+                        if (i > 0) then begin
+                            // Not the first item, so just activate previous
+                            item := TAWTrackerItem(_trackingList.Objects[i - 1]);
+                            if (item <> nil) then begin
+                                activateItem(item.awItem);
+                            end
+                        end
+                        else begin
+                            // First item, so activate last item in list
+                            item := TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]);
+                            if (item <> nil) then begin
+                                activateItem(item.awItem);
+                            end;
                         end;
                         break;
                     end;
@@ -1328,6 +1387,10 @@ var
 begin
     if (awitem = nil) then exit;
     if (name = '') then exit;
+
+    if ((name = awitem.name) and (itemhint = awitem.hint)) then exit;    
+
+    _needToSortList := true;
 
     idx := findItemIndex(awitem);
     if (idx >= 0) then begin
@@ -1390,6 +1453,13 @@ begin
     _trackingList.Clear;
     _trackingList.Free();
     _trackingList := tempList;
+
+    if (_trackingList.Count > 0) then
+    begin
+        // grab a hold of most recent activity for redraw performance reasons.
+        tempitem1 := TAWTrackerItem(_trackingList.Objects[0]);
+        _lastListActivity := tempitem1.frm.LastActivity;
+    end;
 end;
 
 {---------------------------------------}

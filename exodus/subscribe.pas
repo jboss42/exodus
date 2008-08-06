@@ -190,14 +190,14 @@ begin
     chkSubscribe.Checked := true;
     chkSubscribe.Enabled := true;
 //
-    if (item <> nil) then begin
-        if ((item.value['Subscription'] = 'to') or (item.value['Subscription'] = 'both')) then begin
-            chkSubscribe.Checked := false;
-            chkSubscribe.Enabled := false;
-        end;
-    end;
+//    if (item <> nil) then begin
+//        if ((item.value['Subscription'] = 'to') or (item.value['Subscription'] = 'both')) then begin
+//            chkSubscribe.Checked := false;
+//            chkSubscribe.Enabled := false;
+//        end;
+//    end;
 //
-    EnableAdd(chkSubscribe.Enabled);
+//    EnableAdd(chkSubscribe.Enabled);
 //
     if (chkSubscribe.Enabled) then begin
         populateGroups();
@@ -250,7 +250,6 @@ begin
     else begin
         showHandler := TShowHandler.Create();
         TShowHandler(showHandler).getDispNameAndShow(Self, jid);
-        ShowDefault(true);
     end;
 end;
 
@@ -293,7 +292,8 @@ begin
     end;
 
     // send a subscribed and possible add..
-    sjid := _jid.full();
+    //sjid := _jid.full();
+    sjid := _jid.jid();
     snick := txtNickname.Text;
     sgrp := cboGroup.Text;
 

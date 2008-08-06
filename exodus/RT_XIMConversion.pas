@@ -227,11 +227,7 @@ end;
 {--------------------------------------}
 function getFontStyle(f: TFont): WideString;
 begin
-    //Result := 'font-size:' + getRelativeSize(f.Size) + ';';
-    Result := 'font-size:' + IntToStr(f.Size) + 'pt;';
-    Result := Result + 'ex-font-size:' + IntToStr(f.Size) + ';';
-    Result := Result + 'font-family:' + f.Name + ';';
-    Result := Result + 'color:' + getRGBStr(f.Color) + ';';
+    Result := 'color:' + getRGBStr(f.Color) + ';';
 end;
 
 function getStyleAttrib(f: TFont): WideString;
@@ -239,6 +235,7 @@ begin
     Result := getStyleStyle(f);
     if (Result <> '') then
         Result := ';' + Result;
+
     Result := Result + getFontStyle(f);
 end;
 
@@ -256,13 +253,6 @@ begin
         Result := getStyleAttrib(childFont)
     else begin
         Result := '';
-        if (childFont.Name <> parentFont.Name) then
-            Result := Result + 'font-family:' + childFont.Name + ';';
-        if (childFont.Size <> parentFont.Size) then begin
-            //Result := Result + 'font-size:' + getRelativeSize(childFont.Size) + ';';
-            Result := Result + 'font-size:' + IntToStr(childFont.Size) + 'pt;';
-            Result := Result + 'ex-font-size:' + IntToStr(childFont.Size) + ';';
-        end;
         if (childFont.Color <> parentFont.Color) then
             Result := Result + 'color:' + getRGBStr(childFont.Color) + ';';
         if (childFont.Style <> parentFont.style) then begin
@@ -345,7 +335,6 @@ begin
     if (tstr[Length(tstr)] = ';') then
       setLength(tstr, Length(tstr) - 1);
 
-    outerTag.setAttribute('style', tstr);
     currTag := outerTag;
     currSelPos := 1;
     currCData := '';

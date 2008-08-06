@@ -1524,6 +1524,7 @@ begin
             lstContacts.SelectAll();
             lstContacts.DeleteSelected();
             lstContacts.AddItem(_(ANY_JID), nil);
+            btnSearch.Enabled := true;
         end;
         exit;
     end;
@@ -1575,6 +1576,7 @@ begin
             lstRooms.SelectAll();
             lstRooms.DeleteSelected();
             lstRooms.AddItem(_(ANY_JID), nil);
+            btnSearch.Enabled := true;
         end;
         exit;
     end;

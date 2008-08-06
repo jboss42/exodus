@@ -94,7 +94,7 @@ type
 
     procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
 
-    procedure OnNotify(frm: TForm; notifyEvents: integer);
+    procedure OnNotify(frm: TfrmDockable; notifyEvents: integer);
 
 
     {
@@ -121,6 +121,7 @@ type
     function ShowDockManagerWindow(Show: boolean = true; BringWindowToFront: boolean = true): boolean;
 
     function isActive(): boolean;
+
     function getHWND(): THandle;
   end;
 

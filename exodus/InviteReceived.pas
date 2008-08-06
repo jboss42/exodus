@@ -64,46 +64,17 @@ uses
     ChatWin,
     Contnrs;
 const
-    LEFT_OFFSET = 30;
-    TOP_OFFSET = 30;
+    LEFT_OFFSET = 60;
+    TOP_OFFSET = 60;
 
     sDEFAULT_DECLINE_REASON = 'Sorry, I am not interested in joining right now.';
 
 type
 
-    TDisconnectEvent = procedure(ForcedDisconnect: boolean; Reason: WideString) of object;
-    TAuthenticatedEvent = procedure () of object;
-
     TFrmDecline = class(TExForm)
 
     end;
 
-
-    {------------------------ TSessionListener --------------------------------}
-    TSessionListener = class
-    private
-        _OnAuthEvent: TAuthenticatedEvent;
-        _OnDisconnectEvent: TDisconnectEvent;
-        _Session: TJabberSession;
-
-        _ReceivedError: WideString;
-        _Authenticated: Boolean;
-
-        _SessionCB: integer;
-    protected
-        procedure SetSession(JabberSession: TJabberSession);virtual;
-        procedure FireAuthenticated(); virtual;
-        procedure FireDisconnected(); virtual;
-    public
-        Constructor Create(JabberSession: TJabberSession);
-        Destructor Destroy(); override;
-
-        procedure SessionListener(event: string; tag: TXMLTag);
-
-        property OnAuthenticated: TAuthenticatedEvent read _OnAuthEvent write _OnAuthEvent;
-        property OnDisconnected: TDisconnectEvent read _OnDisconnectEvent write _OnDisconnectEvent;
-        property Session: TJabberSession read _Session write SetSession;
-    end;
 
 
     TInvitePos = class
@@ -137,25 +108,21 @@ type
         _SessionListener: TSessionListener;
 
         _InviteCB: Integer;
-
-        procedure OnAuthenticated();
+        _InviteNoTypeCB: integer;
+        
         procedure OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
 
         procedure SetSession(JabberSession: TJabberSession);
 
         procedure ShowInviteReceived(InvitePacket: TXMLTag);
         
-        function IndexOfForm(frm: TForm): integer;
+        procedure InviteCallback(event: string; InvitePacket: TXMLTag);
+
+        procedure AddWindow(key: widestring; frm: TForm);
+        procedure RemoveWindow(frm: TForm);
     public
         Constructor Create(JabberSession: TJabberSession);
         Destructor Destroy(); override;
-
-        procedure AddWindow(frm: TForm);
-        procedure RemoveWindow(frm: TForm);
-
-        property Session: TJabberSession read _Session write SetSession;
-
-        procedure InviteCallback(event: string; InvitePacket: TXMLTag);
 
         //invite form event handlers
         procedure OnFormClose(Sender: TObject; var Action: TCloseAction);
@@ -187,66 +154,6 @@ begin
     end;
 end;
 
-procedure TSessionListener.SetSession(JabberSession: TJabberSession);
-begin
-    if (_Session <> nil) then
-    begin
-        if (_SessionCB <> -1) then        begin
-            _Session.UnRegisterCallback(_SessionCB);
-            _SessionCB := -1;
-        end;
-    end;
-    _Session := JabberSession;
-    if (_Session <> nil) then
-    begin
-        _SessionCB := _Session.RegisterCallback(SessionListener, '/session');
-        _Authenticated := _Session.Authenticated;
-    end;
-end;
-
-procedure TSessionListener.FireAuthenticated();
-begin
-    if (Assigned(_OnAuthEvent)) then
-        _OnAuthEvent();
-end;
-
-procedure TSessionListener.FireDisconnected();
-begin
-    if (Assigned(_OnDisconnectEvent)) then
-        _OnDisconnectEvent((_ReceivedError <> ''), _ReceivedError);
-end;
-
-procedure TSessionListener.SessionListener(event: string; tag: TXMLTag);
-begin
-    if (event = '/session/authenticated') then
-    begin
-        _Authenticated := true;
-        _ReceivedError := '';
-        FireAuthenticated();
-    end
-    else if ((event = '/session/disconnected') and _Authenticated) then
-    begin
-        FireDisconnected();
-        _Authenticated := false;
-    end
-    else if (event = '/session/commerror') then
-    begin
-        _ReceivedError := 'Comm Error';
-    end;
-end;
-
-Constructor TSessionListener.Create(JabberSession: TJabberSession);
-begin
-    _Authenticated := false;
-    _ReceivedError := '';
-    _SessionCB := -1;
-    SetSession(JabberSession);
-end;
-
-Destructor TSessionListener.Destroy();
-begin
-    SetSession(nil);
-end;
 
 procedure TWindowPosHelper.SetInitialPosition(p: TPoint);
 begin
@@ -324,11 +231,6 @@ begin
         _TrackedWindows.Delete(i);
 end;
 
-procedure TInviteHandler.OnAuthenticated();
-begin
-
-end;
-
 procedure TInviteHandler.OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
 var
     i: Integer;
@@ -376,6 +278,12 @@ begin
             _Session.UnRegisterCallback(_InviteCB);
             _InviteCB := -1;
         end;
+        if (_InviteNoTypeCB <> -1) then
+        begin
+            _Session.UnRegisterCallback(_InviteNoTypeCB);
+            _InviteNoTypeCB := -1;
+        end;
+        _SessionListener.Free();
     end;
 
     _Session := JabberSession;
@@ -383,25 +291,24 @@ begin
     if (_Session <> nil)  then
     begin
         _InviteCB := _Session.RegisterCallback(InviteCallback,
-                                               '/packet/message[@type<>"error"]/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
-                                               
+                                               '/packet/message[@type="normal"]/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
+        _InviteNoTypeCB := _Session.RegisterCallback(InviteCallback,
+                                               '/packet/message[!type]/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
+        _SessionListener := TSessionListener.create(nil, OnDisconnected, _Session);
     end;
-    _SessionListener.Session := JabberSession;
 end;
 
 Constructor TInviteHandler.Create(JabberSession: TJabberSession);
 begin
     _InviteCB := -1;
-
+    _InviteNoTypeCB := -1;
+    _sessionListener := nil;
+        
     _OpenReceivedList := TWideStringList.Create();
 
     _ReceivedPosHelper := nil;
 
-    _SessionListener := TSessionListener.create(nil);
-    _SessionListener.OnAuthenticated := Self.OnAuthenticated;
-    _SessionListener.OnDisconnected := Self.OnDisconnected;
-
-    Self.Session := JabberSession;
+    SetSession(JabberSession);
 end;
 
 
@@ -409,9 +316,7 @@ Destructor TInviteHandler.Destroy();
 begin
     _OpenReceivedList.Free();
     _ReceivedPosHelper.Free();
-    
-    Session := nil;
-    _SessionListener.Free();
+    SetSession(nil); 
 end;
 
 procedure JoinRoom(InvitePacket: TXMLTag);
@@ -420,9 +325,6 @@ var
     RoomName: WideString;
     ttag: TXMLTag;
 begin
-    ttag := InvitePacket.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
-    //bail if we somehow got a non muc invite message
-    if (ttag = nil) then exit;
     RoomName := InvitePacket.getAttribute('from');
     //password
     ttag := InvitePacket.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]');
@@ -440,9 +342,9 @@ begin
     ttag := InvitePacket.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
     //make sure this is contact is not blocked
     tjid := TJabberID.create(ttag.GetAttribute('from'));
-    if (not Session.IsBlocked(tjid.jid)) then
+    if (not _Session.IsBlocked(tjid.jid)) then
     begin
-        if (Session.prefs.getBool('auto_join_on_invite')) then
+        if (_Session.prefs.getBool('auto_join_on_invite')) then
             JoinRoom(InvitePacket)
         else
             ShowInviteReceived(InvitePacket);
@@ -461,8 +363,7 @@ begin
     //only one invite per room should be shown
     if (_OpenReceivedList.IndexOf(from) = -1) then begin
         frm := TfrmInviteReceived.Create(Application);
-        _OpenReceivedList.AddObject(from, frm);
-        if (_ReceivedPosHelper = nil) then
+         if (_ReceivedPosHelper = nil) then
         begin
             _ReceivedPosHelper := TWindowPosHelper.create();
             p.X := (frm.Monitor.Width div 2) - (frm.Width div 2);
@@ -473,12 +374,13 @@ begin
         frm.Left := p.X;
         frm.Top := P.Y;
         frm.OnClose := Self.OnFormClose;
+        AddWindow(from, frm);
     end
     else
         frm := TfrmInviteReceived(_OpenReceivedList.Objects[_OpenReceivedList.IndexOf(from)]);
     frm.InitializeFromTag(InvitePacket);
     frm.Show();
-    _ReceivedPosHelper.AddWindow(frm);
+
     Notify.DoNotify(Application.Mainform, 'notify_invite', 'You have received an invitation to join ' + frm.lblRoom.Caption, 0);
 end;
 
@@ -489,33 +391,20 @@ begin
     inherited;
 end;
 
-function TInviteHandler.IndexOfForm(frm: TForm): integer;
+procedure TInviteHandler.AddWindow(key: widestring; frm: TForm);
 begin
-    if (frm is TFrmInviteReceived) then
-    begin
-        for Result  := 0 to _OpenReceivedList.Count - 1 do
-        begin
-            if (_OpenReceivedList.Objects[Result] = frm) then
-                exit;
-        end;
-    end;
-    Result := -1;
-end;
-
-procedure TInviteHandler.AddWindow(frm: TForm);
-begin
+    _OpenReceivedList.AddObject(key, frm);
+    _ReceivedPosHelper.AddWindow(frm);
 end;
 
 procedure TInviteHandler.RemoveWindow(frm: TForm);
 var
     i: integer;
 begin
-    if (frm is TFrmInviteReceived) then begin
-        _ReceivedPosHelper.RemoveWindow(frm);
-        i := IndexOfForm(frm);
-        if (i <> -1) then
-            _OpenReceivedList.Delete(i);
-    end
+    _ReceivedPosHelper.RemoveWindow(frm);
+    i := _OpenReceivedList.IndexOfObject(frm);
+    if (i <> -1) then
+        _OpenReceivedList.Delete(i);
 end;
 
 procedure TfrmInviteReceived.TntFormClose(Sender: TObject;
@@ -634,13 +523,11 @@ procedure TfrmInviteReceived.InitializeFromTag(InvitePacket: TXMLTag);
 var
     tJID: TJabberID;
     inviteMessage: widestring;
-    ttag: TXMLTag;
+    itag: TXMLTag;
 begin
     Self.AutoSize := false;
     //if already in the room ignore invite
-    ttag := InvitePacket.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
-    //bail if we somehow got a non muc invite message
-    if (ttag = nil) then exit;
+    itag := InvitePacket.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
 
     if (_invitePacket <> nil) then
         _InvitePacket.Free(); //in case we received a second invite to this room
@@ -655,13 +542,13 @@ begin
     Self.lblRoom.Hint := _RoomJID.getDisplayJID();
     Self.lblRoom.font.Style := Self.lblRoom.font.Style + [fsBold];
 
-    tJID := TJabberID.Create(ttag.GetAttribute('from'));
+    tJID := TJabberID.Create(itag.GetAttribute('from'));
     _FromJID := TJabberID.Create(tJID.jid); //bare JID
     Self.lblInvitor.Hint := tJID.getDisplayFull();
     _dnListener.UID := tJID.jid; //listen for DN changes from this JID only
     tJID.free();
 
-    inviteMessage := ttag.GetBasicText('reason');
+    inviteMessage := itag.GetBasicText('reason');
     if (InviteMessage <> '') then
         Self.lblInviteMessage.Caption := InviteMessage;
     Self.lblInvitor.Caption := DisplayName.getDisplayNameCache.getDisplayName(_FromJID);
@@ -676,8 +563,6 @@ end;
 initialization
     _InviteHandler := nil;
 
-finalization
-    OnSessionEnd();
 end.
 
 
