@@ -167,16 +167,12 @@ type
     mServerCert: SChannelX509;
 
     m_Buffer: TIdDataBuffer;
-    m_ExtraData: PByte;
-    m_ExtraDataLength: Cardinal;
     skipRecv: Boolean;
 
     //
     procedure SetPassThrough(const Value: Boolean);
     procedure Init;
     procedure getServerCertificate;
-    procedure addExtraData(var dataLength: Cardinal; var ABuf);
-    procedure freeExtraData;
   protected
     procedure OpenEncodedConnection; virtual;
 
@@ -227,41 +223,6 @@ type
 implementation
 
 uses IdException, IdIOHandler;
-
-procedure TIdSchannelIOHandlerSocket.freeExtraData;
-begin
-  if (m_ExtraData <> nil) then
-  begin
-    FreeMem(m_ExtraData, m_ExtraDataLength);
-    m_ExtraData := nil;
-    m_ExtraDataLength := 0;
-  end;
-end;
-
-procedure TIdSchannelIOHandlerSocket.addExtraData(var dataLength: Cardinal; var ABuf);
-var
-  tmpDataSize: Cardinal;
-  tmpData: Pointer;
-  tmpDataPtr: PByte;
-begin
-  if (m_ExtraData = nil) then exit;
-
-  tmpDataSize := dataLength + m_ExtraDataLength;
-  tmpData := AllocMem(tmpDataSize);
-  try
-    Move(m_ExtraData^, tmpData^, m_ExtraDataLength);
-
-    tmpDataPtr := tmpData;
-    Inc(tmpDataPtr, m_ExtraDataLength);
-    Move(ABuf, tmpDataPtr^, dataLength);
-
-    dataLength := tmpDataSize;
-    Move(tmpData^, ABuf, dataLength);
-  finally
-    freeExtraData;
-    FreeMem(tmpData, tmpDataSize);
-  end;
-end;
 
 procedure TIdSchannelIOHandlerSocket.Open;
 begin
@@ -472,7 +433,6 @@ var
   psecInfo: PSecPkgInfo;
   ss: SECURITY_STATUS;
 begin
-  Result := 0;
   ss := mSspiCalls.FunctionTable.QuerySecurityPackageInfoA(UNISP_NAME_A, @psecInfo);
   if (ss = SEC_E_OK) then begin
     Result := psecInfo.cbMaxToken;
@@ -519,8 +479,6 @@ var
   inbuffer: array[0..1] of SecBuffer;
   recvBuffer: PByte;
   pRecvBuffer: PByte;
-  pTmpBuffer, anotherBytePtr: PByte;
-  pTmpLength: Cardinal;
   recvBufferSize: Cardinal;
   dwSSPIOutFlags: Cardinal;
   expirationDate: TimeStamp;
@@ -553,24 +511,6 @@ begin
     end;
 
     recvLength := m_Buffer.Deque(recvLength, recvBufferSize, recvBuffer^);
-    {
-    if (m_ExtraDataLength <> 0) then
-    begin
-      pTmpLength := m_ExtraDataLength + recvLength;
-      pTmpBuffer := AllocMem(pTmpLength);
-
-      Move(m_ExtraData^, pTmpBuffer^, m_ExtraDataLength);
-      anotherBytePtr := pTmpBuffer;
-      Inc(anotherBytePtr, m_ExtraDataLength);
-      freeExtraData;
-
-      Move(recvBuffer^, anotherBytePtr^, recvLength);
-      FreeMem(recvBuffer, recvBufferSize);
-      recvBuffer := pTmpBuffer;
-      recvLength := pTmpLength;
-      recvBufferSize := pTmpLength;
-    end;
-    }
     inbufferDesc.ulVersion := 0;
     inbufferDesc.cBuffers := 2;
     inbufferDesc.pBuffers := @inbuffer;
@@ -591,13 +531,6 @@ begin
     if (Result = SEC_E_INCOMPLETE_MESSAGE) then
     begin
       m_Buffer.Enque(recvLength, recvBuffer^);
-      {
-      freeExtraData;
-
-      m_ExtraData := AllocMem(recvLength);
-      Move(recvBuffer^, m_ExtraData^, recvLength);
-      m_ExtraDataLength := recvLength;
-      }
     end else if (Result < 0) then begin
       raise EIdException.Create('SSL Initialization did not work.');
     end;
@@ -609,18 +542,6 @@ begin
       Inc(pRecvBuffer, recvLength);
       Dec(pRecvBuffer, pExtraBuffer.cbBuffer);
       m_Buffer.Enque(pExtraBuffer.cbBuffer, pRecvBuffer^);
-      {
-      pExtraBuffer := @inbuffer[1];
-      freeExtraData;
-      m_ExtraData := AllocMem(pExtraBuffer.cbBuffer);
-
-      pRecvBuffer := recvBuffer;
-      Inc(pRecvBuffer, recvLength);
-      Dec(pRecvBuffer, pExtraBuffer.cbBuffer);
-
-      Move(pRecvBuffer^, m_ExtraData^, pExtraBuffer.cbBuffer);
-      m_ExtraDataLength := pExtraBuffer.cbBuffer;
-      }
     end;
 
     if ((Result = SEC_E_OK) or (Result = SEC_I_CONTINUE_NEEDED)) then
@@ -687,12 +608,6 @@ begin
       dataLength := 0;
     end;
 
-    {
-    if (m_ExtraData <> nil) then
-    begin
-      addExtraData(dataLength, ABuf);
-    end;
-    }
     with BuffersDesc do begin
       ulVersion := 0;
       cBuffers := 4;
@@ -720,12 +635,6 @@ begin
     ss := mSspiCalls.FunctionTable.DecryptMessage(m_phContext, @BuffersDesc, 0, nil);
 
     if (ss = SEC_E_INCOMPLETE_MESSAGE) then begin
-      {
-      freeExtraData();
-      m_ExtraData := AllocMem(dataLength);
-      Move(ABuf, m_ExtraData^, dataLength);
-      m_ExtraDataLength := dataLength;
-      }
       m_Buffer.Enque(dataLength, dataStore^);
       skipRecv := false;
       Continue;
@@ -787,13 +696,6 @@ begin
 
     if ((pExtraBuffer <> nil) and (pExtraBuffer.cbBuffer > 0)) then
     begin
-      {
-      freeExtraData;
-      m_ExtraData := AllocMem(pExtraBuffer.cbBuffer);
-      Move(pExtraBuffer.pvBuffer^, m_ExtraData^, pExtraBuffer.cbBuffer);
-      m_ExtraDataLength := pExtraBuffer.cbBuffer;
-      }
-
       m_Buffer.Enque(pExtraBuffer.cbBuffer, pExtraBuffer.pvBuffer^);
       mSspiCalls.FunctionTable.FreeContextBuffer(pExtraBuffer.pvBuffer);
 
@@ -898,8 +800,6 @@ begin
   m_SecExtraBuffer.pvBuffer := nil;
 
   m_Buffer := TIdDataBuffer.Create();
-  m_ExtraData := nil;
-  m_ExtraDataLength := 0;
   skipRecv := False;
 
   mClientCert := nil;
@@ -910,7 +810,6 @@ end;
 
 destructor TIdSchannelIOHandlerSocket.Destroy;
 begin
-  freeExtraData;
   FreeAndNil(m_Buffer);
 
   if (mClientCert <> nil) then
@@ -1165,7 +1064,7 @@ begin
         Inc(ptr, m_Length);
     end;
 
-    Move(src, tmp^, len);
+    Move(src, ptr^, len);
     m_Data := tmp;
     m_Length := amt;
 end;
