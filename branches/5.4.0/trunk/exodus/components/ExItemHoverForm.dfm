@@ -4,6 +4,8 @@ inherited ExItemHoverForm: TExItemHoverForm
   Caption = 'Display Name'
   ClientHeight = 193
   ClientWidth = 260
+  PopupMode = pmExplicit
+  PopupParent = frmExodus.Owner
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy
   OnMouseEnter = TntFormMouseEnter
