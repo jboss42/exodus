@@ -240,7 +240,7 @@ begin
         while (i < _btnBar.ButtonCount) and (not _btnBar.Buttons[i].Visible) do
             inc(i);
 
-        _btnBar.Visible := (i = _btnBar.ButtonCount);
+        _btnBar.Visible := (i <> _btnBar.ButtonCount);
     except
         on E:Exception do
             DebugMessage('Exception in ' + Self.ClassName + '.RemoveButton, button: ' + Name + ', (' + E.Message + ')');
