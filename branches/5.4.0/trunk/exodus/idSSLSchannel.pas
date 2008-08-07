@@ -463,7 +463,7 @@ begin
   else begin
     //TODO: loggit
     //raise Exception.Create('Could not get the Chunk Size for SChannel.');
-    result := 16384;    //max possible chunk size
+    result := 65536;    //max possible chunk size
   end;
 end;
 
@@ -474,9 +474,11 @@ var
 begin
   Result := 0;
   ss := mSspiCalls.FunctionTable.QuerySecurityPackageInfoA(UNISP_NAME_A, @psecInfo);
-  if (ss = SEC_E_OK) then
-  begin
+  if (ss = SEC_E_OK) then begin
     Result := psecInfo.cbMaxToken;
+  end
+  else begin
+    Result := 65536;
   end;
 end;
 
@@ -661,6 +663,7 @@ end;
 function TIdSchannelIOHandlerSocket.RecvDecrypt(var ABuf; ALen: Integer): integer;
 var
   dataLength: Cardinal;
+  dataStore: Pointer;
   Buffers: array[0..3] of SecBuffer;
   pDataBuffer, pExtraBuffer: PSecBuffer;
   BuffersDesc: SecBufferDesc;
@@ -669,15 +672,14 @@ var
   done: Boolean;
 begin
   Result := 0;
-
+  dataStore := nil;
   done := False;
   while (not done) do
   begin
     if (not skipRecv) then
     begin
       dataLength := inherited Recv(ABuf, ALen);
-      if (dataLength > Cardinal(ALen)) then
-      begin
+      if (dataLength > Cardinal(ALen)) then begin
         //Something went wrong. Can't trust the ABuf data
         Exit;
       end;
@@ -685,15 +687,12 @@ begin
       dataLength := 0;
     end;
 
-    dataLength := m_Buffer.Deque(dataLength, ALen, ABuf);
     {
     if (m_ExtraData <> nil) then
     begin
       addExtraData(dataLength, ABuf);
     end;
     }
-    Result := dataLength;
-
     with BuffersDesc do begin
       ulVersion := 0;
       cBuffers := 4;
@@ -701,9 +700,14 @@ begin
     end;
 
     with Buffers[0] do begin
+      if (dataStore <> nil) then FreeMem(dataStore);
+      dataStore := AllocMem(m_Buffer.m_Length + dataLength);
+      Move(ABuf, dataStore^, dataLength);
+
+      dataLength := m_Buffer.Deque(dataLength, dataLength + m_Buffer.m_Length, dataStore^);
       cbBuffer := dataLength;
       BufferType := SECBUFFER_DATA;
-      pvBuffer := @ABuf;
+      pvBuffer := dataStore;
     end;
     for I := 1 to 3 do begin
       with Buffers[I] do begin
@@ -722,29 +726,33 @@ begin
       Move(ABuf, m_ExtraData^, dataLength);
       m_ExtraDataLength := dataLength;
       }
-      m_Buffer.Enque(dataLength, ABuf);
+      m_Buffer.Enque(dataLength, dataStore^);
       skipRecv := false;
       Continue;
     end;
 
     if (ss = SEC_E_MESSAGE_ALTERED) then
     begin
+      if (dataStore <> nil) then FreeMem(dataStore);
       raise EIdException.Create('Our SSL message has been altered.');
     end;
 
     if (ss < 0) then
     begin
+      if (dataStore <> nil) then FreeMem(dataStore);
       raise EIdException.Create('Decryption of the SSL message failed.');
     end;
 
     if ((ss <> SEC_E_OK) and (ss <> SEC_I_RENEGOTIATE) and
         (ss <> SEC_I_CONTEXT_EXPIRED)) then
     begin
+      if (dataStore <> nil) then FreeMem(dataStore);
       raise EIdException.Create('SSL Decryption Failed.');
     end;
 
     if (ss = SEC_I_CONTEXT_EXPIRED) then
     begin
+      if (dataStore <> nil) then FreeMem(dataStore);
       EncryptSend(Pointer(nil)^, 0);
       Exit;
     end;
@@ -796,6 +804,7 @@ begin
 
     done := True;
   end;
+  if (dataStore <> nil) then FreeMem(dataStore);
 end;
 
 function TIdSchannelIOHandlerSocket.ClientHandshakeLoop(var IoBuffer;
