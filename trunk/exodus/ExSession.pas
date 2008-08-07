@@ -675,7 +675,7 @@ begin
 
     InviteReceived.OnSessionStart(MainSession);
     MiscMessages.SetSession(MainSession);
-    //create a roster early so all other windows can get east access
+    //create a roster early so all other windows can get easy access
     RosterForm.GetRosterWindow().InitControlls();
 
     if (MainSession.Prefs.getBool('brand_history_search')) then begin
