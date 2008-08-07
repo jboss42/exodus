@@ -157,12 +157,12 @@ type
     procedure WMWindowPosChange(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
 
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
-    procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormDestroy(Sender: TObject);
+    procedure FormOnActivate(Sender: TObject);
   private
      _pos: TPos;          //our position
      _persistPos: boolean; //should we persist our current position?
@@ -678,6 +678,30 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmState.FormOnActivate(Sender: TObject);
+begin
+
+    try
+        inherited; //hmm, shouldthis go first?
+        if (not skipWindowPosEvents()) then
+        begin
+            // we are getting activated, bring to front
+            StopWindowPosEvents();
+            SetWindowPos(Self.Handle,
+                         HWND_BOTTOM,
+                         Self.Left, Self.Top, Self.Width, Self.Height,
+                         HWND_TOP);
+            StartWindowPosEvents();
+
+            if (self.Visible) then
+                gotActivate();
+        end;
+    except
+        // Possible exception when dealing with an extreme amount of windows
+    end;
+end;
+
+{---------------------------------------}
 function sToWindowState(s : string): TWindowState;
 begin
     if (s = 'm') then
@@ -719,29 +743,6 @@ begin
         end;
     end;
     inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmState.WMActivate(var msg: TMessage);
-begin
-    try
-        inherited; //hmm, shouldthis go first?
-        if (not skipWindowPosEvents()) and (Msg.WParamLo <> WA_INACTIVE) then
-        begin
-            // we are getting activated, bring to front
-            StopWindowPosEvents();
-            SetWindowPos(Self.Handle,
-                         HWND_BOTTOM,
-                         Self.Left, Self.Top, Self.Width, Self.Height,
-                         HWND_TOP);
-            StartWindowPosEvents();
-
-            if (self.Visible) then 
-                gotActivate();
-        end;
-    except
-        // Possible exception when dealing with an extreme amount of windows
-    end;
 end;
 
 {---------------------------------------}
