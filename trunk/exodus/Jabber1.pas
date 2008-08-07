@@ -1864,6 +1864,10 @@ begin
         timAutoAway.Enabled := false;
         CloseSubscribeWindows();
 
+        // Close whatever rooms we have
+        CloseAllRooms();
+        CloseAllChats();
+
         Self.Caption := getAppInfo().Caption;
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
@@ -2303,9 +2307,6 @@ begin
         sExodusCWPHook := 0;
     end;
 
-    // Close whatever rooms we have
-    CloseAllRooms();
-    CloseAllChats();
     CloseDebugForm();
 
     // Unload all of the remaining plugins
@@ -4015,11 +4016,10 @@ begin
     if MainSession.Active then begin
         _logoff := true;
         TAutoOpenEventManager.onAutoOpenEvent('disconnected');
-        CloseAllRooms();
-        CloseAllChats();
-        if (not isDebugShowing()) then begin
-            getDockManager().ShowDockManagerWindow(false, false);
-        end;
+        //dock manager should close with last window closing
+//        if (not isDebugShowing()) then begin
+//            getDockManager().ShowDockManagerWindow(false, false);
+//        end;
         MainSession.Disconnect();
     end;
 
@@ -5136,11 +5136,6 @@ begin
         Result := false;
     end;
 end;
-
-
-
-
-
 
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
