@@ -650,16 +650,6 @@ var
 begin
     holdSheet:=  TTntTabSheet(AWTabControl.ActivePage);
 
-//    if ((idx >= 0) and
-//        (idx < AWTabControl.PageCount)) then begin
-//        AWTabControl.Pages[idx].TabVisible := false;
-//    end
-//    else begin
-//        for i := 0 to AWTabControl.PageCount - 1 do begin
-//            AWTabControl.Pages[i].TabVisible := false
-//        end;
-//    end;
-
     if (holdSheet <> nil) then begin
         AWTabControl.ActivePage := holdSheet;
     end;
