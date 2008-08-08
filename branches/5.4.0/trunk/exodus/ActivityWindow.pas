@@ -781,9 +781,6 @@ begin
                 tsheet := _dockwindow.getTabSheet(trackitem.frm);
                 if (tsheet <> nil) then begin
                     try
-                        for I := 0 to _dockWindow.AWTabControl.PageCount - 1 do begin
-                            _dockWindow.AWTabControl.Pages[i].Visible := false;
-                        end;
                         tsheet.Visible := true;
                         _oldActivateSheet := tsheet;
                         _dockWindow.AWTabControl.ActivePage := tsheet;
