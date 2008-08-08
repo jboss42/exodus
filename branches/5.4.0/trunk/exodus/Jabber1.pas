@@ -477,9 +477,11 @@ type
     _glueRange: integer;
     _hiddenIEMsgList: TfIEMsgList;
     _mnuRegisterUD: TTntMenuItem;
+    _PageControlSaveWinProc: TWndMethod;
+
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
-
+    procedure _PageControlNewWndProc(var Msg: TMessage);
     procedure SaveBands();
     procedure RestoreBands();
 
@@ -1187,6 +1189,7 @@ var
             Result := '&' + Result;
         end;
     end;
+ 
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
 
@@ -1424,6 +1427,8 @@ begin
     _mnuRegisterUD := nil;
 
     ExCOMRoster.AddPredefinedMenu('Status', popPresence);
+    _PageControlSaveWinProc := tbsView.WindowProc;
+    tbsView.WindowProc := _PageControlNewWndProc;    
 end;
 
 {---------------------------------------}
@@ -3198,6 +3203,10 @@ begin
             StrDisposeW(Value);
         end;
     end;
+
+   tbsView.WindowProc := _PageControlSaveWinProc;
+   _PageControlSaveWinProc := nil;
+
     Exsession.ExCOMToolbar := nil;
     Exsession.COMToolbar := nil;
 end;
@@ -5135,6 +5144,19 @@ begin
     else
         Result := false;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus._PageControlNewWndProc(var Msg: TMessage);
+begin
+  if(Msg.Msg=TCM_ADJUSTRECT) then
+  begin
+      _PageControlSaveWinProc(Msg);
+      PRect(Msg.LParam)^.Top:=PRect(Msg.LParam)^.Top-6;
+  end
+  else
+      _PageControlSaveWinProc(Msg);
+
 end;
 
 initialization
