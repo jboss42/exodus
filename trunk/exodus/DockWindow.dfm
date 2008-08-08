@@ -40,19 +40,15 @@ inherited frmDockWindow: TfrmDockWindow
     ParentColor = True
     TabOrder = 1
     OnResize = pnlTabControlResize
-    ExplicitLeft = 352
-    ExplicitTop = 184
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object AWTabControl: TPageControl
       Left = 0
-      Top = -50
+      Top = -1
       Width = 450
       Height = 462
       DockSite = True
       OwnerDraw = True
       Style = tsButtons
-      TabHeight = 50
+      TabHeight = 1
       TabOrder = 0
       TabStop = False
       OnDockDrop = AWTabControlDockDrop
