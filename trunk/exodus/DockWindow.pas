@@ -41,6 +41,7 @@ type
     splAW: TTntSplitter;
     AWTabControl: TPageControl;
     pnlActivityList: TPanel;
+    pnlTabControl: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AWTabControlDockDrop(Sender: TObject; Source: TDragDockObject; X,
@@ -55,6 +56,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure OnMove(var Msg: TWMMove); message WM_MOVE;
     procedure FormHide(Sender: TObject);
+    procedure pnlTabControlResize(Sender: TObject);
   private
     { Private declarations }
     _docked_forms: TList;
@@ -325,6 +327,22 @@ begin
     Result := GetTabSheet(frm);
     frm.Visible := true;
     _removeTabs(-1, oldsheet);
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.pnlTabControlResize(Sender: TObject);
+begin
+    // This hides the tabs.  If we try to hide
+    // tabs via the TabVisible property on the
+    // tab sheets, we see poor redraw behavior.
+    // Hiding the tabs off the top of the screen
+    // seems to make a more visual pleaseing
+    // experience.
+    inherited;
+    AWTabControl.Top := -1 * AWTabControl.TabHeight;
+    AWTabControl.Height := pnlTabControl.ClientHeight + AWTabControl.TabHeight;
+    AWTabControl.Left := 0;
+    AWTabControl.Width := pnlTabControl.ClientWidth;
 end;
 
 {---------------------------------------}
@@ -632,15 +650,15 @@ var
 begin
     holdSheet:=  TTntTabSheet(AWTabControl.ActivePage);
 
-    if ((idx >= 0) and
-        (idx < AWTabControl.PageCount)) then begin
-        AWTabControl.Pages[idx].TabVisible := false;
-    end
-    else begin
-        for i := 0 to AWTabControl.PageCount - 1 do begin
-            AWTabControl.Pages[i].TabVisible := false
-        end;
-    end;
+//    if ((idx >= 0) and
+//        (idx < AWTabControl.PageCount)) then begin
+//        AWTabControl.Pages[idx].TabVisible := false;
+//    end
+//    else begin
+//        for i := 0 to AWTabControl.PageCount - 1 do begin
+//            AWTabControl.Pages[i].TabVisible := false
+//        end;
+//    end;
 
     if (holdSheet <> nil) then begin
         AWTabControl.ActivePage := holdSheet;
@@ -765,11 +783,10 @@ begin
         //we need to hide/de-align/set their relative positions/size them and show them
         pnlActivityList.align := alNone;
         splAW.align := alNone;
-        AWTabControl.align := alNone;
 
         splAW.Visible := false; //hide this first or will expand and throw widths off
         pnlActivityList.Visible := false;
-        AWTabControl.Visible := false;
+        pnlTabControl.Visible := false;
 
         //Obtain the width of the monitor
         //If we exceed the width of the monitor,
@@ -791,13 +808,12 @@ begin
         splAW.Left := pnlActivityList.BoundsRect.Right + 1;
         splAW.Align := alLeft;
         splAW.Visible := true;
-        AWTabControl.Left := pnlActivityList.BoundsRect.Right + 4;
-        AWTabControl.Align := alClient;
-        AWTabControl.Visible := true;
+        pnlTabControl.Left := pnlActivityList.BoundsRect.Right + 4;
+        pnlTabControl.Align := alClient;
+        pnlTabControl.Visible := true;
 
         Self.DockSite := false;
         pnlActivityList.DockSite := false;
-        AWTabControl.DockSite := true;
 
         _dockState := dsDocked;
 
@@ -823,13 +839,12 @@ begin
     //if tabs were being shown, save tab size
     _saveDockWidths();
     if (_dockState <> dsUnDocked) then begin
-        AWTabControl.Visible := false;
+        pnlTabControl.Visible := false;
         pnlActivityList.Align := alClient;
         splAW.Visible := false;
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ACTIVITY_WINDOW_WIDTH);
         Self.DockSite := true;
         pnlActivityList.DockSite := true;
-        AWTabControl.DockSite := false;
 
         _dockState := dsUnDocked;
 
