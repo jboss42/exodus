@@ -116,7 +116,7 @@ uses
 
 var
     frmDebug: TfrmDebug;
-
+    _debugMode: boolean;
 
 {---------------------------------------}
 procedure ShowDebugForm(bringToFront: boolean);
@@ -146,6 +146,7 @@ procedure DebugMessage(txt: Widestring);
 begin
     if (frmDebug = nil) then exit;
     if (not frmDebug.Visible) then exit;
+    if (not _debugMode) then exit;
 
     frmDebug.AddWideText(txt, clRed);
 end;
@@ -160,6 +161,8 @@ end;
 {---------------------------------------}
 
 procedure TfrmDebug.FormCreate(Sender: TObject);
+var
+    tstr: widestring;
 begin
     // make sure the output is showing..
     inherited;
@@ -175,6 +178,9 @@ begin
     lblJID.Font.Style := [fsUnderline];
 
     _scb := MainSession.RegisterCallback(SessionCallback, '/session');
+    //set _debugMode if -d was passed on command line
+    tstr := Windows.GetCommandLineW();//MainSession.prefs.GetPref('exe_CommandLine');
+    _debugMode := (WStrPos(PWideChar(tstr), '-d') <> nil);
 
     if MainSession.Active then begin
         lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayName(MainSession.Profile.getJabberID()) + ' <' + MainSession.Profile.getJabberID().getDisplayFull() + '>';
@@ -409,7 +415,7 @@ begin
                         else begin
                             DebugMessage('    Activating Flag:  false');
                         end;
-
+                        
                         try
                             DebugMessage('    LastActivity:  ' + DateTimeToStr(LastActivity));
                         except
@@ -418,7 +424,7 @@ begin
 
                         DebugMessage('    Window type:  ' + WindowType);
 
-                        if (Activating) then
+                        if (PersistUnreadMessages) then
                         begin
                             DebugMessage('    Persist Unread Messages:  true');
                         end
@@ -634,7 +640,8 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.DebugStatement(msg: Widestring; dt: TDateTime);
 begin
-    AddWideText(msg, clRed);
+    if (_debugMode) then
+        AddWideText(msg, clRed);
 end;
 
 {---------------------------------------}
@@ -677,4 +684,5 @@ end;
 
 initialization
     Classes.RegisterClass(TfrmDebug);
+    _debugMode := false;
 end.

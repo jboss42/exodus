@@ -167,6 +167,14 @@ procedure SendBroadcastMessage(Subject: widestring;
                                Recipients: TList; //list of TItemInfo
                                Plaintext: widestring;
                                xhtml: TXMLtag = nil);
+                               
+function FormatBroadcastPlainText(OrigPlaintext: widestring;
+                                  Subject: widestring): widestring;
+
+procedure FormatBroadcastXHTML(OrigMessageTag: TXMLTag;
+                               Plaintext: widestring;
+                               Subject: widestring;
+                               var formattedTag: TXMLTag);
 implementation
 
 {$R *.dfm}
@@ -202,10 +210,10 @@ const
 
     IT_INVALID_ITEM = 'This item has a problem that prevents sending of a broadcast messages.';
 
-    ROOMMSG_NO_SUBJECT = 'No subject specified';
-    ROOMMSG_SUBJECT_HEADER = 'Subject: ';
-    ROOMMSG_BROADCAST_HEADER = 'Broadcast Message';
-    ROOMMSG_MESSAGE_HEADER = 'Message: ';
+    BROADCAST_NO_SUBJECT = 'No subject specified';
+    BROADCAST_SUBJECT_HEADER = 'Subject: ';
+    BROADCAST_HEADER = 'Broadcast Message';
+    BROADCAST_MESSAGE_HEADER = 'Message: ';
     
     ERROR_NO_RECIPIENTS = 'You must have at least one valid recipient to send a Broadcast Message.' + #10#13#10#13 + 'Would you like to add a recipient now?';
     WARNING_NO_SUBJECT = 'Are you sure you want to send this message with no Subject?"';
@@ -827,27 +835,22 @@ begin
 end;
 
 
-function FormatRoomBroadcastPlainText(Header: widestring;
-                                      Plaintext: widestring;
-                                      Subject: widestring): widestring;
+function FormatBroadcastPlainText(OrigPlaintext: widestring;
+                                  Subject: widestring): widestring;
 begin
-    Result := header;
-    if (Result <> '') then
-        Result := Result + #13#10;
-    Result := Result + _(ROOMMSG_SUBJECT_HEADER);
+    Result := _(BROADCAST_HEADER) + #13#10 + _(BROADCAST_SUBJECT_HEADER);
     if (Subject <> '') then
         Result := Result + Subject
     else
-        Result := Result + _(ROOMMSG_NO_SUBJECT);
+        Result := Result + _(BROADCAST_NO_SUBJECT);
 
-    Result := Result +  #13#10 + _(ROOMMSG_MESSAGE_HEADER) + Plaintext;
+    Result := Result +  #13#10 + _(BROADCAST_MESSAGE_HEADER) + OrigPlaintext;
 end;
 
-procedure FormatRoomBroadcastXHTML(Header: widestring;
-                                   xhtmlTag: TXMLTag;
-                                   Plaintext: widestring;
-                                   Subject: widestring;
-                                   var formattedTag: TXMLTag);
+procedure FormatBroadcastXHTML(OrigMessageTag: TXMLTag;
+                               Plaintext: widestring;
+                               Subject: widestring;
+                               var formattedTag: TXMLTag);
 var
     sstr: WideString;
     i: integer;
@@ -864,29 +867,27 @@ begin
     //add header and subject
     //JJF just using span tags right now, should use a table of somesort
     topTag := tTag.AddTag('span');
+
     //header
-    sstr := header;
-    if (header <> '') then
-    begin
-        ttag := toptag.AddBasicTag('span', header);
-        ttag.SetAttribute('style','font-weight:bold');
-    end;
+    ttag := toptag.AddBasicTag('span', BROADCAST_HEADER);
+    ttag.SetAttribute('style','font-weight:bold');
+    
     //subject
     dtag := topTag.AddTag('div');
-    dtag.AddBasicTag('span', _(ROOMMSG_SUBJECT_HEADER)).setAttribute('style','font-weight:bold');
+    dtag.AddBasicTag('span', _(BROADCAST_SUBJECT_HEADER)).setAttribute('style','font-weight:bold');
     sstr := Subject;
     if (sstr = '') then
-        sstr := _(ROOMMSG_NO_SUBJECT);
+        sstr := _(BROADCAST_NO_SUBJECT);
     dtag.AddBasicTag('span', sstr);
 
     dtag := topTag.AddTag('div');
-    ttag := dtag.AddBasicTag('span', _(ROOMMSG_MESSAGE_HEADER));
+    ttag := dtag.AddBasicTag('span', _(BROADCAST_MESSAGE_HEADER));
     ttag.SetAttribute('style','font-weight:bold');
     
     //now add children of the given xhtml or use the plaintext
     ttag := nil;
-    if (xhtmlTag <> nil) then
-        ttag := xhtmlTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]/body[@xmlns="' + XMLNS_XHTML + '"]');
+    if (OrigMessageTag <> nil) then
+        ttag := OrigMessageTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]/body[@xmlns="' + XMLNS_XHTML + '"]');
 
     if (ttag = nil) then
         dTag.AddBasicTag('span',plaintext)
@@ -899,6 +900,8 @@ begin
         end;
     end;
 end;
+
+
 {*******************************************************************************
 *********************** SendBroadcastMessage ***********************************
 *******************************************************************************}
@@ -967,8 +970,9 @@ begin
     //create another list with non room valid items
     //room will event plugins as needed
     validContacts := TObjectList.Create(false);
-    roomMessage := formatRoomBroadcastPlaintext(_(ROOMMSG_BROADCAST_HEADER), Plaintext, Subject);
-    formatRoomBroadcastXHTML(_(ROOMMSG_BROADCAST_HEADER), xhtml, Plaintext, Subject, roomXhtml);
+    roomMessage := FormatBroadcastPlainText(Plaintext, Subject);
+    FormatBroadcastXHTML(xhtml, Plaintext, Subject, roomXhtml);
+
     roomXHTMLStr := roomXHTML.XML;
 
     for i := 0 to Recipients.Count - 1 do

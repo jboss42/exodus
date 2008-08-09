@@ -5,8 +5,10 @@ inherited frmState: TfrmState
   DefaultMonitor = dmDesktop
   Position = poDefault
   ScreenSnap = True
+  OnActivate = FormOnActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   ExplicitWidth = 206
   ExplicitHeight = 197
   PixelsPerInch = 96

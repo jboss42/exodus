@@ -305,7 +305,8 @@ uses
   COMExodusPacketDispatcher in 'COMExodusPacketDispatcher.pas',
   XMLVCardCache in '..\jopl\XMLVCardCache.pas',
   AvatarCache in '..\jopl\AvatarCache.pas',
-  ExVcardCache in 'ExVcardCache.pas';
+  ExVcardCache in 'ExVcardCache.pas',
+  NTDLLFixup in '..\jopl\NTDLLFixup.pas';
 
 {$R *.TLB}
 

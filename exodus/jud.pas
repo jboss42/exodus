@@ -235,7 +235,6 @@ begin
     end;
 
     f.reset();
-    //???dda f.ShowDefault();
     f.Show();
 
     // either get the fields right away,
@@ -269,7 +268,6 @@ begin
     cur_dir := true;
   
     dflt_grp := MainSession.Prefs.getString('roster_default');
-    //???dda Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
 
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
@@ -288,7 +286,6 @@ begin
     btnBroadcastMsg.Enabled := false;
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
     lblGroup.Caption := dflt_grp;
-    //???dda _windowType := 'jud';
 end;
 
 

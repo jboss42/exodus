@@ -29,6 +29,7 @@ uses
     Unicode,
     {$ifdef Win32}
     Messages,
+    Windows,
     {$endif}
     PrefController,
     SysUtils, IdThread, IdException,

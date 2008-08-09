@@ -456,18 +456,26 @@ procedure CloseAllChats;
 var
     i: integer;
     c: TChatController;
+    w: TfrmChat;
 begin
-    with MainSession.ChatList do begin
-        for i := Count - 1 downto 0 do begin
+    with MainSession.ChatList do
+    begin
+        for i := Count - 1 downto 0 do
+        begin
             c := TChatController(Objects[i]);
-            Delete(i);
-            if ((c <> nil) and (c.window <> nil)) then begin
-                TfrmChat(c.window)._warn_busyclose := false; //don't warn on all close
-                TfrmChat(c.window).Close();
-                TfrmChat(c.window).Free();
-                //Application.ProcessMessages();
+            w := nil;
+            if (c <> nil) then
+                w := TfrmChat(c.Window);
+            //free controller before closing window, prevents uneeded and
+            //problematic packet listener updates (controller may free itself
+            //before listeners are actually added/removed by dispatcher) 
+            c.Free(); //removes self from chatlist
+
+            if (w <> nil) then
+            begin
+                w._warn_busyclose := false; //don't warn on all close
+                w.Close();
             end;
-            c.Free();
         end;
     end;
 end;
@@ -1313,12 +1321,6 @@ begin
     Self.ImageIndex := newPresIdx;
 end;
 
-
-
-
-
-
-
 {---------------------------------------}
 procedure TfrmChat.handleMucPresence(tag: TXMLTag);
 var
@@ -1362,7 +1364,6 @@ begin
 
         // modify presnece image - right not make everyone offline
         ChangePresImage(nil, 'offline', 'offline')
-
     end
 end;
 
@@ -1608,7 +1609,7 @@ begin
     if (chat_object = nil) then exit;
     // Setting window to nil will call dec the ref count,
     // so don't call release.
-    chat_object.window := nil;
+    //chat_object.window := nil;
     chat_object := nil;
 end;
 
@@ -1632,9 +1633,9 @@ begin
         _scallback      := -1;
         _itemcallback   := -1;
     end;
-
-    if (chat_object <> nil) then
-        freeChatObject();
+    //chat controller will free itself appropriately
+//    if (chat_object <> nil) then
+//        freeChatObject();
 
     if (com_controller <> nil) then
         com_controller.Free();
@@ -1712,6 +1713,7 @@ end;
 procedure TfrmChat.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 var
     s: String;
+    cc: TChatController;
 begin
     if ((_warn_busyclose) and
         (((timBusy.Enabled) or (MsgList.isComposing())) and msgOut.Enabled)) then begin
@@ -1723,16 +1725,21 @@ begin
     // Cancel our composing event
     if (_sent_composing) then
         _sendComposing('');
+    //controller could already be gone by this point
+    //(freed by /session/disconnected for example). Get ref from list, controller
+    //destruction will remove it from the list.
+    cc := MainSession.ChatList.FindChat(_jid.jid, _jid.resource, '');
+    if (cc <> nil) then
+    begin
+        //if this user is blocked but we started a chat, block him again
+        if (MainSession.IsBlocked(_jid.jid)) then
+            cc.DisableChat;
 
-    //if we had a chat going with a blocked contact, make sure we
-    //stop the conversation but still maintain state
-    if (MainSession.IsBlocked(_jid.jid)) then
-        chat_object.DisableChat;
+        s := MsgList.getHistory();
+        cc.SetHistory(s);
 
-    s := MsgList.getHistory();
-    chat_object.SetHistory(s);
-    chat_object.Window := nil; //stop any eventing to this now closed window
-    chat_object := nil; //object will handle its own destruction
+        cc.window := nil; //unassign listenrs, starts mem timer for destruction
+    end;
     inherited;
 end;
 

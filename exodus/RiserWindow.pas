@@ -113,28 +113,27 @@ begin
     // Don't show toast while auto away
     //if ((frmExodus.IsAutoAway) or (frmExodus.IsAutoXA)) then exit;
 
-    if singleToast = nil then begin
-        // create a new instance
-        singleToast := TfrmRiser.Create(Application);
-        animate := true;
+    if (singleToast <> nil) then begin
+        with singleToast do begin
+            Timer1.Enabled := false;
+            Timer2.Enabled := false;
+            Close();
+        end;
+        FreeAndNil(singleToast);
+    end;
+    
+    // create a new instance
+    singleToast := TfrmRiser.Create(nil);
+    animate := true;
 //        AssignDefaultFont(singleToast.Label1.Font);
 
-        // reduce the font size by 1 pt.
-        //singleToast.Label1.Font.Size := singleToast.Label1.Font.Size - 1;
+    // reduce the font size by 1 pt.
+    //singleToast.Label1.Font.Size := singleToast.Label1.Font.Size - 1;
 
-        // Setup alpha blending..
-        if MainSession.Prefs.getBool('toast_alpha') then begin
-            singleToast.AlphaBlend := true;
-            singleToast.AlphaBlendValue := MainSession.Prefs.getInt('toast_alpha_val');
-        end;
-    end
-    else begin
-        // we already have an instance, reset the timer
-        if singleToast.Timer2.Enabled then begin
-            singleToast.Timer2.Enabled := false;
-            singleToast.Timer2.Enabled := true;
-        end;
-        animate := false;
+    // Setup alpha blending..
+    if MainSession.Prefs.getBool('toast_alpha') then begin
+        singleToast.AlphaBlend := true;
+        singleToast.AlphaBlendValue := MainSession.Prefs.getInt('toast_alpha_val');
     end;
 
     singleToast._clickForm := clickForm;
