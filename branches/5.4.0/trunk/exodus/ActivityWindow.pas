@@ -1097,39 +1097,42 @@ var
 begin
     if (_activeitem = nil) then exit; // No active item
 
-    _needToSortList := true;
+    if (_doUpdates) then
+    begin
+        _needToSortList := true;
 
-    _updateDisplay(false); // don't want a partial at this instant
+        _updateDisplay(false); // don't want a partial at this instant
 
-    if (_activeitem.Visible) then exit; // Active item is visible
+        if (_activeitem.Visible) then exit; // Active item is visible
 
-    // Find where the item is in the tracking list
-    idx := -1;
-    tempitem := nil;
-    for i := 0 to _trackingList.Count - 1 do begin
-        tempitem := TAWTrackerItem(_trackingList.Objects[i]);
-        if (tempitem.awItem = _activeitem) then begin
-            idx := i;
-            break;
-        end;
-    end;
-
-    if ((idx >= 0) and
-        (tempitem <> nil)) then begin
-        if (idx < _showingTopItem) then begin
-            // Item is above current visible
-            _showingTopItem := idx;
-        end
-        else begin
-            // Item is below current visible
-            numSlots := pnlList.Height div tempitem.awItem.Height;
-            if (numSlots > 0) then begin
-                _showingTopItem := idx - numSlots + 1;
+        // Find where the item is in the tracking list
+        idx := -1;
+        tempitem := nil;
+        for i := 0 to _trackingList.Count - 1 do begin
+            tempitem := TAWTrackerItem(_trackingList.Objects[i]);
+            if (tempitem.awItem = _activeitem) then begin
+                idx := i;
+                break;
             end;
         end;
-    end;
 
-    _updateDisplay(); // partials are fine now.
+        if ((idx >= 0) and
+            (tempitem <> nil)) then begin
+            if (idx < _showingTopItem) then begin
+                // Item is above current visible
+                _showingTopItem := idx;
+            end
+            else begin
+                // Item is below current visible
+                numSlots := pnlList.Height div tempitem.awItem.Height;
+                if (numSlots > 0) then begin
+                    _showingTopItem := idx - numSlots + 1;
+                end;
+            end;
+        end;
+
+        _updateDisplay(); // partials are fine now.
+    end;
 end;
 
 {---------------------------------------}
