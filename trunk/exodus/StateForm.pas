@@ -341,7 +341,8 @@ uses
     GnuGetText,
     ExUtils,
     XMLUtils,
-    Dockable;
+    Dockable,
+    ActivityWindow;
 
 var
   currentAutoOpenEvent: widestring;
@@ -420,7 +421,8 @@ begin
     //call appropriate auto open factories
     else if ((event = AOE_STARTUP) or (event = AOE_AUTHED)) then begin
         RestoreDesktop := MainSession.Prefs.getBool('restore_desktop');
-        
+
+        GetActivityWindow().enableListUpdates(false);
         discovered := TWideStringList.create();
         if (prefHelper.getAutoOpenEvent(event, profileList, MainSession.Profile.Name)) then
             for i := 0 to profileList.Count - 1 do
@@ -430,6 +432,7 @@ begin
             for i := 0 to defaultList.Count - 1 do
                 OpenWindow(defaultList[i]);
         discovered.Free();
+        GetActivityWindow().enableListUpdates(true);
     end;
 
     prefHelper.Free();

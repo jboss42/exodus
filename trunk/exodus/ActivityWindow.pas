@@ -23,11 +23,34 @@ unit ActivityWindow;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExForm, Dockable, TntComCtrls, ComCtrls, ExtCtrls,
-  TntExtCtrls, ExodusDockManager, StdCtrls, ExGradientPanel,
-  AWItem, Unicode, DockWindow, Menus, TntMenus, TntStdCtrls, Buttons, TntButtons,
-  SClrRGrp;
+  Windows,
+  Messages,
+  SysUtils,
+  Variants,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  ExForm,
+  Dockable,
+  TntComCtrls,
+  ComCtrls,
+  ExtCtrls,
+  TntExtCtrls,
+  ExodusDockManager,
+  StdCtrls,
+  ExGradientPanel,
+  AWItem,
+  Unicode,
+  DockWindow,
+  Menus,
+  TntMenus,
+  TntStdCtrls,
+  Buttons,
+  TntButtons,
+  SClrRGrp,
+  XMLTag;
 
 type
 
@@ -143,6 +166,8 @@ type
     _FilesDragAndDropEnabled: Boolean;
     _needToSortList: boolean;    // Added to try and cut down on sorts as performance is hurt by multiple sorts
     _lastListActivity: TDateTime;
+    _sessionCB: integer;
+    _doUpdates: boolean;
 
     procedure _clearTrackingList();
     function _findItem(awitem: TfAWItem): TAWTrackerItem;
@@ -181,6 +206,9 @@ type
     procedure selectNextItem();
     procedure selectPrevItem();
     procedure SetItemName(awitem: TfAWItem; name: widestring; itemhint: widestring);
+    procedure onSessionCallback(event: string; tag: TXMLTag);
+    procedure forceUpdate();
+    procedure enableListUpdates(enable: boolean = true);
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -189,6 +217,7 @@ type
     property FilesDragAndDrop: Boolean read _FilesDragAndDropEnabled write _SetFilesDragAndDrop;
     property currentListSort: TSortState read _curListSort;
     property needToSortList: boolean read _needToSortList write _needToSortList;
+    property updatesEnabled: boolean read _doUpdates;
 
   end;
 
@@ -209,7 +238,6 @@ uses
     Jabber1,
     RosterImages,
     gnugettext,
-    XMLTag,
     ExUtils,
     ShellAPI,
     stringprep;
@@ -384,6 +412,9 @@ begin
     FreeAndNil(tag);
 
     _FilesDragAndDropEnabled := false;
+
+    _sessionCB := MainSession.RegisterCallback(OnSessionCallback, '/session/activitywindow');
+    _doUpdates := true;
 end;
 
 {---------------------------------------}
@@ -404,6 +435,11 @@ begin
             listSort := 0;
     end;
     MainSession.Prefs.setInt('activity_window_sort', listSort);
+
+    if (_sessionCB > -1) then
+    begin
+        MainSession.UnRegisterCallback(_sessionCB);
+    end;
 end;
 
 {---------------------------------------}
@@ -419,7 +455,9 @@ procedure TfrmActivityWindow.mnuAW_CloseAllClick(Sender: TObject);
 begin
     inherited;
     _needToSortList := true;
+    enableListUpdates(false);
     MainSession.FireEvent('/session/close-all-windows', nil);
+    enableListUpdates(true);
 end;
 
 {---------------------------------------}
@@ -427,7 +465,9 @@ procedure TfrmActivityWindow.mnuAW_DockAllClick(Sender: TObject);
 begin
     inherited;
     _needToSortList := true;
+    enableListUpdates(false);
     MainSession.FireEvent('/session/dock-all-windows', nil);
+    enableListUpdates(true);
 end;
 
 {---------------------------------------}
@@ -435,7 +475,9 @@ procedure TfrmActivityWindow.mnuAW_FloatAllClick(Sender: TObject);
 begin
     inherited;
     _needToSortList := true;
+    enableListUpdates(false);
     MainSession.FireEvent('/session/float-all-windows', nil);
+    enableListUpdates(true);
 end;
 
 {---------------------------------------}
@@ -546,6 +588,7 @@ begin
         Result.awItem.OnClick := Self.onItemClick;
 
         // Setup item props
+        Result.awItem.Visible := false;
         Result.awItem.Parent := pnlList;
         Result.awItem.Align := alNone;
         Result.awItem.Left := ListLeftSpacer.Width;
@@ -874,116 +917,119 @@ var
     slotsFilled: integer;
     remainder: integer;
 begin
-    _sortTrackingList(_curListSort);
-    try
-        if (_trackingList.Count > 0) then begin
-            // Compute the maximum showing items
-            numSlots := pnlList.Height div TAWTrackerItem(_trackingList.Objects[0]).awItem.Height;
-            remainder := pnlList.Height mod TAWTrackerItem(_trackingList.Objects[0]).awItem.Height;
-            slotsFilled := 0;
+    if (_doUpdates) then
+    begin
+        _sortTrackingList(_curListSort);
+        try
+            if (_trackingList.Count > 0) then begin
+                // Compute the maximum showing items
+                numSlots := pnlList.Height div TAWTrackerItem(_trackingList.Objects[0]).awItem.Height;
+                remainder := pnlList.Height mod TAWTrackerItem(_trackingList.Objects[0]).awItem.Height;
+                slotsFilled := 0;
 
-            // See if current showing top item needs to be changed so maximum number
-            // of items are visible
-            if (_showingTopItem > 0) then begin
-                if ((_trackingList.Count - _showingTopItem + 1) < numSlots) then begin
-                    // We can show more so change top showing
-                    _showingTopItem := _trackingList.Count - numSlots + 1;
+                // See if current showing top item needs to be changed so maximum number
+                // of items are visible
+                if (_showingTopItem > 0) then begin
+                    if ((_trackingList.Count - _showingTopItem + 1) < numSlots) then begin
+                        // We can show more so change top showing
+                        _showingTopItem := _trackingList.Count - numSlots + 1;
+                    end;
                 end;
-            end;
 
-            // Crawl list to see what needs displayed
-            if (_canScrollUp) then begin
-                _scrollUpState := ssEnabled;
-            end
-            else begin
-                _scrollUpState := ssDisabled;
-            end;
-            if (_canScrollDown) then begin
-                _scrollDownState := ssEnabled;
-            end
-            else begin
-                _scrollDownState := ssDisabled;
-            end;
-
-            for i := 0 to _trackingList.Count - 1 do begin
-                item := TAWTrackerItem(_trackingList.Objects[i]);
-                if (i < _showingTopItem) then begin
-                    // Off the top of the viewable list
-                    item.awItem.Visible := false;
-                    if ((item.awItem.priority) and
-                        (_scrollUpState < ssPriority)) then begin
-                        _scrollUpState := ssPriority;
-                    end;
-                    if ((item.awItem.newWindowHighlight) and
-                        (_scrollUpState < ssNewWindow)) then begin
-                        _scrollUpState := ssNewWindow;
-                    end;
-                    if ((item.awItem.newMessageHighlight) and
-                        (_scrollUpState < ssNewMessage)) then begin
-                        _scrollUpState := ssNewMessage;
-                    end;
-                    _enableScrollUp(true);
+                // Crawl list to see what needs displayed
+                if (_canScrollUp) then begin
+                    _scrollUpState := ssEnabled;
                 end
-                else if (slotsFilled >= numSlots) then begin
-                    // Off the bottom of the viewable list
-                    item.awItem.Visible := false;
-                    if ((item.awItem.priority) and
-                        (_scrollDownState < ssPriority)) then begin
-                        _scrollDownState := ssPriority;
-                    end;
-                    if ((item.awItem.newWindowHighlight) and
-                        (_scrollDownState < ssNewWindow)) then begin
-                        _scrollDownState := ssNewWindow;
-                    end;
-                    if ((item.awItem.newMessageHighlight) and
-                        (_scrollDownState < ssNewMessage)) then begin
-                        _scrollDownState := ssNewMessage;
-                    end;
-                    _enableScrollDown(true);
+                else begin
+                    _scrollUpState := ssDisabled;
+                end;
+                if (_canScrollDown) then begin
+                    _scrollDownState := ssEnabled;
+                end
+                else begin
+                    _scrollDownState := ssDisabled;
+                end;
 
-                    if ((slotsFilled = numSlots) and
-                        (remainder > 0) and
-                        (allowPartialVisible)) then begin
-                        // we are off the bottom, so we showed the
-                        // scroll, but still want to show partial item
+                for i := 0 to _trackingList.Count - 1 do begin
+                    item := TAWTrackerItem(_trackingList.Objects[i]);
+                    if (i < _showingTopItem) then begin
+                        // Off the top of the viewable list
+                        item.awItem.Visible := false;
+                        if ((item.awItem.priority) and
+                            (_scrollUpState < ssPriority)) then begin
+                            _scrollUpState := ssPriority;
+                        end;
+                        if ((item.awItem.newWindowHighlight) and
+                            (_scrollUpState < ssNewWindow)) then begin
+                            _scrollUpState := ssNewWindow;
+                        end;
+                        if ((item.awItem.newMessageHighlight) and
+                            (_scrollUpState < ssNewMessage)) then begin
+                            _scrollUpState := ssNewMessage;
+                        end;
+                        _enableScrollUp(true);
+                    end
+                    else if (slotsFilled >= numSlots) then begin
+                        // Off the bottom of the viewable list
+                        item.awItem.Visible := false;
+                        if ((item.awItem.priority) and
+                            (_scrollDownState < ssPriority)) then begin
+                            _scrollDownState := ssPriority;
+                        end;
+                        if ((item.awItem.newWindowHighlight) and
+                            (_scrollDownState < ssNewWindow)) then begin
+                            _scrollDownState := ssNewWindow;
+                        end;
+                        if ((item.awItem.newMessageHighlight) and
+                            (_scrollDownState < ssNewMessage)) then begin
+                            _scrollDownState := ssNewMessage;
+                        end;
+                        _enableScrollDown(true);
+
+                        if ((slotsFilled = numSlots) and
+                            (remainder > 0) and
+                            (allowPartialVisible)) then begin
+                            // we are off the bottom, so we showed the
+                            // scroll, but still want to show partial item
+                            item.awItem.Left := ListLeftSpacer.Width;
+                            item.awItem.Width := pnlList.Width - ListLeftSpacer.Width - ListRightSpacer.Width;
+                            item.awItem.Top := item.awItem.Height * slotsFilled;
+                            item.awItem.Visible := true;
+                            Inc(slotsFilled);
+                        end;
+                    end
+                    else begin
+                        // Is in visible part of list
                         item.awItem.Left := ListLeftSpacer.Width;
                         item.awItem.Width := pnlList.Width - ListLeftSpacer.Width - ListRightSpacer.Width;
                         item.awItem.Top := item.awItem.Height * slotsFilled;
                         item.awItem.Visible := true;
                         Inc(slotsFilled);
                     end;
-                end
-                else begin
-                    // Is in visible part of list
-                    item.awItem.Left := ListLeftSpacer.Width;
-                    item.awItem.Width := pnlList.Width - ListLeftSpacer.Width - ListRightSpacer.Width;
-                    item.awItem.Top := item.awItem.Height * slotsFilled;
-                    item.awItem.Visible := true;
-                    Inc(slotsFilled);
                 end;
-            end;
 
-            // Change scroll state
-            _setScrollUpColor();
-            _setScrollDownColor();
+                // Change scroll state
+                _setScrollUpColor();
+                _setScrollDownColor();
 
-            // Disable scroll buttons if not needed
-            if (_showingTopItem <= 0) then begin
-                // At top of list
+                // Disable scroll buttons if not needed
+                if (_showingTopItem <= 0) then begin
+                    // At top of list
+                    _enableScrollUp(false);
+                end;
+                if ((TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Visible) and
+                    ((TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Top +
+                     TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Height) <= pnlList.Height)) then begin
+                    // At bottom of list AND bottom element is fully visible (not partial)
+                    _enableScrollDown(false);
+                end;
+            end
+            else begin
                 _enableScrollUp(false);
-            end;
-            if ((TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Visible) and
-                ((TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Top +
-                 TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Height) <= pnlList.Height)) then begin
-                // At bottom of list AND bottom element is fully visible (not partial)
                 _enableScrollDown(false);
             end;
-        end
-        else begin
-            _enableScrollUp(false);
-            _enableScrollDown(false);
+        except
         end;
-    except
     end;
 end;
 
@@ -1646,6 +1692,47 @@ begin
     _FilesDragAndDropEnabled := Value;
     DragAcceptFiles(Handle, _FilesDragAndDropEnabled)
 end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.onSessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/activitywindow/update') then
+    begin
+        forceUpdate();
+    end
+    else if (event = '/session/activitywindow/suspendupdates') then
+    begin
+        enableListUpdates(false);
+    end
+    else if (event = '/session/activitywindow/resumeupdates') then
+    begin
+        enableListUpdates(true);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.forceUpdate();
+begin
+    // We have been asked to force an update to the list
+    _needToSortList := true;
+    _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.enableListUpdates(enable: boolean);
+begin
+    _doUpdates := enable;
+    pnlListBase.Enabled := enable;
+    if (enable) then
+    begin
+        Screen.Cursor := crDefault;
+        forceUpdate();
+    end
+    else begin
+        Screen.Cursor := crHourglass;
+    end;
+end;
+
 
 initialization
     frmActivityWindow := nil;
