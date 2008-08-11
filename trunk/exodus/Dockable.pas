@@ -99,6 +99,7 @@ type
     procedure closeAllCallback(event: string; tag: TXMLTag);
     procedure dockAllCallback(event: string; tag: TXMLTag);
     procedure floatAllCallback(event: string; tag: TXMLTag);
+    procedure initializeDatabase();
   protected
     updateDockedCnt: integer;
 
@@ -204,6 +205,8 @@ uses
     JabberConst,
     ExSession,
     IDGlobal,
+    ComObj,
+    SQLUtils,
     XMLUtils, XMLParser, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
 var
@@ -499,9 +502,67 @@ end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
 var
-    i: integer;
     ttag: TXMLTag;
-    txlist: TXMLTagList;
+
+    procedure restoreUnreadXML();
+    var
+        txlist: TXMLTagList;
+        idx: Integer;
+    begin
+        ttag := windowState.GetFirstTag('unread');
+        if (ttag <> nil) then
+        begin
+            txList := ttag.ChildTags;
+            for idx := 0 to txList.Count - 1 do
+                OnPersistedMessage(txList[idx]);
+        end;
+    end;
+
+    procedure restoreUnreadDB();
+    var
+        parser: TXMLTagParser;
+        table: IExodusDataTable;
+        sql, key: string;
+        xml: Widestring;
+        tag: TXMLTag;
+        idx:  Integer;
+    begin
+        parser := nil;
+        tag := nil;
+        initializeDatabase();
+
+        key := str2sql(WidestringToUTF8(GetWindowStateKey()));
+        try
+            table := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
+            sql := Format('select * from unread_cache where (key=''%s'');',
+                    [key]);
+            if not DataStore.GetTable(sql, table) then exit;
+            if not table.FirstRow then exit;
+
+            parser := TXMLTagParser.Create();
+            for idx := 0 to table.RowCount - 1 do begin
+                xml := table.GetFieldByName('xml');
+                if (xml = '') then continue;
+                xml := XML_UnEscapeChars(xml);
+
+                parser.Clear();
+                parser.ParseString(xml);
+                if (parser.Count = 0) then continue;
+                tag := parser.popTag();
+                if (tag <> nil) then OnPersistedMessage(tag);
+                FreeAndNil(tag);
+            end;
+
+            sql := Format('delete from unread_cache where (key=''%s'');',
+                    [key]);
+            DataStore.ExecSQL(sql);
+        except
+            //TODO: loggit
+        end;
+
+        FreeAndNil(tag);
+        FreeAndNil(parser);
+    end;
 begin
     inherited;
     if (Jabber1.getAllowedDockState() = adsForbidden) then
@@ -515,34 +576,37 @@ begin
 
     if (PersistUnreadMessages) then
     begin
-        ttag := windowState.GetFirstTag('unread');
-        if (ttag <> nil) then
-        begin
-            txList := ttag.ChildTags;
-            for i := 0 to txList.Count - 1 do
-                OnPersistedMessage(txList[i]);
-        end;
+        //check for XML-based messages
+        restoreUnreadXML();
+
+        //check the database
+        restoreUnreadDB();
     end;
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
-var
-    i: integer;
-    ttag: TXMLTag;
-    _parser: TXMLTagParser;
+    procedure persistUnreadDB();
+    var
+        idx: Integer;
+        xml: Widestring;
+        sql, key: String;
+    begin
+        initializeDatabase();
+
+        key := str2sql(WideStringToUTF8(GetWindowStateKey()));
+        for idx := 0 to _unreadMessages.Count - 1 do begin
+            xml := _unreadMessages[idx];
+            xml := XML_EscapeChars(xml);
+
+            sql := Format('insert into unread_cache (key,xml) values (''%s'',''%s'');',
+                    [key, str2sql(WideStringToUTF8(xml))]);
+            DataStore.ExecSQL(sql);
+        end;
+    end;
 begin
-    ttag := windowState.AddTag('unread');
     if (PersistUnreadMessages and (_unreadMessages.Count > 0)) then
     begin
-        _parser := TXMLTagParser.Create();
-        for i := 0 to _unreadMessages.Count - 1 do
-        begin
-            _parser.Clear();
-            _parser.ParseString(_unreadMessages[i], '');
-            if (_parser.Count > 0) then
-                ttag.AddTag(_parser.popTag());
-        end;
-        _parser.Free();
+        persistUnreadDB();
     end;
 
     if (not Floating) then
@@ -714,6 +778,20 @@ begin
     Dec(updateDockedCnt);
 end;
 
+procedure TfrmDockable.initializeDatabase();
+begin
+    try
+        if (DataStore.CheckForTableExistence('unread_cache')) then exit;
+
+        DataStore.ExecSQL('CREATE TABLE unread_cache (' +
+                'key TEXT, ' +
+                'xml TEXT);'
+                );
+        DataStore.ExecSQL('CREATE INDEX unread_cache_idx1 on unread_cache (key);');
+    except
+        //TODO: loggit
+    end;
+end;
 
 initialization
     dockable_uid := 0;
