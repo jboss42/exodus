@@ -476,21 +476,27 @@ end;
 procedure TfAWItem.mnuAWItem_CloseAllClick(Sender: TObject);
 begin
     inherited;
+    GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/close-all-windows', nil);
+    GetActivityWindow().enableListUpdates(true);
 end;
 
 {---------------------------------------}
 procedure TfAWItem.mnuAWItem_DockAllClick(Sender: TObject);
 begin
     inherited;
+    GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/dock-all-windows', nil);
+    GetActivityWindow().enableListUpdates(true);
 end;
 
 {---------------------------------------}
 procedure TfAWItem.mnuAWItem_FloatAllClick(Sender: TObject);
 begin
     inherited;
+    GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/float-all-windows', nil);
+    GetActivityWindow().enableListUpdates(true);
 end;
 
 {---------------------------------------}
@@ -558,7 +564,10 @@ end;
 {---------------------------------------}
 procedure TfAWItem._setName(val:widestring);
 begin
-    lblName.Caption := Tnt_WideStringReplace(val, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
+    if (val <> lblName.Caption) then
+    begin
+        lblName.Caption := val;
+    end;
 end;
 
 {---------------------------------------}
@@ -613,7 +622,10 @@ begin
     _priority := setPriority;
     if (setPriority) then begin
         _setPnlColors(_priorityStartColor, _priorityEndColor);
-        lblName.Font.Color := _activity_window_high_priority_font_color;
+        if (lblName.Font.Color <> _activity_window_high_priority_font_color) then
+        begin
+            lblName.Font.Color := _activity_window_high_priority_font_color;
+        end;
     end
     else begin
         if ((pnlAWItemGPanel.GradientProperites.startColor = _priorityStartColor) and
@@ -661,8 +673,9 @@ end;
 {---------------------------------------}
 procedure TfAWItem._setPnlColors(startColor, endColor: TColor);
 begin
-    if ((pnlAWItemGPanel.GradientProperites.startColor <> startColor) or
-        (pnlAWItemGPanel.GradientProperites.endColor <> endColor)) then
+    if (((pnlAWItemGPanel.GradientProperites.startColor <> startColor) or
+         (pnlAWItemGPanel.GradientProperites.endColor <> endColor)) and
+         GetActivityWindow().updatesEnabled) then
     begin
         // only change color when needed to reduce redraw time.
         pnlAWItemGPanel.GradientProperites.startColor := startColor;

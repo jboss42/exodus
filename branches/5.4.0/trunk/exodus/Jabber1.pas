@@ -836,7 +836,8 @@ uses
     HistorySearch,
     FrmUtils,
     COMExodusControlSite, //TExodusControlSite
-    ExActionCtrl;
+    ExActionCtrl,
+    ActivityWindow;
 
 {$R *.DFM}
 
@@ -3746,7 +3747,9 @@ end;
 
 procedure TfrmExodus.mnuWindows_CloseAllClick(Sender: TObject);
 begin
+    GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/close-all-windows', nil);
+    GetActivityWindow().enableListUpdates(true);
 end;
 
 {---------------------------------------}
