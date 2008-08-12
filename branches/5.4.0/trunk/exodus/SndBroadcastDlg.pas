@@ -212,6 +212,7 @@ uses
     Contnrs,        //TObjectList
     ExActionCtrl,   //action controller
     SelectItem,     //item slection dioalog
+    DisplayName,
     Session;
 
 const
@@ -924,6 +925,26 @@ end;
 {*******************************************************************************
 *********************** SendBroadcastMessage ***********************************
 *******************************************************************************}
+procedure FormatBroadcastTag(origMessageTag: TXMLTag; var formattedTag: TXMLTag);
+var
+    plainText: widestring;
+    subject: widestring;
+    newXHTMLTag: TXMLTag;
+    newPlainText: widestring;
+begin
+    formattedTag := TXMLTag.create(OrigMessageTag);
+    plainText := formattedTag.GetBasicText('body');
+    subject := formattedTag.GetBasicText('subject');
+    newPlainText := sndBroadcastDlg.FormatBroadcastPlainText(plainText, subject);
+    sndBroadcastDlg.FormatBroadcastXHTML(formattedTag, plainText, subject, newXHTMLTag);
+    //replace xhtml in formatted tag with new
+    formattedTag.RemoveTag(formattedTag.GetFirstTag('body'));
+    formattedTag.AddBasicTag('body', newPlainText);
+    formattedTag.RemoveTag(formattedTag.GetFirstTag('subject'));
+    formattedTag.RemoveTag(formattedTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]'));
+    formattedTag.AddTag(newXHTMLTag);
+end;
+
 procedure SendBroadcastMessage(Subject: widestring;
                                Recipients: TList; //list of TItemInfo
                                Plaintext: widestring;
@@ -933,7 +954,6 @@ var
     oneMessage: TJabberMessage;
     i: integer;
     ent: TJabberEntity;
-    nick: Widestring;
     oneInfo: TItemInfo;
     room: TfrmRoom;
     validContacts: TObjectList;
@@ -942,57 +962,64 @@ var
     roomXhtml: TXMLTag;
     roomXhtmlStr: widestring;
 
-    function createMessage(jidStr: widestring): TJabberMessage;
+    function CreateMessage(toJID: TJabberID; Plaintext: widestring; subject: widestring; xhtml: TXMLTag): TJabberMessage; overload;
     begin
-        Result := TJabberMessage.Create(jidstr, 'normal', Plaintext, Subject);
-
-        // these must be set so that logging works right
+        Result := TJabberMessage.Create(toJID.jid, 'normal', Plaintext, Subject);
         Result.isMe := true;
-        Result.Nick := nick;
+        result.Nick := MainSession.getDisplayUsername();
+        if (xhtml <> nil) then
+            Result.XML := xhtml.XML;
+    end;
+
+    function CreateMessage(tag: TXMLTag): TJabberMessage; overload;
+    begin
+        result := TJabberMessage.Create(tag);
+        result.isMe := true;
+        result.Nick := MainSession.getDisplayUsername();
+    end;
+
+    procedure LogBMessage(msgTag: TXMLtag);
+    var
+        adderChildren: TXMLTagList;
+        i: integer;
+        dtag: TXMLTag;
+        logMsg: TJabberMessage;
+    begin
+        FormatBroadcastTag(msgtag, dtag);
+        dtag.setAttribute('type','chat');
+        logMsg := CreateMessage(dtag);
+        adderChildren := msgTag.QueryXPTag('//addresses[@xmlns="' + XMLNS_ADDRESS + '"]').ChildTags;
+        for i  := 0 to adderChildren.Count - 1 do
+        begin
+            if (adderChildren[i].GetAttribute('type') = ADDRESS_TYPE_TO) then
+            begin
+                logMsg.ToJID := adderChildren[i].GetAttribute('jid');
+                ExUtils.LogMessage(logMsg);
+            end;
+        end;
+        logMsg.free();
+        adderChildren.free();
+        dtag.free();
     end;
 
     procedure FireMessage(msg: TJabberMessage);
-    var
-        mtag: TXMLTag;
     begin
-        mtag := msg.GetTag; //get a reference to msg's xml representation
-        mtag.addInsertedXML(xhtmlStr);
-
-        (* JJF todo fire com events
-        // plugin stuff
-        if (ComController <> nil) then
-            x2 := TExodusChat(ComController).fireAfterMsg(txt);
-        if (x2 <> '') then
-            mtag.addInsertedXML(x2);
-        *)
-
-        // log the msg
-        LogMessage(msg);
-
-        jabberSendMsg(msg.toJID, mtag, '', Plaintext, Subject);
+        MainSession.SendTag(msg.GetTag);
+        LogBMessage(msg.GetTag(false)); //pass reference
     end;
+
 begin
     if (Plaintext = '') or (Recipients.Count = 0) then exit;
-
-    // let plugins know about message going out
-    // if they don't want to allow it, they change txt to NULL
-    (* JJF todo fire com events
-    if (ComController <> nil) then
-        allowed := TExodusChat(ComController).fireBeforeMsg(txt)
-    else
-        allowed := true;
-
-    if ((allowed = false) or (txt = '')) then exit;
-    *)
 
     //process any messages to rooms by using the room to send the actual message
     //create another list with non room valid items
     //room will event plugins as needed
     validContacts := TObjectList.Create(false);
+
     roomMessage := FormatBroadcastPlainText(Plaintext, Subject);
     FormatBroadcastXHTML(xhtml, Plaintext, Subject, roomXhtml);
-
     roomXHTMLStr := roomXHTML.XML;
+    roomXHTML.free();
 
     for i := 0 to Recipients.Count - 1 do
     begin
@@ -1013,7 +1040,6 @@ begin
 
     // Check for multicast service
     ent := jEntityCache.getFirstFeature(XMLNS_ADDRESS);
-    nick := MainSession.getDisplayUsername();
     if (ent = nil) then
     begin
         //no multicast, send msg to all valid recipients, include
@@ -1021,19 +1047,21 @@ begin
         for i := 0 to validContacts.Count - 1 do
         begin
             oneInfo := TItemInfo(validContacts[i]);
-            oneMessage := createMessage(oneInfo.JID.jid);
+            oneMessage := createMessage(oneInfo.JID, Plaintext, Subject, xhtml);
             oneMessage.Addresses.AddAddress(oneInfo.JID.jid, ADDRESS_TYPE_TO); //client hint
             oneMessage.Addresses.AddAddress(ADDRESS_REPLYTO_JID, ADDRESS_TYPE_NOREPLY);
+
             fireMessage(oneMessage);
             oneMessage.Free();
         end;
     end
     else begin
         // We have a multicast service - use it
-        oneMessage := createMessage(ent.Jid.jid);
+        oneMessage := createMessage(ent.Jid, Plaintext, Subject, xhtml);
         // add recipient <address> elements to the message
         for i := 0 to validContacts.Count - 1 do
             oneMessage.Addresses.AddAddress(TItemInfo(validContacts[i]).JID.jid, ADDRESS_TYPE_TO);
+            
         oneMessage.Addresses.AddAddress(ADDRESS_REPLYTO_JID, ADDRESS_TYPE_NOREPLY);
         fireMessage(oneMessage);
         oneMessage.Free();
