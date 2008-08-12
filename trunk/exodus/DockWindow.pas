@@ -417,8 +417,8 @@ begin
     if (Source.Control is TfrmDockable) then begin
         _undocking := false;
         oldsheet := GetActiveTabSheet();
-        updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TfrmDockable(Source.Control).Docked := true;
+        updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();
         _docked_forms.Add(TfrmDockable(Source.Control));
