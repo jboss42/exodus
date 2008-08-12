@@ -670,7 +670,7 @@ end;
 
 procedure TfrmDockable.updateMsgCount(msg: TJabberMessage);
 begin
-    _priorityflag := _priorityflag or (msg.Priority = High);
+    _priorityflag := _priorityflag or ((msg.Priority = High) and (not msg.isMe));
     UpdateMsgCount(msg.Tag);
 end;
 

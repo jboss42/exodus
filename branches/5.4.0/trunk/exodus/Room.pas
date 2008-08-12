@@ -679,18 +679,22 @@ begin
 
     // Check to see if we need to increment the
     // unread msg count
+    tmp_jid := TJabberID.Create(msg.FromJID);
     msgDelayTag := GetDelayTag(Msg.Tag);
     if ((msgDelayTag = nil) and
         (not Msg.IsMe) and
         (Msg.FromJID <> self.jid) and
-        (not IsMemberBlocked(msg.FromJID))) then begin
+        (not IsMemberBlocked(msg.FromJID)) and
+        (tmp_jid.resource <> Self.mynick)) then begin
         // We don't want to update counts on delayed (history) msgs
         // or on msgs from "me"
         // or on msgs that are "system messages"
         // or on msgs that are from blocked members
+        // or on msgs that are from my own nick
         updateMsgCount(Msg);
         updateLastActivity(Msg.Time);
     end;
+    tmp_jid.Free();
 
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
@@ -779,7 +783,7 @@ begin
                 Msg.highlight := true;
             end
             else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (msgDelayTag = nil) then
-              if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
+              if ((Msg.Priority = High) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
                 DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
                          GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
                          RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
