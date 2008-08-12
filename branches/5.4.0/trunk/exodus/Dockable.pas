@@ -126,7 +126,8 @@ type
 
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;virtual;
     function GetDockbar(): IExodusDockToolbar;
-  public
+    procedure CreateParams(var Params: TCreateParams); override;
+public
     _windowType: widestring; // what kind of dockable window is this
 
     Constructor Create(AOwner: TComponent); override;
@@ -236,7 +237,7 @@ begin
         //set initial conditions for dock
         if (Jabber1.getAllowedDockState() = adsForbidden) then
             _docked := false  //docking not allowed
-        else 
+        else
             //initial condition, how to handle windows we have no state for
             _docked := MainSession.Prefs.getBool('start_docked');
         end;
@@ -248,6 +249,14 @@ begin
     _priorityflag := false;
     _activating := false;
     _uid := generateUID();
+end;
+
+procedure TfrmDockable.CreateParams(var Params: TCreateParams);
+begin
+    inherited CreateParams(Params);
+    params.ExStyle := params.ExStyle or WS_EX_APPWINDOW;
+    if (not Self._docked) then
+        params.WndParent := GetDesktopwindow;
 end;
 
 function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;

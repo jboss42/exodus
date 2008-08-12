@@ -124,7 +124,7 @@ procedure ShowDebugForm(bringToFront: boolean);
 begin
     // Singleton factory
     if ( frmDebug = nil ) then
-        frmDebug := TfrmDebug.Create(Application);
+        frmDebug := TfrmDebug.Create(nil);
     frmDebug.ShowDefault(bringToFront);
     frmExodus.mnuFile_ShowDebugXML.Checked := true;
 end;
