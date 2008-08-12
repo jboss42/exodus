@@ -212,13 +212,6 @@ begin
      number := _('N/A');
 
    _Avatar := avatar;
-   if (avatar <> nil) then begin
-     if (_Avatar.Height > 32) then
-       imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
-     else
-       imgAvatar.Width := _Avatar.Width;
-
-   end;
 
    lblPhone.Caption := number;
    imgAvatar.Invalidate;
@@ -304,25 +297,15 @@ var
     Rect: TRect;
 begin
     inherited;
+    Rect.Top := 0;
+    Rect.Left := 0;
+    Rect.Bottom := 32;
+    Rect.Right := 32;
     if (_Avatar <> nil) then
-    begin
-        if (_Avatar.Height > imgAvatar.Height) then begin
-            Rect.Top := 1;
-            Rect.Left := 1;
-            Rect.Bottom := imgAvatar.Height;
-            Rect.Right := imgAvatar.Width;
-            _Avatar.Draw(imgAvatar.Canvas, Rect);
-        end
-        else
-            _Avatar.Draw(imgAvatar.Canvas);
-    end
-    else begin
-        Rect.Top := 1;
-        Rect.Left := 1;
-        Rect.Bottom := 33;
-        Rect.Right := 33;
+        _Avatar.Draw(imgAvatar.Canvas, Rect)
+    else
         imgAvatar.Canvas.StretchDraw(Rect, _UnknownAvatar);
-    end;
+
 end;
 
 procedure TExContactHoverFrame.imgPresenceMouseEnter(Sender: TObject);
