@@ -435,6 +435,7 @@
     <!-- HISTORY SEARCH WINDOW PREFS -->
     <search_history_primary_bg_color value="$ffffff"/>
     <search_history_alternate_bg_color value="$efedeb"/>
+    <search_history_sort value="3"/>
     <!-- /HISTORY SEARCH WINDOW PREFS -->
 
     <!-- unfiled -->
