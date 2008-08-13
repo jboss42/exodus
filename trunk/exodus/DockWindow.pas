@@ -303,7 +303,6 @@ begin
 
         if (frm.Docked) then begin
             updateLayoutDockChange(frm, true, _docked_forms.Count = 1);
-            frm.Docked := false;
             idx := _docked_forms.IndexOf(frm);
             if (idx >= 0) then
                 _docked_forms.Delete(idx);
@@ -323,7 +322,6 @@ begin
     if (not Self.Showing) then begin
         ShowDockManagerWindow(true, false);
     end;
-    frm.Docked := true;
     frm.ManualDock(AWTabControl); //fires TabsDockDrop event
     setWindowCaption(frm.Caption);
     Result := GetTabSheet(frm);
@@ -350,7 +348,6 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.FloatDocked(frm : TfrmDockable);
 begin
-    frm.Docked := false;
     frm.ManualFloat(frm.FloatPos);
 end;
 
@@ -419,7 +416,6 @@ begin
     if (Source.Control is TfrmDockable) then begin
         _undocking := false;
         oldsheet := GetActiveTabSheet();
-        TfrmDockable(Source.Control).Docked := true;
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();
@@ -441,11 +437,10 @@ procedure TfrmDockWindow.AWTabControlUnDock(Sender: TObject;
 begin
     // check to see if the tab is a frmDockable
     Allow := true;
-    if ((Client is TfrmDockable) and TfrmDockable(Client).Docked)then begin
+    if ((Client is TfrmDockable) {and TfrmDockable(Client).Docked})then begin
         setWindowCaption('');
         _undocking := true;
         CloseDocked(TfrmDockable(Client));
-        TfrmDockable(Client).Docked := false;
         TfrmDockable(Client).OnFloat();
         _undocking := false;
     end;
