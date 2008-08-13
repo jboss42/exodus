@@ -323,6 +323,7 @@ begin
     if (not Self.Showing) then begin
         ShowDockManagerWindow(true, false);
     end;
+    frm.Docked := true;
     frm.ManualDock(AWTabControl); //fires TabsDockDrop event
     setWindowCaption(frm.Caption);
     Result := GetTabSheet(frm);
@@ -349,6 +350,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.FloatDocked(frm : TfrmDockable);
 begin
+    frm.Docked := false;
     frm.ManualFloat(frm.FloatPos);
 end;
 
