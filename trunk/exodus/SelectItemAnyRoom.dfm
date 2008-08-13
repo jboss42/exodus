@@ -5,7 +5,7 @@ inherited frmSelectItemAnyRoom: TfrmSelectItemAnyRoom
   inherited pnlInput: TPanel
     object TntSplitter1: TTntSplitter [0]
       Left = 0
-      Top = 171
+      Top = 168
       Width = 279
       Height = 3
       Cursor = crVSplit
@@ -14,19 +14,25 @@ inherited frmSelectItemAnyRoom: TfrmSelectItemAnyRoom
       ExplicitWidth = 41
     end
     inherited pnlSelect: TPanel
-      Height = 142
+      Height = 139
+      ExplicitHeight = 139
+    end
+    inherited pnlEntry: TPanel
+      Top = 248
+      ExplicitTop = 248
+      inherited lblJID: TTntLabel
+        Height = 29
+      end
     end
     object pnlJoinedRooms: TTntPanel
       Left = 0
-      Top = 174
+      Top = 171
       Width = 279
       Height = 77
       Align = alBottom
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 3
-      ExplicitTop = 176
-      ExplicitWidth = 281
       object lblJoinedRooms: TTntLabel
         AlignWithMargins = True
         Left = 3
@@ -35,8 +41,6 @@ inherited frmSelectItemAnyRoom: TfrmSelectItemAnyRoom
         Height = 13
         Align = alTop
         Caption = 'Currently Joined Rooms'
-        ExplicitLeft = 0
-        ExplicitTop = 0
         ExplicitWidth = 114
       end
       object lstJoinedRooms: TTntListView
@@ -48,7 +52,6 @@ inherited frmSelectItemAnyRoom: TfrmSelectItemAnyRoom
         Align = alClient
         Columns = <
           item
-            AutoSize = True
             Caption = 'foo'
           end>
         IconOptions.Arrangement = iaLeft
@@ -61,8 +64,7 @@ inherited frmSelectItemAnyRoom: TfrmSelectItemAnyRoom
         ViewStyle = vsReport
         OnChange = lstJoinedRoomsChange
         OnClick = lstJoinedRoomsClick
-        ExplicitWidth = 250
-        ExplicitHeight = 150
+        OnResize = lstJoinedRoomsResize
       end
     end
   end
