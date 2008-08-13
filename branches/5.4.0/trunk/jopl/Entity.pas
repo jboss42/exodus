@@ -243,8 +243,9 @@ begin
             e._processDiscoitems(tag, e, newItems);
         Synchronize(FinishWalk);
     end;
-    tag.Release();
+    tag.Free();
 end;
+
 
 {---------------------------------------}
 procedure TJabberEntityProcess.FinishDiscoItems();
@@ -580,7 +581,7 @@ procedure TJabberEntity.ItemsCallback(event: string; tag: TXMLTag);
 var
     pt: TJabberEntityProcess;
     js: TJabberSession;
-    ttag: TXMLTag;
+    ttag, temptag: TXMLTag;
     newItems: TWidestringlist;
 begin
     //event may be 'xml', '/session/disconnected', 'timeout'
@@ -606,10 +607,10 @@ begin
         ttag := tag.QueryXPTag('/iq/query[@xmlns="' + XMLNS_DISCOITEMS + '"]');
         if ((ttag <> nil) and (ttag.ChildCount > UITHREAD_MAX_ITEMS)) then
         begin
-            tag.AddRef();
+            temptag := TXMLTag.Create(tag);
             pt := TJabberEntityProcess.Create(true);
             pt.jso := js;
-            pt.tag := tag;
+            pt.tag := temptag;
             pt.ptype := ProcDisco;
             pt.e := Self;
             pt.FreeOnTerminate := true;
@@ -954,8 +955,9 @@ begin
         begin
             _fireOnEntityInfo(js, tag);
 
-            if (_parent <> nil) then
+            if (_parent <> nil) then begin
                 _parent._childDiscoWalkFinished(js, Self);
+            end;
         end
         else
             // We got info back... so lets get our items..
@@ -993,10 +995,10 @@ begin
     if (newItems <> nil) then
         _finishWalk(js, newItems)
     else begin
-        tag.AddRef();
+        ttag := TXMLTag.Create(tag);
         pt := TJabberEntityProcess.Create(true);
         pt.jso := js;
-        pt.tag := tag;
+        pt.tag := ttag;
         pt.ptype := ProcWalk;
         pt.e := Self;
         pt.FreeOnTerminate := true;
@@ -1078,6 +1080,7 @@ procedure TJabberEntity.BrowseCallback(event: string; tag: TXMLTag);
 var
     pt: TJabberEntityProcess;
     js: TJabberSession;
+    ttag: TXMLTag;
 begin
     assert(_iq <> nil);
     js := _iq.JabberSession;
@@ -1094,10 +1097,10 @@ begin
             _fireOnEntityInfo(js, _jid);
     end
     else begin
-        tag.AddRef();
+        ttag := TXMLTag.Create(tag);
         pt := TJabberEntityProcess.Create(true);
         pt.jso := js;
-        pt.tag := tag;
+        pt.tag := ttag;
         pt.ptype := ProcBrowse;
         pt.e := Self;
         pt.FreeOnTerminate := true;
@@ -1218,8 +1221,9 @@ begin
             _fireOnEntityInfo(jso, _jid);
         _fireOnEntityItems(jso, _jid);
 
-        if (_parent <> nil) then
+        if (_parent <> nil) then begin
             _parent._childDiscoWalkFinished(jso, Self);
+        end;
     end;
 end;
 
