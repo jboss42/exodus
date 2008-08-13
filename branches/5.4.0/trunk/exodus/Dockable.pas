@@ -132,6 +132,8 @@ public
 
     Constructor Create(AOwner: TComponent); override;
 
+    procedure Dock(NewDockSite: TWinControl; ARect: TRect); override;
+    
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
 
@@ -257,6 +259,12 @@ begin
     params.ExStyle := params.ExStyle or WS_EX_APPWINDOW;
     if (not Self._docked) then
         params.WndParent := GetDesktopwindow;
+end;
+
+procedure TfrmDockable.Dock(NewDockSite: TWinControl; ARect: TRect);
+begin
+    _docked := (NewDockSite <> nil);
+    inherited;
 end;
 
 function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
@@ -391,6 +399,7 @@ end;
 procedure TfrmDockable.gotActivate();
 begin
     inherited;
+    //if we are already active, ignore this request
     if (not _activating) then
     begin
         _activating := true;
