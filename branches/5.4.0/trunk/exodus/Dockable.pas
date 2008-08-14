@@ -38,7 +38,7 @@ type
     are two different paths that result in this state change One set of events
     has been defined that will fire in either case.
   }
-  TfrmDockable = class(TfrmState, IControlDelegate, IHandleUnreadMessages)
+  TfrmDockable = class(TfrmState, IControlDelegate)
     pnlDock: TTntPanel;
     pnlDockTop: TTntPanel;
     pnlDockTopContainer: TTntPanel;
@@ -80,8 +80,6 @@ type
 
     //Unread messages in the currently open window
     _unreadmsg: integer; // Unread msg count
-    _unreadMessages: TWidestringList; //list of serialized <message> elements
-    _unreadDirty: boolean; //unread changed since last store
 
     //Messages persisted through session, available at OnRestoreWindowState
     _persistMessages: boolean; //should messages be persisted through a session?
@@ -127,8 +125,6 @@ type
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;virtual;
     function GetDockbar(): IExodusDockToolbar;
     procedure CreateParams(var Params: TCreateParams); override;
-    //IHandleUnreadMessages
-    procedure StoreUnreadMessages();
     procedure StoreUnreadMessage(unreadMsg: widestring; key: widestring = '');
 public
     _windowType: widestring; // what kind of dockable window is this
@@ -264,8 +260,6 @@ begin
         end;
 
     _unreadmsg := -1;
-    _unreadDirty := false;
-    _unreadMessages := TWidestringList.create();
     _persistMessages := false;
 
     _priorityflag := false;
@@ -347,7 +341,6 @@ begin
     if (_unreadMsg <> value) then
     begin
         _unreadmsg := value;
-        _unreadDirty := true;
         updateDocked();
     end;
 end;
@@ -432,13 +425,23 @@ end;
 
 {---------------------------------------}
 procedure TfrmDockable.ClearUnreadMsgCount();
+var
+    key, sql: string;
 begin
     //only need to updateDocked if we are changing state
-    if ((_unreadmsg > 0) or _priorityflag or (_unreadMessages.count > 0)) then
+    if ((_unreadmsg > 0) or _priorityflag) then
     begin
-        _unreadDirty := true;
+        try
+            initializeDatabase();
+            
+            key := str2sql(GetWindowStateKey());
+            sql := Format('delete from unread_cache where key=''%s'';',
+                    [key]);
+            DataStore.ExecSQL(sql);
+        except
+        end;
+
         _unreadmsg := 0;
-        _unreadMessages.clear();
         _priorityflag := false;
         updateDocked();
     end;
@@ -593,10 +596,6 @@ var
                 FreeAndNil(tag);
                 table.NextRow;
             end;
-
-            sql := Format('delete from unread_cache where (key=''%s'');',
-                    [key]);
-            DataStore.ExecSQL(sql);
         except
             //TODO: loggit
         end;
@@ -617,18 +616,20 @@ begin
 
     if (PersistUnreadMessages) then
     begin
+        PersistUnreadMessages := false;
+
         //check for XML-based messages
         restoreUnreadXML();
 
         //check the database
         restoreUnreadDB();
+        
+        PersistUnreadMessages := true;
     end;
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
 begin
-    StoreUnreadMessages();
-    
     if (not Floating) then
         windowState.setAttribute('dock', 't')
     else
@@ -656,7 +657,6 @@ end;
 
 procedure TfrmDockable.FormDestroy(Sender: TObject);
 begin
-    _unreadMessages.free();
     _COMDockbar := nil;
     inherited;
 end;
@@ -721,7 +721,6 @@ begin
             (not GetDockManager().isActive)) then
         begin
             Inc(Self._unreadmsg);
-            _unreadDirty := true;
             if (PersistUnreadMessages) then
             begin
                 ttag := nil;
@@ -744,10 +743,10 @@ begin
                 end;
                 if (ttag <> nil) then
                 begin
-                    _unreadMessages.Add(ttag.XML);
+                    StoreUnreadMessage(ttag.XML);
                     ttag.Free();
                 end
-                else _unreadMessages.Add(msgTag.XML);
+                else StoreUnreadMessage(msgTag.XML);
             end;
             updateDocked();
         end;
@@ -804,35 +803,14 @@ procedure TfrmDockable.StoreUnreadMessage(unreadMsg: widestring; key: widestring
 var
     em, sql: widestring;
 begin
+    initializeDatabase();
+
     if (key = '') then
         key := str2sql(WideStringToUTF8(GetWindowStateKey()));
     em := XML_EscapeChars(unreadMsg);
     sql := Format('insert into unread_cache (key,xml) values (''%s'',''%s'');',
                   [key, str2sql(WideStringToUTF8(em))]);
     DataStore.ExecSQL(sql);
-end;
-
-
-procedure TfrmDockable.StoreUnreadMessages();
-var
-    idx: Integer;
-    xml: Widestring;
-    sql, key: String;
-begin
-    if (_unreadDirty and PersistUnreadMessages and (_unreadMessages.Count > 0)) then
-    begin
-        initializeDatabase();
-
-        key := str2sql(WideStringToUTF8(GetWindowStateKey()));
-        //clear any existing unread
-        sql := Format('delete from unread_cache where (key=''%s'');',
-                    [key]);
-        DataStore.ExecSQL(sql);
-
-        for idx := 0 to _unreadMessages.Count - 1 do
-            StoreUnreadMessage(_unreadMessages[idx], key);
-        _unreadDirty := false;
-    end;
 end;
 
 initialization

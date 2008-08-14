@@ -43,10 +43,10 @@ const
     AUTO_OPEN_OVERRIDE = 'auto-open-override';
 type
 
-    IHandleUnreadMessages = interface
-    ['{C5D53D68-4B6E-42A5-B181-863D180E0090}']
-        procedure StoreUnreadMessages();
-    end;
+    //IHandleUnreadMessages = interface
+    //['{C5D53D68-4B6E-42A5-B181-863D180E0090}']
+    //    procedure StoreUnreadMessages();
+    //end;
 
     {
         Encapsulates event handling for auto-open events.
@@ -416,11 +416,11 @@ begin
         for i := 0 to Screen.FormCount - 1 do begin
             if (Screen.Forms[i].InheritsFrom(TfrmState)) then
             begin
-                try
-                    (Screen.Forms[i] as IHandleUnreadMessages).StoreUnreadMessages();
-                except
-
-                end;
+                //try
+                //    (Screen.Forms[i] as IHandleUnreadMessages).StoreUnreadMessages();
+                //except
+                //
+                //end;
                 wTag := TfrmState(Screen.Forms[i]).GetAutoOpenInfo(event, useProfile);
                 if (wTag <> nil) then begin
                     if (useProfile) then
