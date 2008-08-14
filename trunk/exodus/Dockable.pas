@@ -38,7 +38,7 @@ type
     are two different paths that result in this state change One set of events
     has been defined that will fire in either case.
   }
-  TfrmDockable = class(TfrmState, IControlDelegate)
+  TfrmDockable = class(TfrmState, IControlDelegate, IHandleUnreadMessages)
     pnlDock: TTntPanel;
     pnlDockTop: TTntPanel;
     pnlDockTopContainer: TTntPanel;
@@ -81,6 +81,7 @@ type
     //Unread messages in the currently open window
     _unreadmsg: integer; // Unread msg count
     _unreadMessages: TWidestringList; //list of serialized <message> elements
+    _unreadDirty: boolean; //unread changed since last store
 
     //Messages persisted through session, available at OnRestoreWindowState
     _persistMessages: boolean; //should messages be persisted through a session?
@@ -100,7 +101,6 @@ type
     procedure closeAllCallback(event: string; tag: TXMLTag);
     procedure dockAllCallback(event: string; tag: TXMLTag);
     procedure floatAllCallback(event: string; tag: TXMLTag);
-    procedure initializeDatabase();
   protected
     updateDockedCnt: integer;
 
@@ -127,13 +127,16 @@ type
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;virtual;
     function GetDockbar(): IExodusDockToolbar;
     procedure CreateParams(var Params: TCreateParams); override;
+    //IHandleUnreadMessages
+    procedure StoreUnreadMessages();
+    procedure StoreUnreadMessage(unreadMsg: widestring; key: widestring = '');
 public
     _windowType: widestring; // what kind of dockable window is this
 
     Constructor Create(AOwner: TComponent); override;
 
     procedure Dock(NewDockSite: TWinControl; ARect: TRect); override;
-    
+
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
 
@@ -179,6 +182,7 @@ public
     }
     procedure ClearUnreadMsgCount(); virtual;
 
+
     { Public Properties }
     property Docked: boolean read _docked write _docked;
     property FloatPos: TRect read getPosition;
@@ -223,6 +227,21 @@ begin
     Result := 'dockableUID_' + inttostr(dockable_uid);
 end;
 
+procedure initializeDatabase();
+begin
+    try
+        if (DataStore.CheckForTableExistence('unread_cache')) then exit;
+
+        DataStore.ExecSQL('CREATE TABLE unread_cache (' +
+                'key TEXT, ' +
+                'xml TEXT);'
+                );
+        DataStore.ExecSQL('CREATE INDEX unread_cache_idx1 on unread_cache (key);');
+    except
+        //TODO: loggit
+    end;
+end;
+
 Constructor TfrmDockable.Create(AOwner: TComponent);
 begin
     inherited;
@@ -245,6 +264,7 @@ begin
         end;
 
     _unreadmsg := -1;
+    _unreadDirty := false;
     _unreadMessages := TWidestringList.create();
     _persistMessages := false;
 
@@ -327,6 +347,7 @@ begin
     if (_unreadMsg <> value) then
     begin
         _unreadmsg := value;
+        _unreadDirty := true;
         updateDocked();
     end;
 end;
@@ -415,6 +436,7 @@ begin
     //only need to updateDocked if we are changing state
     if ((_unreadmsg > 0) or _priorityflag or (_unreadMessages.count > 0)) then
     begin
+        _unreadDirty := true;
         _unreadmsg := 0;
         _unreadMessages.clear();
         _priorityflag := false;
@@ -553,8 +575,7 @@ var
         key := str2sql(WidestringToUTF8(GetWindowStateKey()));
         try
             table := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
-            sql := Format('select * from unread_cache where (key=''%s'');',
-                    [key]);
+            sql := Format('select * from unread_cache where (key=''%s'');',[key]);
             if not DataStore.GetTable(sql, table) then exit;
             if not table.FirstRow then exit;
 
@@ -570,6 +591,7 @@ var
                 tag := parser.popTag();
                 if (tag <> nil) then OnPersistedMessage(tag);
                 FreeAndNil(tag);
+                table.NextRow;
             end;
 
             sql := Format('delete from unread_cache where (key=''%s'');',
@@ -604,30 +626,9 @@ begin
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
-    procedure persistUnreadDB();
-    var
-        idx: Integer;
-        xml: Widestring;
-        sql, key: String;
-    begin
-        initializeDatabase();
-
-        key := str2sql(WideStringToUTF8(GetWindowStateKey()));
-        for idx := 0 to _unreadMessages.Count - 1 do begin
-            xml := _unreadMessages[idx];
-            xml := XML_EscapeChars(xml);
-
-            sql := Format('insert into unread_cache (key,xml) values (''%s'',''%s'');',
-                    [key, str2sql(WideStringToUTF8(xml))]);
-            DataStore.ExecSQL(sql);
-        end;
-    end;
 begin
-    if (PersistUnreadMessages and (_unreadMessages.Count > 0)) then
-    begin
-        persistUnreadDB();
-    end;
-
+    StoreUnreadMessages();
+    
     if (not Floating) then
         windowState.setAttribute('dock', 't')
     else
@@ -720,6 +721,7 @@ begin
             (not GetDockManager().isActive)) then
         begin
             Inc(Self._unreadmsg);
+            _unreadDirty := true;
             if (PersistUnreadMessages) then
             begin
                 ttag := nil;
@@ -797,18 +799,39 @@ begin
     Dec(updateDockedCnt);
 end;
 
-procedure TfrmDockable.initializeDatabase();
-begin
-    try
-        if (DataStore.CheckForTableExistence('unread_cache')) then exit;
 
-        DataStore.ExecSQL('CREATE TABLE unread_cache (' +
-                'key TEXT, ' +
-                'xml TEXT);'
-                );
-        DataStore.ExecSQL('CREATE INDEX unread_cache_idx1 on unread_cache (key);');
-    except
-        //TODO: loggit
+procedure TfrmDockable.StoreUnreadMessage(unreadMsg: widestring; key: widestring);
+var
+    em, sql: widestring;
+begin
+    if (key = '') then
+        key := str2sql(WideStringToUTF8(GetWindowStateKey()));
+    em := XML_EscapeChars(unreadMsg);
+    sql := Format('insert into unread_cache (key,xml) values (''%s'',''%s'');',
+                  [key, str2sql(WideStringToUTF8(em))]);
+    DataStore.ExecSQL(sql);
+end;
+
+
+procedure TfrmDockable.StoreUnreadMessages();
+var
+    idx: Integer;
+    xml: Widestring;
+    sql, key: String;
+begin
+    if (_unreadDirty and PersistUnreadMessages and (_unreadMessages.Count > 0)) then
+    begin
+        initializeDatabase();
+
+        key := str2sql(WideStringToUTF8(GetWindowStateKey()));
+        //clear any existing unread
+        sql := Format('delete from unread_cache where (key=''%s'');',
+                    [key]);
+        DataStore.ExecSQL(sql);
+
+        for idx := 0 to _unreadMessages.Count - 1 do
+            StoreUnreadMessage(_unreadMessages[idx], key);
+        _unreadDirty := false;
     end;
 end;
 

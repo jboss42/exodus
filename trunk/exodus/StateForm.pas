@@ -43,6 +43,11 @@ const
     AUTO_OPEN_OVERRIDE = 'auto-open-override';
 type
 
+    IHandleUnreadMessages = interface
+    ['{C5D53D68-4B6E-42A5-B181-863D180E0090}']
+        procedure StoreUnreadMessages();
+    end;
+
     {
         Encapsulates event handling for auto-open events.
 
@@ -284,6 +289,8 @@ type
         implementation does nothing.
 
         @param autoOpenInfo Persisted opening information
+
+        @param the (newly created) window or nil if not applicable
     }
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); virtual;
 
@@ -404,6 +411,11 @@ begin
         for i := 0 to Screen.FormCount - 1 do begin
             if (Screen.Forms[i].InheritsFrom(TfrmState)) then
             begin
+                try
+                    (Screen.Forms[i] as IHandleUnreadMessages).StoreUnreadMessages();
+                except
+
+                end;
                 wTag := TfrmState(Screen.Forms[i]).GetAutoOpenInfo(event, useProfile);
                 if (wTag <> nil) then begin
                     if (useProfile) then
@@ -570,7 +582,7 @@ begin
 end;
 
 {---------------------------------------}
-class procedure TfrmState.AutoOpenFactory(autoOpenInfo: TXMLTag);
+class Procedure TfrmState.AutoOpenFactory(autoOpenInfo: TXMLTag);
 begin
     //nop
 end;
