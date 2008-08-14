@@ -668,6 +668,7 @@ published
     function AppKeyDownHook(var Msg: TMessage): Boolean;
 
     property dockManager:IExodusDockManager read _dockManager;
+    property dockWindowGlued: boolean read _dockWindowGlued;
   end;
 
   {

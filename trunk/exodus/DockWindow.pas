@@ -600,6 +600,17 @@ begin
             close();
         end;
         Result := true;
+
+        // Check to see if we are on screen and if not,
+        // bring back to screen
+        if (((Self.Top >= Screen.DesktopRect.Bottom) or
+            (Self.Left >= Screen.DesktopRect.Right) or
+            ((Self.Top + Self.Height) <= Screen.DesktopRect.Top) or
+            ((Self.Left + Self.Width) <= Screen.DesktopRect.Left)) and
+            (not frmExodus.dockWindowGlued)) then
+        begin
+            Self.MakeFullyVisible();
+        end;
     end
     else if (not Show) then begin
         close(); //hide, sets Showing property to false
