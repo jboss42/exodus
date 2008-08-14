@@ -130,6 +130,7 @@ end;
 procedure TExodusControlSite.Set_Visible(value: WordBool);
 begin
     Visible := value;
+    Parent.Realign();
 end;
 
 function TExodusControlSite.Get_ControlName: WideString;
@@ -160,6 +161,7 @@ begin
         Align := alClient
     else
         Align := alNone;
+    Parent.Realign();
 end;
 
 initialization
