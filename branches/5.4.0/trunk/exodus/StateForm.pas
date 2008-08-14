@@ -164,7 +164,7 @@ type
 
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
-
+    procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormDestroy(Sender: TObject);
@@ -332,6 +332,7 @@ type
     property IsNotifying: boolean read _isNotifying write _isNotifying;
   end;
 
+procedure Log(msg: widestring);
 implementation
 
 {$R *.dfm}
@@ -339,6 +340,7 @@ implementation
 uses
     PrefController,
     debug,
+    DebugManager,
     room,
     ChatWin,
     unicode,
@@ -355,6 +357,10 @@ uses
 var
   currentAutoOpenEvent: widestring;
 
+procedure Log(msg: widestring);
+begin
+//    DebugManager.DebugMessage(msg);
+end;
 
 class procedure TAutoOpenEventManager.onAutoOpenEvent(event: Widestring);
 type
@@ -406,7 +412,6 @@ begin
     if ((event = AOE_DISCONNECTED) or (event = AOE_SHUTDOWN)) then begin
         defaultList := TXMLTagList.Create();
         profileList := TXMLTagList.Create();
-
         //walk open forms and get auto-open tags from them
         for i := 0 to Screen.FormCount - 1 do begin
             if (Screen.Forms[i].InheritsFrom(TfrmState)) then
@@ -696,7 +701,7 @@ end;
 {---------------------------------------}
 procedure TfrmState.FormOnActivate(Sender: TObject);
 begin
-
+    log('TfrmState(' + GetWindowStateKey() + ').FormOnActivate BEGIN');
     try
         inherited; //hmm, shouldthis go first?
         if (not skipWindowPosEvents()) then
@@ -709,12 +714,13 @@ begin
                          HWND_TOP);
             StartWindowPosEvents();
 
-            if (self.Visible) then
+            if (self.Showing) then
                 gotActivate();
         end;
     except
         // Possible exception when dealing with an extreme amount of windows
     end;
+    log('TfrmState(' + GetWindowStateKey() + ').FormOnActivate END');
 end;
 
 {---------------------------------------}
@@ -892,12 +898,24 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmState.WMActivate(var msg: TMessage);
+begin
+    if (Msg.WParamLo <> WA_INACTIVE) then begin
+        log('TfrmState(' + GetWindowStateKey() + ').WMActivate BEGIN');
+        StopFlash(Self);
+        isNotifying := false;
+        log('TfrmState(' + GetWindowStateKey() + ').WMActivate END');
+    end;
+    inherited;
+end;
+
 procedure TfrmState.gotActivate();
 begin
-    //this is going to be a problem if tray should flash
-    //until *all* notified windows become active
-    StopFlash(Self);
-    isNotifying := false;
+    log('TfrmState(' + GetWindowStateKey() + ').gotActivate BEGIN');
+
+    //nop
+    log('TfrmState(' + GetWindowStateKey() + ').gotActivate END');
 end;
 
 {

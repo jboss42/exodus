@@ -165,6 +165,7 @@ debug.DebugMessage('start flashing actual window: ' + inttostr(tf.Handle) + ', c
         fi.hwnd:= tf.Handle;
         fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
         fi.dwTimeout := 0;
+        fi.uCount := 999999999;  //this should not be needed but there ya go
         fi.cbSize:=SizeOf(fi);
         FlashWindowEx(fi);
     end;
@@ -189,6 +190,7 @@ debug.DebugMessage('stop flashing actual window: ' + inttostr(tf.Handle) + ', cl
     fi.dwFlags := FLASHW_STOP;
     fi.dwTimeout := 0;
     fi.cbSize:=SizeOf(fi);
+
     FlashWindowEx(fi);
 end;
 
