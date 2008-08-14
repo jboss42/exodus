@@ -357,16 +357,29 @@ end;
 {---------------------------------------}
 function TReplaceURLHandler.Replace(re: TRegExpr): RegExprString;
 var
-    url, val: string;
+    url, val, rem: string;
+    len: Integer;
+    last: Char;
 begin
     val :=  Copy(re.InputString, re.MatchPos[0], re.MatchLen[0]);
 
+    //more clean up
+    val := XML_UnEscapeChars(val);
+    rem := '';
+    len := Length(val);
+    last := val[len];
+    if (last = '>') or (last = '<') or (last = '\') then begin
+        val := Copy(val, 1, len - 1);
+        rem := last;
+    end;
+
+    val := XML_EscapeChars(val);
     if Pos('www.', val) = 1 then
         url := 'http://' + val
     else
         url := val;
 
-    Result := '<a href="' + url + '">' + val + '</a>';
+    Result := '<a href="' + url + '">' + val + '</a>' + rem;
 end;
 
 {---------------------------------------}
