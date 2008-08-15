@@ -186,14 +186,9 @@ procedure SendBroadcastMessage(Subject: widestring;
                                Recipients: TList; //list of TItemInfo
                                Plaintext: widestring;
                                xhtml: TXMLtag = nil);
-                               
-function FormatBroadcastPlainText(OrigPlaintext: widestring;
-                                  Subject: widestring): widestring;
 
-procedure FormatBroadcastXHTML(OrigMessageTag: TXMLTag;
-                               Plaintext: widestring;
-                               Subject: widestring;
-                               var formattedTag: TXMLTag);
+procedure FormatBroadcastTagForLogging(origMessageTag: TXMLTag; var formattedTag: TXMLTag);
+
 implementation
 
 {$R *.dfm}
@@ -916,7 +911,12 @@ begin
         children := tTag.ChildTags;
         for i := 0 to children.Count -1 do
         begin
-            dTag.AddTag(TXMLTag.Create(children[i]));
+            ttag := TXMLTag.Create(children[i]);
+            //if first child tag is a <p> tag, rename it as a span,
+            //we are wrapping in a div tag and the paragraph will cause extra spacing
+            if (i = 0) and (ttag.Name = 'p') then
+                ttag.Name := 'span';
+            dTag.AddTag(ttag);
         end;
     end;
 end;
@@ -925,7 +925,7 @@ end;
 {*******************************************************************************
 *********************** SendBroadcastMessage ***********************************
 *******************************************************************************}
-procedure FormatBroadcastTag(origMessageTag: TXMLTag; var formattedTag: TXMLTag);
+procedure FormatBroadcastTagForLogging(origMessageTag: TXMLTag; var formattedTag: TXMLTag);
 var
     plainText: widestring;
     subject: widestring;
@@ -936,13 +936,14 @@ begin
     plainText := formattedTag.GetBasicText('body');
     subject := formattedTag.GetBasicText('subject');
     newPlainText := sndBroadcastDlg.FormatBroadcastPlainText(plainText, subject);
-    sndBroadcastDlg.FormatBroadcastXHTML(formattedTag, plainText, subject, newXHTMLTag);
+    FormatBroadcastXHTML(formattedTag, plainText, subject, newXHTMLTag);
     //replace xhtml in formatted tag with new
     formattedTag.RemoveTag(formattedTag.GetFirstTag('body'));
     formattedTag.AddBasicTag('body', newPlainText);
     formattedTag.RemoveTag(formattedTag.GetFirstTag('subject'));
     formattedTag.RemoveTag(formattedTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]'));
     formattedTag.AddTag(newXHTMLTag);
+    formattedTag.setAttribute('type','chat'); //treat braodcasts as chats for logging, ties them all together
 end;
 
 procedure SendBroadcastMessage(Subject: widestring;
@@ -957,7 +958,6 @@ var
     oneInfo: TItemInfo;
     room: TfrmRoom;
     validContacts: TObjectList;
-    xhtmlStr: widestring;
     roomMessage: widestring;
     roomXhtml: TXMLTag;
     roomXhtmlStr: widestring;
@@ -985,8 +985,8 @@ var
         dtag: TXMLTag;
         logMsg: TJabberMessage;
     begin
-        FormatBroadcastTag(msgtag, dtag);
-        dtag.setAttribute('type','chat');
+        FormatBroadcastTagForLogging(msgtag, dtag);
+
         logMsg := CreateMessage(dtag);
         adderChildren := msgTag.QueryXPTag('//addresses[@xmlns="' + XMLNS_ADDRESS + '"]').ChildTags;
         for i  := 0 to adderChildren.Count - 1 do
