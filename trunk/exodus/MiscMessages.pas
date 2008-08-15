@@ -818,28 +818,6 @@ begin
     inherited;
 end;
 
-
-procedure FormatBroadcastTag(origMessageTag: TXMLTag; var formattedTag: TXMLTag);
-var
-    plainText: widestring;
-    subject: widestring;
-    ttag: TXMLTag;
-    newXHTMLTag: TXMLTag;
-    newPlainText: widestring;
-begin
-    formattedTag := TXMLTag.create(OrigMessageTag);
-    plainText := formattedTag.GetBasicText('body');
-    subject := formattedTag.GetBasicText('subject');
-    newPlainText := sndBroadcastDlg.FormatBroadcastPlainText(plainText, subject);
-    sndBroadcastDlg.FormatBroadcastXHTML(formattedTag, plainText, subject, newXHTMLTag);
-    //replace xhtml in formatted tag with new
-    formattedTag.RemoveTag(formattedTag.GetFirstTag('body'));
-    formattedTag.AddBasicTag('body', newPlainText);
-    formattedTag.RemoveTag(formattedTag.GetFirstTag('subject'));
-    formattedTag.RemoveTag(formattedTag.QueryXPTag('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]'));
-    formattedTag.AddTag(newXHTMLTag);
-end;
-
 //add <feature var='http://jabber.org/protocol/address'/> somewhere
 
 {
@@ -894,9 +872,7 @@ begin
     fromJID.free();
 
     //modify original msg tag before we log it to look more like a room's broadcast messages
-    FormatBroadcastTag(tag, dtag);
-    //finally, change the type to chat so history will group them together
-    dtag.setAttribute('type','chat');
+    FormatBroadcastTagForLogging(tag, dtag);
     m := CreateMessage(dtag);
     ExUtils.LogMessage(m);
     m.free();
