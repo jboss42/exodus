@@ -365,6 +365,8 @@ type
     private
         _sessionReadyTag: TXMLTag; //tag passed along with /dependancy/ready/session event
         _sessionEntityCB: integer;
+        _ServerFetched: Boolean;
+        _AccountFetched: Boolean;
     protected
         procedure DependancyCallback(event: string; tag: TXMLTag);override;
         procedure FireOnAllResolved(tag: TXMLTag);override;
@@ -1741,15 +1743,26 @@ begin
     inherited;
     _sessionEntityCB := -1;
     _sessionReadyTag := nil;
+    _ServerFetched := false;
+    _AccountFetched := false;
 end;
 
 procedure TSessionAuthResolver.DependancyCallback(event: string; tag: TXMLTag);
 begin
-    if (event = '/session/entity/items') and (tag.GetAttribute('from') = Session.Server) then
+    if (event = '/session/entity/items') then
     begin
-        Session.UnRegisterCallback(_sessionEntityCB);
-        _sessionEntityCB := -1;
-        TAuthDependancyResolver.SignalReady(DEPMOD_ENTITY_CACHE, nil, Session);
+        if (tag.GetAttribute('from') = Session.Server) then begin
+            _ServerFetched := true;
+        end;
+        if (tag.GetAttribute('from') = Session.SessionJid.jid) then begin
+            _AccountFetched := true;
+        end;
+
+        if (_ServerFetched and _AccountFetched) then begin
+            Session.UnRegisterCallback(_sessionEntityCB);
+            _sessionEntityCB := -1;
+            TAuthDependancyResolver.SignalReady(DEPMOD_ENTITY_CACHE, nil, Session);
+        end;
     end
     else begin
         if (event = DEPMOD_LOGGED_IN_EVENT) then
@@ -1759,6 +1772,7 @@ begin
             //kick off server disco walk
             _sessionEntityCB := Session.RegisterCallback(DependancyCallback, '/session/entity/items');
             jEntityCache.fetch(Session.Server, Session);
+            jEntityCache.fetch(Session.SessionJid.jid, Session);
         end;
         inherited;
     end;
