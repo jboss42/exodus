@@ -12,7 +12,7 @@
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with Exodus; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -23,7 +23,7 @@ unit JoinRoom;
 interface
 
 uses
-    JabberID, XMLTag, Unicode, Entity, 
+    JabberID, XMLTag, Unicode, Entity,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
     TntExtCtrls;
@@ -262,6 +262,8 @@ begin
         MainSession.UnRegisterCallback(_disconcb);
     end;
 
+    _all.Free();
+    _filter.Free();
     _wait.Free();
 end;
 
@@ -290,6 +292,9 @@ begin
         btnNext.Caption := _('Finish');
 
         _enableNext();
+
+       _all.Clear();
+       _filter.Clear();
 
         // browse each server
         for i := 0 to txtServer.Items.Count - 1 do
@@ -367,6 +372,8 @@ var
     tj: TJabberID;
     i: Integer;
 begin
+    _all.Clear();
+    _filter.Clear();
     if (txtServerFilter.Text = _('- ALL SERVERS -')) then
     begin
         for i := 0 to txtServer.Items.Count - 1 do
@@ -563,8 +570,6 @@ end;
 {---------------------------------------}
 procedure TfrmJoinRoom.txtServerFilterSelect(Sender: TObject);
 begin
-//    btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
-
     // Filter on this server.
     _processFilter();
 end;
@@ -577,11 +582,11 @@ var
 begin
     // populate this item from the current list
     i := Item.Index;
-    if ((i < 0) or (i > _cur.Count)) then exit;
+    if ((i < 0) or (i >= _cur.Count)) then exit;
+
     ce := TJabberEntity(_cur[i]);
     Item.Caption := ce.Jid.userDisplay;
     Item.SubItems.Add(ce.jid.domain);
-    //Item.SubItems.Add(ce.Jid.userDisplay);
 end;
 
 {---------------------------------------}
