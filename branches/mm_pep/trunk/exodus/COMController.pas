@@ -30,7 +30,16 @@ uses
     Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl, COMExodusItem;
 
 type
-  TExodusController = class(TAutoObject, IExodusController, IExodusController2)
+  TControllerRegistryEntry = class
+  private
+    _iface: IUnknown;
+  public
+    constructor Create(iface: IUnknown);
+    destructor Destroy(); override;
+
+    property Controller: IUnknown read _iface;
+  end;
+  TExodusController = class(TAutoObject, IExodusController, IExodusController2, IExodusControllerRegistry)
   protected
     function Get_Connected: WordBool; safecall;
     function Get_Server: WideString; safecall;
@@ -171,15 +180,21 @@ type
 
     _contact_logger: IExodusLogger;
     _room_logger: IExodusLogger;
-    
+
+    _ctrl_reg: TWidestringList;
+
   public
     procedure Initialize(); override;
     destructor Destroy(); override;
 
+    function ObjQueryInterface(const IID: TGUID; out obj): HRESULT; override;
+    procedure RegisterController(const IID: Widestring; const instance: IUnknown); safecall;
+    procedure UnregisterController(const IID: Widestring; const instance: IUnknown); safecall;
+
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
     procedure fireNewOutgoingIM(jid: Widestring; ExodusChat: IExodusChat);
-    procedure fireNewIncomingIM(jid: Widestring; ExodusChat: IExodusChat);    
+    procedure fireNewIncomingIM(jid: Widestring; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
     procedure fireRosterMenuClick(Sender: TObject);
     function fireIM(Jid: Widestring; var Body: Widestring;
@@ -1005,12 +1020,15 @@ end;
 procedure TExodusController.Initialize();
 begin
     inherited Initialize();
+    
     _menu_items := TWidestringList.Create();
     _roster_menus := Twidestringlist.Create();
     _msg_menus := TWidestringlist.Create();
     _nextid := 0;
     _parser := TXMLTagParser.Create();
     _caps_exts := TWidestringList.Create();
+
+    _ctrl_reg := TWidestringList.Create();
 
     (*
     // XXX: Joe: figure out this OLE stuff please so it doesn't core on exit
@@ -1042,6 +1060,12 @@ begin
         OleCheck(CoDisconnectObject(self as IExodusController, 0));
         *)
 
+        while (_ctrl_reg.Count > 0) do begin
+            TControllerRegistryEntry(_ctrl_reg.Objects[0]).Free();
+            _ctrl_reg.Delete(0);
+        end;
+        FreeAndNil(_ctrl_reg);
+
         // should we cleanup these menu items???
         FreeAndNil(_menu_items);
         FreeAndNil(_roster_menus);
@@ -1053,6 +1077,51 @@ begin
 //   except
 
 //   end;
+end;
+
+function TExodusController.ObjQueryInterface(const IID: TGUID; out obj): HResult;
+var
+    idx: Integer;
+begin
+    idx := _ctrl_reg.IndexOf(GUIDToString(IID));
+    if (idx <> -1) then begin
+        IUnknown(obj) := TControllerRegistryEntry(_ctrl_reg.Objects[idx]).Controller;
+        Result := S_OK;
+    end
+    else
+        Result := inherited ObjQueryInterface(IID, obj);
+end;
+procedure TExodusController.RegisterController(const IID: Widestring; const instance: IUnknown);
+var
+    key: TGUID;
+    idx: Integer;
+    test: IUnknown;
+    entry: TControllerRegistryEntry;
+begin
+    if (instance = nil) then exit;
+
+    key := StringToGUID(iid);
+    if (instance.QueryInterface(key, test) <> S_OK) then exit;
+
+    entry := TControllerRegistryEntry.Create(instance);
+    idx := _ctrl_reg.IndexOf(iid);
+    if (idx = -1) then begin
+        idx := _ctrl_reg.Count;
+        _ctrl_reg.Add(iid);
+    end;
+    _ctrl_reg.Objects[idx].Free();
+    _ctrl_reg.Objects[idx] := entry;
+end;
+procedure TExodusController.UnregisterController(const IID: Widestring; const instance: IUnknown);
+var
+    idx: Integer;
+begin
+    idx := _ctrl_reg.IndexOf(iid);
+    if (idx = -1) then exit;
+    if (TControllerRegistryEntry(_ctrl_reg.Objects[idx]).Controller <> instance) then exit;
+
+    _ctrl_reg.Objects[idx].Free();
+    _ctrl_reg.Delete(idx);
 end;
 
 {---------------------------------------}
@@ -2357,6 +2426,14 @@ begin
     end;
 end;
 
+constructor TControllerRegistryEntry.Create(iface: IInterface);
+begin
+    _iface := iface;
+end;
+destructor TControllerRegistryEntry.Destroy;
+begin
+    _iface := nil;
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,

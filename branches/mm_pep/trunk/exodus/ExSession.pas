@@ -134,6 +134,7 @@ uses
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger, DebugManager,
     XMLVCardCache, ExVCardCache,
+    Pubsub,
     InviteReceived,
     ExForm,
     HistorySearch,
@@ -657,13 +658,16 @@ begin
     ExCOMToolBarImages := TExodusMainToolBarImages.Create();
     COMToolBarImages := ExCOMToolBarImages;
 
-
     ExCOMEntityCache := TExodusEntityCache.Create();
     COMEntityCache := ExCOMEntityCache;
 //    ExCOMToolbar := TExodusToolbar.Create(); //created in jabber1
 //    COMToolbar := ExCOMToolbar;
     ExCOMBookmarkManager := TExodusBookmarkManager.Create();
     COMBookmarkManager := ExCOMBookmarkManager;
+
+    ExCOMController.RegisterController(
+            GUIDToString(IID_IExodusPubsubController),
+            TExodusPubsubController.Create(MainSession));
 
     // Setup the ExStartup object props
     ExStartup.priority := cli_priority;
