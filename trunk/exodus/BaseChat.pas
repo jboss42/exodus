@@ -475,6 +475,8 @@ begin
     MsgOut.SelAttributes.Italic := false;
     MsgOut.SelAttributes.UnderlineType := ultNone;
     MsgOut.SelAttributes.Color := MainSession.Prefs.getInt(PREF_FONT_COLOR);
+    MsgOut.SelAttributes.Name := MainSession.Prefs.getString(PREF_FONT_NAME);
+    MsgOut.SelAttributes.Size := MainSession.Prefs.getInt(PREF_FONT_SIZE);
 end;
 
 {---------------------------------------}

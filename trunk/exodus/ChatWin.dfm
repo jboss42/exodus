@@ -27,6 +27,7 @@ inherited frmChat: TfrmChat
       inherited tbDockBar: TToolBar
         Left = 443
         ExplicitLeft = 443
+        ExplicitHeight = 22
       end
       inherited pnlDockTop: TTntPanel
         Width = 440
