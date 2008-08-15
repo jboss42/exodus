@@ -1,23 +1,24 @@
-unit JoinRoom;
 {
-    Copyright 2003, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit JoinRoom;
+
 
 interface
 
@@ -205,18 +206,9 @@ begin
     tmp := TJabberID.Create('');
     for i := 0 to l.Count - 1 do begin
         tmp.ParseJID(l[i]);
-        if (tmp.user <> '') then begin
-            ce := jEntityCache.getByJid(tmp.full);
-            if (ce <> nil) then
-                _addRoomJid(ce);
-        end
-        else begin
+        if (tmp.user = '') then begin
             txtServer.Items.Add(l[i]);
             txtServerFilter.Items.Add(l[i]);
-            {
-            ce := jEntityCache.getByJid(l[i]);
-            ce.getItems(MainSession);
-            }
         end;
     end;
     tmp.Free();
@@ -400,6 +392,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom._fetch(jid: Widestring);
+var
+    Entity: TJabberEntity;
 begin
     if (_wait.IndexOf(jid) >= 0) then exit;
 
@@ -409,8 +403,9 @@ begin
     btnFetch.Visible := false;
     aniWait.Visible := true;
     aniWait.Active := true;
-
-    jEntityCache.fetch(jid, MainSession, true);
+    Entity :=  jEntityCache.getByJid(jid);
+    if (Entity <> nil) then
+       Entity.Refresh(MainSession);
 end;
 
 {---------------------------------------}

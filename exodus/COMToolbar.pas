@@ -1,23 +1,24 @@
-unit COMToolbar;
 {
-    Copyright 2008, Estate of Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit COMToolbar;
+
 
 {$WARN SYMBOL_PLATFORM OFF}
 
@@ -116,7 +117,7 @@ end;
 
 procedure TExodusToolbarBase.Initialize();
 begin
-    _buttons := TObjectList.create(true); //free buttons on delete etc.
+    _buttons := TObjectList.create(false); //button bar owns buttuns
     _imgList := nil;
     _btnBar := nil;
     _controlProxy := nil;
@@ -228,8 +229,9 @@ begin
         begin
             if (TToolButton(_buttons[i]).name = Name) then
             begin
+                TToolButton(_buttons[i]).Visible := false;
                 TToolButton(_buttons[i]).parent := nil; //remove from toolbar
-                _buttons.delete(i); //frees button
+                _buttons.delete(i); //button freed on toolbar destruction, unparented and hidden until then
                 break;
             end;
         end;
@@ -239,7 +241,7 @@ begin
         while (i < _btnBar.ButtonCount) and (not _btnBar.Buttons[i].Visible) do
             inc(i);
 
-        _btnBar.Visible := (i = _btnBar.ButtonCount);
+        _btnBar.Visible := (i <> _btnBar.ButtonCount);
     except
         on E:Exception do
             DebugMessage('Exception in ' + Self.ClassName + '.RemoveButton, button: ' + Name + ', (' + E.Message + ')');

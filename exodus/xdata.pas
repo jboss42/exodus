@@ -1,23 +1,24 @@
-unit xdata;
 {
-    Copyright 2005, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit xdata;
+
 
 interface
 
@@ -25,8 +26,9 @@ uses
     Unicode, XMLTag,
     TntCheckLst, TntStdCtrls, StdCtrls, ExodusLabel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Dockable, buttonFrame, Grids, TntGrids, ExtCtrls, fXData, JabberID,
-  ComCtrls, ToolWin, EntityCache, Entity, TntForms, ExFrame, TntExtCtrls;
+    Dialogs, ExForm, buttonFrame, Grids, TntGrids, ExtCtrls, fXData, JabberID,
+  ComCtrls, ToolWin, EntityCache, Entity, TntForms, ExFrame, TntExtCtrls,
+  Dockable, StateForm;
 
 type
 
@@ -69,17 +71,13 @@ type
     property  Visible: boolean read _visible write setVisible;
   end;
 
-  TfrmXData = class(TfrmDockable)
+  TfrmXData = class(TExForm)
     frameButtons1: TframeButtons;
     frameXData: TframeXData;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
-  protected
-    //don't presist position, not sure why this is derived from dockable
-    procedure RestoreWindowState();override;
-    procedure PersistWindowState();override;
   private
     { Private declarations }
     _packet: Widestring;
@@ -133,8 +131,7 @@ begin
         f.Caption := title;
 
     f.Render(tag);
-    f.ShowDefault(true,'f'); //bring to front, always undocked
-    //f.Show();
+    f.Show();
     Result := true;
 end;
 
@@ -621,7 +618,6 @@ end;
 procedure TfrmXData.FormCreate(Sender: TObject);
 begin
   inherited;
-  _windowType := 'xdata';
 end;
 
 {---------------------------------------}
@@ -632,18 +628,6 @@ begin
     Action := caFree;
     if (MainSession <> nil) then
         MainSession.Prefs.SavePosition(Self);
-end;
-
-//don't presist position, not sure why this is derived from dockable
-procedure TfrmXData.RestoreWindowState();
-begin
-    //nop
-    inherited;
-end;
-
-procedure TfrmXData.PersistWindowState();
-begin
-    //nop
 end;
 
 {---------------------------------------}

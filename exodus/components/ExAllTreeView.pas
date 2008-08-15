@@ -1,22 +1,23 @@
 {
-    Copyright 2008, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+
 unit ExAllTreeView;
 
 interface
@@ -32,6 +33,7 @@ type
     _mnuDelete: TTntMenuItem;
 
     _dropSupport: TExDropTarget;
+    _Filter: WideString;
 
   protected
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
@@ -45,6 +47,9 @@ type
     procedure mnuCopyClick(Sender: TObject); virtual;
     procedure mnuDeleteClick(Sender: TObject); virtual;
     procedure SaveGroupsState(); override;
+
+    function FilterItem(item: IExodusItem): Boolean; override;
+    procedure _SetFilterType(filtertype: Widestring); virtual;
   public
     constructor Create(AOwner: TComponent; Session: TObject); override;
 
@@ -54,6 +59,8 @@ type
             var accept: Boolean); override;
     procedure DragDrop(Source: TObject;
             X, Y: Integer); override;
+
+    property Filter: Widestring read _Filter write _SetFilterType;
   end;
 
 implementation
@@ -104,6 +111,24 @@ begin
     _mnuDelete := mi;
 
     PopupMenu := popup;
+end;
+
+procedure TExAllTreeView._SetFilterType(filtertype: Widestring);
+var
+    idx: Integer;
+    popup: TExActionPopupMenu;
+begin
+    if filtertype = _Filter then exit;
+
+    _Filter := filtertype;
+    if (PopupMenu is TExActionPopupMenu) then begin
+        popup := TExActionPopupMenu(PopupMenu);
+        idx := popup.Excludes.IndexOf('{000-exodus.googlecode.com}-090-add-subgroup');
+        if (_Filter <> '') then
+            popup.Excludes.Add('{000-exodus.googlecode.com}-090-add-subgroup')
+        else if (idx <> -1) then
+             popup.Excludes.Delete(idx);
+    end;
 end;
 procedure TExAllTreeView.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
 var
@@ -422,5 +447,16 @@ begin
 
     TJabberSession(_js).ItemController.SaveGroups();
 
+end;
+
+function TExAllTreeView.FilterItem(item: IExodusItem): Boolean;
+begin
+    Result := inherited FilterItem(item);
+
+    if Result and (_Filter <> '') then
+        Result := (_Filter = Item.Type_);
+
+    if Result then
+        Result := Item.IsVisible or not TJabberSession(_JS).Prefs.getBool('roster_only_online');
 end;
 end.

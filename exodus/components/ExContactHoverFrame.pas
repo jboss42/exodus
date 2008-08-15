@@ -1,3 +1,22 @@
+{
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 unit ExContactHoverFrame;
 
 interface
@@ -193,13 +212,6 @@ begin
      number := _('N/A');
 
    _Avatar := avatar;
-   if (avatar <> nil) then begin
-     if (_Avatar.Height > 32) then
-       imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
-     else
-       imgAvatar.Width := _Avatar.Width;
-
-   end;
 
    lblPhone.Caption := number;
    imgAvatar.Invalidate;
@@ -285,25 +297,15 @@ var
     Rect: TRect;
 begin
     inherited;
+    Rect.Top := 0;
+    Rect.Left := 0;
+    Rect.Bottom := 32;
+    Rect.Right := 32;
     if (_Avatar <> nil) then
-    begin
-        if (_Avatar.Height > imgAvatar.Height) then begin
-            Rect.Top := 1;
-            Rect.Left := 1;
-            Rect.Bottom := imgAvatar.Height;
-            Rect.Right := imgAvatar.Width;
-            _Avatar.Draw(imgAvatar.Canvas, Rect);
-        end
-        else
-            _Avatar.Draw(imgAvatar.Canvas);
-    end
-    else begin
-        Rect.Top := 1;
-        Rect.Left := 1;
-        Rect.Bottom := 33;
-        Rect.Right := 33;
+        _Avatar.Draw(imgAvatar.Canvas, Rect)
+    else
         imgAvatar.Canvas.StretchDraw(Rect, _UnknownAvatar);
-    end;
+
 end;
 
 procedure TExContactHoverFrame.imgPresenceMouseEnter(Sender: TObject);

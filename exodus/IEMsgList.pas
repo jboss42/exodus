@@ -1,24 +1,25 @@
+{
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 unit IEMsgList;
 
-{
-    Copyright 2004, Peter Millard
 
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-}
 
 // To use IE (TWebBrowser) as the history window in chats/rooms
 // set <msglist_type value="1"/> in the defaults
@@ -356,16 +357,29 @@ end;
 {---------------------------------------}
 function TReplaceURLHandler.Replace(re: TRegExpr): RegExprString;
 var
-    url, val: string;
+    url, val, rem: string;
+    len: Integer;
+    last: Char;
 begin
     val :=  Copy(re.InputString, re.MatchPos[0], re.MatchLen[0]);
 
+    //more clean up
+    val := XML_UnEscapeChars(val);
+    rem := '';
+    len := Length(val);
+    last := val[len];
+    if (last = '>') or (last = '<') or (last = '\') then begin
+        val := Copy(val, 1, len - 1);
+        rem := last;
+    end;
+
+    val := XML_EscapeChars(val);
     if Pos('www.', val) = 1 then
         url := 'http://' + val
     else
         url := val;
 
-    Result := '<a href="' + url + '">' + val + '</a>';
+    Result := '<a href="' + url + '">' + val + '</a>' + rem;
 end;
 
 {---------------------------------------}
