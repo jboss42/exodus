@@ -1,23 +1,24 @@
-unit Debug;
 {
-    Copyright 2001, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit Debug;
+
 
 interface
 
@@ -116,14 +117,14 @@ uses
 
 var
     frmDebug: TfrmDebug;
-
+    _debugMode: boolean;
 
 {---------------------------------------}
 procedure ShowDebugForm(bringToFront: boolean);
 begin
     // Singleton factory
     if ( frmDebug = nil ) then
-        frmDebug := TfrmDebug.Create(Application);
+        frmDebug := TfrmDebug.Create(nil);
     frmDebug.ShowDefault(bringToFront);
     frmExodus.mnuFile_ShowDebugXML.Checked := true;
 end;
@@ -146,6 +147,7 @@ procedure DebugMessage(txt: Widestring);
 begin
     if (frmDebug = nil) then exit;
     if (not frmDebug.Visible) then exit;
+    if (not _debugMode) then exit;
 
     frmDebug.AddWideText(txt, clRed);
 end;
@@ -160,6 +162,8 @@ end;
 {---------------------------------------}
 
 procedure TfrmDebug.FormCreate(Sender: TObject);
+var
+    tstr: widestring;
 begin
     // make sure the output is showing..
     inherited;
@@ -175,6 +179,9 @@ begin
     lblJID.Font.Style := [fsUnderline];
 
     _scb := MainSession.RegisterCallback(SessionCallback, '/session');
+    //set _debugMode if -d was passed on command line
+    tstr := Windows.GetCommandLineW();//MainSession.prefs.GetPref('exe_CommandLine');
+    _debugMode := (WStrPos(PWideChar(tstr), '-d') <> nil);
 
     if MainSession.Active then begin
         lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayName(MainSession.Profile.getJabberID()) + ' <' + MainSession.Profile.getJabberID().getDisplayFull() + '>';
@@ -409,7 +416,7 @@ begin
                         else begin
                             DebugMessage('    Activating Flag:  false');
                         end;
-
+                        
                         try
                             DebugMessage('    LastActivity:  ' + DateTimeToStr(LastActivity));
                         except
@@ -418,7 +425,7 @@ begin
 
                         DebugMessage('    Window type:  ' + WindowType);
 
-                        if (Activating) then
+                        if (PersistUnreadMessages) then
                         begin
                             DebugMessage('    Persist Unread Messages:  true');
                         end
@@ -634,7 +641,8 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.DebugStatement(msg: Widestring; dt: TDateTime);
 begin
-    AddWideText(msg, clRed);
+    if (_debugMode) then
+        AddWideText(msg, clRed);
 end;
 
 {---------------------------------------}
@@ -677,4 +685,5 @@ end;
 
 initialization
     Classes.RegisterClass(TfrmDebug);
+    _debugMode := false;
 end.

@@ -1,23 +1,24 @@
-unit XMLSocketStream;
 {
-    Copyright 2001, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit XMLSocketStream;
+
 
 {$ifdef VER150}
     {$define INDY9}
@@ -34,7 +35,7 @@ uses
     {$ifdef INDY9}
     IdIOHandlerSocket, idSSLSchannel,
     {$endif}
-    Windows, ExtCtrls, IdSSLOpenSSL, ZLib,
+    Windows, ExtCtrls, ZLib,
 
     {$endif}
 
@@ -54,12 +55,10 @@ type
             _ssl_int: TIdSSLConnectionIntercept;
         {$else}
             {$ifdef INDY9}
-            _ssl_int: TIdSSLIOHandlerSocket;
 			_x509_int: TIdSchannelIOHandlerSocket;
             _socks_info: TIdSocksInfo;
             _iohandler: TIdIOHandlerSocket;
             {$else}
-            _ssl_int: TIdConnectionInterceptOpenSSL;
             _socks_info: TObject;
             {$endif}
         {$endif}
@@ -68,7 +67,6 @@ type
         _timer:     TTimer;
         _profile:   TJabberProfile;
         _ssl_cert:  string;
-        _ssl_err:   string;
         _compress:  boolean;
 
         procedure Keepalive(Sender: TObject);
@@ -90,9 +88,6 @@ type
         // know how to get these events more explicitly.
         procedure MsgHandler(var msg: TJabberMsg); message WM_JABBER;
 
-        {$ifdef INDY9}
-        function VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
-        {$endif}
         procedure SendXML(xml: Widestring); override;
     public
         constructor Create(root: String); override;
@@ -135,7 +130,7 @@ implementation
 
 uses
     {$ifdef INDY9}
-    HttpProxyIOHandler, IdSSLOpenSSLHeaders, ZlibHandler,
+    HttpProxyIOHandler, ZlibHandler,
     {$endif}
     Session, StrUtils, Classes, Unicode;
 
@@ -152,20 +147,10 @@ begin
 end;
 {$else}
 function checkSSL(): boolean;
-var
-    c, s: THandle;
 begin
     if (not _check_ssl) then begin
-        c := LoadLibrary('libeay32.dll');
-        s := LoadLibrary('ssleay32.dll');
-
-        Result := ((c > 0) and (s > 0));
-
-        FreeLibrary(c);
-        FreeLibrary(s);
-
-        if (Result) then
-            _check_ssl := true;
+        _check_ssl := true;
+        result := _check_ssl;
     end
     else
         Result := _check_ssl;
@@ -375,10 +360,7 @@ begin
     if _Stage = 0 then begin
         // We can't connect
         _socket := nil;
-        if (E is EIdOSSLCouldNotLoadSSLLibrary) then begin
-            _Data := 'Failed to load the OpenSSL libraries.';
-        end
-        else if (E is EIdSocketError) then begin
+        if (E is EIdSocketError) then begin
             se := E as EIdSocketError;
             if (se.LastError = 10060) then begin
                 _Data := 'Server not listening on that port.';
@@ -428,25 +410,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure FixIndy9SSL();
-var
-    libeay: integer;
-begin
-    // Hack around bugs in Indy9..
-    if (@IdSslX509NameHash = nil) then begin
-        {$ifdef linux}
-        {$else}
-        libeay := LoadLibrary('libeay32.dll');
-        @IdSslX509NameHash := LoadCryptoFunc('X509_NAME_hash', libeay);
-        @IdSslX509Digest := LoadCryptoFunc('X509_digest', libeay);
-        @IdSslEvpMd5 := LoadCryptoFunc('EVP_md5', libeay);
-        FreeLibrary(libeay);
-        {$endif}
-    end;
-end;
-
-
-{---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 constructor TXMLSocketStream.Create(root: string);
@@ -459,7 +422,7 @@ begin
     }
     inherited;
 
-    _ssl_int    := nil;
+    //_ssl_int    := nil;
     _x509_int   := nil;
     _ssl_check  := false;
     _ssl_ok     := false;
@@ -482,61 +445,6 @@ begin
     _sock_lock.Free;
 end;
 
-{$ifdef INDY9}
-function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
-var
-    res : TSSLVerifyError;
-    sl  : TStringList;
-    n   : TDateTime;
-
-    function ValidateHostname(host: string): Boolean;
-    var
-        i: Integer;
-    begin
-        for i := 0 to sl.Count - 1 do begin
-            if (Lowercase(sl[i]) = ('cn=' + host)) then begin
-                Result := true;
-                exit;
-            end;
-        end;
-
-        Result := false;
-    end;
-begin
-    _ssl_err := '';
-    sl := TStringList.Create();
-    sl.Delimiter := '/';
-    sl.QuoteChar := #0;
-    sl.DelimitedText := Certificate.Subject.OneLine;
-
-    res := SVE_NONE;
-    _ssl_ok := ValidateHostname(LowerCase(_profile.Server)) or ValidateHostname(LowerCase(_profile.Host));
-    sl.Free();
-
-    if (not _ssl_ok) then begin
-        res := SVE_CNAME;
-        _ssl_ok := false;
-        _ssl_err := 'Certificate does not match host: ' + Certificate.Subject.OneLine;
-    end;
-
-    // TODO: Check issuer of SSL cert?
-
-    n := Now();
-    if (n < Certificate.NotBefore) then begin
-        res := SVE_NOTVALIDYET;
-        _ssl_ok := false;
-        _ssl_err := 'Certificate not valid until ' + DateTimeToStr(Certificate.NotBefore);
-    end;
-
-    if (n > Certificate.NotAfter) then begin
-        res := SVE_EXPIRED;
-        _ssl_ok := false;
-        _ssl_err := 'Certificate expired on ' + DateTimeToStr(Certificate.NotAfter);
-    end;
-    Result := res;
-end;
-{$endif}
-
 {---------------------------------------}
 procedure TXMLSocketStream.Keepalive(Sender: TObject);
 var
@@ -557,9 +465,9 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream.MsgHandler(var msg: TJabberMsg);
 var
-    fp, tmps: WideString;
+    tmps: WideString;
     tag: TXMLTag;
-    cert: TIdX509;
+    //cert: TIdX509;
 begin
     {
     handle all of our funky messages..
@@ -571,45 +479,19 @@ begin
             // Socket is connected
             {$ifdef INDY9}
             _local_ip := _socket.Socket.Binding.IP;
-            if (not MainSession.Profile.x509Auth) then begin
-                if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
-                    (_ssl_int.PassThrough)) then begin
-                    if (_profile.SocksType = proxy_http) then begin
-                        HttpProxyConnect(_iohandler, _profile.ResolvedIP, _profile.ResolvedPort);
-                    end;
-
-                    _ssl_int.PassThrough := false;
+            if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
+                (_x509_int.PassThrough)) then begin
+                if (_profile.SocksType = proxy_http) then begin
+                    HttpProxyConnect(_iohandler, _profile.ResolvedIP, _profile.ResolvedPort);
                 end;
-            end
-            else begin
-                if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
-                    (_x509_int.PassThrough)) then begin
-                    if (_profile.SocksType = proxy_http) then begin
-                        HttpProxyConnect(_iohandler, _profile.ResolvedIP, _profile.ResolvedPort);
-                    end;
 
-                    _x509_int.PassThrough := false;
-                end;
+                _x509_int.PassThrough := false;
             end;
 
             // Validate here, not in onVerifyPeer
             if (_profile.ssl = ssl_port) then begin
-                if ((not MainSession.Profile.x509Auth) and
-                    (_ssl_int <> nil)) then begin
-                    FixIndy9SSL();
-                    cert := _ssl_int.SSLSocket.PeerCert;
-	                if (VerifyPeer(cert) <> SVE_NONE) then begin
-	                    tag := TXMLTag.Create('ssl');
-	                    tag.AddCData(_ssl_err);
-	                    fp := cert.FingerprintAsString;
-	                    tag.setAttribute('fingerprint', fp);
-	                    FireOnStreamEvent('ssl-error', tag);
-	                end;
-                end
-                else if (_x509_int <> nil) then begin
-                    FixIndy9SSL();
-					verifyServerCertificate;
-                end;
+                //FixIndy9SSL();
+                verifyServerCertificate;
             end;
 
             {$else}
@@ -693,25 +575,8 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream._setupSSL();
 begin
-	if (not MainSession.Profile.x509Auth) then begin 
-	    with _ssl_int do begin
-	        SSLOptions.Mode := sslmClient;
-	        SSLOptions.Method :=  sslvTLSv1;
-	
-	        // TODO: get certs from profile, that would be *cool*.
-	        SSLOptions.CertFile := '';
-	        SSLOptions.RootCertFile := '';
-	
-	        if (_ssl_cert <> '') then begin
-	            SSLOptions.CertFile := _ssl_cert;
-	            SSLOptions.KeyFile := _ssl_cert;
-	        end;
-	
-	        // TODO: Add verification options here!
-	    end;
-	end
-	else
-		_x509_int.CertificateId := _ssl_cert;
+    if (_ssl_cert <> '') then
+        _x509_int.CertificateId := _ssl_cert;
 end;
 
 {---------------------------------------}
@@ -722,38 +587,20 @@ var
     hport: integer;
 begin
     // Setup everything for Indy9 objects
-    _ssl_int := nil;
     _x509_int := nil;
     _socks_info := TIdSocksInfo.Create(nil);
     _iohandler := nil;
 
     // Let's always use SSL if we can, then we can always do TLS
     if (checkSSL()) then begin
-		if (not MainSession.Profile.x509Auth) then begin
-        	_ssl_int := TIdSSLIOHandlerSocket.Create(nil);
+        _x509_int := TIdSchannelIOHandlerSocket.Create(nil);
+        _x509_int.ServerName := _profile.Server; //SChannel
 
-            if ((_profile.ssl <> ssl_port) or (_profile.SocksType <> proxy_none)) then
-                _ssl_int.PassThrough := true;
-
-            _ssl_int.UseNagle := false;
-        end
-		else begin
-	        _x509_int := TIdSchannelIOHandlerSocket.Create(nil);
-    	    _x509_int.ServerName := _profile.Server; //SChannel
-
-            if ((_profile.ssl <> ssl_port) or (_profile.SocksType <> proxy_none)) then
-               _x509_int.PassThrough := true;
-		end;
+        if ((_profile.ssl <> ssl_port) or (_profile.SocksType <> proxy_none)) then
+           _x509_int.PassThrough := true;
 
         _setupSSL();
-
-		if (not MainSession.Profile.x509Auth) then begin
-	        _iohandler := _ssl_int;
-	        _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
-    	    _ssl_int.OnGetPassword := TSocketThread(_thread).SSLGetPassword;
-		end
-		else
-			_iohandler := _x509_int;
+        _iohandler := _x509_int;
     end;
 
     // Create an HTTP Proxy if we need one
@@ -828,7 +675,6 @@ procedure TXMLSocketStream._connectIndy8();
 begin
     // Setup everything for Indy8
     if (_profile.ssl = ssl_port) then begin
-        _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
         _setupSSL();
     end;
 
@@ -899,10 +745,8 @@ begin
 
     // SUCK, make the recv buffer freaken' gigantic to avoid weird SSL issues
     //_socket.RecvBufferSize := 4096;
-	if (not MainSession.Profile.x509Auth) then
-	    _socket.RecvBufferSize := (1024 * 1024)
-	else
-		_socket.RecvBufferSize := _x509_int.MaxIntialChunkSize; //SChannel
+    if (_x509_int <> nil) then
+        _socket.RecvBufferSize := _x509_int.MaxIntialChunkSize; //SChannel
 
     _thread.Start;
 end;
@@ -910,55 +754,23 @@ end;
 {---------------------------------------}
 function TXMLSocketStream.isSSLCapable(): boolean;
 begin
-    if (not MainSession.Profile.x509Auth) then begin
-        if (_ssl_int <> nil) then
-            Result := _ssl_int.PassThrough
-        else
-            Result := false;
-    end
-    else begin
-        if (_x509_int <> nil) then
-            Result := _x509_int.PassThrough
-        else
-            Result := false;
-    end;
+    if (_x509_int <> nil) then
+        Result := _x509_int.PassThrough
+    else
+        Result := false;
 end;
 
 {---------------------------------------}
 procedure TXMLSocketStream.EnableSSL();
-var
-    fp: Widestring;
-    cert: TIdX509;
-    tag: TXMLTag;
 begin
-    if (not MainSession.Profile.x509Auth) then begin
-        if (_ssl_int = nil) then exit;
+    if (_x509_int = nil) then exit;
 
-        if (_ssl_int.PassThrough = false) then
-            exit
-        else begin
-            _ssl_int.PassThrough := false;
-            FixIndy9SSL();
-            cert := _ssl_int.SSLSocket.PeerCert;
-            if (VerifyPeer(cert) <> SVE_NONE) then begin
-                tag := TXMLTag.Create('ssl');
-                tag.AddCData(_ssl_err);
-                fp := cert.FingerprintAsString;
-                tag.setAttribute('fingerprint', fp);
-                FireOnStreamEvent('ssl-error', tag);
-            end;
-        end;
-    end
+    if (_x509_int.PassThrough = false) then exit
     else begin
-        if (_x509_int = nil) then exit;
-
-        if (_x509_int.PassThrough = false) then exit
-        else begin
-            _x509_int.PassThrough := false;
-            _socket.RecvBufferSize := _x509_int.MaxDataChunkSize;
-            FixIndy9SSL();
-            verifyServerCertificate;
-        end;
+        _x509_int.PassThrough := false;
+        _socket.RecvBufferSize := _x509_int.MaxDataChunkSize;
+        //FixIndy9SSL();
+        verifyServerCertificate;
     end;
 end;
 
@@ -968,12 +780,15 @@ var
   tag: TXMLTag;
   fp, ssl_err: WideString;
 begin
-  if (not _x509_int.PeerCert.verifyCertificate(ssl_err)) then
+  if (_x509_int.PeerCert = nil) or (not _x509_int.PeerCert.verifyCertificate(ssl_err)) then
   begin
     tag := TXMLTag.Create('ssl');
     tag.AddCData(ssl_err);
-    fp := _x509_int.PeerCert.FingerprintAsString;
-    tag.setAttribute('fingerprint', fp);
+    if (_x509_int.PeerCert <> nil) then begin
+        fp := _x509_int.PeerCert.FingerprintAsString;
+        tag.setAttribute('fingerprint', fp);
+    end;
+
     FireOnStreamEvent('ssl-error', tag);
   end;
 end;
@@ -997,14 +812,8 @@ begin
     _timer.Enabled := false;
     if ((_socket <> nil) and (_socket.Connected)) then begin
         {$ifdef INDY9}
-        if (not MainSession.Profile.x509Auth) then begin
-            if (_ssl_int <> nil) then
-                _ssl_int.PassThrough := true;
-        end
-        else begin
-            if (_x509_int <> nil) then
-                _x509_int.PassThrough := true;
-        end;
+        if (_x509_int <> nil) then
+            _x509_int.PassThrough := true;
         {$endif}
         _socket.Disconnect();
     end
@@ -1034,9 +843,6 @@ begin
         _iohandler.SocksInfo := nil;
         _socket.IOHandler := nil;
         {$endif}
-
-        if (_ssl_int <> nil) then
-            FreeAndNil(_ssl_int);
 
         if (_x509_int <> nil) then
             FreeAndNil(_x509_int);

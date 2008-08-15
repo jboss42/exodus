@@ -1,3 +1,22 @@
+{
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 unit SelectItemAnyRoom;
 
 interface
@@ -25,6 +44,7 @@ type
       Change: TItemChange);
     procedure chkAnyClick(Sender: TObject);
     procedure lstJoinedRoomsClick(Sender: TObject);
+    procedure lstJoinedRoomsResize(Sender: TObject);
     private
     { Private declarations }
         _trackinglist: TWidestringList;
@@ -99,8 +119,6 @@ begin
         track.item := item;
         _trackingList.AddObject(item.caption, track);
     end;
-
-
 end;
 
 procedure TfrmSelectItemAnyRoom.FormDestroy(Sender: TObject);
@@ -124,6 +142,7 @@ var
     i: integer;
     track: TListItemTracker;
     jid: widestring;
+    idx: integer;
 begin
     if (chkAny.Checked) then begin
         Item.Selected := false;
@@ -134,8 +153,20 @@ begin
         _itemView.ClearSelection();
     end;
 
-    if (_trackinglist.Find(item.Caption, i)) then begin
-        track := TListItemTracker(_trackinglist.Objects[i]);
+    // Have to loop through because _trackingList.Find()
+    // seems to miss some items.
+    idx := -1;
+    for i := 0 to _trackingList.Count - 1 do
+    begin
+        if (_trackingList.Strings[i] = item.Caption) then
+        begin
+            idx := i;
+            break;
+        end;
+    end;
+
+    if (idx >= 0) then begin
+        track := TListItemTracker(_trackinglist.Objects[idx]);
         jid := track.jid;
         txtJID.text := jid;
         btnOK.Enabled := true;
@@ -153,5 +184,22 @@ begin
     end;
     inherited;
 end;
+
+procedure TfrmSelectItemAnyRoom.lstJoinedRoomsResize(Sender: TObject);
+begin
+    inherited;
+
+    // Resize the hidden column to prevent the horizontal scroll bar
+    // if the vertical scroll bar is shown.
+    // If a user wishes to see all the text on a long room name,
+    // the user can resize the window.
+    lstJoinedRooms.Column[0].Width := lstJoinedRooms.ClientWidth - 20;
+end;
+
+
+
+
+
+
 
 end.

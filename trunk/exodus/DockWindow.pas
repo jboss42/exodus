@@ -1,24 +1,25 @@
+{
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 unit DockWindow;
 
-{
-    Copyright 2003, Peter Millard
 
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-}
 
 interface
 
@@ -41,7 +42,7 @@ type
     splAW: TTntSplitter;
     AWTabControl: TPageControl;
     pnlActivityList: TPanel;
-    timFlasher: TTimer;
+    pnlTabControl: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AWTabControlDockDrop(Sender: TObject; Source: TDragDockObject; X,
@@ -52,11 +53,11 @@ type
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure FormDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
-    procedure timFlasherTimer(Sender: TObject);
     Procedure WMSyscommand(Var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure FormResize(Sender: TObject);
     procedure OnMove(var Msg: TWMMove); message WM_MOVE;
     procedure FormHide(Sender: TObject);
+    procedure pnlTabControlResize(Sender: TObject);
   private
     { Private declarations }
     _docked_forms: TList;
@@ -91,8 +92,9 @@ type
     procedure BringDockedToTop(form: TfrmDockable);
     function getTopDocked(): TfrmDockable;
     procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
-    procedure OnNotify(frm: TForm; notifyEvents: integer);reintroduce; overload;
+    procedure OnNotify(frm: TfrmDockable; notifyEvents: integer);reintroduce; overload;
     procedure UpdateDocked(frm: TfrmDockable);
+
     procedure BringToFront();
     function isActive(): boolean;
     function getHWND(): THandle;
@@ -102,12 +104,10 @@ type
     function getTabForm(tab: TTabSheet): TForm;
     procedure updateLayoutDockChange(frm: TfrmDockable; docking: boolean; FirstOrLastDock: boolean);
     procedure setWindowCaption(txt: widestring);
-    procedure Flash();
-    procedure checkFlash();
     procedure moveGlued();
     procedure SessionCallback(event: string; tag: TXMLTag);
     function GetActiveTabSheet(): TTntTabSheet;
-    procedure changeGotoAcitivityWindowButton();
+    procedure changeGotoActivityWindowButton();
 
     property glueEdge: TGlueEdge read _glueEdge write _glueEdge;
   end;
@@ -174,7 +174,7 @@ begin
                 end;
 
                 if (keyUP) then begin
-                    // Only process KeyUp as we can get many
+                    // Only process on KeyUp as we can get many
                     // KeyDowns, but only one KeyUp per press.
                     case wParam of
                         VK_TAB: begin
@@ -192,6 +192,20 @@ begin
                                 if (aw <> nil) then begin
                                     aw.selectPrevItem();
                                 end;
+                                Result := 1;
+                            end;
+                        end;
+                    end;
+                end
+                else begin
+                    // KeyDown event
+                    // We don't want to do anything here, but we do want to capture event
+                    // so as to possibly not pass onthe key down.
+                    case wParam of
+                        VK_TAB: begin
+                            if (ctrl_down) then begin
+                                // Doing a Ctrl-Tab of some version, so mark as
+                                // handled (non-zero result), don't pass on.
                                 Result := 1;
                             end;
                         end;
@@ -259,7 +273,7 @@ begin
     _docked_forms := nil;
     MainSession.UnRegisterCallback(_sessionCB);
     _sessionCB := -1;
-    UnHookWindowsHookEx(dockWindowKBHook) ;
+    UnHookWindowsHookEx(dockWindowKBHook);
 end;
 
 {---------------------------------------}
@@ -289,7 +303,6 @@ begin
 
         if (frm.Docked) then begin
             updateLayoutDockChange(frm, true, _docked_forms.Count = 1);
-            frm.Docked := false;
             idx := _docked_forms.IndexOf(frm);
             if (idx >= 0) then
                 _docked_forms.Delete(idx);
@@ -314,6 +327,22 @@ begin
     Result := GetTabSheet(frm);
     frm.Visible := true;
     _removeTabs(-1, oldsheet);
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.pnlTabControlResize(Sender: TObject);
+begin
+    // This hides the tabs.  If we try to hide
+    // tabs via the TabVisible property on the
+    // tab sheets, we see poor redraw behavior.
+    // Hiding the tabs off the top of the screen
+    // seems to make a more visual pleaseing
+    // experience.
+    inherited;
+    AWTabControl.Top := -1 * AWTabControl.TabHeight;
+    AWTabControl.Height := pnlTabControl.ClientHeight + AWTabControl.TabHeight;
+    AWTabControl.Left := 0;
+    AWTabControl.Width := pnlTabControl.ClientWidth;
 end;
 
 {---------------------------------------}
@@ -388,7 +417,6 @@ begin
         _undocking := false;
         oldsheet := GetActiveTabSheet();
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
-        TfrmDockable(Source.Control).Docked := true;
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();
         _docked_forms.Add(TfrmDockable(Source.Control));
@@ -409,11 +437,10 @@ procedure TfrmDockWindow.AWTabControlUnDock(Sender: TObject;
 begin
     // check to see if the tab is a frmDockable
     Allow := true;
-    if ((Client is TfrmDockable) and TfrmDockable(Client).Docked)then begin
+    if ((Client is TfrmDockable) {and TfrmDockable(Client).Docked})then begin
         setWindowCaption('');
         _undocking := true;
         CloseDocked(TfrmDockable(Client));
-        TfrmDockable(Client).Docked := false;
         TfrmDockable(Client).OnFloat();
         _undocking := false;
     end;
@@ -441,19 +468,15 @@ var
     i: integer;
 begin
     Result := nil;
-    try
-        // Find the visible tab as we cannot use ActivePage reliably with hidden tabs
-
-        for i := 0 to AWTabControl.PageCount - 1 do begin
-            if (AWTabControl.Pages[i].Visible) then begin
-                top := getTabForm(AWTabControl.Pages[i]);
-                if ((top is TfrmDockable) and (TfrmDockable(top).Docked)) then begin
-                    Result := TfrmDockable(top);
-                    exit;
-                end;
+    // Find the visible tab as we cannot use ActivePage reliably with hidden tabs
+    for i := 0 to AWTabControl.PageCount - 1 do begin
+        if (AWTabControl.Pages[i].Visible) then begin
+            top := getTabForm(AWTabControl.Pages[i]);
+            if ((top is TfrmDockable) and (TfrmDockable(top).Docked)) then begin
+                Result := TfrmDockable(top);
+                exit;
             end;
         end;
-    finally
     end;
 end;
 
@@ -464,17 +487,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockWindow.OnNotify(frm: TForm; notifyEvents: integer);
+procedure TfrmDockWindow.OnNotify(frm: TfrmDockable; notifyEvents: integer);
 begin
-    //if dockmanager is being notified directly or the given form is docked
-    //handle bring to front and flash
-    if ((frm = nil) or (frm = Self) or
-        ((frm is TfrmDockable) and (TfrmDockable(frm).Docked))) then begin
-        if ((notifyEvents and notify_front) > 0) then
-             bringToFront()
-        else if ((notifyEvents and notify_flash) > 0) then
-            Self.Flash();
-    end;
+    if ((notifyEvents and notify_front) > 0) then
+        bringDockedToTop(frm);
+        
+    //stateform will flash and bring dock manager to front as needed
+    inherited OnNotify(notifyEvents);
 end;
 
 {---------------------------------------}
@@ -509,7 +528,18 @@ begin
             end;
 
             // Deal with msg count
-            item.awItem.count := frm.UnreadMsgCount;
+            if (item.awItem.count <> frm.UnreadMsgCount) then
+            begin
+                item.awItem.count := frm.UnreadMsgCount;
+                if (aw.currentListSort = ssUnread) then
+                begin
+                    // If this changed, only need to resort
+                    // on unread sort option.
+                    // This helps with eleminating unneccessary
+                    // redraws
+                    aw.needToSortList := true;
+                end;
+            end;
 
             // Deal with change of nickname
             aw.SetItemName(item.awItem, frm.Caption, frm.Hint);
@@ -523,13 +553,12 @@ begin
                 aw.activateItem(item.awItem);
             end;
 
-            aw.itemChangeUpdate();
-            checkFlash();
+            aw.itemChangeUpdate(item);
             _needToBeShowingCheck();
         end;
 
         // Make sure right color button is showing on contact list toolbar
-        changeGotoAcitivityWindowButton();
+        changeGotoActivityWindowButton();
     end;
 end;
 
@@ -553,6 +582,8 @@ end;
 
 {---------------------------------------}
 function TfrmDockWindow.ShowDockManagerWindow(Show: boolean = true; BringWindowToFront: boolean = true): boolean;
+var
+    aoEvent: widestring;
 begin
     Result := false;
 
@@ -563,11 +594,23 @@ begin
 
         // Make sure that if we are starting up and we are supposed to
         // start minimized to systray, then be sure to be minimized to systray
-        if ((StateForm.restoringDesktopFlag) and
+        aoEvent := TAutoOpenEventManager.GetAutoOpenEvent();
+        if (((aoEvent = AOE_STARTUP) or (aoEvent = AOE_AUTHED)) and
             (not frmExodus.Showing)) then begin
-            Self.close();
+            close();
         end;
         Result := true;
+
+        // Check to see if we are on screen and if not,
+        // bring back to screen
+        if (((Self.Top >= Screen.DesktopRect.Bottom) or
+            (Self.Left >= Screen.DesktopRect.Right) or
+            ((Self.Top + Self.Height) <= Screen.DesktopRect.Top) or
+            ((Self.Left + Self.Width) <= Screen.DesktopRect.Left)) and
+            (not frmExodus.dockWindowGlued)) then
+        begin
+            Self.MakeFullyVisible();
+        end;
     end
     else if (not Show) then begin
         close(); //hide, sets Showing property to false
@@ -615,16 +658,6 @@ var
     holdSheet: TTntTabSheet;
 begin
     holdSheet:=  TTntTabSheet(AWTabControl.ActivePage);
-
-    if ((idx >= 0) and
-        (idx < AWTabControl.PageCount)) then begin
-        AWTabControl.Pages[idx].TabVisible := false;
-    end
-    else begin
-        for i := 0 to AWTabControl.PageCount - 1 do begin
-            AWTabControl.Pages[i].TabVisible := false
-        end;
-    end;
 
     if (holdSheet <> nil) then begin
         AWTabControl.ActivePage := holdSheet;
@@ -675,7 +708,6 @@ var
     frm: TfrmDockable;
 begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
-        checkFlash();
         if (_dockState = dsDocked) then begin
             frm := getTopDocked();
             if (frm <> nil) and (frm.visible) then begin
@@ -683,7 +715,6 @@ begin
             end;
         end;
     end;
-
     inherited;
 end;
 
@@ -751,11 +782,10 @@ begin
         //we need to hide/de-align/set their relative positions/size them and show them
         pnlActivityList.align := alNone;
         splAW.align := alNone;
-        AWTabControl.align := alNone;
 
         splAW.Visible := false; //hide this first or will expand and throw widths off
         pnlActivityList.Visible := false;
-        AWTabControl.Visible := false;
+        pnlTabControl.Visible := false;
 
         //Obtain the width of the monitor
         //If we exceed the width of the monitor,
@@ -777,13 +807,12 @@ begin
         splAW.Left := pnlActivityList.BoundsRect.Right + 1;
         splAW.Align := alLeft;
         splAW.Visible := true;
-        AWTabControl.Left := pnlActivityList.BoundsRect.Right + 4;
-        AWTabControl.Align := alClient;
-        AWTabControl.Visible := true;
+        pnlTabControl.Left := pnlActivityList.BoundsRect.Right + 4;
+        pnlTabControl.Align := alClient;
+        pnlTabControl.Visible := true;
 
         Self.DockSite := false;
         pnlActivityList.DockSite := false;
-        AWTabControl.DockSite := true;
 
         _dockState := dsDocked;
 
@@ -809,13 +838,12 @@ begin
     //if tabs were being shown, save tab size
     _saveDockWidths();
     if (_dockState <> dsUnDocked) then begin
-        AWTabControl.Visible := false;
+        pnlTabControl.Visible := false;
         pnlActivityList.Align := alClient;
         splAW.Visible := false;
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ACTIVITY_WINDOW_WIDTH);
         Self.DockSite := true;
         pnlActivityList.DockSite := true;
-        AWTabControl.DockSite := false;
 
         _dockState := dsUnDocked;
 
@@ -857,52 +885,6 @@ begin
                    ' - ' +
                    txt;
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmDockWindow.timFlasherTimer(Sender: TObject);
-begin
-    inherited;
-    // Flash the window
-    FlashWindow(Self.Handle, true);
-end;
-
-{---------------------------------------}
-procedure TfrmDockWindow.Flash();
-begin
-    If (Self.Active and not MainSession.Prefs.getBool('notify_docked_flasher')) then begin
-        timFlasher.Enabled := false;
-        exit; //0.9.1.0 behavior
-    end;
-    // flash window
-    if (not Self.Showing) then begin
-        Self.WindowState := wsMinimized;
-        Self.Visible := true;
-        if (_canShowWindow()) then begin
-            ShowWindow(Handle, SW_SHOWMINNOACTIVE);
-        end;
-    end;
-    if MainSession.Prefs.getBool('notify_flasher') then begin
-        timFlasher.Enabled := true;
-    end
-    else begin
-        timFlasher.Enabled := false;
-        timFlasherTimer(Self);
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmDockWindow.checkFlash();
-begin
-    //notify_docked_flasher is a badly named pref that controls
-    //whether or not the docking window should continue to flash until
-    //every "notified" docked window has been brought to the front.
-    //This means walking the list and checking the IsNotifying flag
-    //however... this functionality will drive you crazy. It is
-    //turned off and invisible in Exodus' defaults.xml
-//    if (timFlasher.Enabled and
-//       (not MainSession.Prefs.getBool('notify_docked_flasher'))) then
-        timFlasher.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -1074,7 +1056,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockWindow.changeGotoAcitivityWindowButton();
+procedure TfrmDockWindow.changeGotoActivityWindowButton();
 const
     ALBUTTON_NORMAL = 8;
     ALBUTTON_UNREAD = 9;

@@ -1,13 +1,13 @@
 <exodus version="0.9">
   <prefs>
     <!-- Use the following tags to brand default preference values. These
-         sections control what is shown in the clients preference dialog. -->
+		 sections control what is shown in the clients preference dialog. -->
     <!-- Preference Screens -->
-    <show_system_preferences value="1"/>
+	<show_system_preferences value="1"/>
     <show_contact_list_preferences value="1"/>
     <show_display_preferences value="1"/>
     <show_notification_preferences value="1"/>
-    <show_message_preferences value="1"/>
+	<show_message_preferences value="1"/>
     <show_auto_away_preferences value="1"/>
     <show_presence_preferences value="1"/>
     <show_hot_key_preferences value="1"/>
@@ -52,8 +52,7 @@
     <inline_status value="0" control="chkInlineStatus" state="rw"/>
     <displayname_profile_enabled value='1' control="chkUseProfileDN" state="rw"/>
     <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
-    <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
-    <roster_only_online value="1" state="rw"/>
+	<roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
     <roster_tabs control="btnManageTabs" state="rw"/>
     <!-- timeout values are in milliseconds -->
     <roster_hint_delay value="750"/>
@@ -338,7 +337,7 @@
     <http_proxy_port value="8080" control="txtProxyPort" state="rw">
       <control name="lblProxyPort"/>
     </http_proxy_port>
-    <http_proxy_password control="txtProxyPassword" state="rw">
+	<http_proxy_password control="txtProxyPassword" state="rw">
       <control name="lblProxyPassword"/>
     </http_proxy_password>
     <http_proxy_user control="txtProxyUsername" state="rw">
@@ -352,6 +351,7 @@
 
     <event_width value="400"/>
     <roster_width value="215"/>
+    <roster_height value="550"/>
 
     <!-- file xfer Options -->
     <xfer_path control="txtXferPath" state="rw">
@@ -435,6 +435,7 @@
     <!-- HISTORY SEARCH WINDOW PREFS -->
     <search_history_primary_bg_color value="$ffffff"/>
     <search_history_alternate_bg_color value="$efedeb"/>
+    <search_history_sort value="3"/>
     <!-- /HISTORY SEARCH WINDOW PREFS -->
 
     <!-- unfiled -->
@@ -444,7 +445,8 @@
     <browse_view value="0"/>
     <fade_limit value="100"/>
     <profile_active value="0"/>
-    <wrap_input value="1"/>
+	<wrap_input value="1"/>
+	<roster_only_online value="1"/>
     <vcard_iq_timeout value="90"/>
     <vcard_cache_ttl value="14"/>
 
@@ -493,7 +495,7 @@
     <brand_profile_show_accountdetails control="imgAcctDetails" value="true"/>
     <brand_profile_show_connection control="imgConnection" value="true"/>
     <brand_profile_show_proxy control="imgProxy" value="true"/>
-    <brand_profile_show_httppolling control="imgHttpPolling" value="true"/>
+    <brand_profile_show_httppolling control="imgHttpPolling" value="false"/>
     <brand_profile_show_advanced control="imgAdvanced" value="true"/>
     
     <brand_profile_allow_rename value="1"/>
@@ -523,10 +525,10 @@
     <brand_profile_socks_user control="pnlSocksUsername" />
     <brand_profile_socks_password control="pnlSocksPassword" />
 
-    <brand_profile_http_allowpolling control="pnlPolling" value="true"/>
-    <brand_profile_http_poll control="pnlTime" value="1000"/>
-    <brand_profile_http_url control="pnlURL" />
-    <brand_profile_num_poll_keys control="pnlKeys" value="256"/>
+    <brand_profile_http_allowpolling control="pnlPolling" state="inv" value="false"/>
+    <brand_profile_http_poll control="pnlTime" state="inv" value="1000"/>
+    <brand_profile_http_url control="pnlURL" state="inv" />
+    <brand_profile_num_poll_keys control="pnlKeys" state="inv" value="256"/>
 
     <brand_profile_resource control="pnlResource" value="Exodus"/>
     <brand_profile_resource_list>

@@ -3,31 +3,29 @@ inherited frmJoinRoom: TfrmJoinRoom
   Top = 151
   BorderStyle = bsSizeable
   Caption = 'Join Room'
-  ClientHeight = 458
-  ClientWidth = 502
+  ClientHeight = 372
+  ClientWidth = 408
   DefaultMonitor = dmMainForm
   OldCreateOrder = True
   Position = poScreenCenter
   OnClose = FormClose
   OnDestroy = FormDestroy
-  ExplicitWidth = 510
-  ExplicitHeight = 498
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitHeight = 406
+  PixelsPerInch = 96
+  TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Top = 407
-    Width = 502
+    Top = 331
+    Width = 408
     TabOrder = 2
-    ExplicitTop = 407
-    ExplicitWidth = 502
+    ExplicitTop = 331
+    ExplicitWidth = 408
     inherited Bevel1: TBevel
-      Width = 502
-      ExplicitWidth = 502
+      Width = 408
+      ExplicitWidth = 408
     end
     inherited Panel3: TPanel
-      Left = 185
-      Height = 45
-      ExplicitLeft = 185
+      Left = 151
+      ExplicitLeft = 151
       inherited btnBack: TTntButton
         Enabled = False
         OnClick = btnBackClick
@@ -43,88 +41,88 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
   end
   inherited Panel1: TPanel
-    Width = 502
-    ExplicitWidth = 502
+    Width = 408
+    ExplicitWidth = 408
     inherited Bevel2: TBevel
-      Width = 502
-      ExplicitWidth = 502
+      Width = 408
+      ExplicitWidth = 408
     end
     inherited lblWizardTitle: TTntLabel
-      Width = 270
+      Width = 219
       Caption = 'Join or Browse for a Conference Room'
-      ExplicitWidth = 270
+      ExplicitWidth = 219
     end
     inherited lblWizardDetails: TTntLabel
       Caption = 'Specify or browse for a conference room to join or create.'
     end
     inherited Image1: TImage
-      Left = 451
-      ExplicitLeft = 452
+      Left = 367
+      ExplicitLeft = 366
     end
   end
   inherited Tabs: TPageControl
-    Width = 502
-    Height = 333
+    Width = 408
+    Height = 271
     ActivePage = TabSheet2
     TabOrder = 0
-    ExplicitWidth = 502
-    ExplicitHeight = 333
+    ExplicitWidth = 408
+    ExplicitHeight = 271
     inherited TabSheet1: TTabSheet
       ExplicitLeft = 4
-      ExplicitTop = 30
-      ExplicitWidth = 494
-      ExplicitHeight = 299
+      ExplicitTop = 27
+      ExplicitWidth = 400
+      ExplicitHeight = 240
       object Label2: TTntLabel
-        Left = 31
-        Top = 161
-        Width = 149
-        Height = 16
+        Left = 25
+        Top = 131
+        Width = 125
+        Height = 13
         Caption = 'Conference Room Server:'
       end
       object Label1: TTntLabel
-        Left = 31
-        Top = 196
-        Width = 144
-        Height = 16
+        Left = 25
+        Top = 159
+        Width = 120
+        Height = 13
         Caption = 'Conference Room Name:'
       end
       object lblPassword: TTntLabel
-        Left = 31
-        Top = 231
-        Width = 197
-        Height = 16
+        Left = 25
+        Top = 188
+        Width = 162
+        Height = 13
         Caption = 'Password to join room if required:'
       end
       object Label3: TTntLabel
-        Left = 7
-        Top = 10
-        Width = 80
-        Height = 16
+        Left = 6
+        Top = 8
+        Width = 66
+        Height = 13
         Caption = 'My Nickname:'
       end
       object TntLabel1: TTntLabel
-        Left = 10
-        Top = 71
-        Width = 424
-        Height = 16
+        Left = 8
+        Top = 58
+        Width = 356
+        Height = 13
         Caption = 
           'If a new conference room is created you may be prompted to confi' +
           'gure it.'
       end
       object Bevel3: TBevel
-        Left = 5
-        Top = 121
-        Width = 481
-        Height = 6
+        Left = 4
+        Top = 98
+        Width = 391
+        Height = 5
         Shape = bsTopLine
       end
       object txtServer: TTntComboBox
-        Left = 234
-        Top = 162
-        Width = 234
-        Height = 24
+        Left = 190
+        Top = 132
+        Width = 190
+        Height = 21
         Hint = 'Select the conference room server to use.'
-        ItemHeight = 16
+        ItemHeight = 13
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
@@ -132,34 +130,34 @@ inherited frmJoinRoom: TfrmJoinRoom
         OnChange = txtServerChange
       end
       object txtRoom: TTntEdit
-        Left = 234
-        Top = 196
-        Width = 234
-        Height = 24
+        Left = 190
+        Top = 159
+        Width = 190
+        Height = 21
         TabOrder = 5
         OnChange = txtRoomChange
       end
       object txtPassword: TTntEdit
-        Left = 234
-        Top = 229
-        Width = 234
-        Height = 24
+        Left = 190
+        Top = 186
+        Width = 190
+        Height = 21
         PasswordChar = '*'
         TabOrder = 6
       end
       object txtNick: TTntEdit
-        Left = 161
-        Top = 7
-        Width = 234
-        Height = 24
+        Left = 131
+        Top = 6
+        Width = 190
+        Height = 21
         TabOrder = 0
         OnChange = txtNickChange
       end
       object optSpecify: TTntRadioButton
-        Left = 5
-        Top = 134
-        Width = 492
-        Height = 21
+        Left = 4
+        Top = 109
+        Width = 400
+        Height = 17
         Caption = 'Join or Create the following conference room:'
         Checked = True
         TabOrder = 3
@@ -167,28 +165,28 @@ inherited frmJoinRoom: TfrmJoinRoom
         OnClick = optSpecifyClick
       end
       object optBrowse: TTntRadioButton
-        Left = 4
-        Top = 267
-        Width = 464
-        Height = 21
+        Left = 3
+        Top = 217
+        Width = 377
+        Height = 17
         Caption = 'Browse servers for a conference room to join'
         TabOrder = 7
         OnClick = optSpecifyClick
       end
       object chkDefaultConfig: TTntCheckBox
-        Left = 31
-        Top = 90
-        Width = 418
-        Height = 24
+        Left = 25
+        Top = 73
+        Width = 340
+        Height = 20
         Caption = 'Always accept default conference room configuration.'
         TabOrder = 2
         WordWrap = True
       end
       object chkUseRegisteredNickname: TTntCheckBox
-        Left = 31
-        Top = 42
-        Width = 437
-        Height = 21
+        Left = 25
+        Top = 34
+        Width = 355
+        Height = 17
         Caption = 'Use registered nickname if available.'
         TabOrder = 1
       end
@@ -198,18 +196,18 @@ inherited frmJoinRoom: TfrmJoinRoom
       ImageIndex = 1
       object lstRooms: TTntListView
         Left = 0
-        Top = 69
-        Width = 494
-        Height = 230
+        Top = 56
+        Width = 400
+        Height = 184
         Align = alClient
         Columns = <
           item
             Caption = 'Conference Room'
-            Width = 185
+            Width = 150
           end
           item
             Caption = 'Server'
-            Width = 185
+            Width = 150
           end>
         OwnerData = True
         ReadOnly = True
@@ -227,22 +225,23 @@ inherited frmJoinRoom: TfrmJoinRoom
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 494
-        Height = 69
+        Width = 400
+        Height = 56
         Align = alTop
         BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 0
         object lblFetch: TTntLabel
           Left = 2
-          Top = 5
-          Width = 257
-          Height = 16
+          Top = 4
+          Width = 215
+          Height = 13
           Cursor = crHandPoint
           Caption = 'Show conference rooms found on this server'
         end
         object aniWait: TAnimate
-          Left = 362
-          Top = 5
+          Left = 294
+          Top = 4
           Width = 80
           Height = 50
           CommonAVI = aviFindFolder
@@ -250,12 +249,12 @@ inherited frmJoinRoom: TfrmJoinRoom
           Visible = False
         end
         object txtServerFilter: TTntComboBox
-          Left = 23
-          Top = 25
-          Width = 323
-          Height = 24
+          Left = 19
+          Top = 20
+          Width = 262
+          Height = 21
           Hint = 'Select the conference room server to use.'
-          ItemHeight = 16
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
@@ -263,10 +262,10 @@ inherited frmJoinRoom: TfrmJoinRoom
           OnSelect = txtServerFilterSelect
         end
         object btnFetch: TTntButton
-          Left = 364
-          Top = 22
-          Width = 130
-          Height = 31
+          Left = 296
+          Top = 18
+          Width = 105
+          Height = 25
           Caption = 'Refresh'
           TabOrder = 1
           OnClick = btnFetchClick

@@ -1,23 +1,24 @@
-unit RT_XIMConversion;
 {
-    Copyright 2001, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit RT_XIMConversion;
+
 {
     Convert rich text to and from xhtml-im.
 }
@@ -227,11 +228,7 @@ end;
 {--------------------------------------}
 function getFontStyle(f: TFont): WideString;
 begin
-    //Result := 'font-size:' + getRelativeSize(f.Size) + ';';
-    Result := 'font-size:' + IntToStr(f.Size) + 'pt;';
-    Result := Result + 'ex-font-size:' + IntToStr(f.Size) + ';';
-    Result := Result + 'font-family:' + f.Name + ';';
-    Result := Result + 'color:' + getRGBStr(f.Color) + ';';
+    Result := 'color:' + getRGBStr(f.Color) + ';';
 end;
 
 function getStyleAttrib(f: TFont): WideString;
@@ -239,6 +236,7 @@ begin
     Result := getStyleStyle(f);
     if (Result <> '') then
         Result := ';' + Result;
+
     Result := Result + getFontStyle(f);
 end;
 
@@ -256,13 +254,6 @@ begin
         Result := getStyleAttrib(childFont)
     else begin
         Result := '';
-        if (childFont.Name <> parentFont.Name) then
-            Result := Result + 'font-family:' + childFont.Name + ';';
-        if (childFont.Size <> parentFont.Size) then begin
-            //Result := Result + 'font-size:' + getRelativeSize(childFont.Size) + ';';
-            Result := Result + 'font-size:' + IntToStr(childFont.Size) + 'pt;';
-            Result := Result + 'ex-font-size:' + IntToStr(childFont.Size) + ';';
-        end;
         if (childFont.Color <> parentFont.Color) then
             Result := Result + 'color:' + getRGBStr(childFont.Color) + ';';
         if (childFont.Style <> parentFont.style) then begin
@@ -345,7 +336,6 @@ begin
     if (tstr[Length(tstr)] = ';') then
       setLength(tstr, Length(tstr) - 1);
 
-    outerTag.setAttribute('style', tstr);
     currTag := outerTag;
     currSelPos := 1;
     currCData := '';
