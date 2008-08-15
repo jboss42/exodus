@@ -585,6 +585,7 @@ type
     procedure SetCapacity(NewCapacity: Integer); override;
     procedure SetUpdateState(Updating: Boolean); override;
     procedure SetLanguage(Value: LCID); override;
+    function BSFind(const S: WideString; var Index: Integer): Boolean; virtual;
   public
     destructor Destroy; override;
 
@@ -5045,7 +5046,7 @@ function TWideStringList.Add(const S: WideString): Integer;
 begin
   if not Sorted then Result := FCount
                 else
-    if Find(S, Result) then
+    if BSFind(S, Result) then
       case Duplicates of
         dupIgnore:
           Exit;
@@ -5132,6 +5133,14 @@ end;
 //----------------------------------------------------------------------------------------------------------------------
 
 function TWideStringList.Find(const S: WideString; var Index: Integer): Boolean;
+begin
+    Index := IndexOf(S);
+    Result := (Index <> -1);
+end;
+
+//----------------------------------------------------------------------------------------------------------------------
+
+function TWideStringList.BSFind(const S: WideString; var Index: Integer): Boolean;
 
 var
   L, H, I, C: Integer;
@@ -5212,11 +5221,11 @@ end;
 //----------------------------------------------------------------------------------------------------------------------
 
 function TWideStringList.IndexOf(const S: WideString): Integer;
-
 begin
-  if not Sorted then Result := inherited IndexOf(S)
-                else
-    if not Find(S, Result) then Result := -1;
+  if not Sorted then
+    Result := inherited IndexOf(S)
+  else if not BSFind(S, Result) then
+    Result := -1;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
