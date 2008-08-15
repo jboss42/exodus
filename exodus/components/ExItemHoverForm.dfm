@@ -4,12 +4,13 @@ inherited ExItemHoverForm: TExItemHoverForm
   Caption = 'Display Name'
   ClientHeight = 193
   ClientWidth = 260
+  PopupMode = pmExplicit
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy
   OnMouseEnter = TntFormMouseEnter
   OnMouseLeave = TntFormMouseLeave
   ExplicitWidth = 266
-  ExplicitHeight = 217
+  ExplicitHeight = 219
   PixelsPerInch = 96
   TextHeight = 13
   object HoverHide: TTimer

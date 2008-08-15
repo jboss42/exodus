@@ -1,23 +1,24 @@
-unit Jabber1;
 {
-    Copyright 2001, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit Jabber1;
+
 
 interface
 
@@ -477,9 +478,11 @@ type
     _glueRange: integer;
     _hiddenIEMsgList: TfIEMsgList;
     _mnuRegisterUD: TTntMenuItem;
+    _PageControlSaveWinProc: TWndMethod;
+
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
-
+    procedure _PageControlNewWndProc(var Msg: TMessage);
     procedure SaveBands();
     procedure RestoreBands();
 
@@ -665,6 +668,7 @@ published
     function AppKeyDownHook(var Msg: TMessage): Boolean;
 
     property dockManager:IExodusDockManager read _dockManager;
+    property dockWindowGlued: boolean read _dockWindowGlued;
   end;
 
   {
@@ -834,7 +838,8 @@ uses
     HistorySearch,
     FrmUtils,
     COMExodusControlSite, //TExodusControlSite
-    ExActionCtrl;
+    ExActionCtrl,
+    ActivityWindow;
 
 {$R *.DFM}
 
@@ -1004,6 +1009,12 @@ begin
     // Catch some of the important windows msgs
     // so that we can handle minimizing & stuff properly
     case (msg.CmdType and $FFF0) of
+    SC_MAXIMIZE: begin
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, Self.ClientWidth);
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_HEIGHT, Self.ClientHeight);
+        inherited;
+        msg.Result := 0;
+    end;
     SC_MINIMIZE: begin
         _hidden := true;
         _was_max := (Self.WindowState = wsMaximized);
@@ -1145,7 +1156,7 @@ procedure TfrmExodus.WMActivate(var msg: TMessage);
     if (Msg.WParamLo <> WA_INACTIVE) then begin
 //        outputdebugMsg('TfrmExodus.WMActivate');
 
-        Notify.StopFlash(Self);
+//        StopFlash(Self);
         stopTrayAlert();
 
         if ((_dockWindow <> nil) and
@@ -1181,6 +1192,7 @@ var
             Result := '&' + Result;
         end;
     end;
+ 
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
 
@@ -1418,6 +1430,8 @@ begin
     _mnuRegisterUD := nil;
 
     ExCOMRoster.AddPredefinedMenu('Status', popPresence);
+    _PageControlSaveWinProc := tbsView.WindowProc;
+    tbsView.WindowProc := _PageControlNewWndProc;    
 end;
 
 {---------------------------------------}
@@ -1458,14 +1472,24 @@ begin
     // figure out the width of the msg queue
     tab_w := MainSession.Prefs.getInt(P_TAB_WIDTH);
     roster_w := MainSession.Prefs.getInt(P_ROSTER_WIDTH);
+
+    // Check to see if roster was closed in Maximized state
+    // negative width means closed maximized
+    if (roster_w < 0) then begin
+        roster_w := Abs(roster_w);
+        Self.ClientWidth := roster_w;
+        Self.ClientHeight := MainSession.Prefs.getInt(P_ROSTER_HEIGHT);
+        WindowState := wsMaximized;
+    end;
+
     //set to defaults if we don't have widths
     if ((tab_w <= 0) or (roster_w <= 0)) then begin
         tab_w := 2 * (Self.ClientWidth div 3);
         roster_w := Self.ClientWidth - tab_w - 3;
         MainSession.Prefs.setInt(P_TAB_WIDTH, tab_w);
         MainSession.Prefs.setInt(P_ROSTER_WIDTH, roster_w);
+        MainSession.Prefs.setInt(P_ROSTER_HEIGHT, Self.ClientHeight);
     end;
-
 
     updateLayoutPrefChange();
     ShowLogin();
@@ -1487,9 +1511,6 @@ begin
     // window async since it's a modal dialog.
     with MainSession.Prefs do begin
         if (ExStartup.debug) then begin
-            if (_dockWindow <> nil) then begin
-                getDockManager().ShowDockManagerWindow(true, false);
-            end;
             ShowDebugForm(false);
         end;
         if (ExStartup.auto_login) then begin
@@ -1836,9 +1857,6 @@ begin
             frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width');
         end;
 
-        _profileScreenLastWidth := Self.Width;
-        Self.Width := MainSession.Prefs.getInt('roster_width');
-
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
@@ -1853,6 +1871,10 @@ begin
 
         timAutoAway.Enabled := false;
         CloseSubscribeWindows();
+
+        // Close whatever rooms we have
+        CloseAllRooms();
+        CloseAllChats();
 
         Self.Caption := getAppInfo().Caption;
         setTrayInfo(Self.Caption);
@@ -1910,10 +1932,6 @@ begin
             frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
             frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width');
         end;
-
-        if (_profileScreenLastWidth > 0) then
-            //Didn't have a docked window at login so restore to width at that time.
-            Self.Width := _profileScreenLastWidth;
     end
     else if event = '/session/commtimeout' then begin
         timAutoAway.Enabled := false;
@@ -2297,9 +2315,6 @@ begin
         sExodusCWPHook := 0;
     end;
 
-    // Close whatever rooms we have
-    CloseAllRooms();
-    CloseAllChats();
     CloseDebugForm();
 
     // Unload all of the remaining plugins
@@ -2373,7 +2388,16 @@ begin
     Application.OnException := CatchersMit.gotExceptionNoDlg;
 
     //Save our current width...
-    MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, Self.ClientWidth);
+    if (WindowState <> wsMaximized) then begin
+        // not maximized so go ahead and save our current width
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, Self.ClientWidth);
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_HEIGHT, Self.ClientHeight);
+    end
+    else begin
+        // we are maxmized so pull the last width, and save it as a negative to indicate Maximzed.
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, (-1 * Abs(MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH))));
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_HEIGHT, MainSession.Prefs.getInt(PrefController.P_ROSTER_HEIGHT));
+    end;
 
     // If we are not already disconnected, then
     // disconnect. Once we successfully disconnect,
@@ -2473,7 +2497,6 @@ begin
         if (frmExodus.Height < frmExodus.Constraints.MinHeight) then
             frmExodus.Height := frmExodus.Constraints.MinHeight;
     end;
-//    MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, frmExodus.Width);
 end;
 
 {---------------------------------------}
@@ -2983,8 +3006,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
-    StopFlash(Self); 
-    StopTrayAlert();
+    StopFlash(Self);
+//    StopTrayAlert();
 end;
 
 
@@ -3183,6 +3206,10 @@ begin
             StrDisposeW(Value);
         end;
     end;
+
+   tbsView.WindowProc := _PageControlSaveWinProc;
+   _PageControlSaveWinProc := nil;
+
     Exsession.ExCOMToolbar := nil;
     Exsession.COMToolbar := nil;
 end;
@@ -3532,7 +3559,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
-//    Notify.StopFlash(Self);
     StopTrayAlert();
 end;
 
@@ -3595,7 +3621,7 @@ procedure StopTrayAlert();
 begin
     //events might get this called pretty early
     if (frmExodus = nil) or (frmExodus.timTrayAlert = nil) then exit;
-    
+
     if (frmExodus.timTrayAlert.Enabled) then begin
         frmExodus.timTrayAlert.Enabled := false;
         frmExodus._tray_notify := false;
@@ -3723,7 +3749,9 @@ end;
 
 procedure TfrmExodus.mnuWindows_CloseAllClick(Sender: TObject);
 begin
+    GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/close-all-windows', nil);
+    GetActivityWindow().enableListUpdates(true);
 end;
 
 {---------------------------------------}
@@ -4002,11 +4030,10 @@ begin
     if MainSession.Active then begin
         _logoff := true;
         TAutoOpenEventManager.onAutoOpenEvent('disconnected');
-        CloseAllRooms();
-        CloseAllChats();
-        if (not isDebugShowing()) then begin
-            getDockManager().ShowDockManagerWindow(false, false);
-        end;
+        //dock manager should close with last window closing
+//        if (not isDebugShowing()) then begin
+//            getDockManager().ShowDockManagerWindow(false, false);
+//        end;
         MainSession.Disconnect();
     end;
 
@@ -4520,7 +4547,10 @@ begin
     //if tabs were being shown, save tab size
     _enforceConstraints := false;
     _noMoveCheck := true;
-    Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+    if (WindowState <> wsMaximized) then begin
+        Self.ClientWidth := Abs(MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH));
+        Self.ClientHeight := Abs(MainSession.Prefs.getInt(PrefController.P_ROSTER_HEIGHT));
+    end;
     _noMoveCheck := false;
     Self.DockSite := false;
 
@@ -5121,10 +5151,18 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmExodus._PageControlNewWndProc(var Msg: TMessage);
+begin
+  if(Msg.Msg=TCM_ADJUSTRECT) then
+  begin
+      _PageControlSaveWinProc(Msg);
+      PRect(Msg.LParam)^.Top:=PRect(Msg.LParam)^.Top-6;
+  end
+  else
+      _PageControlSaveWinProc(Msg);
 
-
-
-
+end;
 
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause

@@ -544,9 +544,9 @@ inherited frmPrefRoster: TfrmPrefRoster
         FocusControl = txtDefaultNick
       end
       object txtDefaultNick: TTntEdit
-        Left = 231
+        Left = 171
         Top = 0
-        Width = 200
+        Width = 260
         Height = 24
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
@@ -573,15 +573,15 @@ inherited frmPrefRoster: TfrmPrefRoster
       object lblDefaultGrp: TTntLabel
         Left = 0
         Top = 4
-        Width = 225
+        Width = 165
         Height = 16
-        Caption = 'Default &group for new contact list items'
+        Caption = 'Default &group for new items:'
         FocusControl = txtDefaultGrp
       end
       object txtDefaultGrp: TTntComboBox
-        Left = 231
+        Left = 171
         Top = 0
-        Width = 200
+        Width = 260
         Height = 24
         Anchors = [akLeft, akTop, akRight]
         ItemHeight = 16

@@ -1,23 +1,24 @@
-unit HistorySearch;
 {
-    Copyright 2008, Estate of Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit HistorySearch;
+
 
 interface
 
@@ -206,6 +207,7 @@ type
     procedure _RemoveAnyJID(removeFromContact: boolean = true; removeFromRoom: boolean = true);
     procedure _DropSearchObj();
     procedure _DropResultObj();
+    procedure _setResultListSortImage();
 
     // Properties
     property _MsgList: TfBaseMsgList read _getMsgList;
@@ -830,9 +832,16 @@ begin
 
     _ResultList := TWidestringList.Create();
 
-    _resultSort := rsJIDAsc;
-    lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_up');
-    lstResults.Columns.Items[1].ImageIndex := -1;
+    case (MainSession.Prefs.getInt('search_history_sort')) of
+        0: _resultSort := rsJIDAsc;
+        1: _resultSort := rsJIDDec;
+        2: _resultSort := rsDateAsc;
+        3: _resultSort := rsDateDec;
+        4: _resultSort := rsMsgAsc;
+        5: _resultSort := rsMsgDec;
+        else _resultSort := rsDateDec;
+    end;
+    _setResultListSortImage();
 
     _setWindowCaption(_('History'));
 
@@ -1116,16 +1125,18 @@ procedure TfrmHistorySearch.lstResultsColumnClick(Sender: TObject;
 begin
     inherited;
 
+    // remove/reset sort
+    // needed to trigger resort
+    lstResults.SortType := stNone;
+
+    // Determine what to sort on
     if (Column = lstResults.Columns.Items[0]) then begin
         if (_resultSort = rsJIDAsc) then begin
             _resultSort := rsJIDDec;
-
         end
         else begin
             _resultSort := rsJIDAsc;
         end;
-        lstResults.SortType := stNone;
-        lstResults.SortType := stBoth;
     end
     else if (Column = lstResults.Columns.Items[1]) then begin
         if (_resultSort = rsDateAsc) then begin
@@ -1134,8 +1145,6 @@ begin
         else begin
             _resultSort := rsDateAsc;
         end;
-        lstResults.SortType := stNone;
-        lstResults.SortType := stBoth;
     end
     else if (Column = lstResults.Columns.Items[2]) then begin
         if (_resultSort = rsMsgAsc) then begin
@@ -1144,9 +1153,16 @@ begin
         else begin
             _resultSort := rsMsgAsc;
         end;
-        lstResults.SortType := stNone;
-        lstResults.SortType := stBoth;
     end;
+
+    // Change the image
+    _setResultListSortImage();
+
+    // Trigger the resort
+    lstResults.SortType := stBoth;
+
+    // Store current desired sort
+    MainSession.Prefs.setInt('search_history_sort', Ord(_resultSort));
 end;
 
 {---------------------------------------}
@@ -1161,9 +1177,6 @@ begin
 
     case _resultSort of
         rsJIDAsc: begin
-            lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_up');
-            lstResults.Columns.Items[1].ImageIndex := -1;
-            lstResults.Columns.Items[2].ImageIndex := -1;
             if (Item1.Caption > Item2.Caption) then begin
                 Compare := 1;
             end
@@ -1175,9 +1188,6 @@ begin
             end;
         end;
         rsJIDDec: begin
-            lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_down');
-            lstResults.Columns.Items[1].ImageIndex := -1;
-            lstResults.Columns.Items[2].ImageIndex := -1;
             if (Item1.Caption > Item2.Caption) then begin
                 Compare := -1;
             end
@@ -1189,9 +1199,6 @@ begin
             end;
         end;
         rsDateAsc: begin
-            lstResults.Columns.Items[0].ImageIndex := -1;
-            lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find('arrow_up');
-            lstResults.Columns.Items[2].ImageIndex := -1;
             try
                 if ((Item1.SubItems.Count > 0) and
                     (Item2.SubItems.Count > 0)) then begin
@@ -1214,9 +1221,6 @@ begin
             end;
         end;
         rsDateDec: begin
-            lstResults.Columns.Items[0].ImageIndex := -1;
-            lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find('arrow_down');
-            lstResults.Columns.Items[2].ImageIndex := -1;
             try
                 if ((Item1.SubItems.Count > 0) and
                     (Item2.SubItems.Count > 0)) then begin
@@ -1239,9 +1243,6 @@ begin
             end;
         end;
         rsMsgAsc: begin
-            lstResults.Columns.Items[0].ImageIndex := -1;
-            lstResults.Columns.Items[1].ImageIndex := -1;
-            lstResults.Columns.Items[2].ImageIndex := RosterTreeImages.Find('arrow_up');
             try
                 if ((Item1.SubItems.Count > 0) and
                     (Item2.SubItems.Count > 0)) then begin
@@ -1263,9 +1264,6 @@ begin
             end;
         end;
         rsMsgDec: begin
-            lstResults.Columns.Items[0].ImageIndex := -1;
-            lstResults.Columns.Items[1].ImageIndex := -1;
-            lstResults.Columns.Items[2].ImageIndex := RosterTreeImages.Find('arrow_down');
             try
                 if ((Item1.SubItems.Count > 0) and
                     (Item2.SubItems.Count > 0)) then begin
@@ -1524,6 +1522,7 @@ begin
             lstContacts.SelectAll();
             lstContacts.DeleteSelected();
             lstContacts.AddItem(_(ANY_JID), nil);
+            btnSearch.Enabled := true;
         end;
         exit;
     end;
@@ -1575,6 +1574,7 @@ begin
             lstRooms.SelectAll();
             lstRooms.DeleteSelected();
             lstRooms.AddItem(_(ANY_JID), nil);
+            btnSearch.Enabled := true;
         end;
         exit;
     end;
@@ -2061,6 +2061,46 @@ begin
     if (_ResultObj <> nil) then begin
         _ResultObj.ObjRelease();
         _ResultObj := nil;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._setResultListSortImage();
+const
+    IMG_ASC = 'arrow_up';
+    IMG_DEC = 'arrow_down';
+begin
+    case _resultSort of
+        rsJIDAsc: begin
+            lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find(IMG_ASC);
+            lstResults.Columns.Items[1].ImageIndex := -1;
+            lstResults.Columns.Items[2].ImageIndex := -1;
+        end;
+        rsJIDDec: begin
+            lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find(IMG_DEC);
+            lstResults.Columns.Items[1].ImageIndex := -1;
+            lstResults.Columns.Items[2].ImageIndex := -1;
+        end;
+        rsDateAsc: begin
+            lstResults.Columns.Items[0].ImageIndex := -1;
+            lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find(IMG_ASC);
+            lstResults.Columns.Items[2].ImageIndex := -1;
+        end;
+        rsDateDec: begin
+            lstResults.Columns.Items[0].ImageIndex := -1;
+            lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find(IMG_DEC);
+            lstResults.Columns.Items[2].ImageIndex := -1;
+        end;
+        rsMsgAsc: begin
+            lstResults.Columns.Items[0].ImageIndex := -1;
+            lstResults.Columns.Items[1].ImageIndex := -1;
+            lstResults.Columns.Items[2].ImageIndex := RosterTreeImages.Find(IMG_ASC);
+        end;
+        rsMsgDec: begin
+            lstResults.Columns.Items[0].ImageIndex := -1;
+            lstResults.Columns.Items[1].ImageIndex := -1;
+            lstResults.Columns.Items[2].ImageIndex := RosterTreeImages.Find(IMG_DEC);
+        end;
     end;
 end;
 

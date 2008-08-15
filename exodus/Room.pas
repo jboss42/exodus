@@ -1,22 +1,24 @@
-unit Room;
 {
-    Copyright 2002, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit Room;
+
 interface
 
 uses
@@ -48,7 +50,7 @@ type
     affil: WideString;
     hideUnavailable: Boolean;
     destructor Destroy(); override;
-  published
+
     property real_jid: WideString read getRealJID write setRealJID;
   end;
 
@@ -204,7 +206,7 @@ type
     procedure configRoom(use_default: boolean = false);
     procedure AddMemberItems(tag: TXMLTag; reason: WideString = '';
         NewRole: WideString = ''; NewAffiliation: WideString = '');
-    procedure showStatusCode(t: TXMLTag);
+    procedure showStatusCode(t: TXMLTag; r: TXMLTag = nil);
     procedure selectNicks(wsl: TWideStringList);
 
     function newRoomMessage(body: Widestring): TXMLTag;
@@ -677,18 +679,22 @@ begin
 
     // Check to see if we need to increment the
     // unread msg count
+    tmp_jid := TJabberID.Create(msg.FromJID);
     msgDelayTag := GetDelayTag(Msg.Tag);
     if ((msgDelayTag = nil) and
         (not Msg.IsMe) and
         (Msg.FromJID <> self.jid) and
-        (not IsMemberBlocked(msg.FromJID))) then begin
+        (not IsMemberBlocked(msg.FromJID)) and
+        (tmp_jid.resource <> Self.mynick)) then begin
         // We don't want to update counts on delayed (history) msgs
         // or on msgs from "me"
         // or on msgs that are "system messages"
         // or on msgs that are from blocked members
+        // or on msgs that are from my own nick
         updateMsgCount(Msg);
         updateLastActivity(Msg.Time);
     end;
+    tmp_jid.Free();
 
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
@@ -777,7 +783,7 @@ begin
                 Msg.highlight := true;
             end
             else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (msgDelayTag = nil) then
-              if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
+              if ((Msg.Priority = High) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
                 DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
                          GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
                          RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
@@ -1454,8 +1460,8 @@ begin
         t := tag.QueryXPTag(xp_muc_status);
         if ((from = jid) or (from = jid + '/' + MyNick)) then begin
             if (t <> nil) then
-                ShowStatusCode(t)
-            else if (not _pending_destroy) then begin
+                ShowStatusCode(t, tag.QueryXPTag(xp_muc_reason))
+            else if (_pending_destroy) then begin
                 // Show destroy reason
                 tmp_jid := TJabberID.Create(from);
                 //don't use display name here for room name
@@ -1616,8 +1622,8 @@ begin
         if (member.Nick = myNick) then begin
             if (i < 0) then begin
                 // this is the first time I've joined the room
+                 mtag := nil;
                 try
-                    mtag := nil;
                     if (member.Nick = myNick) then begin
                         if (member.Role = MUC_VISITOR) then
                             mtag := newRoomMessage(_(sNoVoice))
@@ -1759,12 +1765,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.showStatusCode(t: TXMLTag);
+procedure TfrmRoom.showStatusCode(t: TXMLTag; r: TXMLTag);
 var
-    msg, fmt: string;
+    msg, fmt, reason: WideString;
     scode: WideString;
 begin
     scode := t.getAttribute('code');
+    if (r <> nil) then reason := r.Data else reason := '';
 
     fmt := '';
 
@@ -1772,14 +1779,14 @@ begin
     else if (scode = '302') then fmt := _(sStatus_302)
     else if (scode = '303') then fmt := _(sStatus_303)
     else if (scode = '307') then fmt := _(sStatus_307)
-    else if (scode = '322') then fmt := _(sStatus_322)         
+    else if (scode = '322') then fmt := _(sStatus_322)
     else if (scode = '403') then msg := _(sStatus_403)
     else if (scode = '405') then msg := _(sStatus_405)
     else if (scode = '407') then msg := _(sStatus_407)
     else if (scode = '409') then msg := _(sStatus_409);
 
     if (fmt <> '') then
-        msg := WideFormat(fmt, [MyNick, '']);
+        msg := WideFormat(fmt, [MyNick, reason]);
 
     if (msg <> '') then
         MessageDlgW(msg, mtInformation, [mbOK], 0);
@@ -2824,19 +2831,20 @@ end;
 {---------------------------------------}
 function TfrmRoom._getSelectedMembers() : TXMLTag;
 var
-   rm: TRoomMember;
-   Item: TListItem;
+    rm: TRoomMember;
+    Item: TListItem;
 begin
-   if (lstRoster.SelCount < 1) then exit;
-   Result := TXMLTag.Create('jids');
+    Result := nil;
+    if (lstRoster.SelCount < 1) then exit;
+    Result := TXMLTag.Create('jids');
 
-   Item := lstRoster.Selected;
-   while (Item <> nil) do
-   begin
-       rm := TRoomMember(Item.Data);
-       Result.AddBasicTag('jid', rm.real_jid);
-       Item := lstRoster.GetNextItem(Item, sdAll, [isSelected]);
-   end;
+    Item := lstRoster.Selected;
+    while (Item <> nil) do
+    begin
+        rm := TRoomMember(Item.Data);
+        Result.AddBasicTag('jid', rm.real_jid);
+        Item := lstRoster.GetNextItem(Item, sdAll, [isSelected]);
+    end;
 end;
 
 {---------------------------------------}

@@ -252,6 +252,8 @@ inherited frmHistorySearch: TfrmHistorySearch
           Top = 19
           Width = 160
           Height = 96
+          Margins.Left = 0
+          Margins.Right = 0
           Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           MultiSelect = True
@@ -290,10 +292,12 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = btnRemoveRoomClick
         end
         object lstRooms: TTntListBox
-          Left = 0
+          Left = 5
           Top = 19
           Width = 160
           Height = 96
+          Margins.Left = 0
+          Margins.Right = 0
           Style = lbOwnerDrawFixed
           Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13

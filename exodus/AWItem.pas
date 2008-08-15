@@ -1,24 +1,25 @@
+{
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 unit AWItem;
 
-{
-    Copyright 2003, Peter Millard
 
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-}
 
 {$ifdef VER150}
     {$define INDY9}
@@ -195,6 +196,7 @@ end;
 constructor TfAWItem.Create(AOwner: TComponent);
 var
     tag: TXMLTag;
+    aoEvent: widestring;
 begin
     inherited;
 
@@ -272,7 +274,8 @@ begin
         _LowestUnreadMsgCntColorChange := Mainsession.Prefs.getInt('lowest_unread_msg_cnt_color_change');
 
         // Set timer for new window notification
-        if (not StateForm.restoringDesktopFlag) then begin
+        aoEvent := TAutoOpenEventManager.GetAutoOpenEvent();
+        if ((aoEvent <> AOE_STARTUP) and (aoEvent <> AOE_AUTHED)) then begin
             _timNewItemTimer := TTimer.Create(Self);
             if (_timNewItemTimer <> nil) then begin
                 _timNewItemTimer.Enabled := true;
@@ -296,6 +299,13 @@ begin
 
         AssignUnicodeFont(lblCount.Font);
         AssignUnicodeFont(lblName.Font);
+
+        if (_count < _LowestUnreadMsgCnt) then
+        begin
+            // Make sure count is not showing if it
+            // isn't supposed to.
+            lblCount.Caption := ' ';
+        end;
     except
     end;
 end;
@@ -407,19 +417,31 @@ begin
         lblCount.Caption := IntToStr(_count);
         if (_count >= _LowestUnreadMsgCntColorChange) then begin
             if (_priority) then begin
-                lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
+                if (lblCount.Font.Color <> _activity_window_unread_msgs_high_priority_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
+                end;
             end
             else begin
-                lblCount.Font.Color := _activity_window_unread_msgs_font_color;
+                if (lblCount.Font.Color <> _activity_window_unread_msgs_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_unread_msgs_font_color;
+                end;
             end;
             lblCount.Font.Style := lblCount.Font.Style + [fsBold];
         end
         else begin
             if (_active) then begin
-                lblCount.Font.Color := _activity_window_selected_font_color;
+                if (lblCount.Font.Color <> _activity_window_selected_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_selected_font_color;
+                end;
             end
             else begin
-                lblCount.Font.Color := _activity_window_non_selected_font_color;
+                if (lblCount.Font.Color <> _activity_window_non_selected_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_non_selected_font_color;
+                end;
             end;
             lblCount.Font.Style := lblCount.Font.Style - [fsBold];
         end;
@@ -455,21 +477,27 @@ end;
 procedure TfAWItem.mnuAWItem_CloseAllClick(Sender: TObject);
 begin
     inherited;
+    GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/close-all-windows', nil);
+    GetActivityWindow().enableListUpdates(true);
 end;
 
 {---------------------------------------}
 procedure TfAWItem.mnuAWItem_DockAllClick(Sender: TObject);
 begin
     inherited;
+    GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/dock-all-windows', nil);
+    GetActivityWindow().enableListUpdates(true);
 end;
 
 {---------------------------------------}
 procedure TfAWItem.mnuAWItem_FloatAllClick(Sender: TObject);
 begin
     inherited;
+    GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/float-all-windows', nil);
+    GetActivityWindow().enableListUpdates(true);
 end;
 
 {---------------------------------------}
@@ -503,9 +531,6 @@ begin
     if (aw <> nil) then begin
         item := aw.findItem(self);
         if (item <> nil) then begin
-            // Force window to show before docking which helps some oddities when
-            // docking a minimized window.
-            ShowWindow(item.frm.Handle, SW_RESTORE);
             item.frm.DockForm();
             aw.activateItem(Self);
         end;
@@ -540,14 +565,18 @@ end;
 {---------------------------------------}
 procedure TfAWItem._setName(val:widestring);
 begin
-    lblName.Caption := Tnt_WideStringReplace(val, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
+    if (val <> lblName.Caption) then
+    begin
+        lblName.Caption := val;
+    end;
 end;
 
 {---------------------------------------}
 procedure TfAWItem._setImgIndex(val: Integer);
 begin
     if ((val >= 0) and
-        (val < frmExodus.ImageList1.Count)) then begin
+        (val < frmExodus.ImageList1.Count)and
+        (val <> _imgIndex)) then begin
         _imgIndex := val;
         frmExodus.ImageList1.GetIcon(_imgIndex, imgPresence.Picture.Icon);
       end;
@@ -594,7 +623,10 @@ begin
     _priority := setPriority;
     if (setPriority) then begin
         _setPnlColors(_priorityStartColor, _priorityEndColor);
-        lblName.Font.Color := _activity_window_high_priority_font_color;
+        if (lblName.Font.Color <> _activity_window_high_priority_font_color) then
+        begin
+            lblName.Font.Color := _activity_window_high_priority_font_color;
+        end;
     end
     else begin
         if ((pnlAWItemGPanel.GradientProperites.startColor = _priorityStartColor) and
@@ -642,9 +674,15 @@ end;
 {---------------------------------------}
 procedure TfAWItem._setPnlColors(startColor, endColor: TColor);
 begin
-    pnlAWItemGPanel.GradientProperites.startColor := startColor;
-    pnlAWItemGPanel.GradientProperites.endColor := endColor;
-    pnlAWItemGPanel.Invalidate;
+    if (((pnlAWItemGPanel.GradientProperites.startColor <> startColor) or
+         (pnlAWItemGPanel.GradientProperites.endColor <> endColor)) and
+         GetActivityWindow().updatesEnabled) then
+    begin
+        // only change color when needed to reduce redraw time.
+        pnlAWItemGPanel.GradientProperites.startColor := startColor;
+        pnlAWItemGPanel.GradientProperites.endColor := endColor;
+        pnlAWItemGPanel.Invalidate;
+    end;
 end;
 
 

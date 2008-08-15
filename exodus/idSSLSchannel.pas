@@ -1,3 +1,22 @@
+{
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 unit idSSLSchannel;
 {$DEFINE SSPI_UNICODE}
 
@@ -130,6 +149,19 @@ type
     procedure setErrorMessage(errorType:DWORD; var error:WideString);
   end;
 
+  TIdDataBuffer = class
+  private
+    m_Data: Pointer;
+    m_Length: Cardinal;
+
+  public
+    constructor Create();
+    destructor Destroy(); override;
+
+    function Deque(len: Cardinal; limit: Cardinal; var dst): Cardinal;
+    procedure Enque(len: Cardinal; var src);
+    procedure Clear();
+  end;
   TIdSchannelIOHandlerSocket = class(TIdIOHandlerSocket)
   private
     fPassThrough: Boolean;
@@ -153,16 +185,13 @@ type
 
     mServerCert: SChannelX509;
 
-    m_ExtraData: PByte;
-    m_ExtraDataLength: Cardinal;
+    m_Buffer: TIdDataBuffer;
     skipRecv: Boolean;
 
     //
     procedure SetPassThrough(const Value: Boolean);
     procedure Init;
     procedure getServerCertificate;
-    procedure addExtraData(var dataLength: Cardinal; var ABuf);
-    procedure freeExtraData;
   protected
     procedure OpenEncodedConnection; virtual;
 
@@ -193,6 +222,7 @@ type
     procedure Close; override;
     procedure Open; override;
 
+    function Readable(AMSec: Integer = IdTimeoutDefault): Boolean; override;
     function Recv(var ABuf; ALen: integer): integer; override;
     function Send(var ABuf; ALen: integer): integer; override;
 
@@ -211,40 +241,7 @@ type
 
 implementation
 
-uses IdIOHandler;
-
-procedure TIdSchannelIOHandlerSocket.freeExtraData;
-begin
-  if (m_ExtraData <> nil) then
-  begin
-    FreeMem(m_ExtraData, m_ExtraDataLength);
-    m_ExtraData := nil;
-    m_ExtraDataLength := 0;
-  end;
-end;
-
-procedure TIdSchannelIOHandlerSocket.addExtraData(var dataLength: Cardinal; var ABuf);
-var
-  tmpDataSize: Cardinal;
-  tmpData: Pointer;
-  tmpDataPtr: PByte;
-begin
-  tmpDataSize := dataLength + m_ExtraDataLength;
-  tmpData := AllocMem(tmpDataSize);
-  try
-    Move(m_ExtraData^, tmpData^, m_ExtraDataLength);
-    freeExtraData;
-
-    tmpDataPtr := tmpData;
-    Inc(tmpDataPtr, m_ExtraDataLength);
-    Move(ABuf, tmpDataPtr^, dataLength);
-
-    dataLength := tmpDataSize;
-    Move(tmpData^, ABuf, dataLength);
-  finally
-    FreeMem(tmpData, tmpDataSize);
-  end;
-end;
+uses IdException, IdIOHandler;
 
 procedure TIdSchannelIOHandlerSocket.Open;
 begin
@@ -353,13 +350,13 @@ begin
   if (ss = SEC_E_NO_CREDENTIALS) then
   begin
     exceptionStr := 'Bad Certificate';
-    raise Exception.Create(exceptionStr);
+    raise EIdException.Create(exceptionStr);
   end;
 
   if (ss <> SEC_E_OK) then
   begin
     exceptionStr := 'Something bad happened when starting SChannel.';
-    raise Exception.Create(exceptionStr);
+    raise EIdException.Create(exceptionStr);
   end;
 
   if (mClientCert <> nil) then
@@ -408,7 +405,7 @@ begin
   firstTime := True;
   done := False;
 
-  dwSSPIFlags := ISC_REQ_ALLOCATE_MEMORY;
+  dwSSPIFlags := ISC_REQ_ALLOCATE_MEMORY or ISC_REQ_USE_SUPPLIED_CREDS;
 
   while (not done) do
   begin
@@ -422,10 +419,13 @@ begin
 
     done := ((SEC_I_CONTINUE_NEEDED <> ss) and (SEC_I_COMPLETE_AND_CONTINUE <> ss)
       and (SEC_E_INCOMPLETE_MESSAGE <> ss));
-    if (ss = SEC_E_OK) then
-    begin
+    if (ss = SEC_E_OK) then begin
       getServerCertificate;
     end;
+  end;
+
+  if (ss <> SEC_E_OK) then begin
+      raise EIdException.Create('Could not complete SSL handshaking.');
   end;
 
 end;
@@ -437,11 +437,14 @@ var
 begin
   ss := mSspiCalls.FunctionTable.QueryContextAttributesA(m_phContext,
     SECPKG_ATTR_STREAM_SIZES, @noUsed);
-  if (ss <> SEC_E_OK) then
-  begin
-    raise Exception.Create('Could not get the Chunk Size for SChannel.');
+  if (ss = SEC_E_OK) then begin
+    Result := noUsed.cbMaximumMessage;
+  end
+  else begin
+    //TODO: loggit
+    //raise Exception.Create('Could not get the Chunk Size for SChannel.');
+    result := 65536;    //max possible chunk size
   end;
-  Result := noUsed.cbMaximumMessage;
 end;
 
 function TIdSchannelIOHandlerSocket.getMaxInitialChunkSize;
@@ -449,17 +452,25 @@ var
   psecInfo: PSecPkgInfo;
   ss: SECURITY_STATUS;
 begin
-  Result := 0;
   ss := mSspiCalls.FunctionTable.QuerySecurityPackageInfoA(UNISP_NAME_A, @psecInfo);
-  if (ss = SEC_E_OK) then
-  begin
+  if (ss = SEC_E_OK) then begin
     Result := psecInfo.cbMaxToken;
+  end
+  else begin
+    Result := 65536;
   end;
 end;
 
 procedure TIdSchannelIOHandlerSocket.OpenEncodedConnection;
 begin
   initializeSchannel;
+end;
+
+function TIdSchannelIOHandlerSocket.Readable(AMSec: Integer): Boolean;
+begin
+    Result := skipRecv;
+    if not Result then
+        Result := inherited Readable(AMSec)
 end;
 
 function TIdSchannelIOHandlerSocket.Recv(var ABuf; ALen: integer): integer;
@@ -487,8 +498,6 @@ var
   inbuffer: array[0..1] of SecBuffer;
   recvBuffer: PByte;
   pRecvBuffer: PByte;
-  pTmpBuffer, anotherBytePtr: PByte;
-  pTmpLength: Cardinal;
   recvBufferSize: Cardinal;
   dwSSPIOutFlags: Cardinal;
   expirationDate: TimeStamp;
@@ -517,26 +526,10 @@ begin
     recvLength := inherited Recv(recvBuffer^, recvBufferSize);
     if ((recvLength > recvBufferSize) or (recvLength = 0)) then
     begin
-      raise Exception.Create('The socket must have closed. SSL init failed.');
+      raise EIdException.Create('The socket must have closed. SSL init failed.');
     end;
 
-    if (m_ExtraDataLength <> 0) then
-    begin
-      pTmpLength := m_ExtraDataLength + recvLength;
-      pTmpBuffer := AllocMem(pTmpLength);
-
-      Move(m_ExtraData^, pTmpBuffer^, m_ExtraDataLength);
-      anotherBytePtr := pTmpBuffer;
-      Inc(anotherBytePtr, m_ExtraDataLength);
-      freeExtraData;
-
-      Move(recvBuffer^, anotherBytePtr^, recvLength);
-      FreeMem(recvBuffer, recvBufferSize);
-      recvBuffer := pTmpBuffer;
-      recvLength := pTmpLength;
-      recvBufferSize := pTmpLength;
-    end;
-
+    recvLength := m_Buffer.Deque(recvLength, recvBufferSize, recvBuffer^);
     inbufferDesc.ulVersion := 0;
     inbufferDesc.cBuffers := 2;
     inbufferDesc.pBuffers := @inbuffer;
@@ -556,27 +549,18 @@ begin
 
     if (Result = SEC_E_INCOMPLETE_MESSAGE) then
     begin
-      freeExtraData;
-
-      m_ExtraData := AllocMem(recvLength);
-      Move(recvBuffer^, m_ExtraData^, recvLength);
-      m_ExtraDataLength := recvLength;
+      m_Buffer.Enque(recvLength, recvBuffer^);
     end else if (Result < 0) then begin
-      raise Exception.Create('SSL Initialization did not work.');
+      raise EIdException.Create('SSL Initialization did not work.');
     end;
 
     if (inbuffer[1].BufferType = SECBUFFER_EXTRA) then
     begin
       pExtraBuffer := @inbuffer[1];
-      freeExtraData;
-      m_ExtraData := AllocMem(pExtraBuffer.cbBuffer);
-
       pRecvBuffer := recvBuffer;
       Inc(pRecvBuffer, recvLength);
       Dec(pRecvBuffer, pExtraBuffer.cbBuffer);
-
-      Move(pRecvBuffer^, m_ExtraData^, pExtraBuffer.cbBuffer);
-      m_ExtraDataLength := pExtraBuffer.cbBuffer;
+      m_Buffer.Enque(pExtraBuffer.cbBuffer, pRecvBuffer^);
     end;
 
     if ((Result = SEC_E_OK) or (Result = SEC_I_CONTINUE_NEEDED)) then
@@ -599,7 +583,7 @@ begin
     SECPKG_ATTR_REMOTE_CERT_CONTEXT, @serverCert);
   if (ss <> SEC_E_OK) then
   begin
-    raise Exception.Create('Could not get the Server Certificate.');
+    raise EIdException.Create('Could not get the Server Certificate.');
   end;
 
   // SChannelX509 takes over ownership of the certificate. No need to release it.
@@ -619,6 +603,7 @@ end;
 function TIdSchannelIOHandlerSocket.RecvDecrypt(var ABuf; ALen: Integer): integer;
 var
   dataLength: Cardinal;
+  dataStore: Pointer;
   Buffers: array[0..3] of SecBuffer;
   pDataBuffer, pExtraBuffer: PSecBuffer;
   BuffersDesc: SecBufferDesc;
@@ -627,27 +612,20 @@ var
   done: Boolean;
 begin
   Result := 0;
-
+  dataStore := nil;
   done := False;
   while (not done) do
   begin
     if (not skipRecv) then
     begin
       dataLength := inherited Recv(ABuf, ALen);
-      if (dataLength > Cardinal(ALen)) then
-      begin
+      if (dataLength > Cardinal(ALen)) then begin
         //Something went wrong. Can't trust the ABuf data
         Exit;
       end;
     end else begin
       dataLength := 0;
     end;
-
-    if (m_ExtraDataLength <> 0) then
-    begin
-      addExtraData(dataLength, ABuf);
-    end;
-    Result := dataLength;
 
     with BuffersDesc do begin
       ulVersion := 0;
@@ -656,9 +634,14 @@ begin
     end;
 
     with Buffers[0] do begin
+      if (dataStore <> nil) then FreeMem(dataStore);
+      dataStore := AllocMem(m_Buffer.m_Length + dataLength);
+      Move(ABuf, dataStore^, dataLength);
+
+      dataLength := m_Buffer.Deque(dataLength, dataLength + m_Buffer.m_Length, dataStore^);
       cbBuffer := dataLength;
       BufferType := SECBUFFER_DATA;
-      pvBuffer := @ABuf;
+      pvBuffer := dataStore;
     end;
     for I := 1 to 3 do begin
       with Buffers[I] do begin
@@ -670,33 +653,34 @@ begin
 
     ss := mSspiCalls.FunctionTable.DecryptMessage(m_phContext, @BuffersDesc, 0, nil);
 
-    if (ss = SEC_E_INCOMPLETE_MESSAGE) then
-    begin
-      freeExtraData;
-      m_ExtraData := AllocMem(dataLength);
-      Move(ABuf, m_ExtraData, dataLength);
-      m_ExtraDataLength := dataLength;
+    if (ss = SEC_E_INCOMPLETE_MESSAGE) then begin
+      m_Buffer.Enque(dataLength, dataStore^);
+      skipRecv := false;
       Continue;
     end;
 
     if (ss = SEC_E_MESSAGE_ALTERED) then
     begin
-      raise Exception.Create('Our SSL message has been altered.');
+      if (dataStore <> nil) then FreeMem(dataStore);
+      raise EIdException.Create('Our SSL message has been altered.');
     end;
 
     if (ss < 0) then
     begin
-      raise Exception.Create('Decryption of the SSL message failed.');
+      if (dataStore <> nil) then FreeMem(dataStore);
+      raise EIdException.Create('Decryption of the SSL message failed.');
     end;
 
     if ((ss <> SEC_E_OK) and (ss <> SEC_I_RENEGOTIATE) and
         (ss <> SEC_I_CONTEXT_EXPIRED)) then
     begin
-      raise Exception.Create('SSL Decryption Failed.');
+      if (dataStore <> nil) then FreeMem(dataStore);
+      raise EIdException.Create('SSL Decryption Failed.');
     end;
 
     if (ss = SEC_I_CONTEXT_EXPIRED) then
     begin
+      if (dataStore <> nil) then FreeMem(dataStore);
       EncryptSend(Pointer(nil)^, 0);
       Exit;
     end;
@@ -731,11 +715,8 @@ begin
 
     if ((pExtraBuffer <> nil) and (pExtraBuffer.cbBuffer > 0)) then
     begin
-      freeExtraData;
-      m_ExtraData := AllocMem(pExtraBuffer.cbBuffer);
-      Move(pExtraBuffer.pvBuffer^, m_ExtraData^, pExtraBuffer.cbBuffer);
-      m_ExtraDataLength := pExtraBuffer.cbBuffer;
-      //mSspiCalls.FunctionTable.FreeContextBuffer(pExtraBuffer.pvBuffer);
+      m_Buffer.Enque(pExtraBuffer.cbBuffer, pExtraBuffer.pvBuffer^);
+      mSspiCalls.FunctionTable.FreeContextBuffer(pExtraBuffer.pvBuffer);
 
       skipRecv := True;
     end else begin
@@ -744,6 +725,7 @@ begin
 
     done := True;
   end;
+  if (dataStore <> nil) then FreeMem(dataStore);
 end;
 
 function TIdSchannelIOHandlerSocket.ClientHandshakeLoop(var IoBuffer;
@@ -764,7 +746,7 @@ begin
     SECPKG_ATTR_STREAM_SIZES, @sizes);
   if (ss <> SEC_E_OK) then
   begin
-    raise Exception.Create('SSL message size call failed.');
+    raise EIdException.Create('SSL message size call failed.');
   end;
 
   buffersDesc.ulVersion := 0;
@@ -806,7 +788,7 @@ begin
     FreeMem(buffers[0].pvBuffer);
     FreeMem(buffers[2].pvBuffer);
   end else begin
-    raise Exception.Create('SSL encryption failed.');
+    raise EIdException.Create('SSL encryption failed.');
   end;
 end;
 
@@ -836,8 +818,7 @@ begin
   m_SecExtraBuffer.BufferType := 0;
   m_SecExtraBuffer.pvBuffer := nil;
 
-  m_ExtraData := nil;
-  m_ExtraDataLength := 0;
+  m_Buffer := TIdDataBuffer.Create();
   skipRecv := False;
 
   mClientCert := nil;
@@ -848,7 +829,7 @@ end;
 
 destructor TIdSchannelIOHandlerSocket.Destroy;
 begin
-  freeExtraData;
+  FreeAndNil(m_Buffer);
 
   if (mClientCert <> nil) then
   begin
@@ -1023,6 +1004,88 @@ begin
     DWORD(CERT_E_REVOCATION_FAILURE): error := CERT_E_REVOCATION_FAILURE_STR;
     else error := 'Some unknown error has occurred.';
   End;
+end;
+
+
+constructor TIdDataBuffer.Create;
+begin
+    m_Data := nil;
+    m_Length := 0;
+end;
+destructor TIdDataBuffer.Destroy;
+begin
+    Clear();
+
+    inherited;
+end;
+
+procedure TIdDataBuffer.Clear();
+begin
+    if (m_Data = nil) then exit;
+
+    FreeMem(m_Data, m_Length);
+    m_Data := nil;
+    m_Length := 0;
+end;
+
+function TidDataBuffer.Deque(len: Cardinal; limit: Cardinal; var dst): Cardinal;
+var
+    tmp: Pointer;
+    ptr: PByte;
+    amt, overflow: Cardinal;
+begin
+    Assert (len >= 0);
+    Assert (len <= limit);
+
+    amt := m_Length + len;
+    overflow := Max(amt - limit, 0);
+    tmp := AllocMem(amt);
+    ptr := tmp;
+
+    try
+        //Copy saved (if any)
+        if (m_Data <> nil) then begin
+            Move(m_Data^, ptr^, m_Length);
+            Inc(ptr, m_Length);
+            Clear();
+        end;
+
+        Move(dst, ptr^, len);
+
+        Result := amt - overflow;
+        if (overflow > 0) then begin
+            //copy extra data to saved
+            m_Data := AllocMem(overflow);
+            ptr := tmp;
+            Inc(ptr, Result);
+            Move(ptr^, m_Data^, overflow);
+        end;
+
+        Move(tmp^, dst, Result);
+    finally
+        FreeMem(tmp);
+    end;
+end;
+procedure TIdDataBuffer.Enque(len: Cardinal; var src);
+var
+    tmp: Pointer;
+    ptr: PByte;
+    amt: Cardinal;
+begin
+    Assert (len >= 0);
+    amt := m_Length + len;
+    tmp := AllocMem(amt);
+    ptr := tmp;
+
+    if (m_Data <> nil) then begin
+        //grow buffer by <len>, and add old data to the head
+        Move(m_Data^, ptr^, m_Length);
+        Inc(ptr, m_Length);
+    end;
+
+    Move(src, ptr^, len);
+    m_Data := tmp;
+    m_Length := amt;
 end;
 
 end.

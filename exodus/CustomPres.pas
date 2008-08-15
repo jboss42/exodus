@@ -1,30 +1,31 @@
-unit CustomPres;
 {
-    Copyright 2002, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit CustomPres;
+
 interface
 
 uses
     Menus, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ComCtrls, TntStdCtrls, ExForm, TntForms,
-  ExFrame;
+  ExFrame, Unicode;
 
 type
   TfrmCustomPres = class(TExForm)
@@ -50,6 +51,7 @@ type
     procedure txtHotkeyChange(Sender: TObject);
   private
     { Private declarations }
+    _show_list: TWidestringList;
   public
     { Public declarations }
   end;
@@ -68,8 +70,7 @@ implementation
 
 uses
     JabberUtils, ExUtils,  GnuGetText,
-    Jabber1, Session, Presence,
-    Unicode;
+    Jabber1, Session, Presence;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -88,17 +89,42 @@ end;
 {---------------------------------------}
 procedure TfrmCustomPres.FormCreate(Sender: TObject);
 var
-    i: integer;
+    i, pos: integer;
+
+    procedure BrandShowOption(value: Widestring; brand: Boolean);
+    begin
+        if brand then begin
+            _show_list.Add(value);
+            Inc(pos);
+        end
+        else begin
+            cboType.Items.Delete(Pos);
+        end;
+
+    end;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
 
+    if (_show_list = nil) then begin
+        _show_list := TWidestringList.Create();
+        pos := 0;
+        BrandShowOption('chat', MainSession.Prefs.getBool('show_presence_menu_chat'));
+        BrandShowOption('', MainSession.Prefs.getBool('show_presence_menu_available'));
+        BrandShowOption('away', MainSession.Prefs.getBool('show_presence_menu_away'));
+        BrandShowOption('xa', MainSession.Prefs.getBool('show_presence_menu_xa'));
+        BrandShowOption('dnd', MainSession.Prefs.getBool('show_presence_menu_dnd'));
+    end;
+
+
     // Default to the current settings
-    if (MainSession.Show = 'chat') then i := 0
-    else if (MainSession.Show = 'away') then i := 2
-    else if (MainSession.show = 'xa') then i := 3
-    else if (MainSession.Show = 'dnd') then i := 4
-    else i := 1;
+    if (MainSession.Show = 'chat') then i := _show_list.IndexOf('chat')
+    else if (MainSession.Show = 'away') then i := _show_list.IndexOf('away')
+    else if (MainSession.show = 'xa') then i := _show_list.IndexOf('xa')
+    else if (MainSession.Show = 'dnd') then i := _show_list.IndexOf('dnd')
+    else i := _show_list.IndexOf('');
+
+    if (i = -1) then i := 0;
 
     cboType.ItemIndex := i;
     txtStatus.Text := MainSession.Status;
@@ -114,14 +140,7 @@ var
     cp: TJabberCustomPres;
 begin
     // apply the new presence to the session
-    case cboType.ItemIndex of
-    0: show := 'chat';
-    1: show := '';
-    2: show := 'away';
-    3: show := 'xa';
-    4: show := 'dnd';
-end;
-
+    show := _show_list[cboType.ItemIndex];
     status := txtStatus.Text;
     pri := StrToInt(txtPriority.Text);
 

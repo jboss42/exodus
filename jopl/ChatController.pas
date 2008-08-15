@@ -1,23 +1,24 @@
-unit ChatController;
 {
-    Copyright 2002, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit ChatController;
+
 
 interface
 uses
@@ -60,6 +61,13 @@ type
         procedure SessionCallback(event: string; tag: TXMLTag);
         procedure startTimer();
         procedure stopTimer();
+
+        procedure RegisterSessionCB(event: widestring);
+        procedure RegisterMsgCB();
+        procedure RegisterSendMsgCB();
+        procedure UnregisterSessionCB();
+        procedure UnregisterMsgCB();
+        procedure UnregisterSendMsgCB();
     public
         msg_queue: TQueue;
 //        last_session_msg_queue: TQueue; //Number of newly received offline messages
@@ -91,12 +99,6 @@ type
         function getTags: TXMLTagList;
 
         procedure DisableChat();
-        procedure RegisterSessionCB(event: widestring);
-        procedure RegisterMsgCB();
-        procedure RegisterSendMsgCB();
-        procedure UnregisterSessionCB();
-        procedure UnregisterMsgCB();
-        procedure UnregisterSendMsgCB();
 
         property BareJID: WideString read _bareJID;
         property Resource: Widestring read _resource;
@@ -195,6 +197,8 @@ begin
         self.SetJID(_bareJID + '/' + _resource)
     else
         self.SetJID(_bareJID);
+        
+    RegisterSessionCB('/session/presence');
 end;
 procedure OutputDebugMsg(Message : String);
 begin
@@ -248,8 +252,6 @@ begin
     begin
         stopTimer();
         //start listeneing for presence only, not other session events
-        RegisterSessionCB('/session/presence');
-
         tag := TXMLTag.Create('chat');
         tag.setAttribute('handle', IntToStr(TForm(new_window).Handle));
         tag.setAttribute('jid', self._bareJID);
@@ -257,8 +259,6 @@ begin
         tag.Free;
     end else
     begin
-        //listen for all session events
-        RegisterSessionCB('/session');
         if (MainSession.Prefs.getBool('multi_resource_chat')) then
             //change our jid to be bare, get all messages from this jid
             //listen for all incoming jids
@@ -600,10 +600,7 @@ end;
 //Handle session events related to this chat
 procedure TChatController.SessionCallback(event: string; tag: TXMLTag);
 begin
-    // remove the ChatController if the user disconnects
-    if (event = '/session/disconnected') then
-        Self.Free()
-    else if (event = '/session/presence') then //Reset auto response flag
+    if (event = '/session/presence') then //Reset auto response flag
         _sent_auto_response := false;
 end;
 

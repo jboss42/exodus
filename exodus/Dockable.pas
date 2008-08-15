@@ -1,23 +1,24 @@
-unit Dockable;
 {
-    Copyright 2001, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
+unit Dockable;
+
 
 interface
 
@@ -70,7 +71,7 @@ type
   private
     { Private declarations }
     _docked: boolean;
-    _initiallyDocked: boolean;  //start docked?
+
     _normalImageIndex: integer;//image shown when not notifying
     _prefs_callback_id: integer; //ID for prefs events
     _session_close_all_callback: integer;
@@ -79,14 +80,13 @@ type
 
     //Unread messages in the currently open window
     _unreadmsg: integer; // Unread msg count
-    _unreadMessages: TWidestringList; //list of serialized <message> elements
 
     //Messages persisted through session, available at OnRestoreWindowState
     _persistMessages: boolean; //should messages be persisted through a session?
 
     _uid: widestring; // Unique ID (usually a jid) for this particular dockable window
     _priorityflag: boolean; // Is there a high priority msg unread
-    _activating: boolean; // Is the window currently becoming active
+    _activating: boolean; //in GotActive event
     _lastActivity: TDateTime; // what was the last activity for this window
     _closing: boolean; // Is the window closing (for updatedocked() call);
 
@@ -115,7 +115,6 @@ type
     procedure updateMsgCount(msg: TJabberMessage); overload;virtual;
     procedure updateMsgCount(msgTag: TXMLTag); overload;virtual;
     procedure updateLastActivity(lasttime: TDateTime); virtual;
-    procedure _doActivate();
 
     //getters/setters for activity window properties. Allows subclasses to set their
     //state as the state of these properties change
@@ -125,15 +124,19 @@ type
 
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;virtual;
     function GetDockbar(): IExodusDockToolbar;
-  public
+    procedure CreateParams(var Params: TCreateParams); override;
+    procedure StoreUnreadMessage(unreadMsg: widestring; key: widestring = '');
+public
     _windowType: widestring; // what kind of dockable window is this
 
     Constructor Create(AOwner: TComponent); override;
 
+    procedure Dock(NewDockSite: TWinControl; ARect: TRect); override;
+
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
 
-    procedure ShowDefault(bringtofront:boolean=true; dockOverride: string = 'n');override;
+    procedure ShowDefault(bringtofront:boolean=true);override;
 
     {
         Event fired when docking is complete.
@@ -175,6 +178,7 @@ type
     }
     procedure ClearUnreadMsgCount(); virtual;
 
+
     { Public Properties }
     property Docked: boolean read _docked write _docked;
     property FloatPos: TRect read getPosition;
@@ -195,10 +199,6 @@ type
     property Dockbar: IExodusDockToolbar read GetDockbar;
   end;
 
-var
-  dockable_uid: integer;
-  frmDockable: TfrmDockable;
-
 implementation
 
 {$R *.dfm}
@@ -209,12 +209,33 @@ uses
     JabberConst,
     ExSession,
     IDGlobal,
+    ComObj,
+    SQLUtils,
     XMLUtils, XMLParser, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
+
+var
+  dockable_uid: integer;
+  //frmDockable: TfrmDockable;
 
 function generateUID(): widestring;
 begin
     Inc(dockable_uid);
     Result := 'dockableUID_' + inttostr(dockable_uid);
+end;
+
+procedure initializeDatabase();
+begin
+    try
+        if (DataStore.CheckForTableExistence('unread_cache')) then exit;
+
+        DataStore.ExecSQL('CREATE TABLE unread_cache (' +
+                'key TEXT, ' +
+                'xml TEXT);'
+                );
+        DataStore.ExecSQL('CREATE INDEX unread_cache_idx1 on unread_cache (key);');
+    except
+        //TODO: loggit
+    end;
 end;
 
 Constructor TfrmDockable.Create(AOwner: TComponent);
@@ -224,23 +245,40 @@ begin
     _docked := false;
     with MainSession do
     begin
-        _initiallyDocked := Prefs.getBool('start_docked');
         SnapBuffer := Prefs.getInt('edge_snap');
 
         _prefs_callback_id := RegisterCallback(prefsCallback, '/session/prefs');
         _session_close_all_callback := RegisterCallback(closeAllCallback, '/session/close-all-windows');
         _session_dock_all_callback := RegisterCallback(dockAllCallback, '/session/dock-all-windows');
         _session_float_all_callback := RegisterCallback(floatAllCallback, '/session/float-all-windows');
-    end;
+        //set initial conditions for dock
+        if (Jabber1.getAllowedDockState() = adsForbidden) then
+            _docked := false  //docking not allowed
+        else
+            //initial condition, how to handle windows we have no state for
+            _docked := MainSession.Prefs.getBool('start_docked');
+        end;
 
     _unreadmsg := -1;
-    _unreadMessages := TWidestringList.create();
     _persistMessages := false;
 
     _priorityflag := false;
-    activating := false;
-
+    _activating := false;
     _uid := generateUID();
+end;
+
+procedure TfrmDockable.CreateParams(var Params: TCreateParams);
+begin
+    inherited CreateParams(Params);
+    params.ExStyle := params.ExStyle or WS_EX_APPWINDOW;
+    if (not Self._docked) then
+        params.WndParent := GetDesktopwindow;
+end;
+
+procedure TfrmDockable.Dock(NewDockSite: TWinControl; ARect: TRect);
+begin
+    _docked := (NewDockSite <> nil);
+    inherited;
 end;
 
 function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
@@ -285,20 +323,26 @@ end;
 
 procedure TfrmDockable.setImageIndex(idx: integer);
 begin
-    _normalImageIndex := idx;
-    RosterTreeImages.GetIcon(idx, Self.Icon);
-    updateDocked();
+    if (_normalImageIndex <> idx) then
+    begin
+        _normalImageIndex := idx;
+        RosterTreeImages.GetIcon(idx, Self.Icon);
+        updateDocked();
+    end;
 end;
 
 function TfrmDockable.getImageIndex(): Integer;
 begin
-        Result := _normalImageIndex;
+    Result := _normalImageIndex;
 end;
 
 procedure TfrmDockable.SetUnreadMsgCount(value : integer);
 begin
-    _unreadmsg := value;
-    updateDocked();
+    if (_unreadMsg <> value) then
+    begin
+        _unreadmsg := value;
+        updateDocked();
+    end;
 end;
 
 function TfrmDockable.GetUnreadMsgCount(): integer;
@@ -338,8 +382,7 @@ begin
     inherited;
     if (Docked) then
         FloatForm()
-    else
-    begin
+    else begin
         DockForm();
         //if dockman is not iconizied, bring tab to front
         if (not IsIconic(GetDockManager().getHWND)) then
@@ -352,19 +395,11 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockable._doActivate();
-begin
-    _activating := true;
-    ClearUnreadMsgCount();
-
-    updateDocked();
-
-    _activating := false;
-end;
-
-{---------------------------------------}
 procedure TfrmDockable.DockForm;
 begin
+    //make sure we are restored before docking, elimiates docking eccentricites
+    if (WindowState = wsMinimized) then    
+        ShowWindow(Self.Handle, SW_RESTORE);
     GetDockManager().OpenDocked(self);
 end;
 
@@ -378,20 +413,38 @@ end;
 procedure TfrmDockable.gotActivate();
 begin
     inherited;
-
-    _doActivate();
+    //if we are already active, ignore this request
+    if (not _activating) then
+    begin
+        _activating := true;
+        ClearUnreadMsgCount();
+        UpdateDocked();
+        _activating := false;
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmDockable.ClearUnreadMsgCount();
+var
+    key, sql: string;
 begin
-    if (_unreadmsg > 0) then
+    //only need to updateDocked if we are changing state
+    if ((_unreadmsg > 0) or _priorityflag) then
+    begin
+        try
+            initializeDatabase();
+            
+            key := str2sql(GetWindowStateKey());
+            sql := Format('delete from unread_cache where key=''%s'';',
+                    [key]);
+            DataStore.ExecSQL(sql);
+        except
+        end;
+
         _unreadmsg := 0;
-
-    _unreadMessages.clear();
-    _priorityflag := false;
-
-    updateDocked();
+        _priorityflag := false;
+        updateDocked();
+    end;
 end;
 
 {---------------------------------------}
@@ -413,33 +466,31 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockable.ShowDefault(bringtofront:boolean; dockOverride: string);
+procedure TfrmDockable.ShowDefault(bringtofront:boolean);
+var
+    initVis: boolean;
 begin
-    if (self.Visible and Docked) then begin
-        if (bringtofront) then begin
+    initVis := Self.Visible;
+    RestoreWindowState();
+    if (not Docked) then
+    begin
+        inherited;
+        if (not initVis) then
+            OnFloat(); //fire float event so windows can fix up
+    end
+    else begin
+        if (not Self.Visible) then
+            Self.DockForm();//will cause dockmanager to be shown as needed
+
+        if (bringtofront) then
+        begin
             GetDockManager().BringToFront();
             GetDockManager().BringDockedToTop(Self);
         end;
-    end
-    else if (Self.Visible) then
-        inherited
-    else begin
-        RestoreWindowState();
-        // show this form using the default behavior
-        if (not self.Visible and _initiallyDocked and (dockOverride <> 'f')) then begin
-            Self.DockForm();//will cause dockmanager to be shown
-
-            if (bringtofront) then begin
-               GetDockManager().BringToFront();
-               GetDockManager().BringDockedToTop(Self);
-            end;
-        end
-        else begin
-            inherited; //let base class show window
-            Self.OnFloat(); //fire float event so windows can fix up
-        end;
     end;
-    updateDocked(); // Make sure activity list is updated.
+
+    if (not initVis) then
+        updateDocked(); // Make sure activity list is updated if we became visible
 end;
 
 {---------------------------------------}
@@ -495,55 +546,90 @@ end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
 var
-    i: integer;
     ttag: TXMLTag;
-    txlist: TXMLTagList;
-    ads: TAllowedDockStates;
-    tstr: widestring;
-begin
-    inherited;
 
-    if (MainSession.Prefs.getBool('restore_window_state')) then
-    begin
-        ads := Jabber1.getAllowedDockState();
-        tstr := windowState.GetAttribute('dock');
-        if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
-            tstr := 't';
-        _initiallyDocked :=  ((ads <> adsForbidden) and (tstr = 't'));
-    end;
-
-    if (PersistUnreadMessages) then
+    procedure restoreUnreadXML();
+    var
+        txlist: TXMLTagList;
+        idx: Integer;
     begin
         ttag := windowState.GetFirstTag('unread');
         if (ttag <> nil) then
         begin
             txList := ttag.ChildTags;
-            for i := 0 to txList.Count - 1 do
-                OnPersistedMessage(txList[i]);
+            for idx := 0 to txList.Count - 1 do
+                OnPersistedMessage(txList[idx]);
         end;
+    end;
+
+    procedure restoreUnreadDB();
+    var
+        parser: TXMLTagParser;
+        table: IExodusDataTable;
+        sql, key: string;
+        xml: Widestring;
+        tag: TXMLTag;
+        idx:  Integer;
+    begin
+        parser := nil;
+        tag := nil;
+        initializeDatabase();
+
+        key := str2sql(WidestringToUTF8(GetWindowStateKey()));
+        try
+            table := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
+            sql := Format('select * from unread_cache where (key=''%s'');',[key]);
+            if not DataStore.GetTable(sql, table) then exit;
+            if not table.FirstRow then exit;
+
+            parser := TXMLTagParser.Create();
+            for idx := 0 to table.RowCount - 1 do begin
+                xml := table.GetFieldByName('xml');
+                if (xml = '') then continue;
+                xml := XML_UnEscapeChars(xml);
+
+                parser.Clear();
+                parser.ParseString(xml);
+                if (parser.Count = 0) then continue;
+                tag := parser.popTag();
+                if (tag <> nil) then OnPersistedMessage(tag);
+                FreeAndNil(tag);
+                table.NextRow;
+            end;
+        except
+            //TODO: loggit
+        end;
+
+        FreeAndNil(tag);
+        FreeAndNil(parser);
+    end;
+begin
+    inherited;
+    if (Jabber1.getAllowedDockState() = adsForbidden) then
+        _docked := false  //docking not allowed
+    else if (MainSession.Prefs.getBool('restore_window_state') and
+            (windowState.GetAttribute('dock') <> '')) then
+        _docked := windowState.GetAttribute('dock') = 't'
+    else
+        //initial condition, how to handle windows we have no state for
+        _docked := MainSession.Prefs.getBool('start_docked');
+
+    if (PersistUnreadMessages) then
+    begin
+        PersistUnreadMessages := false;
+
+        //check for XML-based messages
+        restoreUnreadXML();
+
+        //check the database
+        restoreUnreadDB();
+        
+        PersistUnreadMessages := true;
     end;
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
-var
-    i: integer;
-    ttag: TXMLTag;
-    _parser: TXMLTagParser;
 begin
-    ttag := windowState.AddTag('unread');
-    if (PersistUnreadMessages and (_unreadMessages.Count > 0)) then
-    begin
-        _parser := TXMLTagParser.Create();
-        for i := 0 to _unreadMessages.Count - 1 do
-        begin
-            _parser.Clear();
-            _parser.ParseString(_unreadMessages[i], '');
-            if (_parser.Count > 0) then
-                ttag.AddTag(_parser.popTag());
-        end;
-        _parser.Free();
-    end;
-
     if (not Floating) then
         windowState.setAttribute('dock', 't')
     else
@@ -553,9 +639,10 @@ end;
 
 procedure TfrmDockable.OnNotify(notifyEvents: integer);
 begin
-    if (Docked) and ((notifyEvents and PrefController.notify_front) <> 0) then
-        GetDockManager().BringDockedToTop(Self);
-    inherited; //inherited will handle isNotifying and floating window notifications
+    //if we are docked, delgate to dock manager
+    if (Docked) then
+        GetDockManager().OnNotify(Self, notifyEvents)
+    else inherited; //inherited will handle isNotifying and floating window notifications
 end;
 
 procedure TfrmDockable.showDockbar(show: boolean);
@@ -570,7 +657,6 @@ end;
 
 procedure TfrmDockable.FormDestroy(Sender: TObject);
 begin
-    _unreadMessages.free();
     _COMDockbar := nil;
     inherited;
 end;
@@ -588,13 +674,7 @@ end;
 procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/prefs') then
-    begin
-        with MainSession.Prefs do
-        begin
-            SnapBuffer := getInt('edge_snap');
-            _initiallyDocked := getBool('start_docked');
-        end;
-    end;
+        SnapBuffer := MainSession.Prefs.getInt('edge_snap');
 end;
 
 function TfrmDockable.getUID(): Widestring;
@@ -609,7 +689,7 @@ end;
 
 procedure TfrmDockable.updateMsgCount(msg: TJabberMessage);
 begin
-    _priorityflag := _priorityflag or (msg.Priority = High);
+    _priorityflag := _priorityflag or ((msg.Priority = High) and (not msg.isMe));
     UpdateMsgCount(msg.Tag);
 end;
 
@@ -663,14 +743,13 @@ begin
                 end;
                 if (ttag <> nil) then
                 begin
-                    _unreadMessages.Add(ttag.XML);
+                    StoreUnreadMessage(ttag.XML);
                     ttag.Free();
                 end
-                else _unreadMessages.Add(msgTag.XML);
+                else StoreUnreadMessage(msgTag.XML);
             end;
+            updateDocked();
         end;
-
-        updateDocked();
     end;
 end;
 
@@ -678,9 +757,8 @@ procedure TfrmDockable.updateLastActivity(lasttime: TDateTime);
 begin
     if (lasttime > _lastActivity) then begin
         _lastActivity := lasttime;
+        updateDocked();
     end;
-
-    updateDocked();
 end;
 
 procedure TfrmDockable.closeAllCallback(event: string; tag: TXMLTag);
@@ -693,22 +771,14 @@ end;
 
 procedure TfrmDockable.dockAllCallback(event: string; tag: TXMLTag);
 begin
-    if ((event = '/session/dock-all-windows') and
-        (not _docked)) then begin
-        if (WindowState = wsMinimized) then
-        begin
-            ShowWindow(Self.Handle, SW_RESTORE);
-        end;
+    if ((event = '/session/dock-all-windows') and (not Docked)) then
         Self.DockForm;
-    end;
 end;
 
 procedure TfrmDockable.floatAllCallback(event: string; tag: TXMLTag);
 begin
-    if ((event = '/session/float-all-windows') and
-        (_docked)) then begin
+    if ((event = '/session/float-all-windows') and (_docked)) then
         Self.FloatForm;
-    end;
 end;
 
 procedure TfrmDockable.updateDocked();
@@ -719,15 +789,29 @@ begin
 
     // Prevent UpdateDocked being called from updateDocked
     if (updateDockedCnt <= 1) then begin
-        try
+//        try
             getDockManager().UpdateDocked(Self);
-        except
-        end;
+//        except
+//        end;
     end;
 
     Dec(updateDockedCnt);
 end;
 
+
+procedure TfrmDockable.StoreUnreadMessage(unreadMsg: widestring; key: widestring);
+var
+    em, sql: widestring;
+begin
+    initializeDatabase();
+
+    if (key = '') then
+        key := str2sql(WideStringToUTF8(GetWindowStateKey()));
+    em := XML_EscapeChars(unreadMsg);
+    sql := Format('insert into unread_cache (key,xml) values (''%s'',''%s'');',
+                  [key, str2sql(WideStringToUTF8(em))]);
+    DataStore.ExecSQL(sql);
+end;
 
 initialization
     dockable_uid := 0;
