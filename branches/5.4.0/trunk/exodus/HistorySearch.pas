@@ -659,6 +659,10 @@ begin
     if (_DoingSearch) then begin
         HistorySearchManager.CancelSearch(_SearchObj.Get_SearchID);
 
+        // Ensure that list is sorted
+        lstResults.SortType := stNone;
+        lstResults.SortType := stBoth;
+
         // Switch to "search done" GUI
         _DoingSearch := false;
         _SearchingGUI(false);
@@ -1672,6 +1676,10 @@ begin
             _MsgList.DisplayRawText(_('No results found.'));
         end;
 
+        // Ensure that list is sorted
+        lstResults.SortType := stNone;
+        lstResults.SortType := stBoth;
+
         // Change GUI to "done searching"
         _DoingSearch := false;
         _SearchingGUI(false);
@@ -1827,6 +1835,10 @@ begin
     if (msg = nil) then begin
         // End of results - remove from Result callback map
         ExodusHistoryResultCallbackMap.DeleteCallback(_ResultObj);
+
+        // Ensure that list is sorted
+        lstResults.SortType := stNone;
+        lstResults.SortType := stBoth;
 
         // Change GUI to "done searching"
         _DoingSearch := false;
