@@ -187,7 +187,7 @@ type
     procedure Initialize(); override;
     destructor Destroy(); override;
 
-    function ObjQueryInterface(const IID: TGUID; out obj): HRESULT; override;
+    function GetController(IID: TGUID): IUnknown; safecall;
     procedure RegisterController(IID: TGUID; const instance: IUnknown); safecall;
     procedure UnregisterController(IID: TGUID; const instance: IUnknown); safecall;
 
@@ -1079,17 +1079,15 @@ begin
 //   end;
 end;
 
-function TExodusController.ObjQueryInterface(const IID: TGUID; out obj): HResult;
+function TExodusController.GetController(IID: TGUID): IUnknown;
 var
     idx: Integer;
 begin
     idx := _ctrl_reg.IndexOf(GUIDToString(IID));
+    Result := nil;
     if (idx <> -1) then begin
-        IUnknown(obj) := TControllerRegistryEntry(_ctrl_reg.Objects[idx]).Controller;
-        Result := S_OK;
-    end
-    else
-        Result := inherited ObjQueryInterface(IID, obj);
+        Result := TControllerRegistryEntry(_ctrl_reg.Objects[idx]).Controller;
+    end;
 end;
 procedure TExodusController.RegisterController(IID: TGUID; const instance: IUnknown);
 var

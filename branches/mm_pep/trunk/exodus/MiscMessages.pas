@@ -397,7 +397,7 @@ end;
 *******************************************************************************}
 Constructor THeadlineHandler.Create();
 begin
-    Create('/packet/message[@type="headline"]');
+    Create('/post/message[@type="headline"]');
 end;
 
 procedure THeadlineHandler.MessageCallback(event: string; tag: TXMLTag);
