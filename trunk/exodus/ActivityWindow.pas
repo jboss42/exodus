@@ -1250,6 +1250,7 @@ begin
             end;
         end;
     except
+        _oldActivateSheet := nil; //make it recompute    
     end;
 end;
 
