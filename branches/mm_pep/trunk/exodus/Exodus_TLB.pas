@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-08-15 12:31:30 from Type Library described below.
+// File generated on 2008-08-18 09:27:33 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: Z:\repos\corp.jabber.com\momentim\src\exodus\exodus\Exodus.tlb (1)
@@ -5803,6 +5803,13 @@ type
     ['{A4710E01-8CC8-4AC3-A49F-B702A4208D84}']
     procedure Subscribe(const Node: WideString; const callback: IExodusPubsubListener); safecall;
     procedure unsubscribe(const Node: WideString; const callback: IExodusPubsubListener); safecall;
+    function Get_ServiceCount: Integer; safecall;
+    function Get_Services(Index: Integer): IExodusPubsubService; safecall;
+    function ServiceFor(const jid: WideString): IExodusPubsubService; safecall;
+    function Get_PepService: IExodusPubsubService; safecall;
+    property ServiceCount: Integer read Get_ServiceCount;
+    property Services[Index: Integer]: IExodusPubsubService read Get_Services;
+    property PepService: IExodusPubsubService read Get_PepService;
   end;
 
 // *********************************************************************//
@@ -5814,6 +5821,10 @@ type
     ['{A4710E01-8CC8-4AC3-A49F-B702A4208D84}']
     procedure Subscribe(const Node: WideString; const callback: IExodusPubsubListener); dispid 201;
     procedure unsubscribe(const Node: WideString; const callback: IExodusPubsubListener); dispid 202;
+    property ServiceCount: Integer readonly dispid 203;
+    property Services[Index: Integer]: IExodusPubsubService readonly dispid 204;
+    function ServiceFor(const jid: WideString): IExodusPubsubService; dispid 205;
+    property PepService: IExodusPubsubService readonly dispid 206;
   end;
 
 // *********************************************************************//
@@ -5823,8 +5834,8 @@ type
 // *********************************************************************//
   IExodusControllerRegistry = interface(IDispatch)
     ['{E2AE307A-FFA5-4C68-B56D-FC6165924805}']
-    procedure RegisterController(const iid: WideString; const instance: IUnknown); safecall;
-    procedure UnregisterController(const iid: WideString; const instance: IUnknown); safecall;
+    procedure RegisterController(iid: TGUID; const instance: IUnknown); safecall;
+    procedure UnregisterController(iid: TGUID; const instance: IUnknown); safecall;
   end;
 
 // *********************************************************************//
@@ -5834,8 +5845,8 @@ type
 // *********************************************************************//
   IExodusControllerRegistryDisp = dispinterface
     ['{E2AE307A-FFA5-4C68-B56D-FC6165924805}']
-    procedure RegisterController(const iid: WideString; const instance: IUnknown); dispid 201;
-    procedure UnregisterController(const iid: WideString; const instance: IUnknown); dispid 202;
+    procedure RegisterController(iid: {??TGUID}OleVariant; const instance: IUnknown); dispid 201;
+    procedure UnregisterController(iid: {??TGUID}OleVariant; const instance: IUnknown); dispid 202;
   end;
 
 // *********************************************************************//

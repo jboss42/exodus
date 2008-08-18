@@ -53,7 +53,9 @@ type
     function Get_PubsubListenerSet(node: Widestring): TPubsubListenerSet;
 
     function Get_ServiceCount(): Integer; safecall;
-    function Get_Service(idx: Integer): IExodusPubsubService; safecall;
+    function Get_Services(idx: Integer): IExodusPubsubService; safecall;
+
+    function Get_PepService(): IExodusPubsubService; safecall;
 
   public
     constructor Create(js: TObject);
@@ -62,15 +64,13 @@ type
     procedure subscribe(const node: Widestring; const callback: IExodusPubsubListener); safecall;
     procedure unsubscribe(const node: Widestring; const callback: IExodusPubsubListener); safecall;
 
-    function ServiceFor(jid: Widestring): IExodusPubsubService;
-
-    property ServiceCount: Integer read Get_ServiceCount;
-    property Services[Index: Integer]: IExodusPubsubService read Get_Service;
+    function ServiceFor(const jid: Widestring): IExodusPubsubService; safecall;
   end;
 
 implementation
 
-uses ComServ, IQ, JabberID, Variants, Session, SysUtils, XMLParser, Entity, EntityCache;
+uses ComServ, IQ, JabberID, Variants, Session, SysUtils, XMLParser,
+    Entity, EntityCache, CapsCache;
 
 
 type TPubsubServiceWrapper = class
@@ -153,9 +153,12 @@ constructor TPubsubListenerSet.Create(node: Widestring);
 begin
     _node := node;
     _listeners := TInterfaceList.Create();
+
+    jSelfCaps.AddFeature(_node + '+notify');
 end;
 destructor TPubsubListenerSet.Destroy;
 begin
+    jSelfCaps.RemoveFeature(_node + '+notify');
     FreeAndNil(_listeners);
 
     inherited;
@@ -299,8 +302,8 @@ begin
     defList := Get_PubsubListenerSet('');
     if (nodeList = nil) and (defList = nil) then exit;
 
-    items := VarArrayCreate([0, itemTags.Count], varOleStr);
     itemTags := evt.QueryTags('item');
+    items := VarArrayCreate([0, itemTags.Count], varOleStr);
     for idx := 0 to itemTags.Count - 1 do begin
         VarArrayPut(items, itemTags[idx].XML, idx);
     end;
@@ -317,18 +320,31 @@ function TExodusPubsubController.Get_ServiceCount(): Integer;
 begin
     Result := _svcs.Count;
 end;
-function TExodusPubsubController.Get_Service(idx: Integer): IExodusPubsubService;
+function TExodusPubsubController.Get_Services(idx: Integer): IExodusPubsubService;
 begin
     if (idx < 0) or (idx >= _svcs.Count) then
         result := nil
     else
         Result := TPubsubServiceWrapper(_svcs.Objects[idx]).Service;
 end;
-function TExodusPubsubController.ServiceFor(jid: WideString): IExodusPubsubService;
+function TExodusPubsubController.ServiceFor(const jid: WideString): IExodusPubsubService;
 begin
-    Result := Get_Service(_svcs.IndexOf(jid));
+    Result := Get_Services(_svcs.IndexOf(jid));
 end;
 
+function TExodusPubsubController.Get_PepService(): IExodusPubsubService;
+var
+    session: TJabberSession;
+    jid: Widestring;
+begin
+    session := TJabberSession(_js);
+    Result := nil;
+
+    if (session.Active) then begin
+        jid := session.SessionJid.jid;
+        Result := ServiceFor(jid);
+    end;
+end;
 function TExodusPubsubController.Get_PubsubListenerSet(node: WideString): TPubsubListenerSet;
 var
     idx: Integer;

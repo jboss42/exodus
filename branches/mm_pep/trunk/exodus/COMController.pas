@@ -188,8 +188,8 @@ type
     destructor Destroy(); override;
 
     function ObjQueryInterface(const IID: TGUID; out obj): HRESULT; override;
-    procedure RegisterController(const IID: Widestring; const instance: IUnknown); safecall;
-    procedure UnregisterController(const IID: Widestring; const instance: IUnknown); safecall;
+    procedure RegisterController(IID: TGUID; const instance: IUnknown); safecall;
+    procedure UnregisterController(IID: TGUID; const instance: IUnknown); safecall;
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
@@ -1091,32 +1091,31 @@ begin
     else
         Result := inherited ObjQueryInterface(IID, obj);
 end;
-procedure TExodusController.RegisterController(const IID: Widestring; const instance: IUnknown);
+procedure TExodusController.RegisterController(IID: TGUID; const instance: IUnknown);
 var
-    key: TGUID;
+    key: Widestring;
     idx: Integer;
     test: IUnknown;
     entry: TControllerRegistryEntry;
 begin
     if (instance = nil) then exit;
+    if (instance.QueryInterface(iid, test) <> S_OK) then exit;
 
-    key := StringToGUID(iid);
-    if (instance.QueryInterface(key, test) <> S_OK) then exit;
-
+    key := GUIDToString(iid);
     entry := TControllerRegistryEntry.Create(instance);
-    idx := _ctrl_reg.IndexOf(iid);
+    idx := _ctrl_reg.IndexOf(key);
     if (idx = -1) then begin
         idx := _ctrl_reg.Count;
-        _ctrl_reg.Add(iid);
+        _ctrl_reg.Add(key);
     end;
     _ctrl_reg.Objects[idx].Free();
     _ctrl_reg.Objects[idx] := entry;
 end;
-procedure TExodusController.UnregisterController(const IID: Widestring; const instance: IUnknown);
+procedure TExodusController.UnregisterController(IID: TGUID; const instance: IUnknown);
 var
     idx: Integer;
 begin
-    idx := _ctrl_reg.IndexOf(iid);
+    idx := _ctrl_reg.IndexOf(GUIDToString(IID));
     if (idx = -1) then exit;
     if (TControllerRegistryEntry(_ctrl_reg.Objects[idx]).Controller <> instance) then exit;
 
