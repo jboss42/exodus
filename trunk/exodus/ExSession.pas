@@ -666,7 +666,7 @@ begin
     COMBookmarkManager := ExCOMBookmarkManager;
 
     ExCOMController.RegisterController(
-            GUIDToString(IID_IExodusPubsubController),
+            IID_IExodusPubsubController,
             TExodusPubsubController.Create(MainSession));
 
     // Setup the ExStartup object props
