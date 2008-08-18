@@ -50,7 +50,7 @@ type
     procedure MessageCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
 
-    function Get_PubsubListenerSet(node: Widestring): TPubsubListenerSet;
+    function Get_PubsubListenerSet(node: Widestring; create: Boolean = false): TPubsubListenerSet;
 
     function Get_ServiceCount(): Integer; safecall;
     function Get_Services(idx: Integer): IExodusPubsubService; safecall;
@@ -61,8 +61,8 @@ type
     constructor Create(js: TObject);
     destructor Destroy(); override;
 
-    procedure subscribe(const node: Widestring; const callback: IExodusPubsubListener); safecall;
-    procedure unsubscribe(const node: Widestring; const callback: IExodusPubsubListener); safecall;
+    procedure Subscribe(const Node: WideString; const Callback: IExodusPubsubListener); safecall;
+    procedure Unsubscribe(const Node: WideString; const Callback: IExodusPubsubListener); safecall;
 
     function ServiceFor(const jid: Widestring): IExodusPubsubService; safecall;
   end;
@@ -207,7 +207,7 @@ begin
 
     _msgCB := session.RegisterCallback(
             MessageCallback,
-            '/post/message/event[@xmlns="http://jabber.org/protocol/pubsub#event"]');
+            '/packet/message[@type="headline"]/event[@xmlns="http://jabber.org/protocol/pubsub#event"]');
     _sessionCB := session.RegisterCallback(
             SessionCallback,
             '/session/disconnected');
@@ -286,7 +286,7 @@ begin
 end;
 procedure TExodusPubsubController.MessageCallback(event: string; tag: TXMLTag);
 var
-    from, node: Widestring;
+    from, node, xml: Widestring;
     evt: TXMLTag;
     idx: Integer;
     itemTags: TXMLTagList;
@@ -305,7 +305,8 @@ begin
     itemTags := evt.QueryTags('item');
     items := VarArrayCreate([0, itemTags.Count], varOleStr);
     for idx := 0 to itemTags.Count - 1 do begin
-        VarArrayPut(items, itemTags[idx].XML, idx);
+        xml := itemTags[idx].XML;
+        VarArrayPut(items, xml, idx);
     end;
 
     if (nodeList <> nil) then
@@ -345,51 +346,48 @@ begin
         Result := ServiceFor(jid);
     end;
 end;
-function TExodusPubsubController.Get_PubsubListenerSet(node: WideString): TPubsubListenerSet;
+function TExodusPubsubController.Get_PubsubListenerSet(node: WideString; create: Boolean): TPubsubListenerSet;
 var
     idx: Integer;
 begin
-    result := nil;
     idx := _subscribs.IndexOf(node);
-    if (idx <> -1) then result := TPubsubListenerSet(_subscribs.Objects[idx]);
-end;
-
-procedure TExodusPubsubController.subscribe(
-        const node: WideString;
-        const callback: IExodusPubsubListener);
-var
-    idx: Integer;
-    registered: TPubsubListenerSet;
-begin
-    if (node = '') then exit;
-    if (callback = nil) then exit;
-
-    idx := _subscribs.IndexOf(node);
-    if (idx = -1) then begin
-        idx := _subscribs.Count;
-        _subscribs.AddObject(node, TPubsubListenerSet.Create(node));
+    if (idx <> -1) then
+        result := TPubsubListenerSet(_subscribs.Objects[idx])
+    else if not create then
+         Result := nil
+    else begin
+        result := TPubsubListenerSet.Create(node);
+        _subscribs.AddObject(node, result);
     end;
-    registered := TPubsubListenerSet(_subscribs.Objects[idx]);
-    registered.Add(callback);
 end;
-procedure TExodusPubsubController.unsubscribe(
-        const node: WideString;
-        const callback: IExodusPubsubListener);
+
+procedure TExodusPubsubController.Subscribe(
+        const Node: WideString;
+        const Callback: IExodusPubsubListener);
+var
+    registered: TPubsubListenerSet;
+begin
+    if (Callback = nil) then exit;
+    registered := Get_PubsubListenerSet(node, true);
+    registered.Add(Callback);
+end;
+procedure TExodusPubsubController.Unsubscribe(
+        const Node: Widestring;
+        const Callback: IExodusPubsubListener);
 var
     idx: Integer;
     registered: TPubsubListenerSet;
 begin
-    if (node = '') then exit;
-    if (callback = nil) then exit;
+    if (Callback = nil) then exit;
 
     idx := _subscribs.IndexOf(node);
     if (idx = -1) then exit;
-
+    
     registered := TPubsubListenerSet(_subscribs.Objects[idx]);
-    registered.Remove(callback);
+    registered.Remove(Callback);
     if (registered.Count = 0) then begin
         _subscribs.Delete(idx);
-        FreeAndNil(registered);
+        registered.Free();
     end;
 end;
 

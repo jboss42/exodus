@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-08-18 09:27:33 from Type Library described below.
+// File generated on 2008-08-18 12:03:33 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: Z:\repos\corp.jabber.com\momentim\src\exodus\exodus\Exodus.tlb (1)
@@ -433,6 +433,7 @@ type
   PWideString1 = ^WideString; {*}
   PWordBool1 = ^WordBool; {*}
   POleVariant1 = ^OleVariant; {*}
+  PIUnknown1 = ^IUnknown; {*}
 
 
 // *********************************************************************//
@@ -5801,14 +5802,14 @@ type
 // *********************************************************************//
   IExodusPubsubController = interface(IDispatch)
     ['{A4710E01-8CC8-4AC3-A49F-B702A4208D84}']
-    procedure Subscribe(const Node: WideString; const callback: IExodusPubsubListener); safecall;
-    procedure unsubscribe(const Node: WideString; const callback: IExodusPubsubListener); safecall;
     function Get_ServiceCount: Integer; safecall;
-    function Get_Services(Index: Integer): IExodusPubsubService; safecall;
-    function ServiceFor(const jid: WideString): IExodusPubsubService; safecall;
+    function Get_Services(index: Integer): IExodusPubsubService; safecall;
+    function ServiceFor(const JID: WideString): IExodusPubsubService; safecall;
     function Get_PepService: IExodusPubsubService; safecall;
+    procedure Subscribe(const Node: WideString; const callback: IExodusPubsubListener); safecall;
+    procedure Unsubscribe(const Node: WideString; const callback: IExodusPubsubListener); safecall;
     property ServiceCount: Integer read Get_ServiceCount;
-    property Services[Index: Integer]: IExodusPubsubService read Get_Services;
+    property Services[index: Integer]: IExodusPubsubService read Get_Services;
     property PepService: IExodusPubsubService read Get_PepService;
   end;
 
@@ -5819,12 +5820,12 @@ type
 // *********************************************************************//
   IExodusPubsubControllerDisp = dispinterface
     ['{A4710E01-8CC8-4AC3-A49F-B702A4208D84}']
-    procedure Subscribe(const Node: WideString; const callback: IExodusPubsubListener); dispid 201;
-    procedure unsubscribe(const Node: WideString; const callback: IExodusPubsubListener); dispid 202;
     property ServiceCount: Integer readonly dispid 203;
-    property Services[Index: Integer]: IExodusPubsubService readonly dispid 204;
-    function ServiceFor(const jid: WideString): IExodusPubsubService; dispid 205;
+    property Services[index: Integer]: IExodusPubsubService readonly dispid 204;
+    function ServiceFor(const JID: WideString): IExodusPubsubService; dispid 205;
     property PepService: IExodusPubsubService readonly dispid 206;
+    procedure Subscribe(const Node: WideString; const callback: IExodusPubsubListener); dispid 201;
+    procedure Unsubscribe(const Node: WideString; const callback: IExodusPubsubListener); dispid 202;
   end;
 
 // *********************************************************************//
@@ -5836,6 +5837,7 @@ type
     ['{E2AE307A-FFA5-4C68-B56D-FC6165924805}']
     procedure RegisterController(iid: TGUID; const instance: IUnknown); safecall;
     procedure UnregisterController(iid: TGUID; const instance: IUnknown); safecall;
+    function GetController(IID: TGUID): IUnknown; safecall;
   end;
 
 // *********************************************************************//
@@ -5847,6 +5849,7 @@ type
     ['{E2AE307A-FFA5-4C68-B56D-FC6165924805}']
     procedure RegisterController(iid: {??TGUID}OleVariant; const instance: IUnknown); dispid 201;
     procedure UnregisterController(iid: {??TGUID}OleVariant; const instance: IUnknown); dispid 202;
+    function GetController(IID: {??TGUID}OleVariant): {??PIUnknown1}OleVariant; dispid 203;
   end;
 
 // *********************************************************************//
