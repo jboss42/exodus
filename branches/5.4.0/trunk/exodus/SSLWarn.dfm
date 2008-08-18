@@ -152,6 +152,7 @@ inherited frmSSLWarn: TfrmSSLWarn
     Height = 65
     BorderStyle = bsNone
     ParentColor = True
+    ReadOnly = True
     TabOrder = 0
   end
   inline frameButtons1: TframeButtons
