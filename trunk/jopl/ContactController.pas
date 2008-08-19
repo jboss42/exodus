@@ -24,7 +24,7 @@ unit ContactController;
 interface
 
 uses COMExodusItemController, Exodus_TLB, XMLTag, Presence,
-        Signals, DisplayName, COMExodusItem, ComObj, Unicode, ExtCtrls;
+        Signals, DisplayName, COMExodusItem, ComObj, Unicode;
 
 type
    TExodusContactsCallback = class;
@@ -46,7 +46,7 @@ type
        _PendingItems: IExodusItemList;
        _ContactsLoaded: Boolean;
        _depResolver: TObject; //TSimpleDependancyHandler;
-       _PresenceTimer: TTimer;
+    
        //Methods
        procedure _GetContacts();
        procedure _ParseContacts(Event: string; Tag: TXMLTag);
@@ -65,7 +65,7 @@ type
        function _IsPending(sjid: Widestring): Boolean;
        function _PushPending(item: IExodusItem): IExodusItem;
        function _PopPending(sjid: Widestring): IExodusItem;
-       procedure _OnPresenceTimer(Sender: TObject);
+      
    public
        constructor Create(JS: TObject);
        destructor Destroy; override;
@@ -162,10 +162,6 @@ begin
     _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS, TJabberSession(_JS));
 
     _PendingItems := TExodusItemList.Create();
-    _PresenceTimer := TTimer.Create(nil);
-    _PresenceTimer.Enabled := false;
-    _PresenceTimer.Interval := 500;
-    _PresenceTimer.OnTimer := _OnPresenceTimer;
 end;
 
 {---------------------------------------}
@@ -182,7 +178,6 @@ begin
     _ItemsCB._Release();
     _ItemsCB := nil;
     _depResolver.Free();
-    _PresenceTimer.Free();    
     inherited;
 end;
 
@@ -215,7 +210,7 @@ var
 begin
     Item := nil;
     _ItemsCB.Paused := true;
-    TJabberSession(_JS).FireEvent('/item/begin', Item);
+
     TJabberSession(_JS).FireEvent('/contact/item/begin', Item);
     ContactItemTags := Tag.QueryXPTags('/iq/query/item');
     for i := 0 to ContactItemTags.Count - 1 do begin
@@ -238,9 +233,14 @@ begin
     _ItemsCB.Paused := false;
     _ContactsLoaded := true;
     TJabberSession(_JS).FireEvent('/contact/item/end', Item);
-    TJabberSession(_JS).FireEvent('/item/end', Item);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
     TJabberSession(_JS).FireEvent('/roster/end', nil, ''); //legacy event
+
+    if (TJabberSession(_js).RosterRefreshTimer.Enabled) then
+        TJabberSession(_js).RosterRefreshTimer.Enabled := false;
+
+    TJabberSession(_js).RosterRefreshTimer.Enabled := true;
+
     TAuthDependancyResolver.SignalReady(DEPMOD_ROSTER, nil, TJabberSession(_JS));
     ContactItemTags.Free();
 end;
@@ -625,13 +625,10 @@ begin
 
     //Reset the timer if already enabled
     //Timer will invalidate and release tree view display
-    if (_PresenceTimer.Enabled) then
-        _PresenceTimer.Enabled := false
-    else
-       //This will lock the tree view display
-       TJabberSession(_JS).FireEvent('/item/begin', Item);
-       
-    _PresenceTimer.Enabled := true;
+    if (TJabberSession(_js).RosterRefreshTimer.Enabled) then
+        TJabberSession(_js).RosterRefreshTimer.Enabled := false;
+
+    TJabberSession(_js).RosterRefreshTimer.Enabled := true;
     //If my user own presence, ignore
     try
         Tmp := TJabberID.Create(Pres.FromJid);
@@ -967,14 +964,4 @@ begin
     end;
 end;
 
-{---------------------------------------}
-procedure TContactController._OnPresenceTimer(Sender: TObject);
-var
-    Item: IExodusItem;
-begin
-    _PresenceTimer.Enabled := false;
-    TJabberSession(_JS).FireEvent('/item/end', Item);
-    TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
-    OutputDebugMsg('OnPresenceTimer fired');
-end;
 end.
