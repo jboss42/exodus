@@ -213,7 +213,6 @@ var
     Item: IExodusItem;
 begin
     Item := nil;
-    TJabberSession(_JS).FireEvent('/item/begin', Item);
     RoomTags := nil;
     if ((Event = 'xml') and (Tag.getAttribute('type') <> 'result')) then exit;
 
@@ -241,8 +240,10 @@ begin
 
     _RoomsLoaded := true;
     Item := nil;
-    TJabberSession(_JS).FireEvent('/item/end', Item);
-    TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
+    if (TJabberSession(_js).RosterRefreshTimer.Enabled) then
+        TJabberSession(_js).RosterRefreshTimer.Enabled := false;
+    TJabberSession(_js).RosterRefreshTimer.Enabled := true;
+
     TAuthDependancyResolver.SignalReady(DEPMOD_BOOKMARKS, nil, TJabberSession(_JS));
     RoomTags.Free();
 end;
