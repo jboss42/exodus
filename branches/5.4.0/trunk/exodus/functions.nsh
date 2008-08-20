@@ -172,6 +172,22 @@ Function NotifyInstances ; Closes all running instances of Exodus
     Pop $0
 FunctionEnd
 
+Function RunPreviousUninstall ; Runs the uninstaller for previous instance
+	ReadRegStr $R0 HKLM "${PRODUCT_REGISTRY_KEY}" "${PRODUCT_INSTALL_PATH_KEY}"
+	StrCmp $R0 "" done
+	IfFileExists "$R0\${PRODUCT_UNINSTALLER}${EXEC_EXTENSION}" uninst done
+	
+	uninst:
+	ClearErrors
+	CreateDirectory "$TEMP\${PRODUCT_NAME}"
+	CopyFiles "$R0\${PRODUCT_UNINSTALLER}${EXEC_EXTENSION}" "$TEMP\${PRODUCT_NAME}"
+	ExecWait '"$TEMP\${PRODUCT_NAME}\${PRODUCT_UNINSTALLER}${EXEC_EXTENSION}" _?=$INSTDIR'
+	RMDir /r "$TEMP\${PRODUCT_NAME}"
+	; RMDir "$1"
+	 
+	done:
+FunctionEnd
+
 Function funcGetWindowsVersion ; faster than GetWindowsVersion (cannot be tampered with)
     Push $R0
     Push $R1
