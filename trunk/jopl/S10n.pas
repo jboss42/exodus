@@ -129,7 +129,7 @@ procedure TAutoAddHandler.fireOnDisplayNameChange(bareJID: Widestring; displayNa
 begin
     if (jid.jid = bareJID) then begin
  { TODO : Roster refactor }
-        //MainSession.Roster.AddItem(jid.jid, displayName, MainSession.Prefs.getString('roster_default'), true);
+        MainSession.Roster.AddItem(jid.jid, displayName, MainSession.Prefs.getString('roster_default'), true);
         Self.Free();
     end;
 end;
