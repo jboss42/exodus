@@ -717,9 +717,24 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.SendTag(tag: TXMLTag);
+var
+    track: TXMLTag;
+
+    procedure _RemoveTrackingTag();
+    var
+        track: TXMLTag;
+    begin
+        if (tag.Name <> 'message') then exit;
+
+        track := tag.QueryXPTag(XP_MSG_TRACK);
+        if (track = nil) then exit;
+        
+        tag.RemoveTag(track);
+    end;
 begin
     // Send this tag out to the socket
     if (_stream <> nil) then begin
+        _RemoveTrackingTag();
         if (_lang <> '') then
             tag.setAttribute('xml:lang', _lang);
 
