@@ -82,7 +82,7 @@ begin
     s := TJabberSession(js);
     _cb := s.RegisterCallback(SessionCallback, '/session');
     _icb := s.RegisterCallback(SessionItemCallback, '/session');
-    
+
     _blockers.Clear();
     s.Prefs.fillStringlist('blockers', _blockers);
 end;
@@ -283,6 +283,11 @@ begin
                 //yay for single threaded, this is essentially a long function call lol
                 mainSession.FireEvent('/session/gui/conference', itemList.Item[i]);
         end;
+    end
+    else if (event = '/session/prefs') then
+    begin
+        _blockers.Clear();
+        TJabberSession(_js).Prefs.fillStringlist('blockers', _blockers);
     end;
 end;
 
