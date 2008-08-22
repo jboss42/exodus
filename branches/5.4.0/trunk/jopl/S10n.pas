@@ -285,7 +285,7 @@ begin
         else begin
             MessageDlgW(WideFormat(sS10nUnsub, [tstr]), mtInformation, [mbOK], 0);
         end;
-        MainSession.Roster.RemoveItem(item);
+        MainSession.ItemController.RemoveItem(item.UID);
     end;
 
     { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "unsubscribed",
