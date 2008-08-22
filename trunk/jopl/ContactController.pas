@@ -1,21 +1,21 @@
 {
     Copyright 2001-2008, Estate of Peter Millard
-	
-	This file is part of Exodus.
-	
-	Exodus is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
-	
-	Exodus is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License
-	along with Exodus; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    
+    This file is part of Exodus.
+    
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
 
@@ -46,7 +46,7 @@ type
        _PendingItems: IExodusItemList;
        _ContactsLoaded: Boolean;
        _depResolver: TObject; //TSimpleDependancyHandler;
-    
+
        //Methods
        procedure _GetContacts();
        procedure _ParseContacts(Event: string; Tag: TXMLTag);
@@ -62,16 +62,11 @@ type
        procedure _UpdateContacts();
        procedure _OnDisplayNameChange(bareJID: Widestring; DisplayName: WideString);
 
-       function _IsPending(sjid: Widestring): Boolean;
-       function _PushPending(item: IExodusItem): IExodusItem;
-       function _PopPending(sjid: Widestring): IExodusItem;
-      
    public
        constructor Create(JS: TObject);
        destructor Destroy; override;
 
        function AddItem(sjid, name, group: Widestring; subscribe: Boolean): IExodusItem;
-       procedure RemoveItem(item: IExodusItem);
        //Properties
    end;
 
@@ -80,6 +75,7 @@ type
     _contactCtrl: TContactController;
     _paused: Boolean;
     _ignoring: TWidestringList;
+
 
     constructor Create(cc: TContactController);
 
@@ -405,9 +401,6 @@ begin
                 itemCtrl.RemoveItem(uid);
                 //session.FireEvent('/item/remove', item);
                 SendUnSubscribe(uid, session);
-            end
-            else begin
-                _PopPending(uid);
             end;
         end
         else if (item <> nil) then begin
@@ -422,6 +415,9 @@ begin
                 session.FireEvent('/item/remove', item)
             else if visible and item.IsVisible then
                 session.FireEvent('/item/update', item);
+        end
+        else begin
+            _ParseContacts(Event, Tag);
         end;
     end;
     riList.Free();
@@ -756,38 +752,6 @@ begin
     //now we inform the server...
     TContactAddItemOp.Create(Self, Result, subscribe);
 end;
-procedure TContactController.RemoveItem(item: IExodusItem);
-begin
-    if      (item = nil) or
-            (item.Type_ <> 'contact') or
-            (_IsPending(item.UID)) then exit;
-
-    _PushPending(item);
-    TContactRemItemOp.Create(Self, item);
-end;
-
-function TContactController._IsPending(sjid: Widestring): Boolean;
-begin
-    Result := (_PendingItems.IndexOfUid(sjid) <> -1);
-end;
-function TContactController._PushPending(item: IExodusItem): IExodusItem;
-begin
-    Result := item;
-    if Result = nil then exit;
-    if not _IsPending(Result.UID) then _PendingItems.Add(Result);
-end;
-function TContactController._PopPending(sjid: Widestring): IExodusItem;
-var
-    idx: Integer;
-begin
-    Result := nil;
-    idx := _PendingItems.IndexOfUid(sjid);
-
-    if (idx <> -1) then begin
-        Result := _PendingItems.Item[idx];
-        _PendingItems.Delete(idx);
-    end;
-end;
 
 constructor TExodusContactsCallback.Create(cc: TContactController);
 begin
@@ -824,7 +788,11 @@ begin
     if Paused then exit;
     if IsIgnored(item.UID) then exit;
 
-    _contactCtrl.RemoveItem(item);
+    if ((item <> nil) and
+        (item.Type_ = 'contact')) then
+    begin
+        TContactRemItemOp.Create(_contactCtrl, item);
+    end;
 end;
 procedure TExodusContactsCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
