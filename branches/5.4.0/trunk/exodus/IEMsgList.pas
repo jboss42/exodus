@@ -1681,6 +1681,8 @@ begin
         _we2 := TMSHTMLHTMLElementEvents2.Create(self);
         _we2.Connect(_content);
         _we2.onkeypress := onkeypress;
+        _we2.oncopy := onkeypress;
+        _we2.oncut := onkeypress;
 
         if (_de <> nil) then
             _de.Free();
