@@ -330,7 +330,9 @@ uses
     Emote,
     StrUtils,
     Registry,
-    TntSysUtils;
+    TntSysUtils,
+    ChatWin,
+    Room;
 
 {$R *.dfm}
 
@@ -1576,6 +1578,7 @@ function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): 
 var
     bc: TfrmBaseChat;
     key: integer;
+    CharKey: char;
 begin
     Result := false;
     // If typing starts on the MsgList, then bump it to the outgoing
@@ -1596,6 +1599,11 @@ begin
             bc.MsgOut.WideSelText := WideChar(Key);
         try
             bc.MsgOut.SetFocus();
+            CharKey := Chr(Key);
+            if (_base is TfrmChat) then
+                TfrmChat(_base).MsgOutKeyPress(Self, CharKey)
+            else if (_base is TfrmRoom) then
+                TfrmRoom(_base).MsgOutKeyPress(Self, CharKey);
         except
             on E:Exception do
             begin
