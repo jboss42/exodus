@@ -322,6 +322,8 @@ uses
     BaseChat,
     PrefController,
     ExUtils,
+    ChatWin,
+    Room,
 {$ENDIF}
     FontConsts,
     RT_XIMConversion,
@@ -330,9 +332,7 @@ uses
     Emote,
     StrUtils,
     Registry,
-    TntSysUtils,
-    ChatWin,
-    Room;
+    TntSysUtils;
 
 {$R *.dfm}
 
