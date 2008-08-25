@@ -472,23 +472,36 @@ var
 begin
     initVis := Self.Visible;
     RestoreWindowState();
-    if (not Docked) then
+
+    if (Docked) then
     begin
-        inherited;
-        if (not initVis) then
-            OnFloat(); //fire float event so windows can fix up
+        //not visible --> initial state, floating --> moving to docked state
+        if ((not Self.Visible) or Self.Floating) then
+        begin
+            Self.DockForm();//will cause dockmanager to be shown
+        end;
+
+        //should be showing by the time we get here
+        if (bringtofront) then begin
+            GetDockManager().BringDockedToTop(Self);
+            GetDockManager().BringToFront();
+        end;
+    end
+    //initial condition, open as stateform window
+    else if (not Self.Visible) then
+    begin
+        inherited; //handles show, bring to front
+        OnFloat();
     end
     else begin
-        if (not Self.Visible) then
-            Self.DockForm();//will cause dockmanager to be shown as needed
-
-        if (bringtofront) then
+        //floating --> moving to floating state
+        if (not Self.Floating) then
         begin
-            GetDockManager().BringToFront();
-            GetDockManager().BringDockedToTop(Self);
+            Self.FloatForm();
         end;
-    end;
 
+        inherited; //handles bring to front
+    end;
     if (not initVis) then
         updateDocked(); // Make sure activity list is updated if we became visible
 end;
