@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-08-27 11:00:14 from Type Library described below.
+// File generated on 2008-08-27 12:47:50 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: Z:\repos\corp.jabber.com\momentim\src\exodus\exodus\Exodus.tlb (1)
@@ -5780,6 +5780,7 @@ type
     ['{542C6454-D12A-4DB2-B158-3DEBC1A9E017}']
     function Get_JID: WideString; safecall;
     procedure publish(const Node: WideString; var Items: OleVariant); safecall;
+    procedure retrieve(const node: WideString; const cb: IExodusPubsubListener); safecall;
     property JID: WideString read Get_JID;
   end;
 
@@ -5792,6 +5793,7 @@ type
     ['{542C6454-D12A-4DB2-B158-3DEBC1A9E017}']
     property JID: WideString readonly dispid 201;
     procedure publish(const Node: WideString; var Items: OleVariant); dispid 202;
+    procedure retrieve(const node: WideString; const cb: IExodusPubsubListener); dispid 203;
   end;
 
 // *********************************************************************//
