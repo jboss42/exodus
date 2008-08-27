@@ -264,7 +264,9 @@ begin
                     Items.Add(ol);
             end;
             FreeAndNil(xl);
-            ItemIndex := _opts.IndexOf(d);
+            i := _opts.IndexOf(d);
+            if (i <> -1) and (i < Items.Count) then
+                ItemIndex := _opts.IndexOf(d);
         end;
     end
 
