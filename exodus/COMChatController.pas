@@ -84,6 +84,7 @@ type
     procedure setChatSession(chat_session: TChatController);
     function  fireMsgKeyUp(key: Word; shift: TShiftState): boolean;
     function  fireMsgKeyDown(key: Word; shift: TShiftState): boolean;
+    function  fireMsgKeyPress(var key: Widestring; Part: ChatParts): boolean;
     function  fireBeforeMsg(var body: Widestring): boolean;
     function  fireAfterMsg(var body: WideString): Widestring;
     function  fireBeforeRecvMsg(body, xml: Widestring): boolean;
@@ -238,6 +239,35 @@ begin
     end;
 
 end;
+
+{---------------------------------------}
+function  TExodusChat.fireMsgKeyPress(var Key: Widestring; Part: ChatParts): boolean;
+var
+    i: integer;
+    chatplugin2: IExodusChatPlugin2;
+begin
+    Result := false;
+
+    for i := 0 to _plugs.Count - 1 do begin
+        try
+            chatplugin2 := TChatPlugin(_plugs[i]).com as IExodusChatPlugin2;
+            try
+                if (chatplugin2 <> nil) then
+                begin
+                    Result := chatplugin2.OnKeyPress(Key, Part);
+                    if (Result = true) then exit;
+                end;
+            except
+                // Problem firing OnKeyPress event chat plugin
+                DebugMessage('COM Exception in TExodusChat.fireMsgKeyPress');
+            end;
+        except
+            DebugMessage('COM Exception in TExodusChat.fireMsgKeyPress');
+        end;
+    end;
+
+end;
+
 {---------------------------------------}
 function TExodusChat.fireBeforeMsg(var body: Widestring): boolean;
 var

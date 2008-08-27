@@ -2168,7 +2168,20 @@ begin
 end;
 {---------------------------------------}
 procedure TfrmRoom.MsgOutKeyPress(Sender: TObject; var Key: Char);
+var
+   UpdateKey: WideString;
+   w: PWideChar;
+   Part: ChatParts;
 begin
+    if (TExodusChat(ComController) = nil) then exit;
+    if (Sender = MsgOut) then
+        Part := HWND_MsgInput
+     else
+        Part := HWND_MsgOutput;
+    UpdateKey := WideChar(Key);
+    TExodusChat(ComController).fireMsgKeyPress(UpdateKey, Part);
+    Key := Chr(Ord(PWideChar(UpdateKey)^));
+    if (Key = #0) then exit;
     inherited;
     if (Key = #0) then exit;
 

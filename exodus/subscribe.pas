@@ -47,6 +47,7 @@ type
     imgIdent: TImage;
     lblJID: TTntLabel;
     Bevel1: TBevel;
+    btnBlock: TTntButton;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -56,6 +57,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure chkSubscribeClick(Sender: TObject);
+    procedure btnBlockClick(Sender: TObject);
   private
     { Private declarations }
     _jid: TJabberID;
@@ -252,6 +254,25 @@ begin
         showHandler := TShowHandler.Create();
         TShowHandler(showHandler).getDispNameAndShow(Self, jid);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmSubscribe.btnBlockClick(Sender: TObject);
+var
+    sjid: widestring;
+    p: TJabberPres;
+begin
+    inherited;
+    MainSession.Block(_jid);
+
+    sjid := _jid.full();
+    p := TJabberPres.Create;
+    p.toJID := TJabberID.Create(sjid);
+    p.PresType := 'unsubscribed';
+
+    MainSession.SendTag(p);
+
+    Self.Close;
 end;
 
 {---------------------------------------}

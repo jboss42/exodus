@@ -306,8 +306,7 @@ uses
   XMLVCardCache in '..\jopl\XMLVCardCache.pas',
   AvatarCache in '..\jopl\AvatarCache.pas',
   ExVcardCache in 'ExVcardCache.pas',
-  NTDLLFixup in '..\jopl\NTDLLFixup.pas',
-  Pubsub in 'pubsub\Pubsub.pas';
+  NTDLLFixup in '..\jopl\NTDLLFixup.pas';
 
 {$R *.TLB}
 

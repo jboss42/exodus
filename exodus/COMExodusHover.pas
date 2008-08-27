@@ -64,6 +64,8 @@ begin
        _HoverFrame := TExFrame.Create(nil);
        _HoverFrame.AutoSize := false;
        _AxControl.Parent := _HoverFrame;
+       _HoverFrame.Width := _AxControl.Width;
+       _HoverFrame.Height := _AxControl.Height;
        _HoverFrame.AutoSize := true;
     except
         _AxControl := nil;

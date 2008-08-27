@@ -713,10 +713,12 @@ begin
                          Self.Left, Self.Top, Self.Width, Self.Height,
                          HWND_TOP);
             StartWindowPosEvents();
-
-            if (self.Showing) then
-                gotActivate();
         end;
+        StopFlash(Self);
+        isNotifying := false;
+
+        if (self.Showing) then
+            gotActivate();
     except
         // Possible exception when dealing with an extreme amount of windows
     end;
@@ -913,7 +915,8 @@ end;
 procedure TfrmState.gotActivate();
 begin
     log('TfrmState(' + GetWindowStateKey() + ').gotActivate BEGIN');
-
+    StopFlash(Self);
+    isNotifying := false;
     //nop
     log('TfrmState(' + GetWindowStateKey() + ').gotActivate END');
 end;

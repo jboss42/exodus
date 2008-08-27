@@ -86,7 +86,9 @@ uses
     BaseChat,
     Jabber1,
     PrefController,
-    FontConsts;
+    FontConsts,
+    ChatWin,
+    Room;
 
 {$R *.dfm}
 
@@ -187,6 +189,10 @@ begin
             bc.MsgOut.WideSelText := WideChar(Key);
         try
             bc.MsgOut.SetFocus();
+            if (_base is TfrmChat) then
+                TfrmChat(_base).MsgOutKeyPress(Self, Key)
+            else if (_base is TfrmRoom) then
+                TfrmRoom(_base).MsgOutKeyPress(Self, Key);
         except
             on E:Exception do
             begin
