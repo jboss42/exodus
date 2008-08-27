@@ -575,11 +575,11 @@ end;
 procedure TfAWItem._setImgIndex(val: Integer);
 begin
     if ((val >= 0) and
-        (val < frmExodus.ImageList1.Count)and
-        (val <> _imgIndex)) then begin
+        (val < frmExodus.ImageList1.Count)) then
+    begin
         _imgIndex := val;
         frmExodus.ImageList1.GetIcon(_imgIndex, imgPresence.Picture.Icon);
-      end;
+    end;
 end;
 
 {---------------------------------------}
@@ -674,9 +674,8 @@ end;
 {---------------------------------------}
 procedure TfAWItem._setPnlColors(startColor, endColor: TColor);
 begin
-    if (((pnlAWItemGPanel.GradientProperites.startColor <> startColor) or
-         (pnlAWItemGPanel.GradientProperites.endColor <> endColor)) and
-         GetActivityWindow().updatesEnabled) then
+    if ((pnlAWItemGPanel.GradientProperites.startColor <> startColor) or
+         (pnlAWItemGPanel.GradientProperites.endColor <> endColor)) then
     begin
         // only change color when needed to reduce redraw time.
         pnlAWItemGPanel.GradientProperites.startColor := startColor;
