@@ -1653,7 +1653,10 @@ begin
 //        freeChatObject();
 
     if (com_controller <> nil) then
+    begin
         com_controller.Free();
+        com_controller := nil;
+    end;
 
     if (_jid <> nil) then
         FreeAndNil(_jid);
@@ -1754,7 +1757,12 @@ begin
         cc.SetHistory(s);
 
         cc.window := nil; //unassign listenrs, starts mem timer for destruction
-    end;
+    end
+    else
+        if (com_controller <> nil) then
+            com_controller.setChatSession(nil);
+        
+
     inherited;
 end;
 
