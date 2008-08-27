@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-08-25 08:35:00 from Type Library described below.
+// File generated on 2008-08-27 11:00:14 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: Z:\repos\corp.jabber.com\momentim\src\exodus\exodus\Exodus.tlb (1)
@@ -5805,8 +5805,8 @@ type
     function Get_Services(index: Integer): IExodusPubsubService; safecall;
     function ServiceFor(const JID: WideString): IExodusPubsubService; safecall;
     function Get_PepService: IExodusPubsubService; safecall;
-    procedure Subscribe(const Node: WideString; const callback: IExodusPubsubListener); safecall;
-    procedure Unsubscribe(const Node: WideString; const callback: IExodusPubsubListener); safecall;
+    procedure RegisterListener(const Node: WideString; const callback: IExodusPubsubListener); safecall;
+    procedure UnregisterListener(const Node: WideString; const callback: IExodusPubsubListener); safecall;
     property ServiceCount: Integer read Get_ServiceCount;
     property Services[index: Integer]: IExodusPubsubService read Get_Services;
     property PepService: IExodusPubsubService read Get_PepService;
@@ -5823,8 +5823,8 @@ type
     property Services[index: Integer]: IExodusPubsubService readonly dispid 204;
     function ServiceFor(const JID: WideString): IExodusPubsubService; dispid 205;
     property PepService: IExodusPubsubService readonly dispid 206;
-    procedure Subscribe(const Node: WideString; const callback: IExodusPubsubListener); dispid 201;
-    procedure Unsubscribe(const Node: WideString; const callback: IExodusPubsubListener); dispid 202;
+    procedure RegisterListener(const Node: WideString; const callback: IExodusPubsubListener); dispid 201;
+    procedure UnregisterListener(const Node: WideString; const callback: IExodusPubsubListener); dispid 202;
   end;
 
 // *********************************************************************//
