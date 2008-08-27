@@ -5,6 +5,24 @@ interface
 uses ActiveX, Classes, ComObj, Exodus_TLB, Unicode, XMLTag;
 
 type
+  TPubsubListenerSet = class
+  private
+    _node: Widestring;
+    _listeners: TInterfaceList;
+
+    function _ListenerCount(): Integer;
+  public
+    constructor Create(node: Widestring; reg: Boolean = true);
+    destructor Destroy(); override;
+
+    procedure Notify(from, node: Widestring; items: OleVariant);
+    procedure Add(listener: IExodusPubsubListener);
+    procedure Remove(listener: IExodusPubsubListener);
+
+    property Node: Widestring read _node;
+    property Count: Integer read _ListenerCount;
+  end;
+
   TExodusPubsubService = class(TAutoIntfObject, IExodusPubsubService)
   private
     _jid: Widestring;
@@ -17,23 +35,7 @@ type
     destructor Destroy(); override;
 
     procedure publish(const node: Widestring; var items: OleVariant); safecall;
-  end;
-
-  TPubsubListenerSet = class
-  private
-    _node: Widestring;
-    _listeners: TInterfaceList;
-
-    function _ListenerCount(): Integer;
-  public
-    constructor Create(node: Widestring);
-    destructor Destroy(); override;
-
-    procedure Notify(from, node: Widestring; items: OleVariant);
-    procedure Add(listener: IExodusPubsubListener);
-    procedure Remove(listener: IExodusPubsubListener);
-
-    property Count: Integer read _ListenerCount;
+    procedure retrieve(const node: Widestring; const cb: IExodusPubsubListener); safecall;
   end;
 
   TExodusPubsubController = class(TAutoIntfObject, IExodusPubsubController)
@@ -67,22 +69,72 @@ type
     function ServiceFor(const jid: Widestring): IExodusPubsubService; safecall;
   end;
 
+const
+    XMLNS_PUBSUB: Widestring = 'http://jabber.org/protocol/pubsub';
+
 implementation
 
 uses ComServ, IQ, JabberID, Variants, Session, SysUtils, XMLParser,
     Entity, EntityCache, CapsCache;
 
 
-type TPubsubServiceWrapper = class
-private
+function ParsePubsubItems(itemTags: TXMLTagList): OleVariant;
+var
+    items: Variant;
+    idx, amt: Integer;
+    xml: Widestring;
+begin
+    if (itemTags <> nil) then
+        amt := itemTags.Count
+    else
+        amt := 0;
+    items := VarArrayCreate([0, amt], varOleStr);
+    for idx := 0 to amt - 1 do begin
+        xml := itemTags[idx].XML;
+        VarArrayPut(items, xml, idx);
+    end;
+
+    Result := items;
+end;
+
+
+type
+  TPubsubItemsNotifier = class(TPubsubListenerSet)
+  private
+    _from: Widestring;
+  public
+    constructor Create(from: Widestring; node: Widestring; cb: IExodusPubsubListener);
+
+    procedure NotifyAll(event: String; tag: TXMLTag);
+
+    property From: Widestring read _from;
+  end;
+
+  TPubsubRetrievalListener = class(TAutoIntfObject, IExodusPubsubListener)
+  private
+    _nodeList: TPubsubListenerSet;
+    _defList: TPubsubListenerSet;
+
+  public
+    constructor Create(nodeList, defList: TPubsubListenerSet);
+    destructor Destroy(); override;
+
+    procedure OnNotify(
+            const publisher: WideString;
+            const Node: WideString;
+            var Items: OleVariant); safecall;
+  end;
+
+  TPubsubServiceWrapper = class
+  private
     _svc: IExodusPubsubService;
 
-public
+  public
     constructor Create(svc: IExodusPubsubService);
     destructor Destroy(); override;
 
     property Service: IExodusPubsubService read _svc;
-end;
+  end;
 
 constructor TPubsubServiceWrapper.Create(svc: IExodusPubsubService);
 begin
@@ -113,6 +165,30 @@ begin
     Result := _jid;
 end;
 
+procedure TExodusPubsubService.retrieve(
+        const node: WideString;
+        const cb: IExodusPubsubListener);
+var
+    notifier: TPubsubItemsNotifier;
+    iq: TJabberIQ;
+    ps: TXMLTag;
+begin
+    if (node = '') then exit;
+    if (cb = nil) then exit;
+
+    notifier := TPubsubItemsNotifier.Create(Self.Get_Jid(), node, cb);
+    iq := TJabberIQ.Create(
+            MainSession,
+            MainSession.generateID,
+            notifier.NotifyAll);
+    iq.RemoveTag(iq.qTag);
+    ps := iq.AddTagNS('pubsub', XMLNS_PUBSUB);
+    ps := ps.AddTag('items');
+    ps.setAttribute('node', node);
+
+    //TODO: remember IQ?
+    iq.Send();
+end;
 procedure TExodusPubsubService.publish(
         const node: WideString;
         var items: OleVariant);
@@ -123,14 +199,13 @@ var
     val: Widestring;
     idx: Integer;
 begin
-    //TODO:  stuff!!
     iq := TJabberIQ.Create(MainSession, MainSession.generateID);
     iq.iqType := 'set';
     if (Get_Jid() <> '') then
         iq.toJid := Get_Jid();
 
     iq.RemoveTag(iq.qTag);
-    pub := iq.AddTagNS('pubsub', 'http://jabber.org/protocol/pubsub');
+    pub := iq.AddTagNS('pubsub', XMLNS_PUBSUB);
     pub := pub.AddTag('publish');
     pub.setAttribute('node', node);
 
@@ -149,16 +224,18 @@ begin
     iq.Send();
 end;
 
-constructor TPubsubListenerSet.Create(node: Widestring);
+constructor TPubsubListenerSet.Create(node: Widestring; reg: Boolean);
 begin
     _node := node;
     _listeners := TInterfaceList.Create();
 
-    jSelfCaps.AddFeature(_node + '+notify');
+    if reg and (_node <> '') then
+        jSelfCaps.AddFeature(_node + '+notify');
 end;
 destructor TPubsubListenerSet.Destroy;
 begin
-    jSelfCaps.RemoveFeature(_node + '+notify');
+    if (_node <> '') then
+        jSelfCaps.RemoveFeature(_node + '+notify');
     FreeAndNil(_listeners);
 
     inherited;
@@ -207,7 +284,7 @@ begin
 
     _msgCB := session.RegisterCallback(
             MessageCallback,
-            '/packet/message[@type="headline"]/event[@xmlns="http://jabber.org/protocol/pubsub#event"]');
+            '/packet/message[@type="headline"]/event[@xmlns="' + XMLNS_PUBSUB + '#event"]');
     _sessionCB := session.RegisterCallback(
             SessionCallback,
             '/session/disconnected');
@@ -269,7 +346,7 @@ begin
         while (pubsubs.Count > 0) do begin
             jid := pubsubs[0];
             pubsubs.Delete(0);
-            if not jEntityCache.getByJid(jid).hasFeature('http://jabber.org/protocol/pubsub') then continue;
+            if not jEntityCache.getByJid(jid).hasFeature(XMLNS_PUBSUB) then continue;
 
             svc := TExodusPubsubService.Create(jid) as IExodusPubsubService;
             _svcs.AddObject(jid, TPubsubServiceWrapper.Create(svc));
@@ -292,28 +369,32 @@ var
     itemTags: TXMLTagList;
     items: Variant;
     nodeList, defList: TPubsubListenerSet;
+    svc: IExodusPubsubService;
 begin
-    evt := tag.QueryXPTag('//event[@xmlns="http://jabber.org/protocol/pubsub#event"]/items');
+    evt := tag.QueryXPTag('//event[@xmlns="' + XMLNS_PUBSUB + '#event"]/items');
 
     from := tag.GetAttribute('from');
     node := evt.GetAttribute('node');
+    svc := ServiceFor(from);
 
     nodeList := Get_PubsubListenerSet(node);
     defList := Get_PubsubListenerSet('');
     if (nodeList = nil) and (defList = nil) then exit;
 
-    itemTags := evt.QueryTags('item');
-    items := VarArrayCreate([0, itemTags.Count], varOleStr);
-    for idx := 0 to itemTags.Count - 1 do begin
-        xml := itemTags[idx].XML;
-        VarArrayPut(items, xml, idx);
+    items := ParsePubsubItems(evt.QueryTags('item'));
+    //TODO:  if items.Count = 0, retrieve them!
+    if (VarArrayHighBound(items, 1) > 0) then begin
+        if (nodeList <> nil) then
+            nodeList.Notify(from, node, items);
+        if (defList <> nil) then
+            defList.Notify(from, node, items);
+    end
+    else if (svc <> nil) then begin
+        svc.retrieve(
+                node,
+                TPubsubRetrievalListener.Create(nodeList, defList) as IExodusPubsubListener);
     end;
 
-    if (nodeList <> nil) then
-        nodeList.Notify(from, node, items);
-    if (defList <> nil) then
-        defList.Notify(from, node, items);
-        
     VarClear(items);
 end;
 
@@ -389,6 +470,57 @@ begin
         _subscribs.Delete(idx);
         registered.Free();
     end;
+end;
+
+constructor TPubsubItemsNotifier.Create(
+        from: Widestring;
+        node: Widestring;
+        cb: IExodusPubsubListener);
+begin
+    inherited Create(node, false);
+    Self.Add(cb);
+
+    _from := from;
+end;
+
+procedure TPubsubItemsNotifier.NotifyAll(event: string; tag: TXMLTag);
+var
+    tags: TXMLTagList;
+    items: OleVariant;
+begin
+    if (tag <> nil) then
+        tags :=tag.QueryXPTags('//pubsub[@xmlns="' + XMLNS_PUBSUB+ '"]/items/item')
+    else
+        tags := nil;
+
+    items := ParsePubsubItems(tags);
+    Self.Notify(From, Node, items);
+    VarClear(items);
+
+    Self.Free();
+end;
+
+constructor TPubsubRetrievalListener.Create(nodeList, defList: TPubsubListenerSet);
+begin
+    inherited Create(ComServer.TypeLib, IID_IExodusPubsubListener);
+
+    _nodeList := nodeList;
+    _defList := defList;
+end;
+destructor TPubsubRetrievalListener.Destroy;
+begin
+    inherited;
+end;
+
+procedure TPubsubRetrievalListener.OnNotify(
+        const publisher: WideString;
+        const Node: WideString;
+        var Items: OleVariant);
+begin
+    if (_nodeList <> nil) then
+        _nodeList.Notify(publisher, node, items);
+    if (_defList <> nil) then
+        _defList.Notify(publisher, node, items);
 end;
 
 end.

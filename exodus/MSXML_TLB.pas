@@ -12,7 +12,7 @@ unit MSXML_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-08-25 08:35:00 from Type Library described below.
+// File generated on 2008-08-27 12:47:50 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\WINDOWS\system32\msxml.dll (1)
@@ -28,6 +28,9 @@ unit MSXML_TLB;
 //   Hint: Parameter 'type' of IXMLDOMNode.nodeType changed to 'type_'
 //   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
 //   Hint: Parameter 'type' of IXMLDOMDocument.createNode changed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
 //   Hint: Symbol 'type' renamed to 'type_'
 //   Hint: Symbol 'type' renamed to 'type_'
 // ************************************************************************ //
