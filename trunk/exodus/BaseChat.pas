@@ -611,6 +611,10 @@ begin
         MainSession.Prefs.fillStringlist('hotkeys_keys', _hotkeys_keys_stringlist);
         MainSession.Prefs.fillStringlist('hotkeys_text', _hotkeys_text_stringlist);
         updateFromPrefs();
+        if (MsgList is TfIEMsgList) then
+        begin
+            TfIEMsgList(MsgList).msgProcessor.displayDateSeparator := MainSession.Prefs.getBool('display_date_separator');
+        end;
     end;
 end;
 
