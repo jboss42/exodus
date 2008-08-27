@@ -61,8 +61,8 @@ type
     constructor Create(js: TObject);
     destructor Destroy(); override;
 
-    procedure Subscribe(const Node: WideString; const Callback: IExodusPubsubListener); safecall;
-    procedure Unsubscribe(const Node: WideString; const Callback: IExodusPubsubListener); safecall;
+    procedure RegisterListener(const Node: WideString; const Callback: IExodusPubsubListener); safecall;
+    procedure UnregisterListener(const Node: WideString; const Callback: IExodusPubsubListener); safecall;
 
     function ServiceFor(const jid: Widestring): IExodusPubsubService; safecall;
   end;
@@ -361,7 +361,7 @@ begin
     end;
 end;
 
-procedure TExodusPubsubController.Subscribe(
+procedure TExodusPubsubController.RegisterListener(
         const Node: WideString;
         const Callback: IExodusPubsubListener);
 var
@@ -371,7 +371,7 @@ begin
     registered := Get_PubsubListenerSet(node, true);
     registered.Add(Callback);
 end;
-procedure TExodusPubsubController.Unsubscribe(
+procedure TExodusPubsubController.UnregisterListener(
         const Node: Widestring;
         const Callback: IExodusPubsubListener);
 var
