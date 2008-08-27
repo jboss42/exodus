@@ -185,6 +185,7 @@ type
     procedure _sortTrackingListUnread();
     procedure _sortTrackingListAlpha();
     procedure _setFilesDragAndDrop(Value: Boolean);
+    procedure _forceSyncOfDockedPanel();
   protected
     { Protected declarations }
     procedure CreateParams(Var params: TCreateParams); override;
@@ -1029,6 +1030,8 @@ begin
                 _enableScrollUp(false);
                 _enableScrollDown(false);
             end;
+
+            _forceSyncOfDockedPanel();
         except
         end;
     end;
@@ -1218,39 +1221,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow.timShowActiveDockedTimer(Sender: TObject);
-var
-    i: integer;
-    item: TAWTrackerItem;
 begin
     inherited;
 
     try
         // This timer has to be here because there are cases where
-        // with the TPageControl having all tabs hiden, sometimes,
-        // the TPageControl will not show one of its sheets even though
-        // the activateitem() code has told it to by code.  But, it will show
-        // a sheet if told to from an "external" event like this timer. This
-        // looks to be a bug in TPageControl (TTntPageControl) and this is
-        // a workaround.
-        if ((_dockWindow <> nil) and (_dockWindow.AWTabControl.PageCount > 0)) then begin
-            if (_oldActivateSheet = nil) then begin
-                // We don't currently have a active sheet, so get
-                // a hold of the tsheet associated with the active, docked item.
-                for i := 0 to _trackingList.Count - 1 do begin
-                    item := TAWTrackerItem(_trackingList.Objects[i]);
-                    if ((item.awItem.active) and
-                        (item.frm.Docked)) then begin
-                        _oldActivateSheet := _dockWindow.getTabSheet(item.frm);
-                    end;
-                end;
-            end;
-
-            if (_oldActivateSheet <> nil) then begin
-                _oldActivateSheet.Visible := true;
-            end;
-        end;
+        // with the TPageControl sometimes, will not show the correct
+        // sheet.  Why TPageControl insists on showing its own choice of
+        // sheet even after being told what sheet to show is a
+        // bit of mystery.  Future refactor to remove
+        // TPageControl Completely should solve this issue.
+        _forceSyncOfDockedPanel();
     except
-        _oldActivateSheet := nil; //make it recompute    
     end;
 end;
 
@@ -1738,6 +1720,44 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmActivityWindow._forceSyncOfDockedPanel();
+var
+    item: TAWTrackerItem;
+    sheet: TTabSheet;
+    i: integer;
+begin
+    if ((_dockWindow <> nil) and
+        (_dockWindow.AWTabControl.PageCount > 0)) then
+    begin
+        if ((_activeitem = nil) and
+            (_trackingList.Count > 0)) then
+        begin
+            for i := 0 to _trackingList.Count - 1 do
+            begin
+                if (TAWTrackerItem(_trackingList.Objects[0]).frm.Docked) then
+                begin
+                    activateItem(TAWTrackerItem(_trackingList.Objects[i]).awitem);
+                    break;
+                end;
+            end;
+        end;
+
+        item := Self._findItem(_activeitem);
+
+        if (item <> nil) then
+        begin
+            sheet := _dockWindow.getTabSheet(item.frm);
+            if (sheet <> nil) then
+            begin
+                if (_dockwindow.AWTabControl.ActivePage <> sheet) then
+                begin
+                    _dockwindow.AWTabControl.ActivePage := sheet;
+                end;
+            end;
+        end;
+    end;
+end;
 
 initialization
     frmActivityWindow := nil;
