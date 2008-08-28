@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-08-27 12:47:50 from Type Library described below.
+// File generated on 8/28/2008 4:05:37 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\corp.jabber.com\momentim\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\MomentIM-trunk-foo\src\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -5434,6 +5434,7 @@ type
     ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
     procedure OnSentMessageXML(const XML: WideString); safecall;
     function OnChatEvent(const event: WideString; value: OleVariant): WordBool; safecall;
+    function OnKeyPress(var key: WideString; part: ChatParts): WordBool; safecall;
   end;
 
 // *********************************************************************//
@@ -5445,6 +5446,7 @@ type
     ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
     procedure OnSentMessageXML(const XML: WideString); dispid 302;
     function OnChatEvent(const event: WideString; value: OleVariant): WordBool; dispid 303;
+    function OnKeyPress(var key: WideString; part: ChatParts): WordBool; dispid 304;
     function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
     function OnAfterMessage(var Body: WideString): WideString; dispid 2;
     procedure OnClose; dispid 6;

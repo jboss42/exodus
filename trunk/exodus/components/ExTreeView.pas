@@ -220,6 +220,8 @@ begin
   if event = '/item/end' then begin
      Self.Items.EndUpdate;
      _BatchUpdate := false;
+     Invalidate;
+     Update;
      exit;
   end;
 
@@ -418,7 +420,6 @@ begin
             end;
         end;
     end;
-
     paths.Free();
 end;
 

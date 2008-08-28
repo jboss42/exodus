@@ -64,6 +64,7 @@ type
         _addresses: TJabberAddressList; // use optional (for JEP-33 support)
         _priority: PriorityType;
         _timestampFromDelay: boolean;
+        _guid: TGUID;
         
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
@@ -110,6 +111,7 @@ type
         property Addresses: TJabberAddressList read _addresses;
 
         property TimeIsFromDelayTag: boolean read _timestampFromDelay;
+        property GUID: TGUID read _guid;
   end;
 
 
@@ -119,7 +121,7 @@ type
 implementation
 
 uses
-    JabberConst, XMLUtils, TypInfo, gnugettext;
+    JabberConst, XMLUtils, TypInfo, gnugettext, ComObj;
     
 function GetDisplayPriority(priority: PriorityType) : Widestring;
 begin
@@ -169,6 +171,7 @@ begin
     _addresses := TJabberAddressList.Create();
     _priority := None;
     _timestampFromDelay := false;
+    _guid := StringToGUID(CreateClassID());
 end;
 
 {---------------------------------------}
@@ -262,6 +265,12 @@ begin
           headerList.Free();
         end;
 
+        //"internal" tracking code
+        t := QueryXPTag(XP_MSG_TRACK);
+        if (t <> nil) then begin
+            _guid := StringToGUID(t.Data);
+        end;
+
         // Rich text formating XEP-71
         t := GetFirstTag('html');
         if (t <> nil) then begin
@@ -312,6 +321,7 @@ begin
     _XML := msg.XML;
     _Composing := msg.Composing;
     _Priority := msg.Priority;
+    _guid := msg.GUID;
 end;
 
 {---------------------------------------}
@@ -378,6 +388,10 @@ begin
               mtag := mtag.AddBasicTag('header', GetEnumName(TypeInfo(PriorityType), Ord(Priority)));
               mtag.setAttribute('name', 'Urgency');
             end;
+
+            mtag := _tag.AddTag('track');
+            mtag.setAttribute('xmlns', XMLNS_MSG_TRACK);
+            mtag.AddCData(GUIDToString(_guid));
 
             if (_xml <> '') then
               addInsertedXML(_xml);

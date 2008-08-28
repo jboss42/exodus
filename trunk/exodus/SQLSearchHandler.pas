@@ -161,7 +161,8 @@ var
     i: integer;
     thread: TSQLSearchThread;
 begin
-    if (_CurrentSearches.Find(SearchID, i)) then begin
+    i := _CurrentSearches.IndexOf(SearchID);
+    if (i >= 0) then begin
         try
             thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
             thread.Terminate();
@@ -315,7 +316,8 @@ begin
     if (msg = nil) then begin
         // End of result set
         HistorySearchManager.HandlerResult(_handlerID, SearchID, nil);
-        if (_currentSearches.Find(SearchID, i)) then begin
+        i := _CurrentSearches.IndexOf(SearchID);
+        if (i >= 0) then begin
             // Remove search from search queue.
             // Do NOT free the thread object here.  It will self
             // delete.  If we try to clean it up, we deadlock.
@@ -341,7 +343,8 @@ var
 begin
     if (event = '/session/history/search/execute') then begin
         searchID := tag.Data;
-        if (_CurrentSearches.Find(searchID, i)) then begin
+        i := _CurrentSearches.IndexOf(searchID);
+        if (i >= 0) then begin
             try
                 thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
                 thread.Resume();

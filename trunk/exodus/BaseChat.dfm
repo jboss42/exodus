@@ -5,7 +5,7 @@ inherited frmBaseChat: TfrmBaseChat
   ClientWidth = 415
   OnResize = FormResize
   ExplicitWidth = 423
-  ExplicitHeight = 288
+  ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -35,6 +35,7 @@ inherited frmBaseChat: TfrmBaseChat
       ExplicitWidth = 415
       inherited tbDockBar: TToolBar
         Left = 366
+        Height = 22
         ExplicitLeft = 366
         inherited btnDockToggle: TToolButton
           ParentShowHint = False
@@ -62,6 +63,7 @@ inherited frmBaseChat: TfrmBaseChat
       end
     end
     inherited pnlDockControlSite: TTntPanel
+      Left = 4
       Width = 407
       ExplicitWidth = 407
     end

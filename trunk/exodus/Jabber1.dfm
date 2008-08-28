@@ -20,7 +20,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 656
+  ExplicitHeight = 652
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
@@ -60,10 +60,6 @@ inherited frmExodus: TfrmExodus
     TabStop = False
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -83,21 +79,19 @@ inherited frmExodus: TfrmExodus
       TabVisible = False
       object pnlRoster: TPanel
         Left = 0
-        Top = 50
+        Top = 36
         Width = 396
-        Height = 467
+        Height = 481
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitTop = 44
-        ExplicitHeight = 473
       end
       object GridPanel1: TGridPanel
         Left = 0
         Top = 0
         Width = 396
-        Height = 50
+        Height = 36
         Align = alTop
         BevelOuter = bvNone
         ColumnCollection = <
@@ -139,18 +133,18 @@ inherited frmExodus: TfrmExodus
         RowCollection = <
           item
             SizeStyle = ssAbsolute
-            Value = 22.000000000000000000
+            Value = 13.000000000000000000
           end
           item
             SizeStyle = ssAbsolute
-            Value = 28.000000000000000000
+            Value = 23.000000000000000000
           end>
         TabOrder = 1
         object imgSSL: TImage
           Left = 380
           Top = 0
           Width = 16
-          Height = 50
+          Height = 36
           Hint = 'Secure Connection'
           Margins.Left = 0
           Margins.Top = 0
@@ -189,35 +183,38 @@ inherited frmExodus: TfrmExodus
           Transparent = True
           ExplicitLeft = 384
           ExplicitWidth = 13
+          ExplicitHeight = 50
         end
         object lblDisplayName: TTntLabel
           AlignWithMargins = True
           Left = 24
-          Top = 3
+          Top = 0
           Width = 353
-          Height = 16
+          Height = 13
+          Margins.Top = 0
+          Margins.Bottom = 0
           Align = alClient
+          Layout = tlBottom
           ExplicitWidth = 3
-          ExplicitHeight = 13
         end
         object pnlStatus: TPanel
-          AlignWithMargins = True
-          Left = 24
-          Top = 25
-          Width = 353
-          Height = 22
+          Left = 21
+          Top = 13
+          Width = 359
+          Height = 23
           Cursor = crHandPoint
+          Margins.Top = 0
+          Margins.Bottom = 0
           Align = alClient
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
           OnClick = clickChangeStatus
-          ExplicitHeight = 16
           object imgDown: TImage
             Left = 9
             Top = 0
             Width = 16
-            Height = 22
+            Height = 23
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
@@ -267,7 +264,7 @@ inherited frmExodus: TfrmExodus
             Left = 0
             Top = 0
             Width = 9
-            Height = 22
+            Height = 23
             Cursor = crHandPoint
             Margins.Left = 0
             Margins.Top = 0
@@ -276,16 +273,16 @@ inherited frmExodus: TfrmExodus
             Align = alLeft
             AutoSize = True
             BevelOuter = bvNone
+            ParentColor = True
             TabOrder = 0
             OnMouseEnter = pnlStatusLabelMouseEnter
             OnMouseLeave = pnlStatusLabelMouseLeave
-            ExplicitHeight = 16
             object lblStatus: TTntLabel
               AlignWithMargins = True
               Left = 3
               Top = 3
               Width = 3
-              Height = 16
+              Height = 17
               Cursor = crHandPoint
               Align = alLeft
               Alignment = taCenter
@@ -304,7 +301,7 @@ inherited frmExodus: TfrmExodus
             Left = 28
             Top = 0
             Width = 135
-            Height = 22
+            Height = 23
             Margins.Top = 0
             Margins.Bottom = 0
             Align = alLeft
@@ -321,12 +318,14 @@ inherited frmExodus: TfrmExodus
           Left = 0
           Top = 0
           Width = 21
-          Height = 50
+          Height = 36
           Align = alClient
+          Anchors = []
           AutoSize = True
           Center = True
           Transparent = True
-          ExplicitWidth = 17
+          ExplicitTop = -1
+          ExplicitHeight = 41
         end
       end
     end

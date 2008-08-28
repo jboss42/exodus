@@ -264,8 +264,10 @@ begin
     end;
 
     _GroupsLoaded := true;
-    TJabberSession(_JS).FireEvent('/item/end', Group);
-    TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
+     if (TJabberSession(_js).RosterRefreshTimer.Enabled) then
+        TJabberSession(_js).RosterRefreshTimer.Enabled := false;
+
+    TJabberSession(_js).RosterRefreshTimer.Enabled := true;
     TAuthDependancyResolver.SignalReady(DEPMOD_GROUPS, nil, TJabberSession(_JS));
 end;
 

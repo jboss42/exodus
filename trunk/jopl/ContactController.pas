@@ -1,21 +1,21 @@
 {
     Copyright 2001-2008, Estate of Peter Millard
-	
-	This file is part of Exodus.
-	
-	Exodus is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
-	
-	Exodus is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License
-	along with Exodus; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    
+    This file is part of Exodus.
+    
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
 
@@ -28,10 +28,12 @@ uses COMExodusItemController, Exodus_TLB, XMLTag, Presence,
 
 type
    TExodusContactsCallback = class;
+   TExodusItemCallback = class;
    TContactController = class
    private
        _JS: TObject;
        _ItemsCB: TExodusContactsCallback;
+       _EvtCB: TExodusItemCallback;
        _PresCB: Integer;
        _IQCB: Integer;
        _RMCB: Integer;
@@ -62,15 +64,11 @@ type
        procedure _UpdateContacts();
        procedure _OnDisplayNameChange(bareJID: Widestring; DisplayName: WideString);
 
-       function _IsPending(sjid: Widestring): Boolean;
-       function _PushPending(item: IExodusItem): IExodusItem;
-       function _PopPending(sjid: Widestring): IExodusItem;
    public
        constructor Create(JS: TObject);
        destructor Destroy; override;
 
        function AddItem(sjid, name, group: Widestring; subscribe: Boolean): IExodusItem;
-       procedure RemoveItem(item: IExodusItem);
        //Properties
    end;
 
@@ -81,7 +79,6 @@ type
     _ignoring: TWidestringList;
 
     constructor Create(cc: TContactController);
-
   protected
     property Paused: Boolean read _paused write _paused;
 
@@ -94,6 +91,25 @@ type
     procedure ItemDeleted(const item: IExodusItem); safecall;
     procedure ItemGroupsChanged(const item: IExodusItem); safecall;
     procedure ItemUpdated(const Item: IExodusItem); safecall;
+  end;
+  TExodusItemCallback = class
+  private
+    _contacCtrl: TContactController;
+    _cb: Integer;
+    _ignored: TWidestringList;
+    _paused: Boolean;
+
+    constructor Create(cc: TContactController);
+    procedure _ItemCallback(event: String; item: IExodusItem);
+  protected
+    property Paused: Boolean read _paused write _paused;
+
+    function IsIgnored(sjid: Widestring): boolean;
+    procedure Ignore(sjid: Widestring);
+    procedure Unignore(sjid: Widestring);
+  public
+    destructor Destroy(); override;
+    procedure FireUpdate(item: IExodusItem);
   end;
 
   TContactUpdateItemOp = class
@@ -139,13 +155,14 @@ type
 
 implementation
 uses IQ, JabberConst, JabberID, SysUtils,
-     Session, s10n, RosterImages, COMExodusItemList, ComServ;
+     Session, s10n, RosterImages, COMExodusItemList, ComServ, ExUtils;
 
 {---------------------------------------}
 constructor TContactController.Create(JS: TObject);
 begin
     _JS := JS;
     _ItemsCB := TExodusContactsCallback.Create(Self);
+    _EvtCB := TExodusItemCallback.Create(Self);
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
     _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
     _RMCB := TJabberSession(_JS).RegisterCallback(_RemoveCallback, '/roster/remove/item[@xmlns="jabber:iq:roster"]');
@@ -174,6 +191,7 @@ begin
     end;
     _DNListener.Free;
 
+    FreeAndNil(_EvtCB);
     _ItemsCB._Release();
     _ItemsCB := nil;
     _depResolver.Free();
@@ -209,7 +227,7 @@ var
 begin
     Item := nil;
     _ItemsCB.Paused := true;
-    TJabberSession(_JS).FireEvent('/item/begin', Item);
+
     TJabberSession(_JS).FireEvent('/contact/item/begin', Item);
     ContactItemTags := Tag.QueryXPTags('/iq/query/item');
     for i := 0 to ContactItemTags.Count - 1 do begin
@@ -232,9 +250,14 @@ begin
     _ItemsCB.Paused := false;
     _ContactsLoaded := true;
     TJabberSession(_JS).FireEvent('/contact/item/end', Item);
-    TJabberSession(_JS).FireEvent('/item/end', Item);
     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
     TJabberSession(_JS).FireEvent('/roster/end', nil, ''); //legacy event
+
+    if (TJabberSession(_js).RosterRefreshTimer.Enabled) then
+        TJabberSession(_js).RosterRefreshTimer.Enabled := false;
+
+    TJabberSession(_js).RosterRefreshTimer.Enabled := true;
+
     TAuthDependancyResolver.SignalReady(DEPMOD_ROSTER, nil, TJabberSession(_JS));
     ContactItemTags.Free();
 end;
@@ -355,7 +378,7 @@ begin
             else if visible and not Item.IsVisible then
                 TJabberSession(_JS).FireEvent('/item/remove', Item)
             else if visible and Item.IsVisible then
-                TJabberSession(_JS).FireEvent('/item/update', Item);
+                _EvtCB.FireUpdate(Item);
         end;
     end;
 end;
@@ -399,9 +422,6 @@ begin
                 itemCtrl.RemoveItem(uid);
                 //session.FireEvent('/item/remove', item);
                 SendUnSubscribe(uid, session);
-            end
-            else begin
-                _PopPending(uid);
             end;
         end
         else if (item <> nil) then begin
@@ -415,7 +435,10 @@ begin
             else if visible and not item.IsVisible then
                 session.FireEvent('/item/remove', item)
             else if visible and item.IsVisible then
-                session.FireEvent('/item/update', item);
+                _EvtCB.FireUpdate(item);
+        end
+        else begin
+            _ParseContacts(Event, Tag);
         end;
     end;
     riList.Free();
@@ -476,6 +499,8 @@ var
     ImagePrefix, Subs, Ask, Show: Widestring;
     Tag: TXMLTag;
 begin
+    _EvtCB.Ignore(Item.UID);
+    
     Item.Active := false;
     Item.IsVisible := true;
 
@@ -600,6 +625,7 @@ begin
         Item.IsVisible := false;
 
    Tag.Free();
+   _EvtCB.Unignore(Item.UID);
 end;
 
 {---------------------------------------}
@@ -615,7 +641,14 @@ begin
 
     if (Event = '/presence/subscription') then
         exit;
+    Item := nil;
 
+    //Reset the timer if already enabled
+    //Timer will invalidate and release tree view display
+    if (TJabberSession(_js).RosterRefreshTimer.Enabled) then
+        TJabberSession(_js).RosterRefreshTimer.Enabled := false;
+
+    TJabberSession(_js).RosterRefreshTimer.Enabled := true;
     //If my user own presence, ignore
     try
         Tmp := TJabberID.Create(Pres.FromJid);
@@ -639,7 +672,7 @@ begin
 
   if (Item.IsVisible) then
       if (wasVisible) then
-          TJabberSession(_JS).FireEvent('/item/update', Item)
+          _EvtCB.FireUpdate(Item)
       else
           // notify the window that this item needs to be updated
           TJabberSession(_JS).FireEvent('/item/add', Item)
@@ -735,7 +768,7 @@ begin
                 ((group <> '') and not Result.BelongsToGroup(group)) then begin
             //just update the groups this contact belongs to, and bail
             Result.AddGroup(group);
-            session.FireEvent('/item/update', Result);
+            _EvtCB.FireUpdate(Result);
             exit;
         end;
     end;
@@ -743,43 +776,10 @@ begin
     //now we inform the server...
     TContactAddItemOp.Create(Self, Result, subscribe);
 end;
-procedure TContactController.RemoveItem(item: IExodusItem);
-begin
-    if      (item = nil) or
-            (item.Type_ <> 'contact') or
-            (_IsPending(item.UID)) then exit;
-
-    _PushPending(item);
-    TContactRemItemOp.Create(Self, item);
-end;
-
-function TContactController._IsPending(sjid: Widestring): Boolean;
-begin
-    Result := (_PendingItems.IndexOfUid(sjid) <> -1);
-end;
-function TContactController._PushPending(item: IExodusItem): IExodusItem;
-begin
-    Result := item;
-    if Result = nil then exit;
-    if not _IsPending(Result.UID) then _PendingItems.Add(Result);
-end;
-function TContactController._PopPending(sjid: Widestring): IExodusItem;
-var
-    idx: Integer;
-begin
-    Result := nil;
-    idx := _PendingItems.IndexOfUid(sjid);
-
-    if (idx <> -1) then begin
-        Result := _PendingItems.Item[idx];
-        _PendingItems.Delete(idx);
-    end;
-end;
 
 constructor TExodusContactsCallback.Create(cc: TContactController);
 begin
     inherited Create(ComServer.TypeLib, IID_IExodusItemCallback);
-
     _contactCtrl := cc;
     _ignoring := TWidestringList.Create;
     _AddRef();
@@ -787,7 +787,6 @@ end;
 destructor TExodusContactsCallback.Destroy;
 begin
     _ignoring.Free();
-
     inherited;
 end;
 
@@ -813,7 +812,11 @@ begin
     if Paused then exit;
     if IsIgnored(item.UID) then exit;
 
-    _contactCtrl.RemoveItem(item);
+    if ((item <> nil) and
+        (item.Type_ = 'contact')) then
+    begin
+        TContactRemItemOp.Create(_contactCtrl, item);
+    end;
 end;
 procedure TExodusContactsCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
@@ -865,7 +868,7 @@ begin
         session := TJabberSession(Controller._JS);
 
         if item.IsVisible then
-            session.FireEvent('/item/update', item);
+            _ctrl._EvtCB.FireUpdate(item);
     end;
 
     Self.Free();
@@ -912,7 +915,7 @@ begin
             SendSubscribe(item.UID, session);
 
         if item.IsVisible then
-            session.FireEvent('/item/update', item);
+            _ctrl._EvtCB.FireUpdate(item);
     end;
 
     Self.Free();
@@ -951,6 +954,69 @@ begin
         SendUnSubscribe(item.UID, session);
         SendUnSubscribed(item.UID, session);
     end;
+end;
+
+constructor TExodusItemCallback.Create(cc: TContactController);
+var
+    session: TJabberSession;
+begin
+    _contacCtrl := cc;
+    _ignored := TWidestringList.Create();
+
+    session := TJabberSession(cc._JS);
+    _cb := session.RegisterCallback(_ItemCallback, '/item/update');
+end;
+destructor TExodusItemCallback.Destroy;
+begin
+    _ignored.Free();
+    TJabberSession(_contacCtrl._JS).UnRegisterCallback(_cb);
+
+    inherited;
+end;
+
+procedure TExodusItemCallback._ItemCallback(event: string; item: IExodusItem);
+var
+    session: TJabberSession;
+begin
+    if Paused then exit;
+    if (item = nil) then exit;
+    if (item.Type_ <> 'contact') then exit;
+    if IsIgnored(item.UID) then exit;
+
+    session := TJabberSession(_contacCtrl._JS);
+    _contacCtrl._UpdateContact(item, session.ppdb.FindPres(item.UID, ''));
+end;
+
+function TExodusItemCallback.IsIgnored(sjid: WideString): Boolean;
+begin
+    Result := (_ignored.IndexOf(sjid) <> -1);
+end;
+procedure TExodusItemCallback.Ignore(sjid: WideString);
+var
+    idx: Integer;
+begin
+    idx := _ignored.IndexOf(sjid);
+    if (idx = -1) then begin
+        _ignored.Add(sjid);
+    end;
+end;
+procedure TExodusItemCallback.Unignore(sjid: WideString);
+var
+    idx: Integer;
+begin
+    idx := _ignored.IndexOf(sjid);
+    if (idx <> -1) then begin
+        _ignored.Delete(idx);
+    end;
+end;
+
+procedure TExodusItemCallback.FireUpdate(item: IExodusItem);
+begin
+    if (item.Type_ <> 'contact') then exit;
+
+    Ignore(item.UID);
+    TJabberSession(_contacCtrl._JS).FireEvent('/item/update', item);
+    Unignore(item.UID);
 end;
 
 end.
