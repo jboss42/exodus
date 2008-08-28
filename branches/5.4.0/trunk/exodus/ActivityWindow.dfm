@@ -1,9 +1,10 @@
 object frmActivityWindow: TfrmActivityWindow
   Left = 0
   Top = 0
+  BorderStyle = bsNone
   Caption = 'frmActivityWindow'
-  ClientHeight = 394
-  ClientWidth = 187
+  ClientHeight = 422
+  ClientWidth = 195
   Color = 13681583
   DockSite = True
   Font.Charset = DEFAULT_CHARSET
@@ -19,8 +20,8 @@ object frmActivityWindow: TfrmActivityWindow
   object pnlListBase: TExGradientPanel
     Left = 0
     Top = 10
-    Width = 187
-    Height = 374
+    Width = 195
+    Height = 402
     Align = alClient
     BevelOuter = bvNone
     ParentColor = True
@@ -28,10 +29,12 @@ object frmActivityWindow: TfrmActivityWindow
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdHorizontal
+    ExplicitWidth = 187
+    ExplicitHeight = 374
     object pnlListScrollUp: TExGradientPanel
       Left = 0
       Top = 30
-      Width = 187
+      Width = 195
       Height = 22
       Align = alTop
       BevelOuter = bvNone
@@ -44,8 +47,9 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
+      ExplicitWidth = 187
       object imgScrollUp: TImage
-        Left = 73
+        Left = 76
         Top = 1
         Width = 16
         Height = 16
@@ -55,11 +59,12 @@ object frmActivityWindow: TfrmActivityWindow
         OnClick = pnlListScrollUpClick
         OnMouseDown = pnlListScrollUpMouseDown
         OnMouseUp = pnlListScrollUpMouseUp
+        ExplicitLeft = 73
       end
       object ScrollUpBevel: TColorBevel
         Left = 0
         Top = 17
-        Width = 187
+        Width = 195
         Height = 5
         Align = alBottom
         Shape = bsBottomLine
@@ -67,12 +72,13 @@ object frmActivityWindow: TfrmActivityWindow
         Shadow = clBtnShadow
         FrameColor = frUser
         ExplicitTop = -28
+        ExplicitWidth = 187
       end
     end
     object pnlListScrollDown: TExGradientPanel
       Left = 0
-      Top = 352
-      Width = 187
+      Top = 380
+      Width = 195
       Height = 22
       Align = alBottom
       BevelOuter = bvNone
@@ -85,8 +91,10 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
+      ExplicitTop = 352
+      ExplicitWidth = 187
       object imgScrollDown: TImage
-        Left = 73
+        Left = 76
         Top = 4
         Width = 16
         Height = 16
@@ -102,20 +110,21 @@ object frmActivityWindow: TfrmActivityWindow
       object ScrollDownBevel: TColorBevel
         Left = 0
         Top = 0
-        Width = 187
+        Width = 195
         Height = 5
         Align = alTop
         Shape = bsTopLine
         HighLight = clBtnHighlight
         Shadow = clBtnShadow
         FrameColor = frUser
+        ExplicitWidth = 187
       end
     end
     object pnlList: TExGradientPanel
       Left = 0
       Top = 52
-      Width = 187
-      Height = 300
+      Width = 195
+      Height = 328
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
@@ -125,20 +134,22 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
+      ExplicitWidth = 187
+      ExplicitHeight = 300
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
         Width = 10
-        Height = 300
+        Height = 328
         Align = alLeft
         Shape = bsSpacer
         ExplicitHeight = 305
       end
       object ListRightSpacer: TBevel
-        Left = 187
+        Left = 195
         Top = 0
         Width = 0
-        Height = 300
+        Height = 328
         Align = alRight
         Shape = bsSpacer
         ExplicitLeft = 184
@@ -148,7 +159,7 @@ object frmActivityWindow: TfrmActivityWindow
     object pnlListSort: TExGradientPanel
       Left = 0
       Top = 0
-      Width = 187
+      Width = 195
       Height = 30
       Align = alTop
       BevelOuter = bvNone
@@ -157,10 +168,11 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
+      ExplicitWidth = 187
       object lblSort: TTntLabel
         Left = 26
         Top = 5
-        Width = 140
+        Width = 148
         Height = 20
         Align = alClient
         Alignment = taRightJustify
@@ -176,7 +188,7 @@ object frmActivityWindow: TfrmActivityWindow
       object SortTopSpacer: TBevel
         Left = 0
         Top = 0
-        Width = 187
+        Width = 195
         Height = 5
         Align = alTop
         Shape = bsSpacer
@@ -185,7 +197,7 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitWidth = 183
       end
       object imgSortArrow: TImage
-        Left = 166
+        Left = 174
         Top = 5
         Width = 16
         Height = 20
@@ -219,7 +231,7 @@ object frmActivityWindow: TfrmActivityWindow
         Shape = bsSpacer
       end
       object SortRightSpacer: TBevel
-        Left = 182
+        Left = 190
         Top = 5
         Width = 5
         Height = 20
@@ -230,7 +242,7 @@ object frmActivityWindow: TfrmActivityWindow
       object SortBevel: TColorBevel
         Left = 0
         Top = 25
-        Width = 187
+        Width = 195
         Height = 5
         Align = alBottom
         Shape = bsBottomLine
@@ -246,7 +258,7 @@ object frmActivityWindow: TfrmActivityWindow
   object pnlBorderTop: TExGradientPanel
     Left = 0
     Top = 0
-    Width = 187
+    Width = 195
     Height = 10
     Align = alTop
     BevelOuter = bvNone
@@ -255,11 +267,12 @@ object frmActivityWindow: TfrmActivityWindow
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdVertical
+    ExplicitWidth = 187
   end
   object pnlBorderBottom: TExGradientPanel
     Left = 0
-    Top = 384
-    Width = 187
+    Top = 412
+    Width = 195
     Height = 10
     Align = alBottom
     BevelOuter = bvNone
@@ -268,6 +281,8 @@ object frmActivityWindow: TfrmActivityWindow
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdVertical
+    ExplicitTop = 384
+    ExplicitWidth = 187
   end
   object popAWSort: TTntPopupMenu
     Left = 104
