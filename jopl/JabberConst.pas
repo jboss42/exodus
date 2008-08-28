@@ -78,6 +78,7 @@ const
     XMLNS_XHTMLIM    = 'http://jabber.org/protocol/xhtml-im';
     XMLNS_XHTML      = 'http://www.w3.org/1999/xhtml';
     XMLNS_SHIM       = 'http://jabber.org/protocol/shim';
+    XMLNS_MSG_TRACK  = 'http://www.jabber.com/protocol/momentim/msg-track';
 
     //"known" or expected Item properties
     IE_PROP_IMAGEPREFIX = 'ImagePrefix';
@@ -97,6 +98,7 @@ var
     XP_XDISPLAY: TXPLite;
     XP_XROSTER: TXPLite;
     XP_XHTMLIM: TXPLite;
+    XP_MSG_TRACK: TXPLite;
 
     REGEX_URL: TRegExpr;
     REGEX_CRLF: TRegExpr;
@@ -116,6 +118,7 @@ initialization
     XP_XDISPLAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/displayed');
     XP_XROSTER := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XROSTER + '"]');
     XP_XHTMLIM := TXPLite.Create('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]');
+    XP_MSG_TRACK := TXPLite.Create('/message/track[@xmlns="' + XMLNS_MSG_TRACK + '"]');
 
     REGEX_URL := TRegExpr.Create();
     // http://foo, you see

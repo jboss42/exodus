@@ -1,21 +1,21 @@
 {
     Copyright 2001-2008, Estate of Peter Millard
-	
-	This file is part of Exodus.
-	
-	Exodus is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
-	
-	Exodus is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License
-	along with Exodus; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    
+    This file is part of Exodus.
+    
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 unit DockWindow;
 
@@ -69,7 +69,6 @@ type
     _sessionCB: integer;
     _suppressShow: boolean;
 
-    procedure _removeTabs(idx:integer = -1; oldtsheet: TTntTabSheet = nil);
     procedure _layoutDock();
     procedure _layoutAWOnly();
     procedure _saveDockWidths();
@@ -326,7 +325,6 @@ begin
     setWindowCaption(frm.Caption);
     Result := GetTabSheet(frm);
     frm.Visible := true;
-    _removeTabs(-1, oldsheet);
 end;
 
 {---------------------------------------}
@@ -420,7 +418,6 @@ begin
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();
         _docked_forms.Add(TfrmDockable(Source.Control));
-        _removeTabs(-1, oldsheet);
 
         if (Self.WindowState = wsMaximized) then begin
             Self.Top := Self.Monitor.WorkareaRect.Top;
@@ -644,60 +641,6 @@ begin
         if (tab.Controls[0] is TForm) then begin
             Result := TForm(tab.Controls[0]);
             exit;
-        end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmDockWindow._removeTabs(idx: integer; oldtsheet: TTntTabSheet);
-var
-    i: integer;
-    aw: TfrmActivityWindow;
-    frm: TfrmDockable;
-    item: TAWTrackerItem;
-    holdSheet: TTntTabSheet;
-begin
-    holdSheet:=  TTntTabSheet(AWTabControl.ActivePage);
-
-    if (holdSheet <> nil) then begin
-        AWTabControl.ActivePage := holdSheet;
-    end;
-
-    if (oldtsheet <> nil) then begin
-        // Workaround for problem with hidden tabs on TPageControl
-        // Restore the sheet that was showing
-        //AWTabControl.ActivePage := oldtsheet;
-        try
-            aw := GetActivityWindow();
-            if (aw <> nil) then begin
-                frm := TfrmDockable(getTabForm(oldtsheet));
-                if (frm <> nil) then begin
-                    item := aw.findItem(frm);
-                    if (item <> nil) then begin
-                        aw.activateItem(item.awItem);
-                    end;
-                end;
-            end;
-            AWTabControl.ActivePage := oldtsheet;
-        except
-        end;
-    end
-    else if (AWTabControl.PageCount > 0) then begin
-        try
-            // No old sheet was showing but one should be now
-            // as the PageCount is positive, so force the page
-            // at index 0 to show.
-            aw := GetActivityWindow();
-            if (aw <> nil) then begin
-                frm := TfrmDockable(getTabForm(AWTabControl.Pages[0]));
-                if (frm <> nil) then begin
-                    item := aw.findItem(frm);
-                    if (item <> nil) then begin
-                        aw.activateItem(item.awItem);
-                    end;
-                end;
-            end;
-        except
         end;
     end;
 end;
@@ -1091,7 +1034,6 @@ begin
 
     frmExodus.btnActivityWindow.ImageIndex := imgref;
 end;
-
 
 
 end.

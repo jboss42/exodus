@@ -475,6 +475,8 @@ begin
     MsgOut.SelAttributes.Italic := false;
     MsgOut.SelAttributes.UnderlineType := ultNone;
     MsgOut.SelAttributes.Color := MainSession.Prefs.getInt(PREF_FONT_COLOR);
+    MsgOut.SelAttributes.Name := MainSession.Prefs.getString(PREF_FONT_NAME);
+    MsgOut.SelAttributes.Size := MainSession.Prefs.getInt(PREF_FONT_SIZE);
 end;
 
 {---------------------------------------}
@@ -483,7 +485,7 @@ begin
     inherited;
     frmExodus.ActiveChat := Self;
 
-    if (Self.Visible and MsgOut.Visible and MsgOut.Enabled) then begin
+    if (Self.Active and Self.Visible and MsgOut.Visible and MsgOut.Enabled) then begin
         try
             MsgOut.SetFocus();
         except
@@ -609,6 +611,10 @@ begin
         MainSession.Prefs.fillStringlist('hotkeys_keys', _hotkeys_keys_stringlist);
         MainSession.Prefs.fillStringlist('hotkeys_text', _hotkeys_text_stringlist);
         updateFromPrefs();
+        if (MsgList is TfIEMsgList) then
+        begin
+            TfIEMsgList(MsgList).msgProcessor.displayDateSeparator := MainSession.Prefs.getBool('display_date_separator');
+        end;
     end;
 end;
 

@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-08-27 12:47:50 from Type Library described below.
+// File generated on 08/25/2008 10:48:11 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\corp.jabber.com\momentim\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -163,10 +163,6 @@ const
   CLASS_ExodusMsg: TGUID = '{26EE3B49-A7E1-4B67-B63B-16F8BBE3B841}';
   CLASS_ExodusToolbar: TGUID = '{E12A4659-336B-4921-AC6A-771B1DCA5AF8}';
   CLASS_ExodusPacketDispatcher: TGUID = '{DB860D8B-51E5-479E-A8A0-648288C8D031}';
-  IID_IExodusPubsubListener: TGUID = '{EF6AFD93-FBF8-409E-BF37-052608F55FCB}';
-  IID_IExodusPubsubService: TGUID = '{542C6454-D12A-4DB2-B158-3DEBC1A9E017}';
-  IID_IExodusPubsubController: TGUID = '{A4710E01-8CC8-4AC3-A49F-B702A4208D84}';
-  IID_IExodusControllerRegistry: TGUID = '{E2AE307A-FFA5-4C68-B56D-FC6165924805}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -376,14 +372,6 @@ type
   IExodusControlSiteDisp = dispinterface;
   IExodusMsg = interface;
   IExodusMsgDisp = dispinterface;
-  IExodusPubsubListener = interface;
-  IExodusPubsubListenerDisp = dispinterface;
-  IExodusPubsubService = interface;
-  IExodusPubsubServiceDisp = dispinterface;
-  IExodusPubsubController = interface;
-  IExodusPubsubControllerDisp = dispinterface;
-  IExodusControllerRegistry = interface;
-  IExodusControllerRegistryDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -432,7 +420,6 @@ type
 // *********************************************************************//
   PWideString1 = ^WideString; {*}
   PWordBool1 = ^WordBool; {*}
-  POleVariant1 = ^OleVariant; {*}
 
 
 // *********************************************************************//
@@ -5434,6 +5421,7 @@ type
     ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
     procedure OnSentMessageXML(const XML: WideString); safecall;
     function OnChatEvent(const event: WideString; value: OleVariant): WordBool; safecall;
+    function OnKeyPress(var key: WideString; part: ChatParts): WordBool; safecall;
   end;
 
 // *********************************************************************//
@@ -5445,6 +5433,7 @@ type
     ['{B92A81A9-79B8-47F0-8A79-1CAC711089E5}']
     procedure OnSentMessageXML(const XML: WideString); dispid 302;
     function OnChatEvent(const event: WideString; value: OleVariant): WordBool; dispid 303;
+    function OnKeyPress(var key: WideString; part: ChatParts): WordBool; dispid 304;
     function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
     function OnAfterMessage(var Body: WideString): WideString; dispid 2;
     procedure OnClose; dispid 6;
@@ -5749,108 +5738,6 @@ type
     property additionalXML: WideString dispid 212;
     property RawMsgXML: WideString dispid 213;
     property Priority: Integer dispid 214;
-  end;
-
-// *********************************************************************//
-// Interface: IExodusPubsubListener
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {EF6AFD93-FBF8-409E-BF37-052608F55FCB}
-// *********************************************************************//
-  IExodusPubsubListener = interface(IDispatch)
-    ['{EF6AFD93-FBF8-409E-BF37-052608F55FCB}']
-    procedure OnNotify(const publisher: WideString; const Node: WideString; var Items: OleVariant); safecall;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusPubsubListenerDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {EF6AFD93-FBF8-409E-BF37-052608F55FCB}
-// *********************************************************************//
-  IExodusPubsubListenerDisp = dispinterface
-    ['{EF6AFD93-FBF8-409E-BF37-052608F55FCB}']
-    procedure OnNotify(const publisher: WideString; const Node: WideString; var Items: OleVariant); dispid 201;
-  end;
-
-// *********************************************************************//
-// Interface: IExodusPubsubService
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {542C6454-D12A-4DB2-B158-3DEBC1A9E017}
-// *********************************************************************//
-  IExodusPubsubService = interface(IDispatch)
-    ['{542C6454-D12A-4DB2-B158-3DEBC1A9E017}']
-    function Get_JID: WideString; safecall;
-    procedure publish(const Node: WideString; var Items: OleVariant); safecall;
-    procedure retrieve(const node: WideString; const cb: IExodusPubsubListener); safecall;
-    property JID: WideString read Get_JID;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusPubsubServiceDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {542C6454-D12A-4DB2-B158-3DEBC1A9E017}
-// *********************************************************************//
-  IExodusPubsubServiceDisp = dispinterface
-    ['{542C6454-D12A-4DB2-B158-3DEBC1A9E017}']
-    property JID: WideString readonly dispid 201;
-    procedure publish(const Node: WideString; var Items: OleVariant); dispid 202;
-    procedure retrieve(const node: WideString; const cb: IExodusPubsubListener); dispid 203;
-  end;
-
-// *********************************************************************//
-// Interface: IExodusPubsubController
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {A4710E01-8CC8-4AC3-A49F-B702A4208D84}
-// *********************************************************************//
-  IExodusPubsubController = interface(IDispatch)
-    ['{A4710E01-8CC8-4AC3-A49F-B702A4208D84}']
-    function Get_ServiceCount: Integer; safecall;
-    function Get_Services(index: Integer): IExodusPubsubService; safecall;
-    function ServiceFor(const JID: WideString): IExodusPubsubService; safecall;
-    function Get_PepService: IExodusPubsubService; safecall;
-    procedure RegisterListener(const Node: WideString; const callback: IExodusPubsubListener); safecall;
-    procedure UnregisterListener(const Node: WideString; const callback: IExodusPubsubListener); safecall;
-    property ServiceCount: Integer read Get_ServiceCount;
-    property Services[index: Integer]: IExodusPubsubService read Get_Services;
-    property PepService: IExodusPubsubService read Get_PepService;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusPubsubControllerDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {A4710E01-8CC8-4AC3-A49F-B702A4208D84}
-// *********************************************************************//
-  IExodusPubsubControllerDisp = dispinterface
-    ['{A4710E01-8CC8-4AC3-A49F-B702A4208D84}']
-    property ServiceCount: Integer readonly dispid 203;
-    property Services[index: Integer]: IExodusPubsubService readonly dispid 204;
-    function ServiceFor(const JID: WideString): IExodusPubsubService; dispid 205;
-    property PepService: IExodusPubsubService readonly dispid 206;
-    procedure RegisterListener(const Node: WideString; const callback: IExodusPubsubListener); dispid 201;
-    procedure UnregisterListener(const Node: WideString; const callback: IExodusPubsubListener); dispid 202;
-  end;
-
-// *********************************************************************//
-// Interface: IExodusControllerRegistry
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {E2AE307A-FFA5-4C68-B56D-FC6165924805}
-// *********************************************************************//
-  IExodusControllerRegistry = interface(IDispatch)
-    ['{E2AE307A-FFA5-4C68-B56D-FC6165924805}']
-    procedure RegisterController(iid: TGUID; const instance: IUnknown); safecall;
-    procedure UnregisterController(iid: TGUID; const instance: IUnknown); safecall;
-    function GetController(iid: TGUID): IUnknown; safecall;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusControllerRegistryDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {E2AE307A-FFA5-4C68-B56D-FC6165924805}
-// *********************************************************************//
-  IExodusControllerRegistryDisp = dispinterface
-    ['{E2AE307A-FFA5-4C68-B56D-FC6165924805}']
-    procedure RegisterController(iid: {??TGUID}OleVariant; const instance: IUnknown); dispid 201;
-    procedure UnregisterController(iid: {??TGUID}OleVariant; const instance: IUnknown); dispid 202;
-    function GetController(iid: {??TGUID}OleVariant): IUnknown; dispid 203;
   end;
 
 // *********************************************************************//

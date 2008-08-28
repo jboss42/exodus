@@ -12,7 +12,7 @@ unit MSXML_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-08-27 12:47:50 from Type Library described below.
+// File generated on 6/25/2008 5:16:28 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\WINDOWS\system32\msxml.dll (1)
@@ -23,11 +23,41 @@ unit MSXML_TLB;
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // Parent TypeLibrary:
-//   (0) v1.0 Exodus, (Z:\repos\corp.jabber.com\momentim\src\exodus\exodus\Exodus.tlb)
+//   (0) v1.0 Exodus, (C:\source\MomentIM-trunk\src\Exodus\exodus\Exodus.tlb)
 // Errors:
 //   Hint: Parameter 'type' of IXMLDOMNode.nodeType changed to 'type_'
 //   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
 //   Hint: Parameter 'type' of IXMLDOMDocument.createNode changed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'
 //   Hint: Symbol 'type' renamed to 'type_'
 //   Hint: Symbol 'type' renamed to 'type_'
 //   Hint: Member 'implementation' of 'IXMLDOMDocument' changed to 'implementation_'

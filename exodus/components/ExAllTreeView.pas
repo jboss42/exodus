@@ -457,6 +457,6 @@ begin
         Result := (_Filter = Item.Type_);
 
     if Result then
-        Result := Item.IsVisible or not TJabberSession(_JS).Prefs.getBool('roster_only_online');
+        Result := Item.IsVisible;
 end;
 end.

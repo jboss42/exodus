@@ -599,7 +599,6 @@
     <brand_required_plugins/>
     <brand_required_plugins_message
       value ="This installation is not in compliance with Exodus Instant Messaging Policy: A mandatory component %s has been disabled." />
-    <branding_disable_outflow value="0"/>
     <!-- indicates if priority notification feature should be used -->
     <branding_priority_notifications value="1"/>
     <!-- indicates if nested subgroup feature should be available -->

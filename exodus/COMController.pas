@@ -30,16 +30,7 @@ uses
     Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl, COMExodusItem;
 
 type
-  TControllerRegistryEntry = class
-  private
-    _iface: IUnknown;
-  public
-    constructor Create(iface: IUnknown);
-    destructor Destroy(); override;
-
-    property Controller: IUnknown read _iface;
-  end;
-  TExodusController = class(TAutoObject, IExodusController, IExodusController2, IExodusControllerRegistry)
+  TExodusController = class(TAutoObject, IExodusController, IExodusController2)
   protected
     function Get_Connected: WordBool; safecall;
     function Get_Server: WideString; safecall;
@@ -180,21 +171,15 @@ type
 
     _contact_logger: IExodusLogger;
     _room_logger: IExodusLogger;
-
-    _ctrl_reg: TWidestringList;
-
+    
   public
     procedure Initialize(); override;
     destructor Destroy(); override;
 
-    function GetController(IID: TGUID): IUnknown; safecall;
-    procedure RegisterController(IID: TGUID; const instance: IUnknown); safecall;
-    procedure UnregisterController(IID: TGUID; const instance: IUnknown); safecall;
-
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
     procedure fireNewOutgoingIM(jid: Widestring; ExodusChat: IExodusChat);
-    procedure fireNewIncomingIM(jid: Widestring; ExodusChat: IExodusChat);
+    procedure fireNewIncomingIM(jid: Widestring; ExodusChat: IExodusChat);    
     procedure fireMenuClick(Sender: TObject);
     procedure fireRosterMenuClick(Sender: TObject);
     function fireIM(Jid: Widestring; var Body: Widestring;
@@ -1020,15 +1005,12 @@ end;
 procedure TExodusController.Initialize();
 begin
     inherited Initialize();
-    
     _menu_items := TWidestringList.Create();
     _roster_menus := Twidestringlist.Create();
     _msg_menus := TWidestringlist.Create();
     _nextid := 0;
     _parser := TXMLTagParser.Create();
     _caps_exts := TWidestringList.Create();
-
-    _ctrl_reg := TWidestringList.Create();
 
     (*
     // XXX: Joe: figure out this OLE stuff please so it doesn't core on exit
@@ -1060,12 +1042,6 @@ begin
         OleCheck(CoDisconnectObject(self as IExodusController, 0));
         *)
 
-        while (_ctrl_reg.Count > 0) do begin
-            TControllerRegistryEntry(_ctrl_reg.Objects[0]).Free();
-            _ctrl_reg.Delete(0);
-        end;
-        FreeAndNil(_ctrl_reg);
-
         // should we cleanup these menu items???
         FreeAndNil(_menu_items);
         FreeAndNil(_roster_menus);
@@ -1077,48 +1053,6 @@ begin
 //   except
 
 //   end;
-end;
-
-function TExodusController.GetController(IID: TGUID): IUnknown;
-var
-    idx: Integer;
-begin
-    idx := _ctrl_reg.IndexOf(GUIDToString(IID));
-    Result := nil;
-    if (idx <> -1) then begin
-        Result := TControllerRegistryEntry(_ctrl_reg.Objects[idx]).Controller;
-    end;
-end;
-procedure TExodusController.RegisterController(IID: TGUID; const instance: IUnknown);
-var
-    key: Widestring;
-    idx: Integer;
-    test: IUnknown;
-    entry: TControllerRegistryEntry;
-begin
-    if (instance = nil) then exit;
-    if (instance.QueryInterface(iid, test) <> S_OK) then exit;
-
-    key := GUIDToString(iid);
-    entry := TControllerRegistryEntry.Create(instance);
-    idx := _ctrl_reg.IndexOf(key);
-    if (idx = -1) then begin
-        idx := _ctrl_reg.Count;
-        _ctrl_reg.Add(key);
-    end;
-    _ctrl_reg.Objects[idx].Free();
-    _ctrl_reg.Objects[idx] := entry;
-end;
-procedure TExodusController.UnregisterController(IID: TGUID; const instance: IUnknown);
-var
-    idx: Integer;
-begin
-    idx := _ctrl_reg.IndexOf(GUIDToString(IID));
-    if (idx = -1) then exit;
-    if (TControllerRegistryEntry(_ctrl_reg.Objects[idx]).Controller <> instance) then exit;
-
-    _ctrl_reg.Objects[idx].Free();
-    _ctrl_reg.Delete(idx);
 end;
 
 {---------------------------------------}
@@ -2423,14 +2357,6 @@ begin
     end;
 end;
 
-constructor TControllerRegistryEntry.Create(iface: IInterface);
-begin
-    _iface := iface;
-end;
-destructor TControllerRegistryEntry.Destroy;
-begin
-    _iface := nil;
-end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,

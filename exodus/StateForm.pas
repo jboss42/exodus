@@ -713,10 +713,12 @@ begin
                          Self.Left, Self.Top, Self.Width, Self.Height,
                          HWND_TOP);
             StartWindowPosEvents();
-
-            if (self.Showing) then
-                gotActivate();
         end;
+        StopFlash(Self);
+        isNotifying := false;
+
+        if (self.Showing) then
+            gotActivate();
     except
         // Possible exception when dealing with an extreme amount of windows
     end;
@@ -903,8 +905,8 @@ procedure TfrmState.WMActivate(var msg: TMessage);
 begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         log('TfrmState(' + GetWindowStateKey() + ').WMActivate BEGIN');
-        StopFlash(Self);
-        isNotifying := false;
+        if (Floating) and(self.Showing) then
+            gotActivate();
         log('TfrmState(' + GetWindowStateKey() + ').WMActivate END');
     end;
     inherited;
@@ -913,7 +915,8 @@ end;
 procedure TfrmState.gotActivate();
 begin
     log('TfrmState(' + GetWindowStateKey() + ').gotActivate BEGIN');
-
+    StopFlash(Self);
+    isNotifying := false;
     //nop
     log('TfrmState(' + GetWindowStateKey() + ').gotActivate END');
 end;

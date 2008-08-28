@@ -259,6 +259,7 @@ begin
 
     if (addInfo.isInNetwork()) then begin
         tmp_jid := TJabberID.Create(sjid, false);
+        MainSession.UnBlock(tmp_jid); // Make sure we aren't blocking the contact we wish to add.
         sjid := tmp_jid.jid;
         if (WideLowercase(sjid) = WideLowercase(MainSession.Profile.getJabberID().jid())) then begin
             MessageDlgW(_(sNotAddMyself), mtError, [mbOK], 0);

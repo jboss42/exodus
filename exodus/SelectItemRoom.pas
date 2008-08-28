@@ -129,7 +129,9 @@ begin
         _itemView.ClearSelection();
     end;
 
-    if (_trackinglist.Find(item.Caption, i)) then begin
+    i := _trackinglist.IndexOf(item.Caption);
+
+    if (i >= 0) then begin
         track := TListItemTracker(_trackinglist.Objects[i]);
         jid := track.jid;
         txtJID.text := jid;

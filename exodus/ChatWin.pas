@@ -1188,9 +1188,23 @@ begin
 end;
 {---------------------------------------}
  procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
+var
+   UpdateKey: WideString;
+   w: PWideChar;
+   num: Integer;
+   Part: ChatParts;
 begin
     if (Key = #0) then exit;
-
+    if (com_controller = nil) then exit;
+    if (Sender = MsgOut) then
+        Part := HWND_MsgInput
+    else
+        Part := HWND_MsgOutput;
+    UpdateKey := WideChar(Key);
+    com_controller.fireMsgKeyPress(UpdateKey, Part);
+    Key := Chr(Ord(PWideChar(UpdateKey)^));
+    if (Key = #0) then exit;
+    
     if ((Key = #9) and
         (not _insertTab)) then begin
         Key := #0;
@@ -1639,7 +1653,10 @@ begin
 //        freeChatObject();
 
     if (com_controller <> nil) then
+    begin
         com_controller.Free();
+        com_controller := nil;
+    end;
 
     if (_jid <> nil) then
         FreeAndNil(_jid);
@@ -1740,7 +1757,12 @@ begin
         cc.SetHistory(s);
 
         cc.window := nil; //unassign listenrs, starts mem timer for destruction
-    end;
+    end
+    else
+        if (com_controller <> nil) then
+            com_controller.setChatSession(nil);
+        
+
     inherited;
 end;
 

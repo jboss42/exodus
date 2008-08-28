@@ -1,21 +1,21 @@
 {
     Copyright 2001-2008, Estate of Peter Millard
-	
-	This file is part of Exodus.
-	
-	Exodus is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
-	
-	Exodus is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License
-	along with Exodus; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    
+    This file is part of Exodus.
+    
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 unit Dockable;
 
@@ -472,23 +472,31 @@ var
 begin
     initVis := Self.Visible;
     RestoreWindowState();
-    if (not Docked) then
+
+    if (Docked) then
     begin
-        inherited;
-        if (not initVis) then
-            OnFloat(); //fire float event so windows can fix up
+        //not visible --> initial state, floating --> moving to docked state
+        if ((not Self.Visible) or Self.Floating) then
+        begin
+            Self.DockForm();//will cause dockmanager to be shown
+        end;
+
+        //should be showing by the time we get here
+        if (bringtofront) then begin
+            GetDockManager().BringDockedToTop(Self);
+            GetDockManager().BringToFront();
+        end;
+    end
+    //initial condition, open as stateform window
+    else if (not Self.Visible) then
+    begin
+        inherited; //handles show, bring to front
+        OnFloat();
     end
     else begin
-        if (not Self.Visible) then
-            Self.DockForm();//will cause dockmanager to be shown as needed
-
-        if (bringtofront) then
-        begin
-            GetDockManager().BringToFront();
-            GetDockManager().BringDockedToTop(Self);
-        end;
+        //floating --> moving to floating state
+        inherited; //handles bring to front
     end;
-
     if (not initVis) then
         updateDocked(); // Make sure activity list is updated if we became visible
 end;
