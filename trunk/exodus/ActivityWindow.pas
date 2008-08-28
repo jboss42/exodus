@@ -693,8 +693,11 @@ end;
 procedure TfrmActivityWindow.DockActivityWindow(dockSite : TWinControl);
 begin
     if (dockSite <> Self.Parent) then begin
-        Self.ManualDock(dockSite, nil, alClient);
-        Application.processMessages();
+        //JJF manualdock forces a show of this form, which causes it to activate.
+        //changing parents does not. to look good, AW window window must be borderless
+        Self.Parent := docksite;
+//        Self.ManualDock(dockSite);//, nil, alClient);
+///        Application.processMessages();
         Self.Align := alClient;
         _docked := true;
     end;
@@ -813,34 +816,36 @@ begin
         end;
 
         // Activate if Docked
-        awitem.activate(true, trackitem.frm.Docked);
+        //only change to active colors if msg count = 0 (-1) or will be cleared later
+        //prevents new message/new window colors from being overwritten
+        if (_dockWindow.Active and trackitem.frm.Docked) or trackitem.frm.active or (awitem.count < 1) then
+            awitem.activate(true, trackitem.frm.Docked);
         if (trackitem.frm.Docked) then begin
             _activeitem := awitem;
         end;
 
-        if (trackitem <> nil) then begin
-            trackitem.frm.ClearUnreadMsgCount();
-            trackitem.awItem.count := trackitem.frm.UnreadMsgCount;
-            if (trackitem.frm.Docked) then begin
-                // Docked Window
-                tsheet := _dockwindow.getTabSheet(trackitem.frm);
-                if (tsheet <> nil) then begin
-                    try
-                        tsheet.Visible := true;
-                        _oldActivateSheet := tsheet;
-                        _dockWindow.AWTabControl.ActivePage := tsheet;
-                        _dockWindow.setWindowCaption(trackitem.frm.Caption);
-                        scrollToActive();
-                        trackitem.frm.gotActivate();
-                    except
-                    end;
+        if (trackitem.frm.Docked) then begin
+            // Docked Window
+            tsheet := _dockwindow.getTabSheet(trackitem.frm);
+            if (tsheet <> nil) then begin
+                try
+                    tsheet.Visible := true;
+                    _oldActivateSheet := tsheet;
+                    _dockWindow.AWTabControl.ActivePage := tsheet;
+                    _dockWindow.setWindowCaption(trackitem.frm.Caption);
+                except
                 end;
-            end
-            else begin
-                trackitem.frm.ShowDefault(true);
+                if (_dockWindow.Active) then begin
+                    trackitem.frm.ClearUnreadMsgCount();
+                    trackitem.awItem.count := trackitem.frm.UnreadMsgCount;
+                    trackitem.frm.gotActivate();
+                    scrollToActive();
+                end;
             end;
+        end
+        else begin
+            trackitem.frm.ShowDefault(true);
         end;
-
     except
     end;
 end;

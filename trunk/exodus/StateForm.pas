@@ -905,8 +905,8 @@ procedure TfrmState.WMActivate(var msg: TMessage);
 begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         log('TfrmState(' + GetWindowStateKey() + ').WMActivate BEGIN');
-        StopFlash(Self);
-        isNotifying := false;
+        if (Floating) and(self.Showing) then
+            gotActivate();
         log('TfrmState(' + GetWindowStateKey() + ').WMActivate END');
     end;
     inherited;
