@@ -32,7 +32,8 @@ uses
     Presence, COMExodusItem,
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, 
-    COMExodusItemController, ContactController, Exodus_TLB, RoomController;
+    COMExodusItemController, ContactController, Exodus_TLB, RoomController,
+    ExtCtrls;
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
 
@@ -132,6 +133,7 @@ type
         procedure CompressionErrorCallback(event: string; tag: TXMLTag);
 
         procedure OnAllDependanciesResolved(SessionTag : TXMLTag);
+        procedure OnRosterRefreshTimer(Sender: TObject);
     public
         ppdb: TJabberPPDB;
         ItemController: IExodusItemController;
@@ -142,7 +144,7 @@ type
         Prefs: TPrefController;
         dock_windows: boolean;
         Presence_XML: TWideStringlist;
-
+        RosterRefreshTimer: TTimer;
         Constructor Create(ConfigFile: widestring);
         Destructor Destroy; override;
 
@@ -342,7 +344,8 @@ uses
     RoomProperties,
     StrUtils,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
-    JabberConst, CapPresence, XMLVCard, XMLVCardCache, Windows, JabberUtils;
+    JabberConst, CapPresence, XMLVCard, XMLVCardCache, Windows, JabberUtils,
+    ExUtils;
 
 const
     DEPMOD_READY_EVENT = '/dependancy/ready/';
@@ -478,6 +481,10 @@ begin
     ItemController := TExodusItemController.create(Self);
     roster := TContactController.create(Self);
     rooms := TRoomController.create(Self);
+    RosterRefreshTimer := TTimer.Create(nil);
+    RosterRefreshTimer.Enabled := false;
+    RosterRefreshTimer.Interval := 250;
+    RosterRefreshTimer.OnTimer := OnRosterRefreshTimer;
 end;
 
 {---------------------------------------}
@@ -510,7 +517,7 @@ begin
     // Free the dispatcher... this should free the signals
     _dispatcher.Free;
     _dispatcher := nil; //keeps bad refs from calling back during their destruction
-
+    RosterRefreshTimer.Free();
     inherited Destroy;
 end;
 
@@ -710,9 +717,24 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.SendTag(tag: TXMLTag);
+var
+    track: TXMLTag;
+
+    procedure _RemoveTrackingTag();
+    var
+        track: TXMLTag;
+    begin
+        if (tag.Name <> 'message') then exit;
+
+        track := tag.QueryXPTag(XP_MSG_TRACK);
+        if (track = nil) then exit;
+        
+        tag.RemoveTag(track);
+    end;
 begin
     // Send this tag out to the socket
     if (_stream <> nil) then begin
+        _RemoveTrackingTag();
         if (_lang <> '') then
             tag.setAttribute('xml:lang', _lang);
 
@@ -1548,6 +1570,16 @@ begin
     StartSession(SessionTag);
 end;
 
+{---------------------------------------}
+procedure TJabberSession.OnRosterRefreshTimer(Sender: TObject);
+var
+    Item: IExodusItem;
+begin
+    RosterRefreshTimer.Enabled := false;
+    FireEvent('/data/item/group/restore', nil, '');
+    FireEvent('/item/end', Item);
+    OutputDebugMsg('OnPresenceTimer fired');
+end;
 {*******************************************************************************
 **************************** TSessionListener **********************************
 *******************************************************************************}

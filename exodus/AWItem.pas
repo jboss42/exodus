@@ -575,11 +575,11 @@ end;
 procedure TfAWItem._setImgIndex(val: Integer);
 begin
     if ((val >= 0) and
-        (val < frmExodus.ImageList1.Count)and
-        (val <> _imgIndex)) then begin
+        (val < frmExodus.ImageList1.Count)) then
+    begin
         _imgIndex := val;
         frmExodus.ImageList1.GetIcon(_imgIndex, imgPresence.Picture.Icon);
-      end;
+    end;
 end;
 
 {---------------------------------------}
@@ -604,9 +604,30 @@ begin
         end;
     end
     else begin
-        _setPnlColors(_startColor, _endColor);
-        lblName.Font.Color := _activity_window_non_selected_font_color;
-        lblCount.Font.Color := _activity_window_non_selected_font_color;
+        if (_count >= _LowestUnreadMsgCntColorChange) then begin
+            // We still have unread messages
+            if (_priority) then begin
+                if (lblCount.Font.Color <> _activity_window_unread_msgs_high_priority_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
+                end;
+                _setPnlColors(_priorityStartColor, _priorityEndColor);
+            end
+            else begin
+                if (lblCount.Font.Color <> _activity_window_unread_msgs_font_color) then
+                begin
+                    lblCount.Font.Color := _activity_window_unread_msgs_font_color;
+                end;
+                _setPnlColors(_newMessageStartColor, _newMessageEndColor);
+            end;
+            lblCount.Font.Style := lblCount.Font.Style + [fsBold];
+        end
+        else begin
+            // No unread messages
+            _setPnlColors(_startColor, _endColor);
+            lblName.Font.Color := _activity_window_non_selected_font_color;
+            lblCount.Font.Color := _activity_window_non_selected_font_color;
+        end;
     end;
 end;
 
@@ -674,9 +695,8 @@ end;
 {---------------------------------------}
 procedure TfAWItem._setPnlColors(startColor, endColor: TColor);
 begin
-    if (((pnlAWItemGPanel.GradientProperites.startColor <> startColor) or
-         (pnlAWItemGPanel.GradientProperites.endColor <> endColor)) and
-         GetActivityWindow().updatesEnabled) then
+    if ((pnlAWItemGPanel.GradientProperites.startColor <> startColor) or
+         (pnlAWItemGPanel.GradientProperites.endColor <> endColor)) then
     begin
         // only change color when needed to reduce redraw time.
         pnlAWItemGPanel.GradientProperites.startColor := startColor;
