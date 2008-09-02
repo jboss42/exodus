@@ -128,6 +128,7 @@ type
     procedure pnlListScrollDownMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure pnlListResize(Sender: TObject);
+    procedure pnlListBaseResize(Sender: TObject);
   private
     { Private declarations }
     _timerScrollUp: boolean;
@@ -718,6 +719,15 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmActivityWindow.pnlListBaseResize(Sender: TObject);
+begin
+    // Make sure that the "top" property of the scroll buttons are
+    // correct.  VCL built in resize/position code doesn't always
+    // get it right.
+    pnlListScrollDown.Top := pnlListBase.Height - pnlListScrollDown.Height;
+    pnlListScrollUp.Top := pnlListSort.Height;
+end;
+
 procedure TfrmActivityWindow.pnlListResize(Sender: TObject);
 begin
     inherited;
