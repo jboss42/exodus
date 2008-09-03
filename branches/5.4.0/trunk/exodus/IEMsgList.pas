@@ -214,10 +214,13 @@ type
     function onDragOver(Sender: TObject): WordBool;
     function onContextMenu(Sender: TObject): WordBool;
     function onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
+    procedure onKeyDown(Sender: TObject; const pEvtObj: IHTMLEventObj);
+
     procedure _ClearOldMessages();
     function _getHistory(includeState: boolean = true): WideString;
     procedure _SetInMessageDumpMode(value: boolean);
-
+    function copyMenuEnabled(): boolean;
+    
   protected
     procedure ProcessNavigate(Sender: TObject;
               const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
@@ -1574,6 +1577,43 @@ end;
 
 {---------------------------------------}
 {$IFDEF EXODUS}
+
+//hack to get outflow working for release. Check to see if copy pop munues have been
+//disabled and prevent all copies/cuts and prints if so
+function TfIEMsgList.copyMenuEnabled(): boolean;
+var
+    i: integer;
+begin
+    Result := true;
+    //allow cut/copy only if context men item exists and is enabled.
+    if (_menu <> nil) then
+    begin
+        for i := 0 to _menu.Items.Count - 1 do
+        begin
+            if (_menu.Items[i].Name = 'Copy1') or (_menu.Items[i].Name = 'popCopy') then
+            begin
+                //found a copy menu item, copy allowed only when enabled
+                Result := _menu.Items[i].Enabled;
+                exit;
+            end;
+        end;
+    end;
+end;
+
+procedure TfIEMsgList.onKeyDown(Sender: TObject; const pEvtObj: IHTMLEventObj);
+begin
+    //eat ctrl c,p and x appropriately
+    if (pEvtObj.ctrlKey and
+       ((pEvtObj.keyCode = 67) or (pEvtObj.keyCode = 80) or (pEvtObj.keyCode = 88))) then
+    begin
+        if (not CopyMenuEnabled()) then
+        begin
+            pEvtObj.returnValue := false;
+            pEvtObj.keyCode := 0;
+        end;
+    end;
+end;
+
 function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
 var
     bc: TfrmBaseChat;
@@ -1585,15 +1625,17 @@ begin
     // text box.
 
     if (not (_base is TfrmBaseChat)) then exit;//why not owner here, why "_base", does owner change?
-    
-    bc := TfrmBaseChat(_base); 
+
+    bc := TfrmBaseChat(_base);
     key := pEvtObj.keyCode;
 
-    if ((_getPrefBool('esc_close')) and (key = 27)) then 
+    pEvtObj.returnValue := false;
+
+    if ((_getPrefBool('esc_close')) and (key = 27)) then
         bc.Close()
-    else if (bc.MsgOut.CanFocus()) and (not bc.MsgOut.ReadOnly) then 
+    else if (bc.MsgOut.CanFocus()) and (not bc.MsgOut.ReadOnly) then
     begin
-        if (key = 22) then                
+        if (key = 22) then
             bc.MsgOut.PasteFromClipboard()  // paste, Ctrl-V
         else if (key >= 32) then
             bc.MsgOut.WideSelText := WideChar(Key);
@@ -1607,20 +1649,30 @@ begin
         except
             on E:Exception do
             begin
-                ExUtils.DebugMsg('Exception trying to set focus to composer (' + E.Message + ')', true);                
+                ExUtils.DebugMsg('Exception trying to set focus to composer (' + E.Message + ')', true);
             end;
         end;
+        // This shouldn't be needed, but the TWebbrowser control takes back focus.
+        // You would think that the SetFocus() calls above wouldn't be necessary then
+        // but for some reason the Post doesn't work if they aren't called?
+        PostMessage(bc.Handle, WM_SETFOCUS, 0, 0);
     end;
-    pEvtObj.returnValue := false;
-    // This shouldn't be needed, but the TWebbrowser control takes back focus.
-    // You would think that the SetFocus() calls above wouldn't be necessary then
-    // but for some reason the Post doesn't work if they aren't called?
-    PostMessage(bc.Handle, WM_SETFOCUS, 0, 0);
 end;
+
 {$ELSE}
 function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
 begin
     Result := false;
+end;
+
+procedure TfIEMsgList.onKeyDown(Sender: TObject; const pEvtObj: IHTMLEventObj);
+begin
+    //nop
+end;
+
+function TfIEMsgList.copyMenuEnabled(): boolean;
+begin
+    Result := true;
 end;
 {$ENDIF}
 
@@ -1658,8 +1710,7 @@ begin
         _doc := browser.Document as IHTMLDocument2;
 
         ResetStylesheet();
-
-
+        
         _content := _doc.all.item('content', 0) as IHTMLElement;
         _content2 := _content as IHTMLElement2;
         _body := _doc.body;
@@ -1677,13 +1728,10 @@ begin
         _we.onresize   := onresize;
         //_we.ondrop     := ondrop;
         _we.ondragover := ondragover;
-
         _we2 := TMSHTMLHTMLElementEvents2.Create(self);
         _we2.Connect(_content);
         _we2.onkeypress := onkeypress;
-        _we2.oncopy := onkeypress;
-        _we2.oncut := onkeypress;
-
+        _we2.onkeydown := onkeydown; 
         if (_de <> nil) then
             _de.Free();
         _de := TMSHTMLHTMLDocumentEvents.Create(self);
