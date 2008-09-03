@@ -117,6 +117,10 @@ var
     HistorySearchManager: TExodusHistorySearchManager;
     SQLSearch: TSQLSearchHandler;
 
+    // Controller reference to keep exodus
+    // open when used as COM object
+    ExComServerReference: IExodusController;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -138,7 +142,7 @@ uses
     ExForm,
     HistorySearch,
     MiscMessages,
-    ToolbarImages;
+    ToolbarImages, COMObj;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -682,6 +686,8 @@ begin
     if (MainSession.Prefs.getBool('brand_history_search')) then begin
         HistoryAction.Enabled := true;
     end;
+
+    ExComServerReference := CreateComObject(Class_ExodusController) as IExodusController;
 
     Result := true;
 end;

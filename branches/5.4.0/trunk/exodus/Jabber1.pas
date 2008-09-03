@@ -839,7 +839,8 @@ uses
     FrmUtils,
     COMExodusControlSite, //TExodusControlSite
     ExActionCtrl,
-    ActivityWindow;
+    ActivityWindow,
+    COMObj;
 
 {$R *.DFM}
 
@@ -2374,8 +2375,9 @@ begin
     HistorySearchManager.CancelAllSearches();
 
     // Ask before closing in COM server situation
+    // Ignore self reference (ComServer.ObjectCount > 1)
     if ((MainSession.Prefs.getBool('brand_warn_close_com_server')) and
-        (ComServer.ObjectCount > 0) and
+        (ComServer.ObjectCount > 1) and
         (not _ApprovedExitWithCOMActive))then begin
         if (MessageDlgW(_('Other applications currently depend on this application.  Exiting this application may cause unpredicatable results in those applications.  Do you wish to exit?'), mtConfirmation, [mbYes, mbNo],0) = mrNo) then begin
             CanClose := false;
