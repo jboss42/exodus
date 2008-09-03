@@ -1,21 +1,21 @@
 {
     Copyright 2001-2008, Estate of Peter Millard
-	
-	This file is part of Exodus.
-	
-	Exodus is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
-	
-	Exodus is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License
-	along with Exodus; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    
+    This file is part of Exodus.
+    
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 unit Jabber1;
 
@@ -42,11 +42,11 @@ const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
     RECONNECT_RETRIES = 3;
 
-    DT_UNKNOWN=0;	    // unknown desktop status
-    DT_OPEN=1;	        // the default desktop is active
-    DT_LOCKED=2;	    // the winlogon desktop is active, and a user is logged
-    DT_NO_LOG=3;	    // the winlogon desktop is active, and no user is logged
-    DT_SCREENSAVER=4;	// the screensaver desktop is active
+    DT_UNKNOWN=0;       // unknown desktop status
+    DT_OPEN=1;          // the default desktop is active
+    DT_LOCKED=2;        // the winlogon desktop is active, and a user is logged
+    DT_NO_LOG=3;        // the winlogon desktop is active, and no user is logged
+    DT_SCREENSAVER=4;   // the screensaver desktop is active
     DT_FULLSCREEN=5;    // Something like PowerPoint is running full screen
 
     // FROM pbt.h in the win32 SDK
@@ -2095,6 +2095,13 @@ begin
                    PWideChar(MainSession.Prefs.GetString('brand_caption')),
                    MB_OK or MB_ICONERROR);
         Application.Terminate();
+    end
+
+    else if (event = '/session/force_shutdown') then
+    begin
+        // A plugin/extrenal app has decided to force Exodus to shutdown
+        _ApprovedExitWithCOMActive := true; 
+        Self.Close();
     end;
 end;
 
@@ -4250,18 +4257,18 @@ begin
     end;
 
     if name = 'Winlogon' then begin
-		hw := OpenWindowStation('winsta0', False, WINSTA_ENUMERATE or WINSTA_ENUMDESKTOPS);
-		GetUserObjectInformation(hw, UOI_USER_SID, Nil, 0, len);
-		CloseWindowStation(hw);
+        hw := OpenWindowStation('winsta0', False, WINSTA_ENUMERATE or WINSTA_ENUMDESKTOPS);
+        GetUserObjectInformation(hw, UOI_USER_SID, Nil, 0, len);
+        CloseWindowStation(hw);
 
-		// if no user is assosiated with winsta0, then no user is
-		// is logged on:
-		if len = 0 then
-			// no one is logged on:
-			result := DT_NO_LOG
-		else
-			// the station is locked
-			result := DT_LOCKED;
+        // if no user is assosiated with winsta0, then no user is
+        // is logged on:
+        if len = 0 then
+            // no one is logged on:
+            result := DT_NO_LOG
+        else
+            // the station is locked
+            result := DT_LOCKED;
         exit;
     end;
     result := DT_UNKNOWN;
