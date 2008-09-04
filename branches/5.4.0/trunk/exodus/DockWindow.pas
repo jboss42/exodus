@@ -60,7 +60,6 @@ type
     procedure pnlTabControlResize(Sender: TObject);
   private
     { Private declarations }
-    _docked_forms: TList;
     _dockState: TDockStates;
     _sortState: TSortState;
     _glueEdge: TGlueEdge;
@@ -215,9 +214,12 @@ begin
                                 aw := GetActivityWindow();
                                 if (aw <> nil) then
                                 begin
-                                    aw.closeActiveDockedWindow();
+                                    if (aw.dockwindow.Focused()) then
+                                    begin
+                                        aw.closeActiveDockedWindow();
+                                        Result := 1;
+                                    end;
                                 end;
-                                Result := 1;
                             end;
                         end;
                     end;
@@ -243,7 +245,6 @@ begin
     pnlActivityList.Constraints.MinWidth := MainSession.Prefs.getInt('activity_list_split_min_width');
     
     setWindowCaption('');
-    _docked_forms := TList.Create;
     _dockState := dsUninitialized;
     _sortState := ssUnsorted;
     _glueEdge := geNone;
@@ -280,8 +281,6 @@ end;
 procedure TfrmDockWindow.FormDestroy(Sender: TObject);
 begin
     inherited;
-    _docked_forms.Free;
-    _docked_forms := nil;
     MainSession.UnRegisterCallback(_sessionCB);
     _sessionCB := -1;
     UnHookWindowsHookEx(dockWindowKBHook);
@@ -313,10 +312,7 @@ begin
         end;
 
         if (frm.Docked) then begin
-            updateLayoutDockChange(frm, true, _docked_forms.Count = 1);
-            idx := _docked_forms.IndexOf(frm);
-            if (idx >= 0) then
-                _docked_forms.Delete(idx);
+            updateLayoutDockChange(frm, true, AWTabControl.PageCount = 1);
         end;
 
         _needToBeShowingCheck();
@@ -429,7 +425,6 @@ begin
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();
-        _docked_forms.Add(TfrmDockable(Source.Control));
 
         if (Self.WindowState = wsMaximized) then begin
             Self.Top := Self.Monitor.WorkareaRect.Top;
