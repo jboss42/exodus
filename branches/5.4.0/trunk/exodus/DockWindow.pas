@@ -208,6 +208,18 @@ begin
                                 Result := 1;
                             end;
                         end;
+                        VK_ESCAPE: begin
+                            if (MainSession.Prefs.getBool('esc_close')) then
+                            begin
+                                // Request to close active tab
+                                aw := GetActivityWindow();
+                                if (aw <> nil) then
+                                begin
+                                    aw.closeActiveDockedWindow();
+                                end;
+                                Result := 1;
+                            end;
+                        end;
                     end;
                 end;
             end;
