@@ -212,6 +212,7 @@ type
     procedure onSessionCallback(event: string; tag: TXMLTag);
     procedure forceUpdate();
     procedure enableListUpdates(enable: boolean = true);
+    procedure closeActiveDockedWindow();
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -1770,6 +1771,23 @@ begin
                     _dockwindow.AWTabControl.ActivePage := sheet;
                 end;
             end;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.closeActiveDockedWindow();
+var
+    tsheet: TTabSheet;
+    frm: TfrmDockable;
+begin
+    tsheet := _dockwindow.AWTabControl.ActivePage;
+    if (tsheet <> nil) then
+    begin
+        frm := TfrmDockable(_dockwindow.getTabForm(tsheet));
+        if (frm <> nil) then
+        begin
+            _dockwindow.CloseDocked(frm);
         end;
     end;
 end;
