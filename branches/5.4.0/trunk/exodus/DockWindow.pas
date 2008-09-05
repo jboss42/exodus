@@ -212,13 +212,12 @@ begin
                             begin
                                 // Request to close active tab
                                 aw := GetActivityWindow();
-                                if (aw <> nil) then
+                                if ((aw <> nil) and
+                                    (aw.dockwindow <> nil) and
+                                    (aw.dockwindow.Focused())) then
                                 begin
-                                    if (aw.dockwindow.Focused()) then
-                                    begin
-                                        aw.closeActiveDockedWindow();
-                                        Result := 1;
-                                    end;
+                                    aw.closeActiveDockedWindow();
+                                    Result := 1;
                                 end;
                             end;
                         end;
