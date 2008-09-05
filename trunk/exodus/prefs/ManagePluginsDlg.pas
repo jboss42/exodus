@@ -79,7 +79,7 @@ type
 const
     sRegPluginError = 'The plug-in could not be registered with windows.';
     sExternalLibrary = 'External Library';
-    sPluginChangeWarning = 'Changes to enabled plugins require a restart before being active.';
+    sPluginChangeWarning = 'Changes to plug-ins require a restart before being active.';
 
 procedure showManagePluginDlg(AOwner: TComponent);
 
