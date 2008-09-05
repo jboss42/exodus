@@ -175,7 +175,7 @@ begin
     _DefaultGroup := '';
     _DNListener := TDisplayNameEventListener.Create();
     _DNListener.OnDisplayNameUpdate := _OnDisplayNameChange;
-    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS, TJabberSession(_JS));
+    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS);
 
     _PendingItems := TExodusItemList.Create();
 end;
@@ -258,7 +258,7 @@ begin
 
     TJabberSession(_js).RosterRefreshTimer.Enabled := true;
 
-    TAuthDependancyResolver.SignalReady(DEPMOD_ROSTER, nil, TJabberSession(_JS));
+    TAuthDependancyResolver.SignalReady(DEPMOD_ROSTER);
     ContactItemTags.Free();
 end;
 
