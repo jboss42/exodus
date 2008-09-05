@@ -184,7 +184,7 @@ begin
 
     jSelfCaps.SetSession(js);
 
-     _depResolver := TSimpleAuthResolver.create(OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(js));
+     _depResolver := TSimpleAuthResolver.create(OnDependancyReady, DEPMOD_LOGGED_IN);
 end;
 
 procedure TJabberCapsCache.OnDependancyReady(tag: TXMLTag);
