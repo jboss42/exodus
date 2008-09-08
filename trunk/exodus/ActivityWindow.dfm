@@ -26,11 +26,10 @@ object frmActivityWindow: TfrmActivityWindow
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
+    OnResize = pnlListBaseResize
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdHorizontal
-    ExplicitWidth = 187
-    ExplicitHeight = 374
     object pnlListScrollUp: TExGradientPanel
       Left = 0
       Top = 30
@@ -47,7 +46,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitWidth = 187
       object imgScrollUp: TImage
         Left = 76
         Top = 1
@@ -91,8 +89,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitTop = 352
-      ExplicitWidth = 187
       object imgScrollDown: TImage
         Left = 76
         Top = 4
@@ -134,8 +130,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitWidth = 187
-      ExplicitHeight = 300
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
@@ -168,7 +162,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitWidth = 187
       object lblSort: TTntLabel
         Left = 26
         Top = 5
@@ -267,7 +260,6 @@ object frmActivityWindow: TfrmActivityWindow
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdVertical
-    ExplicitWidth = 187
   end
   object pnlBorderBottom: TExGradientPanel
     Left = 0
@@ -281,8 +273,6 @@ object frmActivityWindow: TfrmActivityWindow
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdVertical
-    ExplicitTop = 384
-    ExplicitWidth = 187
   end
   object popAWSort: TTntPopupMenu
     Left = 104

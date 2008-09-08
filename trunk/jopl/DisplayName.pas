@@ -945,7 +945,7 @@ begin
     DNSession := TJabberSession(js);
     if (_js <> nil) then
     begin
-        _depResolver := TSimpleAuthResolver.create(OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(_js));
+        _depResolver := TSimpleAuthResolver.create(OnDependancyReady, DEPMOD_LOGGED_IN);
         _sessioncb := TJabberSession(_js).RegisterCallback(SessionCallback, '/session');
     end;
 end;

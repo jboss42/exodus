@@ -128,6 +128,7 @@ type
     procedure pnlListScrollDownMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure pnlListResize(Sender: TObject);
+    procedure pnlListBaseResize(Sender: TObject);
   private
     { Private declarations }
     _timerScrollUp: boolean;
@@ -211,6 +212,7 @@ type
     procedure onSessionCallback(event: string; tag: TXMLTag);
     procedure forceUpdate();
     procedure enableListUpdates(enable: boolean = true);
+    procedure closeActiveDockedWindow();
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -718,6 +720,15 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmActivityWindow.pnlListBaseResize(Sender: TObject);
+begin
+    // Make sure that the "top" property of the scroll buttons are
+    // correct.  VCL built in resize/position code doesn't always
+    // get it right.
+    pnlListScrollDown.Top := pnlListBase.Height - pnlListScrollDown.Height;
+    pnlListScrollUp.Top := pnlListSort.Height;
+end;
+
 procedure TfrmActivityWindow.pnlListResize(Sender: TObject);
 begin
     inherited;
@@ -1760,6 +1771,23 @@ begin
                     _dockwindow.AWTabControl.ActivePage := sheet;
                 end;
             end;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.closeActiveDockedWindow();
+var
+    tsheet: TTabSheet;
+    frm: TfrmDockable;
+begin
+    tsheet := _dockwindow.AWTabControl.ActivePage;
+    if (tsheet <> nil) then
+    begin
+        frm := TfrmDockable(_dockwindow.getTabForm(tsheet));
+        if (frm <> nil) then
+        begin
+            _dockwindow.CloseDocked(frm);
         end;
     end;
 end;

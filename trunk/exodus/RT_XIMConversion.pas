@@ -344,13 +344,12 @@ begin
     ExUtils.DebugMsg('rt: ' + tstr);
 {$ENDIF}
     while(currSelPos <= Length(allTxt)) do begin
-      if ((allTxt[currSelPos] = #13) or // Carriage Return 
+      if ((allTxt[currSelPos] = #13) or // Carriage Return
           (allTxt[currSelPos] = #11)) then begin // Vertical Tab (Shift-Return)
         //emit a break;
         currTag.AddCData(currCData);
         currCData := '';
         currTag.addTag('br');
-        inc(currSelPos);
       end;
       //select the current character, and check style, emit tags when changing
       rtSource.SelStart := currSelPos - 1; //0 based

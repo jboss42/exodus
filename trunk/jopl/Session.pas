@@ -1,4 +1,4 @@
-{
+    {
     Copyright 2001-2008, Estate of Peter Millard
 	
 	This file is part of Exodus.
@@ -294,12 +294,12 @@ type
         _dependancyCB: integer;
         _sessionDisconnectCB: integer;
 
-        _session: TJabberSession;
         _dependancies: TDepModInfoArray;
 
         _OnAllResolved: TAllResolvedEvent;
         _onResolved: TResolvedEvent;
 
+        _firedAllResolved: boolean;
     protected
         procedure DependancyCallback(event: string; tag: TXMLTag);virtual;
         procedure FireOnAllResolved(tag: TXMLTag = nil);virtual;
@@ -307,16 +307,14 @@ type
         function IndexOfModule(module: widestring): integer;
         function AllReady(): boolean;virtual;
         procedure ResetState(); virtual;
-
-        property Session: TJabberSession read _session;
     public
-        constructor create(Session: TJabberSession); overload; virtual;
-        constructor create(session: TJabberSession; depmods: TDepModInfoArray);overload; virtual;
-        constructor create(session: TJabberSession; depmods: Array of TModuleInfo);overload; virtual;
+        constructor create(); overload; virtual;
+        constructor create(depmods: TDepModInfoArray);overload; virtual;
+        constructor create(depmods: Array of TModuleInfo);overload; virtual;
 
         destructor Destroy(); override;
 
-        class procedure SignalReady(Module: widestring; tag: TXMLTag = nil; session: TJabberSession = nil);
+        class procedure SignalReady(Module: widestring; tag: TXMLTag = nil);
 
         property OnResolved: TResolvedEvent read _OnResolved write _OnResolved;
         property OnAllResolved: TAllResolvedEvent read _OnAllResolved write _OnAllResolved;
@@ -324,7 +322,7 @@ type
 
     TSimpleAuthResolver = class(TAuthDependancyResolver)
     public
-        constructor create(OnResolved: TAllResolvedEvent; Module: widestring = DEPMOD_LOGGED_IN; Session: TJabberSession = nil); reintroduce; overload; virtual;
+        constructor create(OnResolved: TAllResolvedEvent; Module: widestring = DEPMOD_LOGGED_IN); reintroduce; overload; virtual;
     end;
 
 var
@@ -370,10 +368,9 @@ type
         _sessionEntityCB: integer;
     protected
         procedure DependancyCallback(event: string; tag: TXMLTag);override;
-        procedure FireOnAllResolved(tag: TXMLTag);override;
         procedure ResetState(); override;
     public
-        constructor create(session: TJabberSession; depmods: TDepModInfoArray);override;
+        constructor create(depmods: TDepModInfoArray);override;
     end;
 
 {---------------------------------------}
@@ -385,6 +382,8 @@ begin
     //
     inherited Create();
 
+    MainSession := Self; //hack that insures opjects being create here can access
+                         //the main session global variable. 
     _register := false;
     _id := 1;
     _cb_id := 1;
@@ -427,7 +426,7 @@ begin
 
     //create a handler that will callback when a set of dependancies has been resolved
     //in this case all known dependancies
-    _depHandler := TSessionAuthResolver.create(Self, ALL_DEPENDANT_MODULES);
+    _depHandler := TSessionAuthResolver.create(ALL_DEPENDANT_MODULES);
     TSessionAuthResolver(_depHandler).OnAllResolved := OnAllDependanciesResolved;
     
     _avails := TWidestringlist.Create();
@@ -1676,7 +1675,7 @@ begin
     begin
         depmod := RightStr(event, Length(event) - Length(DEPMOD_READY_EVENT));
         idx := indexOfModule(depmod);
-        if (idx <> -1) then
+        if (idx <> -1) and (not _dependancies[idx].ready) then
         begin
             _dependancies[idx].ready := true;
             fireOnResolved(depmod, Tag);
@@ -1695,12 +1694,14 @@ var
 begin
     for i := 0 to Length(_dependancies) - 1 do
         _dependancies[i].ready := false;
+    _firedAllResolved := false;
 end;
 
 procedure TAuthDependancyResolver.FireOnAllResolved(tag: TXMLTag);
 begin
-    if (Assigned(_OnAllResolved)) then
+    if ((not _firedAllResolved) and Assigned(_OnAllResolved)) then
         _OnAllResolved(tag);
+    _firedAllResolved := true; //assign even if _OnAllResolved is not 
 end;
 
 procedure TAuthDependancyResolver.FireOnResolved(module: widestring; tag: TXMLTag);
@@ -1709,51 +1710,47 @@ begin
         _OnResolved(module, tag);
 end;
 
-constructor TAuthDependancyResolver.create(session: TJabberSession);
+constructor TAuthDependancyResolver.create();
 begin
-    _session := session;
-    if (_session = nil) then
-        _session := MainSession;
-    Assert(_session <> nil); //created before Mainsession assigned perhaps?
+    Assert(MainSession <> nil); //created before Mainsession assigned perhaps?
+    _dependancyCB := MainSession.RegisterCallback(DependancyCallback, DEPMOD_READY_EVENT);
+    _sessionDisconnectCB := MainSession.RegisterCallback(DependancyCallback, '/session/disconnected');
+    _firedAllResolved := false;
 end;
 
-constructor TAuthDependancyResolver.create(session: TJabberSession; depmods: Array of TModuleInfo);
+constructor TAuthDependancyResolver.create(depmods: Array of TModuleInfo);
 begin
-    Create(session, ArrayToTArray(depmods));
+    Create(ArrayToTArray(depmods));
 end;
 
-constructor TAuthDependancyResolver.create(session: TJabberSession; depmods: TDepModInfoArray);
+constructor TAuthDependancyResolver.create(depmods: TDepModInfoArray);
 var
     i: integer;
 begin
-    create(session);
+    create();
+    
     SetLength(_dependancies, Length(depmods));
     for i := 0 to Length(depmods) - 1 do
         _dependancies[i] := depmods[i];
-
-    _dependancyCB := _session.RegisterCallback(DependancyCallback, DEPMOD_READY_EVENT);
-    _sessionDisconnectCB := _session.RegisterCallback(DependancyCallback, '/session/disconnected');
 end;
 
 destructor TAuthDependancyResolver.Destroy();
 begin
-    _session.UnRegisterCallback(_dependancyCB);
-    _session.UnRegisterCallback(_sessionDisconnectCB);
-    _session := nil;
+    if (MainSession <> nil) then
+    begin
+        MainSession.UnRegisterCallback(_dependancyCB);
+        MainSession.UnRegisterCallback(_sessionDisconnectCB);
+    end;
     inherited;
 end;
 
-class procedure TAuthDependancyResolver.SignalReady(Module: widestring; tag: TXMLTag; session: TJabberSession);
-var
-    ts: TJabberSession;
+class procedure TAuthDependancyResolver.SignalReady(Module: widestring; tag: TXMLTag);
 begin
-    ts := session;
-    if (ts = nil) then
-        ts := MainSession;
-    ts.FireEvent(DEPMOD_READY_EVENT + Module, tag);
+    Assert(MainSession <> nil);
+    MainSession.FireEvent(DEPMOD_READY_EVENT + Module, tag);
 end;
 
-constructor TSimpleAuthResolver.create(OnResolved: TAllResolvedEvent; Module: widestring; Session: TJabberSession);
+constructor TSimpleAuthResolver.create(OnResolved: TAllResolvedEvent; Module: widestring);
 
 var
     ta: TDepModInfoArray;
@@ -1763,12 +1760,12 @@ begin
     tm.module := Module;
     tm.ready := false;
     ta[0] := tm;
-    inherited create(Session, ta);
+    inherited create(ta);
     Self.OnAllResolved := OnResolved;
 end;
 
 {---------------------- TSessionDependancyHandler -----------------------------}
-constructor TSessionAuthResolver.create(session: TJabberSession; depmods: TDepModInfoArray);
+constructor TSessionAuthResolver.create(depmods: TDepModInfoArray);
 begin
     inherited;
     _sessionEntityCB := -1;
@@ -1777,11 +1774,11 @@ end;
 
 procedure TSessionAuthResolver.DependancyCallback(event: string; tag: TXMLTag);
 begin
-    if (event = '/session/entity/items') and (tag.GetAttribute('from') = Session.Server) then
+    if (event = '/session/entity/items') and (tag.GetAttribute('from') = MainSession.Server) then
     begin
-        Session.UnRegisterCallback(_sessionEntityCB);
+        MainSession.UnRegisterCallback(_sessionEntityCB);
         _sessionEntityCB := -1;
-        TAuthDependancyResolver.SignalReady(DEPMOD_ENTITY_CACHE, nil, Session);
+        TAuthDependancyResolver.SignalReady(DEPMOD_ENTITY_CACHE, nil);
     end
     else begin
         if (event = DEPMOD_LOGGED_IN_EVENT) then
@@ -1789,16 +1786,11 @@ begin
             _sessionReadyTag := TXMLTag.create(Tag); //copy
 
             //kick off server disco walk
-            _sessionEntityCB := Session.RegisterCallback(DependancyCallback, '/session/entity/items');
-            jEntityCache.fetch(Session.Server, Session);
+            _sessionEntityCB := MainSession.RegisterCallback(DependancyCallback, '/session/entity/items');
+            jEntityCache.fetch(MainSession.Server, MainSession);
         end;
         inherited;
     end;
-end;
-
-procedure TSessionAuthResolver.FireOnAllResolved(tag: TXMLTag);
-begin
-    inherited FireOnAllResolved(_sessionReadyTag);
 end;
 
 procedure TSessionAuthResolver.ResetState();
@@ -1808,7 +1800,7 @@ begin
     _sessionReadyTag := nil;
 
     if (_sessionEntityCB <> -1) then
-        Session.UnRegisterCallback(_sessionEntityCB);
+        MainSession.UnRegisterCallback(_sessionEntityCB);
     _sessionEntityCB := -1;
     inherited;
 end;
