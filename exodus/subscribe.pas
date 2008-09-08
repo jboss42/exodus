@@ -26,16 +26,15 @@ uses
     StateForm,
     XMLTag, JabberID,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus, TntForms,
+    StdCtrls, ExtCtrls, Menus, TntStdCtrls, TntMenus, TntForms,
     Exodus_TLB,
-  ExFrame;
+  ExFrame, TntExtCtrls;
 
 type
   TfrmSubscribe = class(TfrmState)
     Label1: TTntLabel;
     chkSubscribe: TTntCheckBox;
     boxAdd: TGroupBox;
-    frameButtons1: TframeButtons;
     lblNickname: TTntLabel;
     txtNickname: TTntEdit;
     lblGroup: TTntLabel;
@@ -47,6 +46,10 @@ type
     imgIdent: TImage;
     lblJID: TTntLabel;
     Bevel1: TBevel;
+    pnlButtons: TTntPanel;
+    TntBevel1: TTntBevel;
+    btnAccept: TTntButton;
+    btnDeny: TTntButton;
     btnBlock: TTntButton;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);

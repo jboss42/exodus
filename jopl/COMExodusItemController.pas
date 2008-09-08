@@ -161,7 +161,7 @@ begin
     _GroupsCB := TExodusGroupCallback.Create(Self);
     _HoverControls := TWideStringList.Create();
     _itemupdateCB := TJabberSession(_JS).RegisterCallback(_ItemUpdateCallback, '/item/update');
-    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(js));
+    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_LOGGED_IN);
 end;
 
 {---------------------------------------}
@@ -268,7 +268,7 @@ begin
         TJabberSession(_js).RosterRefreshTimer.Enabled := false;
 
     TJabberSession(_js).RosterRefreshTimer.Enabled := true;
-    TAuthDependancyResolver.SignalReady(DEPMOD_GROUPS, nil, TJabberSession(_JS));
+    TAuthDependancyResolver.SignalReady(DEPMOD_GROUPS);
 end;
 
 {---------------------------------------}

@@ -117,6 +117,10 @@ var
     HistorySearchManager: TExodusHistorySearchManager;
     SQLSearch: TSQLSearchHandler;
 
+    // Controller reference to keep exodus
+    // open when used as COM object
+    ExComServerReference: IExodusController;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -134,12 +138,11 @@ uses
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger, DebugManager,
     XMLVCardCache, ExVCardCache,
-    Pubsub,
     InviteReceived,
     ExForm,
     HistorySearch,
     MiscMessages,
-    ToolbarImages;
+    ToolbarImages, COMObj;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -658,16 +661,13 @@ begin
     ExCOMToolBarImages := TExodusMainToolBarImages.Create();
     COMToolBarImages := ExCOMToolBarImages;
 
+
     ExCOMEntityCache := TExodusEntityCache.Create();
     COMEntityCache := ExCOMEntityCache;
 //    ExCOMToolbar := TExodusToolbar.Create(); //created in jabber1
 //    COMToolbar := ExCOMToolbar;
     ExCOMBookmarkManager := TExodusBookmarkManager.Create();
     COMBookmarkManager := ExCOMBookmarkManager;
-
-    ExCOMController.RegisterController(
-            IID_IExodusPubsubController,
-            TExodusPubsubController.Create(MainSession));
 
     // Setup the ExStartup object props
     ExStartup.priority := cli_priority;
@@ -686,6 +686,8 @@ begin
     if (MainSession.Prefs.getBool('brand_history_search')) then begin
         HistoryAction.Enabled := true;
     end;
+
+    ExComServerReference := CreateComObject(Class_ExodusController) as IExodusController;
 
     Result := true;
 end;

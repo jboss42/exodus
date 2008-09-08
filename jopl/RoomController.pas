@@ -73,7 +73,7 @@ begin
     _ItemsCB := TExodusRoomsCallback.Create(Self);
     _dnListener := TDisplayNameEventListener.Create();
     _dnListener.OnDisplayNameChange := _OnDisplayNameChange;
-    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS, TJabberSession(js));
+    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS);
 end;
 
 {---------------------------------------}
@@ -244,7 +244,7 @@ begin
         TJabberSession(_js).RosterRefreshTimer.Enabled := false;
     TJabberSession(_js).RosterRefreshTimer.Enabled := true;
 
-    TAuthDependancyResolver.SignalReady(DEPMOD_BOOKMARKS, nil, TJabberSession(_JS));
+    TAuthDependancyResolver.SignalReady(DEPMOD_BOOKMARKS);
     RoomTags.Free();
 end;
 
