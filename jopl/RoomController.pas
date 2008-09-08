@@ -73,7 +73,7 @@ begin
     _ItemsCB := TExodusRoomsCallback.Create(Self);
     _dnListener := TDisplayNameEventListener.Create();
     _dnListener.OnDisplayNameChange := _OnDisplayNameChange;
-    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS, TJabberSession(js));
+    _depResolver := TSimpleAuthResolver.create(_OnDependancyReady, DEPMOD_GROUPS);
 end;
 
 {---------------------------------------}
@@ -214,38 +214,41 @@ var
 begin
     Item := nil;
     RoomTags := nil;
-    if ((Event = 'xml') and (Tag.getAttribute('type') <> 'result')) then exit;
+    try
+        if ((Event = 'xml') and (Tag.getAttribute('type') <> 'result')) then exit;
 
-    // We got a response..
-    StorageTag := tag.QueryXPTag('/iq/query/storage');
-    if (StorageTag <> nil) then
-        RoomTags := StorageTag.ChildTags();
+        // We got a response..
+        StorageTag := tag.QueryXPTag('/iq/query/storage');
+        if (StorageTag <> nil) then
+            RoomTags := StorageTag.ChildTags();
 
-    for i := 0 to RoomTags.Count - 1 do begin
-        if (RoomTags[i].Name <> 'conference') then continue;
-        RoomTag := RoomTags.Tags[i];
-        jid := WideLowerCase(RoomTag.GetAttribute('jid'));
-        TmpJID := TJabberID.Create(RoomTag.GetAttribute('jid'));
-        Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_ROOM, _ItemsCB);
-        //Make sure item exists
-        if (Item <> nil) then
-        begin
-            _ParseRoom(Item, RoomTag);
+        for i := 0 to RoomTags.Count - 1 do begin
+            if (RoomTags[i].Name <> 'conference') then continue;
+            RoomTag := RoomTags.Tags[i];
+            jid := WideLowerCase(RoomTag.GetAttribute('jid'));
+            TmpJID := TJabberID.Create(RoomTag.GetAttribute('jid'));
+            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_ROOM, _ItemsCB);
+            //Make sure item exists
+            if (Item <> nil) then
+            begin
+                _ParseRoom(Item, RoomTag);
 
-            if (Item.IsVisible) then
-                TJabberSession(_JS).FireEvent('/item/add', Item);
+                if (Item.IsVisible) then
+                    TJabberSession(_JS).FireEvent('/item/add', Item);
+            end;
+            TmpJID.Free();
         end;
-        TmpJID.Free();
+
+        _RoomsLoaded := true;
+        Item := nil;
+        if (TJabberSession(_js).RosterRefreshTimer.Enabled) then
+            TJabberSession(_js).RosterRefreshTimer.Enabled := false;
+        TJabberSession(_js).RosterRefreshTimer.Enabled := true;
+
+        RoomTags.Free();
+    finally
+        TAuthDependancyResolver.SignalReady(DEPMOD_BOOKMARKS);
     end;
-
-    _RoomsLoaded := true;
-    Item := nil;
-    if (TJabberSession(_js).RosterRefreshTimer.Enabled) then
-        TJabberSession(_js).RosterRefreshTimer.Enabled := false;
-    TJabberSession(_js).RosterRefreshTimer.Enabled := true;
-
-    TAuthDependancyResolver.SignalReady(DEPMOD_BOOKMARKS, nil, TJabberSession(_JS));
-    RoomTags.Free();
 end;
 
 {---------------------------------------}

@@ -5,12 +5,12 @@ inherited frmSubscribe: TfrmSubscribe
   BorderStyle = bsDialog
   BorderWidth = 3
   Caption = 'Subscription Request'
-  ClientHeight = 215
+  ClientHeight = 216
   ClientWidth = 328
   Position = poMainFormCenter
   OnClose = FormClose
   ExplicitWidth = 340
-  ExplicitHeight = 253
+  ExplicitHeight = 248
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -46,85 +46,38 @@ inherited frmSubscribe: TfrmSubscribe
   object boxAdd: TGroupBox
     Left = 24
     Top = 88
-    Width = 289
+    Width = 301
     Height = 81
     TabOrder = 1
     object lblNickname: TTntLabel
       Left = 8
-      Top = 16
+      Top = 19
       Width = 49
       Height = 13
       Caption = 'Nickname:'
     end
     object lblGroup: TTntLabel
       Left = 8
-      Top = 48
+      Top = 51
       Width = 33
       Height = 13
       Caption = 'Group:'
     end
     object txtNickname: TTntEdit
       Left = 70
-      Top = 14
-      Width = 200
+      Top = 17
+      Width = 221
       Height = 21
       TabOrder = 0
     end
     object cboGroup: TTntComboBox
       Left = 70
-      Top = 44
-      Width = 200
+      Top = 47
+      Width = 221
       Height = 21
       ItemHeight = 13
       Sorted = True
       TabOrder = 1
-    end
-  end
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 179
-    Width = 328
-    Height = 36
-    Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 2
-    TabStop = True
-    ExplicitTop = 179
-    ExplicitWidth = 328
-    ExplicitHeight = 36
-    inherited Panel2: TPanel
-      Width = 328
-      Height = 36
-      ExplicitTop = -4
-      ExplicitWidth = 328
-      ExplicitHeight = 36
-      inherited Bevel1: TBevel
-        Width = 328
-        ExplicitWidth = 328
-      end
-      inherited Panel1: TPanel
-        Left = 90
-        Width = 238
-        Height = 31
-        ExplicitLeft = 90
-        ExplicitWidth = 238
-        ExplicitHeight = 31
-        inherited btnOK: TTntButton
-          Caption = 'Accept'
-          OnClick = frameButtons1btnOKClick
-        end
-        inherited btnCancel: TTntButton
-          Caption = 'Deny'
-          OnClick = frameButtons1btnCancelClick
-        end
-      end
     end
   end
   object Panel1: TPanel
@@ -135,7 +88,7 @@ inherited frmSubscribe: TfrmSubscribe
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
-    TabOrder = 3
+    TabOrder = 2
     object imgIdent: TImage
       Left = 0
       Top = 0
@@ -165,14 +118,56 @@ inherited frmSubscribe: TfrmSubscribe
       OnClick = lblJIDClick
     end
   end
-  object btnBlock: TTntButton
-    Left = 250
-    Top = 184
-    Width = 75
-    Height = 25
-    Caption = 'Block'
-    TabOrder = 4
-    OnClick = btnBlockClick
+  object pnlButtons: TTntPanel
+    Left = 0
+    Top = 179
+    Width = 328
+    Height = 37
+    Align = alBottom
+    BevelOuter = bvNone
+    ParentColor = True
+    TabOrder = 3
+    ExplicitTop = 184
+    object TntBevel1: TTntBevel
+      Left = 0
+      Top = 0
+      Width = 328
+      Height = 50
+      Align = alTop
+      Shape = bsTopLine
+      ExplicitLeft = -1
+    end
+    object btnAccept: TTntButton
+      Left = 88
+      Top = 9
+      Width = 75
+      Height = 25
+      Caption = '&Accept'
+      Default = True
+      ModalResult = 1
+      TabOrder = 0
+      OnClick = frameButtons1btnOKClick
+    end
+    object btnDeny: TTntButton
+      Left = 169
+      Top = 9
+      Width = 75
+      Height = 25
+      Cancel = True
+      Caption = '&Deny'
+      ModalResult = 2
+      TabOrder = 1
+      OnClick = frameButtons1btnCancelClick
+    end
+    object btnBlock: TTntButton
+      Left = 250
+      Top = 9
+      Width = 75
+      Height = 25
+      Caption = '&Block'
+      TabOrder = 2
+      OnClick = btnBlockClick
+    end
   end
   object PopupMenu1: TTntPopupMenu
     Left = 208

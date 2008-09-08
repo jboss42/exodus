@@ -71,7 +71,7 @@ uses ActionMenus, Graphics, ExActionCtrl, ExUtils, gnugettext, GrpManagement, Fo
 
 const
     sConfirmDeleteCaption: Widestring = 'Delete Item(s)';
-    sConfirmDeleteSingleTxt: Widestring = 'Are you sure you want to delete %s?';
+    sConfirmDeleteSingleTxt: Widestring = 'Are you sure you want to delete the item, %s?';
     sConfirmDeleteMultiTxt: Widestring = 'Are you sure you want to delete these %d items?';
     sWarnSingleNotDeletedTxt: Widestring = 'The group %s is not empty and could not be deleted.' + #13#10 + 'Make sure all items in the group are removed, then try again.';
     sWarnMultiNotDeletedTxt: Widestring = '%d groups are not empty and could not be deleted.' + #13#10 + 'Make sure all items in the groups areremoved, then try again.';

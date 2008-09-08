@@ -205,7 +205,7 @@ type
 constructor TExVCardCache.Create(js: TObject);
 begin
     inherited;
-    _depResolver := TSimpleAuthResolver.create(Self.OnDependancyReady, DEPMOD_LOGGED_IN, TJabberSession(js));
+    _depResolver := TSimpleAuthResolver.create(Self.OnDependancyReady, DEPMOD_LOGGED_IN);
 end;
 
 {---------------------------------------}

@@ -593,23 +593,35 @@ var
 begin
   inherited;
     if (_avatar <> nil) then begin
-        if (_avatar.Height > _imgAvatar.Height) then begin
-            r.Top := 1;
-            r.Left := 1;
-            r.Bottom := _imgAvatar.Height;
-            r.Right := _imgAvatar.Width;
-            _avatar.Draw(_imgAvatar.Canvas, r);
-        end
-        else
-            _avatar.Draw(_imgAvatar.Canvas);
-    end
-    else begin
-        r.Top := 1;
-        r.Left := 1;
-        r.Bottom := 28;
-        r.Right := 28;
-        _imgAvatar.Canvas.StretchDraw(r, _UnknownAvatar);
+        try
+            if (_avatar.Height > _imgAvatar.Height) then begin
+                r.Top := 1;
+                r.Left := 1;
+                r.Bottom := _imgAvatar.Height;
+                r.Right := _imgAvatar.Width;
+                _avatar.Draw(_imgAvatar.Canvas, r);
+            end
+            else
+                _avatar.Draw(_imgAvatar.Canvas);
+            exit;
+        //JJF I keep getting npe here, probably bad avatar data from an
+        //earlier avatar cache implementation, but it happens regularly
+        //enough to trap and report.
+        Except
+            On E:Exception do
+            begin
+                Debug.DebugMessage('Exception attempting to draw avatar (' + e.Message + ')');
+                _avatar := nil; //try to avoid doing this again
+                                //note its just a ref to the cache
+            end;
+        end;
     end;
+    //drops through if avatar could not be rendered
+    r.Top := 1;
+    r.Left := 1;
+    r.Bottom := 28;
+    r.Right := 28;
+    _imgAvatar.Canvas.StretchDraw(r, _UnknownAvatar);
 end;
 
 procedure TExJIDHyperlinkLabel.imgAvatarClick(Sender: TObject);
