@@ -1787,7 +1787,7 @@ begin
         frm := TfrmDockable(_dockwindow.getTabForm(tsheet));
         if (frm <> nil) then
         begin
-            _dockwindow.CloseDocked(frm);
+           frm.Close();
         end;
     end;
 end;
