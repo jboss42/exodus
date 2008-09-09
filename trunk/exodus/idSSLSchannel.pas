@@ -800,6 +800,8 @@ end;
 constructor TIdSchannelIOHandlerSocket.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  fPassThrough := true;
+
   mSspiCalls := TSSPIInterface.Create;
   mSspiCalls.IsAvailable;
 
