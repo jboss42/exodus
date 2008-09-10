@@ -517,6 +517,7 @@
     <brand_profile_host control="pnlHost" />
     <brand_profile_port control="pnlPort" value="5222"/>
     <brand_profile_ssl control="pnlSSL" value="0"/>
+    <brand_profile_allow_ssl_port value="1"/>
 
     <brand_profile_socks_type control="pnlSocksType" value="0"/>
     <brand_profile_socks_host control="pnlSocksHost" />
