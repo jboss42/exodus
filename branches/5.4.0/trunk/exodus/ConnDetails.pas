@@ -669,7 +669,10 @@ begin
     brandControl(pnlHost);
     brandControl(pnlPort);
     brandControl(pnlSSL);
-    //pnlConnection.captureChildStates();
+    if (MainSession.Prefs.getBool('brand_profile_allow_ssl_port')) then
+        optSSLlegacy.Visible := true
+    else
+        optSSLlegacy.Visible := false;
 
     //Setup proxy page
     imgProxy.Target := tbsProxy;
