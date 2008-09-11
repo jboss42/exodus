@@ -1876,6 +1876,8 @@ begin
         // Close whatever rooms we have
         CloseAllRooms();
         CloseAllChats();
+        //stop dock window flashing now that we are disconnected
+        StopFlash(_dockwindow); //from notify.pas
 
         Self.Caption := getAppInfo().Caption;
         setTrayInfo(Self.Caption);
@@ -3760,6 +3762,7 @@ procedure TfrmExodus.mnuWindows_CloseAllClick(Sender: TObject);
 begin
     GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/close-all-windows', nil);
+    StopFlash(_dockwindow); //from notify.pas
     GetActivityWindow().enableListUpdates(true);
 end;
 
