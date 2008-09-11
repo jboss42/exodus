@@ -5,6 +5,7 @@ inherited frmXData: TfrmXData
   ClientHeight = 416
   ClientWidth = 492
   OldCreateOrder = True
+  OnClose = FormClose
   ExplicitWidth = 500
   ExplicitHeight = 444
   PixelsPerInch = 96
