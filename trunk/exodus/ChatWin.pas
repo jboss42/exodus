@@ -249,6 +249,7 @@ uses
     RT_XIMConversion,
     EntityCache,
     IEMsgList,
+    DebugManager,
     TypInfo, Dockable, ActiveX,
     HistorySearch, ActivityWindow,
     TntSysUtils;
@@ -1247,7 +1248,7 @@ begin
         end;
         MsgList.DisplayPresence('', _('You have been disconnected.'), '', 0);
         Self.ImageIndex := RosterImages.RI_OFFLINE_INDEX;
-**}        
+**}
     end
     else if (event = '/session/presence') then begin
         if (not MsgOut.Visible) then begin
@@ -1446,7 +1447,6 @@ begin
         end;
 
         txt := txt + '.';
-
         MsgList.DisplayPresence(_displayName, txt, ts, dt);
     end;
 end;
@@ -1803,23 +1803,32 @@ var
 begin
   inherited;
     if (_avatar <> nil) then begin
-        if (_avatar.Height > imgAvatar.Height) then begin
-            r.Top := 1;
-            r.Left := 1;
-            r.Bottom := imgAvatar.Height;
-            r.Right := imgAvatar.Width;
-            _avatar.Draw(imgAvatar.Canvas, r);
-        end
-        else
-            _avatar.Draw(imgAvatar.Canvas);
-    end
-    else begin
-        r.Top := 1;
-        r.Left := 1;
-        r.Bottom := imgAvatar.Height;
-        r.Right := imgAvatar.Width;
-        imgAvatar.Canvas.StretchDraw(r, _unknown_avatar);
+        try
+            if (_avatar.Height > imgAvatar.Height) then begin
+                r.Top := 1;
+                r.Left := 1;
+                r.Bottom := imgAvatar.Height;
+                r.Right := imgAvatar.Width;
+                _avatar.Draw(imgAvatar.Canvas, r);
+            end
+            else
+                _avatar.Draw(imgAvatar.Canvas);
+            exit;
+        except
+            //corrupt avatars could cause an invalid pointer here,
+            //make like we don't have an avatar
+            on E:Exception do
+            begin
+                DebugManager.DebugMessage('Exception attempting to draw avatar for chat: ' + GetUID() + ' (' + E.message + ')');
+                _avatar := nil;  //unknown drawn below
+            end;
+        end;
     end;
+    r.Top := 1;
+    r.Left := 1;
+    r.Bottom := imgAvatar.Height;
+    r.Right := imgAvatar.Width;
+    imgAvatar.Canvas.StretchDraw(r, _unknown_avatar);
 end;
 
 {---------------------------------------}
