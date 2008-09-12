@@ -51,7 +51,7 @@ type
 
   	public
   		// Variables
-  		
+
   		// Methods
         procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
         procedure AddDebugger(debuggerName: widestring; debugger: TObject);
@@ -64,6 +64,19 @@ type
   	end;
 
 procedure DebugMessage(txt: Widestring);
+
+{$IFDEF EXODUS}
+const
+    sfAddr: integer = 1;
+    sfUnit: integer = 2;
+    sfProc: integer = 4;
+    sfLine: integer = 8;
+    sfAll: integer = 15;
+
+procedure DebugMessageEx(msg: widestring; id: widestring = '');
+procedure DebugStackTrace(caption: Widestring);
+{$ENDIF}
+
 procedure StartDBGManager();
 procedure StopDBGManager();
 
@@ -73,9 +86,12 @@ var
 implementation
 
 uses
+{$IFDEF EXODUS}
+    debug,
+    JclDebug,
+{$ENDIF}
     Session,
-    DebugLogger,
-    Debug;
+    DebugLogger;
 
 
 {---------------------------------------}
@@ -164,8 +180,10 @@ begin
 
     if (obj is TDebugLogFile) then
         Result := TDebugLogFile(obj)
+{$IFDEF EXODUS}
     else if (obj is TfrmDebug) then
         Result := TfrmDebug(obj);
+{$ENDIF}
 end;
 
 
@@ -175,9 +193,94 @@ end;
 procedure DebugMessage(txt: Widestring);
 begin
     if (dbgManager = nil) then exit;
-    
+
     dbgManager.DebugStatement(txt);
 end;
+
+{$IFDEF EXODUS}
+{---------------------------------------}
+function StackFrameToString(level: integer; showFlags: integer = 15): widestring;
+var
+  locInfo: TJclLocationInfo;
+  procAddr: Pointer;
+  unitname, paddr, proc, line: string;
+begin
+    Result := '';
+    procAddr := Caller(level);
+    if ((procAddr <> nil) and GetLocationInfo(procAddr, locInfo))then
+    begin
+        unitName := locinfo.UnitName;
+        paddr := IntToHex(Integer(locInfo.Address), 8);
+        proc := locinfo.ProcedureName;
+        line := IntToStr(locInfo.LineNumber);
+
+        //remove unit from proc if it's there...
+        if (Pos(unitName + '.', locinfo.ProcedureName) = 1) then
+            proc := Copy(proc, Length(unitName) + 2, Length(proc));
+
+        if ((showFlags and sfAddr) <> 0) then
+            Result := '[' + paddr + '] ';
+
+        if ((showFlags and sfUnit) <> 0) then
+            Result := Result + unitName + '.';
+
+        if ((showFlags and sfProc) <> 0) then
+            Result := Result + proc + ' ';
+
+        if ((showFlags and sfLine) <> 0) then
+            Result := Result + 'Line ' + line;
+    end;
+end;
+
+{---------------------------------------}
+function GetStackTrace(startFrame: integer = 3);
+var
+    currFrame: Integer;
+    oneFrame: widestring;
+begin
+    Result := '';
+    currFrame := startFrame; //start 3 deep to skip unwanted frames
+    oneFrame := StackFrameToString(currFrame, sfAll);
+    while (oneFrame <> '') do
+    begin
+        Result := Result + oneFrame + #13#10;
+        inc(currFrame);
+        oneFrame := StackFrameToString(currFrame, sfAll);
+    end;
+end;
+
+{---------------------------------------}
+procedure DebugStackTrace(caption: Widestring);
+var
+    wsl: TWidestringlist;
+begin
+    if (dbgManager = nil) then exit;
+
+    wsl := TWideStringList.create();
+    wsl.Add('Stack Trace for: ' + caption);
+    wsl.Add('---------------------------------------');
+    wsl.Add(GetStackTrace());
+    wsl.Add('---------------------------------------');
+    dbgManager.DebugStatement(wsl.Text);
+    wsl.free();
+end;
+
+{---------------------------------------}
+procedure DebugMessageEx(msg: widestring; id: widestring);
+var
+    tstr: widestring;
+begin
+    if (dbgManager = nil) then exit;
+
+    tstr := ' ';
+    if (id <> '') then
+        tstr := tstr + '(' + id + ') ';//note space
+    tstr := tstr + msg;
+
+    //0->stackframetostring, 1-> DebugMessageEx 2-> caller
+    debugMessage(StackFrameToString(2, sfUnit or sfProc) + tstr);
+end;
+{$ENDIF}
 
 {---------------------------------------}
 procedure StartDBGManager();
