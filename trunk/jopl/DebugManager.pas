@@ -233,7 +233,7 @@ begin
 end;
 
 {---------------------------------------}
-function GetStackTrace(startFrame: integer = 3);
+function GetStackTrace(startFrame: integer = 3): widestring;
 var
     currFrame: Integer;
     oneFrame: widestring;
