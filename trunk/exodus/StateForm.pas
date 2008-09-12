@@ -169,6 +169,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormDestroy(Sender: TObject);
     procedure FormOnActivate(Sender: TObject);
+
   private
      _pos: TPos;          //our position
      _persistPos: boolean; //should we persist our current position?
@@ -332,19 +333,15 @@ type
     property IsNotifying: boolean read _isNotifying write _isNotifying;
   end;
 
-procedure Log(msg: widestring);
 implementation
 
 {$R *.dfm}
 
 uses
     PrefController,
-    debug,
-    DebugManager,
     room,
     ChatWin,
     unicode,
-    jabber1,
     types,
     Session,
     Notify,
@@ -356,11 +353,6 @@ uses
 
 var
   currentAutoOpenEvent: widestring;
-
-procedure Log(msg: widestring);
-begin
-//    DebugManager.DebugMessage(msg);
-end;
 
 class procedure TAutoOpenEventManager.onAutoOpenEvent(event: Widestring);
 type
@@ -701,7 +693,6 @@ end;
 {---------------------------------------}
 procedure TfrmState.FormOnActivate(Sender: TObject);
 begin
-    log('TfrmState(' + GetWindowStateKey() + ').FormOnActivate BEGIN');
     try
         inherited; //hmm, shouldthis go first?
         if (not skipWindowPosEvents()) then
@@ -713,16 +704,16 @@ begin
                          Self.Left, Self.Top, Self.Width, Self.Height,
                          HWND_TOP);
             StartWindowPosEvents();
-        end;
-        StopFlash(Self);
-        isNotifying := false;
+            
+            StopFlash(Self);
+            isNotifying := false;
 
-        if (self.Showing) then
-            gotActivate();
+            if (self.Showing) then
+                gotActivate();
+        end;
     except
         // Possible exception when dealing with an extreme amount of windows
     end;
-    log('TfrmState(' + GetWindowStateKey() + ').FormOnActivate END');
 end;
 
 {---------------------------------------}
@@ -904,21 +895,17 @@ end;
 procedure TfrmState.WMActivate(var msg: TMessage);
 begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
-        log('TfrmState(' + GetWindowStateKey() + ').WMActivate BEGIN');
-        if (Floating) and(self.Showing) then
+        StopFlash(Self);
+        isNotifying := false;
+        if (Floating) then
             gotActivate();
-        log('TfrmState(' + GetWindowStateKey() + ').WMActivate END');
     end;
     inherited;
 end;
 
 procedure TfrmState.gotActivate();
 begin
-    log('TfrmState(' + GetWindowStateKey() + ').gotActivate BEGIN');
-    StopFlash(Self);
-    isNotifying := false;
     //nop
-    log('TfrmState(' + GetWindowStateKey() + ').gotActivate END');
 end;
 
 {
