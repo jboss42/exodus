@@ -813,7 +813,7 @@ begin
 
     try
         _needToSortList := true;
-        
+
         trackitem := _findItem(awitem);
 
         // Deactivate old item if new item docked
@@ -829,8 +829,11 @@ begin
         // Activate if Docked
         //only change to active colors if msg count = 0 (-1) or will be cleared later
         //prevents new message/new window colors from being overwritten
-        if (_dockWindow.Active and trackitem.frm.Docked) or trackitem.frm.active or (awitem.count < 1) then
+        if (_dockWindow.Active and trackitem.frm.Docked) or
+            trackitem.frm.active or (awitem.count < 1) then begin
             awitem.activate(true, trackitem.frm.Docked);
+        end;
+
         if (trackitem.frm.Docked) then begin
             _activeitem := awitem;
         end;
@@ -842,15 +845,15 @@ begin
                 try
                     tsheet.Visible := true;
                     _oldActivateSheet := tsheet;
+                    //tsheet will get a activated when ActivePage is set if
+                    //_dockWindow is active. That fires various aactivastion
+                    //events, includign clearing unread messages as needed.
+                    //If _dockWindow is not active, activation occurs when
+                    //if gets focus later.
                     _dockWindow.AWTabControl.ActivePage := tsheet;
                     _dockWindow.setWindowCaption(trackitem.frm.Caption);
-                except
-                end;
-                if (_dockWindow.Active) then begin
-                    trackitem.frm.ClearUnreadMsgCount();
-                    trackitem.awItem.count := trackitem.frm.UnreadMsgCount;
-                    trackitem.frm.gotActivate();
                     scrollToActive();
+                except
                 end;
             end;
         end
