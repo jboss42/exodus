@@ -635,14 +635,6 @@ begin
     popClearHistory.Visible := (ExCOMController.ContactLogger <> nil);
 end;
 
-{posted by Sebastian Volland at http://www.delphi3000.com/articles/article_1150.asp?SK=}
-function RGBToColor(R,G,B:Byte): TColor;
-begin
-  Result:=B Shl 16 Or
-          G Shl 8  Or
-          R;
-end;
-
 {---------------------------------------}
 procedure TfrmChat.SetupPrefs();
 var
