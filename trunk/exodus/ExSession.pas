@@ -134,7 +134,7 @@ uses
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
-    PrefNotify, Room, RosterAdd, NetMeetingFix, Profile, RegForm,
+    PrefNotify, Room, RosterAdd, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger, DebugManager,
     XMLVCardCache, ExVCardCache,
