@@ -36,7 +36,7 @@ uses
     TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
     ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
     XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
-    SClrRGrp, IEMsgList;
+    IEMsgList, ExCustomSeparatorBar;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -288,7 +288,6 @@ type
     txtStatus: TTntEdit;
     imgAd: TImage;
     MainbarImageList: TImageList;
-    ToolbarBevel: TColorBevel;
     popViewStates: TTntPopupMenu;
     popShowOnline: TTntMenuItem;
     popShowAll: TTntMenuItem;
@@ -297,6 +296,7 @@ type
     mnuFile_Plugins: TTntMenuItem;
     N16: TTntMenuItem;
     mnuFile_Plugins_Options: TTntMenuItem;
+    ToolbarSeparatorBar: TExCustomSeparatorBar;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);

@@ -50,8 +50,8 @@ uses
   TntStdCtrls,
   Buttons,
   TntButtons,
-  SClrRGrp,
-  XMLTag;
+  XMLTag,
+  ExCustomSeparatorBar;
 
 type
 
@@ -96,14 +96,14 @@ type
     SortLeftSpacer: TBevel;
     SortRightSpacer: TBevel;
     timShowActiveDocked: TTimer;
-    SortBevel: TColorBevel;
-    ScrollUpBevel: TColorBevel;
-    ScrollDownBevel: TColorBevel;
     popAWList: TTntPopupMenu;
     mnuAW_CloseAll: TTntMenuItem;
     mnuAW_DockAll: TTntMenuItem;
     mnuAW_FloatAll: TTntMenuItem;
     timScrollTimer: TTimer;
+    ScrollUpSeparatorBar: TExCustomSeparatorBar;
+    SortSeparatorBar: TExCustomSeparatorBar;
+    ScrollDownSeparatorBar: TExCustomSeparatorBar;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure pnlListScrollUpClick(Sender: TObject);
@@ -406,12 +406,12 @@ begin
         _scrollup_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
         _scrolldown_bevel_shadow_color := TColor(StrToInt(tag.GetFirstTag('shadow').Data));
         _scrolldown_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
-        SortBevel.Shadow := _sort_bevel_shadow_color;
-        SortBevel.HighLight := _sort_bevel_highlight_color;
-        ScrollUpBevel.Shadow := _scrollup_bevel_shadow_color;
-        ScrollUpBevel.HighLight := _scrollup_bevel_highlight_color;
-        ScrollDownBevel.Shadow := _scrolldown_bevel_shadow_color;
-        ScrollDownBevel.HighLight := _scrolldown_bevel_highlight_color;
+        SortSeparatorBar.CustomSeparatorBarProperites.Color1 := _sort_bevel_shadow_color;
+        SortSeparatorBar.CustomSeparatorBarProperites.Color2 := _sort_bevel_highlight_color;
+        ScrollUpSeparatorBar.CustomSeparatorBarProperites.Color1 := _scrollup_bevel_shadow_color;
+        ScrollUpSeparatorBar.CustomSeparatorBarProperites.Color2 := _scrollup_bevel_highlight_color;
+        ScrollDownSeparatorBar.CustomSeparatorBarProperites.Color1 := _scrolldown_bevel_shadow_color;
+        ScrollDownSeparatorBar.CustomSeparatorBarProperites.Color2 := _scrolldown_bevel_highlight_color;
     end;
     FreeAndNil(tag);
 

@@ -24,7 +24,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, SelectItem, Menus, TntMenus, StdCtrls, TntStdCtrls, ExtCtrls,
-  SClrRGrp, TntExtCtrls, ComCtrls, TntComCtrls, Unicode;
+  TntExtCtrls, ComCtrls, TntComCtrls, Unicode, ExCustomSeparatorBar;
 
 type
     TListItemTracker = class
