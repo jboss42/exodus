@@ -43,7 +43,7 @@ uses
     Graphics,
     Menus,
     TntMenus,
-    SClrRGrp;
+    ExCustomSeparatorBar;
 
 type
     TfAWItem = class(TExFrame)
@@ -57,11 +57,11 @@ type
     mnuFloatWindow: TTntMenuItem;
     mnuDockWindow: TTntMenuItem;
     FarRightSpacer: TBevel;
-    AWItemBevel: TColorBevel;
     N1: TTntMenuItem;
     mnuAWItem_CloseAll: TTntMenuItem;
     mnuAWItem_DockAll: TTntMenuItem;
     mnuAWItem_FloatAll: TTntMenuItem;
+    AWItemSeparatorBar: TExCustomSeparatorBar;
     procedure imgPresenceClick(Sender: TObject);
     procedure lblNameClick(Sender: TObject);
     procedure lblCountClick(Sender: TObject);
@@ -217,8 +217,8 @@ begin
         _activity_window_unread_msgs_font_color := $000000ff;
         _activity_window_high_priority_font_color := $00000000;
         _activity_window_unread_msgs_high_priority_font_color := $00000000;
-        _activity_window_bevel_shadow_color := AWItemBevel.Shadow;
-        _activity_window_bevel_highlight_color := AWItemBevel.HighLight;
+        _activity_window_bevel_shadow_color := AWItemSeparatorBar.CustomSeparatorBarProperites.Color1;
+        _activity_window_bevel_highlight_color := AWItemSeparatorBar.CustomSeparatorBarProperites.Color2;
         _LowestUnreadMsgCnt := 0;
         _LowestUnreadMsgCntColorChange := 1;
 
@@ -253,8 +253,8 @@ begin
         if (tag <> nil) then begin
             _activity_window_bevel_shadow_color := TColor(StrToInt(tag.GetFirstTag('shadow').Data));
             _activity_window_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
-            AWItemBevel.Shadow := _activity_window_bevel_shadow_color;
-            AWItemBevel.HighLight := _activity_window_bevel_highlight_color;
+            AWItemSeparatorBar.CustomSeparatorBarProperites.Color1 := _activity_window_bevel_shadow_color;
+            AWItemSeparatorBar.CustomSeparatorBarProperites.Color2 := _activity_window_bevel_highlight_color;
         end;
         FreeAndNil(tag);
         tag := MainSession.Prefs.getXMLPref('activity_window_new_message_color');

@@ -26,7 +26,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, ComCtrls, ExForm,
   Forms, ExTreeView, Exodus_TLB, Dialogs, ExtCtrls, StdCtrls, TntStdCtrls,
-  Menus, TntMenus, ExGradientPanel, Unicode, SClrRGrp;
+  Menus, TntMenus, ExGradientPanel, Unicode, ExCustomSeparatorBar;
 
 type
   TfrmSelectItem = class;
@@ -71,7 +71,7 @@ type
     lblJID: TTntLabel;
     popSelected: TTntPopupMenu;
     mnuShowOnline: TTntMenuItem;
-    ColorBevel1: TColorBevel;
+    SeparatorBar: TExCustomSeparatorBar;
     
     procedure FormCreate(Sender: TObject);
 

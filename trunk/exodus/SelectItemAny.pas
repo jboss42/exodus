@@ -25,7 +25,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, SelectItem, Menus, TntMenus, StdCtrls, TntStdCtrls, ExtCtrls,
-  SClrRGrp, TntExtCtrls;
+  TntExtCtrls, ExCustomSeparatorBar;
 
 type
   TfrmSelectItemAny = class(TfrmSelectItem)
