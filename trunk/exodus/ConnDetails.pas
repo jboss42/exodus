@@ -27,7 +27,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
     TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows, JclMime, IdCoderMIME,
-	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile, ExForm, pngimage,
+	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile, ExForm,
   ExGraphicButton, Buttons, TntButtons, ExGroupBox, ExGradientPanel, ExFrame,
   ExBrandPanel, ExCheckGroupBox;
 

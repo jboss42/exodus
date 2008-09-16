@@ -25,7 +25,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, StdCtrls, TntStdCtrls, ComCtrls, TntComCtrls, ExtCtrls,
-  pngextra, XMLTag, pngimage, Menus, TntMenus, RichEdit2, ExRichEdit, Buttons,
+  XMLTag, Menus, TntMenus, RichEdit2, ExRichEdit, Buttons,
   TntButtons, TntForms, ExGraphicButton;
 
 const

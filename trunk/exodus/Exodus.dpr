@@ -168,9 +168,6 @@ uses
   xdata in 'xdata.pas' {frmXData},
   fXData in 'fXData.pas' {frameXData: TFrame},
   NewUser in 'NewUser.pas' {frmNewUser},
-  pngimage in '..\jopl\png\pngimage.pas',
-  pnglang in '..\jopl\png\pnglang.pas',
-  pngextra in '..\jopl\png\pngextra.pas',
   DiscoIdentity in '..\jopl\DiscoIdentity.pas',
   fProfile in 'fProfile.pas' {frameProfile: TFrame},
   ZlibHandler in '..\jopl\ZlibHandler.pas',
@@ -222,7 +219,6 @@ uses
   StateForm in 'StateForm.pas' {frmState: TTntForm},
   PrefHotkeys in 'prefs\PrefHotkeys.pas' {frmPrefHotkeys},
   ModifyHotkeys in 'ModifyHotkeys.pas' {frmModifyHotkeys},
-  zlibpas in '..\jopl\png\zlibpas.pas',
   RT_XIMConversion in 'RT_XIMConversion.pas',
   ToolbarColorSelect in 'ToolbarColorSelect.pas' {frmToolbarColorSelect},
   DisplayName in '..\jopl\DisplayName.pas',
@@ -305,7 +301,9 @@ uses
   XMLVCardCache in '..\jopl\XMLVCardCache.pas',
   AvatarCache in '..\jopl\AvatarCache.pas',
   ExVcardCache in 'ExVcardCache.pas',
-  NTDLLFixup in '..\jopl\NTDLLFixup.pas';
+  NTDLLFixup in '..\jopl\NTDLLFixup.pas',
+  PNGWrapper in '..\jopl\PNGWrapper.pas',
+  NGImages in '..\jopl\TNGImage\Package\NGImages.pas';
 
 {$R *.TLB}
 
