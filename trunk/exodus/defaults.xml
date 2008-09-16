@@ -244,7 +244,7 @@
 
     <!-- Message Preferences -->
     <s10n_auto_accept value="2" state="rw"/>
-    <s10n_auto_add value="1" control="chkIncomingS10nAdd" state="rw"/>
+    <s10n_auto_add value="1" control="chkIncomingS10nAdd" state="inv"/>
 
     <!-- other message preferences -->
     <block_nonroster value="1" control="chkBlockNonRoster" state="rw"/>
