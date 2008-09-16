@@ -374,7 +374,7 @@ begin
         _selectedUID := item.UID;
         _selectedItemType := item.Type_;
         _skipTextChange := true; //skip as we assign selected stuff here
-        txtJID.text := item.UID;
+        txtJID.text := TJabberID.removeJEP106(item.UID);
         _skipTextChange := false;
     end;
 
