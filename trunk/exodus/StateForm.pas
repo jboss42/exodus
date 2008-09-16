@@ -214,7 +214,6 @@ type
         This event is fired when the form is created.
     }
     procedure OnRestoreWindowState(windowState : TXMLTag);virtual;
-
     {
         Event fired when form should persist its position and other state
         information.
@@ -254,6 +253,10 @@ type
         specific windows (ie always saving unread messaged)
     }
     function CanPersist(): boolean;virtual;
+    {
+      Override to restore unread messages
+    }
+    procedure OnRestoreUnreadDB ();virtual;
   public
     {
         Show the window in its default configuration.
@@ -814,6 +817,7 @@ begin
     begin
         prefHelper := TStateFormPrefsHelper.create();
         key := GetWindowStateKey();
+        OnRestoreUnreadDB();
         if (CanPersist() and
            (prefHelper.getWindowState(key, stateTag))) then
         begin
@@ -1066,6 +1070,10 @@ begin
     Result := MainSession.Prefs.getBool('restore_window_state');
 end;
 
+procedure TfrmState.OnRestoreUnreadDB ();
+begin
+
+end;
 initialization
     currentAutoOpenEvent := '';
 
