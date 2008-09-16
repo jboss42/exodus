@@ -23,7 +23,7 @@ interface
 
 uses
   SysUtils, Classes, Controls, ExtCtrls, TntExtCtrls, TntStdCtrls, StdCtrls,
-  Graphics, pngimage;
+  Graphics, PNGWrapper;
 
 type
   TGraphicButtonOrientation = (gboOverlay, gboLeftOf, gboRightOf, gboAbove, gboBelow);
@@ -37,7 +37,7 @@ type
     _pushed: boolean;
     _caption: Widestring;
     _border: TBorderWidth;
-    _images: Array[0..3] of TPNGObject;
+    _images: Array[0..3] of TPNGWrapper;
 
     _target: TObject;
 
@@ -47,20 +47,20 @@ type
     procedure SetBorder(border: TBorderWidth);
     procedure SetOrientation(orient: TGraphicButtonOrientation);
 
-    function GetImageOf(idx: Integer): TPNGObject;
-    procedure SetImageOf(idx: Integer; img: TPNGObject);
+    function GetImageOf(idx: Integer): TPNGWrapper;
+    procedure SetImageOf(idx: Integer; img: TPNGWrapper);
 
-    function GetImageEnabled(): TPNGObject;
-    procedure SetImageEnabled(img: TPNGObject);
+    function GetImageEnabled(): TPNGWrapper;
+    procedure SetImageEnabled(img: TPNGWrapper);
 
-    function GetImageDisabled(): TPNGObject;
-    procedure SetImageDisabled(img: TPNGObject);
+    function GetImageDisabled(): TPNGWrapper;
+    procedure SetImageDisabled(img: TPNGWrapper);
 
-    function GetImageSelected(): TPNGObject;
-    procedure SetImageSelected(img: TPNGObject);
+    function GetImageSelected(): TPNGWrapper;
+    procedure SetImageSelected(img: TPNGWrapper);
 
-    function GetImagePushed(): TPNGObject;
-    procedure SetImagePushed(img: TPNGObject);
+    function GetImagePushed(): TPNGWrapper;
+    procedure SetImagePushed(img: TPNGWrapper);
 
   protected
     { Protected declarations }
@@ -77,7 +77,7 @@ type
 
     function CanAutoSize(var NewWidth, NewHeight: Integer): Boolean; override;
 
-    function FindImage(): TPNGObject;
+    function FindImage(): TPNGWrapper;
 
   public
     { Public declarations }
@@ -99,10 +99,10 @@ type
     property Orientation: TGraphicButtonOrientation read _orient
             write SetOrientation default gboOverlay;
 
-    property ImageEnabled: TPNGObject read GetImageEnabled write SetImageEnabled;
-    property ImageDisabled: TPNGObject read GetImageDisabled write SetImageDisabled;
-    property ImageSelected: TPNGObject read GetImageSelected write SetImageSelected;
-    property ImagePushed: TPNGObject read GetImagePushed write SetImagePushed;
+    property ImageEnabled: TPNGWrapper read GetImageEnabled write SetImageEnabled;
+    property ImageDisabled: TPNGWrapper read GetImageDisabled write SetImageDisabled;
+    property ImageSelected: TPNGWrapper read GetImageSelected write SetImageSelected;
+    property ImagePushed: TPNGWrapper read GetImagePushed write SetImagePushed;
 
     property Target: TObject read _target write _target;
     property Padding;
@@ -135,7 +135,7 @@ var
     idx: Integer;
 begin
     for idx := 0 to Length(_images) - 1 do begin
-        _images[idx] := TPNGObject.Create;
+        _images[idx] := TPNGWrapper.Create;
     end;
 
     OnMouseEnter := MouseEnter;
@@ -190,7 +190,7 @@ begin
     end;
 end;
 
-function TExGraphicButton.FindImage(): TPNGObject;
+function TExGraphicButton.FindImage(): TPNGWrapper;
 begin
     Result := nil;
 
@@ -207,11 +207,12 @@ begin
     if (Result = nil) or (Result.Empty) then
         Result := GetImageEnabled;
 end;
-function TExGraphicButton.GetImageOf(idx: Integer): TPNGObject;
+
+function TExGraphicButton.GetImageOf(idx: Integer): TPNGWrapper;
 begin
     Result := _images[idx];
 end;
-procedure TExGraphicButton.SetImageOf(idx: Integer; img: TPNGObject);
+procedure TExGraphicButton.SetImageOf(idx: Integer; img: TPNGWrapper);
 var
     changed: boolean;
 begin
@@ -230,38 +231,38 @@ begin
     if changed then Repaint;
 end;
 
-function TExGraphicButton.GetImageEnabled(): TPNGObject;
+function TExGraphicButton.GetImageEnabled(): TPNGWrapper;
 begin
     Result := GetImageOf(IMG_ENABLED);
 end;
-procedure TExGraphicButton.SetImageEnabled(img: TPNGObject);
+procedure TExGraphicButton.SetImageEnabled(img: TPNGWrapper);
 begin
     SetImageOf(IMG_ENABLED, img);
 end;
 
-function TExGraphicButton.GetImageDisabled(): TPNGObject;
+function TExGraphicButton.GetImageDisabled(): TPNGWrapper;
 begin
     Result := GetImageOf(IMG_DISABLED);
 end;
-procedure TExGraphicButton.SetImageDisabled(img: TPNGObject);
+procedure TExGraphicButton.SetImageDisabled(img: TPNGWrapper);
 begin
     SetImageOf(IMG_DISABLED, img);
 end;
 
-function TExGraphicButton.GetImageSelected(): TPNGObject;
+function TExGraphicButton.GetImageSelected(): TPNGWrapper;
 begin
     Result := GetImageOf(IMG_SELECTED);
 end;
-procedure TExGraphicButton.SetImageSelected(img: TPNGObject);
+procedure TExGraphicButton.SetImageSelected(img: TPNGWrapper);
 begin
     SetImageOf(IMG_SELECTED, img);
 end;
 
-function TExGraphicButton.GetImagePushed(): TPNGObject;
+function TExGraphicButton.GetImagePushed(): TPNGWrapper;
 begin
     Result := GetImageOf(IMG_PUSHED);
 end;
-procedure TExGraphicButton.SetImagePushed(img: TPNGObject);
+procedure TExGraphicButton.SetImagePushed(img: TPNGWrapper);
 begin
     SetImageOf(IMG_PUSHED, img);
 end;
@@ -309,10 +310,10 @@ var
     extents: TSize;
     Flags: Longint;
     txt: Widestring;
-    img: TPNGObject;
+    img: TPNGWrapper;
     txtColor: TColor;
 
-    procedure paintImage(Canvas: TCanvas; img: TPNGObject; bounds: TRect);
+    procedure paintImage(Canvas: TCanvas; img: TPNGWrapper; bounds: TRect);
     begin
         img.Draw(Canvas, bounds);
     end;
@@ -460,7 +461,7 @@ begin
 end;
 function TExGraphicButton.CanAutoSize(var NewWidth: Integer; var NewHeight: Integer): Boolean;
 var
-    png: TPNGObject;
+    png: TPNGWrapper;
     ih, iw: Integer;
     th, tw: Integer;
 begin

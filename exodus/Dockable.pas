@@ -99,6 +99,7 @@ type
     procedure closeAllCallback(event: string; tag: TXMLTag);
     procedure dockAllCallback(event: string; tag: TXMLTag);
     procedure floatAllCallback(event: string; tag: TXMLTag);
+    //procedure restoreUnreadXML();
   protected
     updateDockedCnt: integer;
 
@@ -126,6 +127,7 @@ type
     function GetDockbar(): IExodusDockToolbar;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure StoreUnreadMessage(unreadMsg: widestring; key: widestring = '');
+    procedure OnRestoreUnreadDB ();override;
 public
     _windowType: widestring; // what kind of dockable window is this
 
@@ -319,6 +321,7 @@ begin
     _closing := false;
 
     inherited;
+   
 end;
 
 procedure TfrmDockable.setImageIndex(idx: integer);
@@ -552,25 +555,22 @@ begin
     pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or tbDockBar.Visible;
 end;
 
-procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
-var
-    ttag: TXMLTag;
+//procedure TfrmDockable.restoreUnreadXML();
+//var
+//        txlist: TXMLTagList;
+//        idx: Integer;
+//        ttag: TXMLTag;
+//begin
+//        ttag := windowState.GetFirstTag('unread');
+//        if (ttag <> nil) then
+//        begin
+//            txList := ttag.ChildTags;
+//            for idx := 0 to txList.Count - 1 do
+//                OnPersistedMessage(txList[idx]);
+//        end;
+//end;
 
-    procedure restoreUnreadXML();
-    var
-        txlist: TXMLTagList;
-        idx: Integer;
-    begin
-        ttag := windowState.GetFirstTag('unread');
-        if (ttag <> nil) then
-        begin
-            txList := ttag.ChildTags;
-            for idx := 0 to txList.Count - 1 do
-                OnPersistedMessage(txList[idx]);
-        end;
-    end;
-
-    procedure restoreUnreadDB();
+procedure TfrmDockable.OnRestoreUnreadDB();
     var
         parser: TXMLTagParser;
         table: IExodusDataTable;
@@ -578,7 +578,8 @@ var
         xml: Widestring;
         tag: TXMLTag;
         idx:  Integer;
-    begin
+begin
+        PersistUnreadMessages := false;
         parser := nil;
         tag := nil;
         initializeDatabase();
@@ -587,8 +588,20 @@ var
         try
             table := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
             sql := Format('select * from unread_cache where (key=''%s'');',[key]);
-            if not DataStore.GetTable(sql, table) then exit;
-            if not table.FirstRow then exit;
+            if not DataStore.GetTable(sql, table) then
+            begin
+                FreeAndNil(tag);
+                FreeAndNil(parser);
+                PersistUnreadMessages := true;
+                exit;
+            end;
+            if not table.FirstRow then
+            begin
+                FreeAndNil(tag);
+                FreeAndNil(parser);
+                PersistUnreadMessages := true;
+                exit;
+            end;
 
             parser := TXMLTagParser.Create();
             for idx := 0 to table.RowCount - 1 do begin
@@ -607,10 +620,14 @@ var
         except
             //TODO: loggit
         end;
-
         FreeAndNil(tag);
         FreeAndNil(parser);
-    end;
+        PersistUnreadMessages := true;
+end;
+
+procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
+var
+    ttag: TXMLTag;
 begin
     inherited;
     if (Jabber1.getAllowedDockState() = adsForbidden) then
@@ -621,19 +638,6 @@ begin
     else
         //initial condition, how to handle windows we have no state for
         _docked := MainSession.Prefs.getBool('start_docked');
-
-    if (PersistUnreadMessages) then
-    begin
-        PersistUnreadMessages := false;
-
-        //check for XML-based messages
-        restoreUnreadXML();
-
-        //check the database
-        restoreUnreadDB();
-        
-        PersistUnreadMessages := true;
-    end;
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);

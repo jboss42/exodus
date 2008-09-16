@@ -656,6 +656,7 @@ procedure TfrmDockWindow.WMActivate(var msg: TMessage);
 var
     frm: TfrmDockable;
 begin
+    inherited; //stop flashing
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         if (_dockState = dsDocked) then begin
             frm := getTopDocked();
@@ -664,7 +665,6 @@ begin
             end;
         end;
     end;
-    inherited;
 end;
 
 {

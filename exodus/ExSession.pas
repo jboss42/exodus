@@ -134,11 +134,10 @@ uses
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
-    PrefNotify, Room, RosterAdd, NetMeetingFix, Profile, RegForm,
+    PrefNotify, Room, RosterAdd, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger, DebugManager,
     XMLVCardCache, ExVCardCache,
-    Pubsub,
     InviteReceived,
     ExForm,
     HistorySearch,
@@ -662,16 +661,13 @@ begin
     ExCOMToolBarImages := TExodusMainToolBarImages.Create();
     COMToolBarImages := ExCOMToolBarImages;
 
+
     ExCOMEntityCache := TExodusEntityCache.Create();
     COMEntityCache := ExCOMEntityCache;
 //    ExCOMToolbar := TExodusToolbar.Create(); //created in jabber1
 //    COMToolbar := ExCOMToolbar;
     ExCOMBookmarkManager := TExodusBookmarkManager.Create();
     COMBookmarkManager := ExCOMBookmarkManager;
-
-    ExCOMController.RegisterController(
-            IID_IExodusPubsubController,
-            TExodusPubsubController.Create(MainSession));
 
     // Setup the ExStartup object props
     ExStartup.priority := cli_priority;

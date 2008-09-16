@@ -22,7 +22,6 @@ unit Avatar;
 
 interface
 uses
-    PNGImage,
     Unicode, JabberUtils, SecHash, Graphics, IdCoderMime, GifImage, Jpeg, XMLTag,
     Types, SysUtils, Classes, Dialogs, GnuGetText;
 
@@ -72,11 +71,10 @@ type
     end;
 
 implementation
+{$UNDEF PNGIMAGE}
 uses
-{$ifdef Exodus}
-    //Windows,
-{$endif}
-    XMLParser, PrefController, AvatarCache, JabberID;
+    PNGWrapper,
+    XMLParser, AvatarCache, JabberID;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -114,9 +112,9 @@ begin
             filename := base + '.jpg';
             TJPEGImage(_pic).SaveToFile(filename);
         end
-        else if (_pic is TPNGObject) then begin
+        else if (_pic is TPNGWrapper) then begin
             filename := base + '.png';
-            TPNGObject(_pic).SaveToFile(filename);
+            TPNGWrapper(_pic).SaveToFile(filename);
         end
         else begin
             filename := base + '.bmp';
@@ -148,7 +146,7 @@ begin
         _pic.LoadFromFile(filename);
     end
     else if (ext = '.png') then begin
-        _pic := TPNGObject.Create();
+        _pic := TPNGWrapper.create();
         _pic.Transparent := true;
         _pic.LoadFromFile(filename);
     end
@@ -347,9 +345,10 @@ begin
             _genData();
         end
         else if (mt = 'image/png') then begin
-            _pic := TPNGObject.Create();
+            _pic := TPNGWrapper.Create();
             _pic.Transparent := true;
-            _pic.LoadFromStream(m);
+            _pic.loadFromStream(m);
+
             _genData();
         end
         else if (_data <> '') then begin
@@ -402,7 +401,7 @@ begin
         Result := 'image/jpeg'
     else if (_pic is TBitmap) then
         Result := 'image/x-ms-bmp'
-    else if (_pic is TPNGObject) then
+    else if (_pic is TPNGWrapper) then
         Result := 'image/png'
     else
         Result := 'INVALID';
