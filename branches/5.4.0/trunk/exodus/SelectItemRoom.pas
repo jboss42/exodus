@@ -59,7 +59,8 @@ implementation
 
 uses
     Room,
-    DisplayName;
+    DisplayName,
+    JabberID;
 
 {$R *.dfm}
 
@@ -134,7 +135,7 @@ begin
     if (i >= 0) then begin
         track := TListItemTracker(_trackinglist.Objects[i]);
         jid := track.jid;
-        txtJID.text := jid;
+        txtJID.text := TJabberID.removeJEP106(jid);
         btnOK.Enabled := true;
     end
     else begin
