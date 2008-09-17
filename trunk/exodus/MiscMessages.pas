@@ -108,7 +108,8 @@ uses
     AvatarCache,
     ChatWin,
     SndBroadcastDlg,
-    GnuGetText;
+    GnuGetText,
+    Exodus_TLB;
 
 const
     XMLNS_MULTICAST = 'http://jabber.org/protocol/address';
@@ -850,6 +851,7 @@ var
     dTag: TXMLTag;
     m: TJabberMessage;
     fromJID: TJabberID;
+    Item: IExodusItem;
 begin
     fromJID := TJabberID.Create(tag.getAttribute('from'));
 
@@ -874,7 +876,8 @@ begin
 
     //event the notification
     sstr := DisplayName.getDisplayNameCache().getDisplayName(fromJID);
-    Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, 0);
+    Item := MainSession.ItemController.GetItem(fromJID.jid);
+    Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, Item.ImageIndex);
     dTag.free();
     fromJID.free();
 
