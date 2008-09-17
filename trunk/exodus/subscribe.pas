@@ -66,7 +66,8 @@ type
     _jid: TJabberID;
     _capsid: Widestring;
     _capscb: integer;
-
+  protected
+      function CanPersist(): boolean; override;
   published
     procedure CapsCallback(event: string; tag: TXMLTag);
 
@@ -424,6 +425,10 @@ begin
     EnableAdd(chkSubscribe.Checked);
 end;
 
+function TfrmSubscribe.CanPersist(): boolean;
+begin
+     Result := false;
+end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
