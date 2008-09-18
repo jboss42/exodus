@@ -1065,16 +1065,17 @@ begin
 
     if (Msg.Body <> '') then begin
         //Notify
-        if (Msg.Priority = High) then
-           DoNotify(Self, 'notify_priority_chatactivity',
-                    GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
-                    RosterTreeImages.Find('contact'))
-         else
-           DoNotify(Self, 'notify_chatactivity',
+        if (not Msg.isMe) then
+        begin
+            if (Msg.Priority = High) then
+                DoNotify(Self, 'notify_priority_chatactivity',
+                        GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
+                        RosterTreeImages.Find('contact'))
+            else
+                DoNotify(Self, 'notify_chatactivity',
                     _(sChatActivity) + DisplayName,
-                    RosterTreeImages.Find('contact'));
-
-
+                      RosterTreeImages.Find('contact'));
+        end;
         if (Msg.isMe = false ) and ( _isRoom ) then
           Msg.Nick := DisplayName;
 
