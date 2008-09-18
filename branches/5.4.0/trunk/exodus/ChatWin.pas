@@ -1065,7 +1065,7 @@ begin
 
     if (Msg.Body <> '') then begin
         //Notify
-        if ((Msg.Priority = High) or (Msg.Priority = Low)) then
+        if (Msg.Priority = High) then
            DoNotify(Self, 'notify_priority_chatactivity',
                     GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
                     RosterTreeImages.Find('contact'))
