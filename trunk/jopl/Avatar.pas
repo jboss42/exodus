@@ -42,13 +42,14 @@ type
         _hash: string;  // contains the sha1 hash
         _data: string;  // contains the base64 encoded image
         _height, _width: integer;
+        _bkColor: TColor;
 
         procedure _genData();
         function getMimeType(): string;
 
     protected
         procedure setHash(hash: string);
-        
+        procedure SetBKColor(value: TColor);
     public
         jid: Widestring;
         AvatarType: TAvatarType;
@@ -68,12 +69,14 @@ type
         property  MimeType: string read getMimeType;
         property  Height: integer read _height;
         property  Width: integer read _width;
+        property BackgroundColor: TCOlor read _bkCOlor write SetBKColor;
     end;
 
 implementation
 {$UNDEF PNGIMAGE}
 uses
     PNGWrapper,
+    ExForm, //for default bk color
     XMLParser, AvatarCache, JabberID;
 
 {---------------------------------------}
@@ -85,6 +88,7 @@ begin
     _pic := nil;
     _hash := '';
     _data := '';
+    _bkCOlor := clNone;
     Valid := false;
 end;
 
@@ -93,6 +97,17 @@ destructor TAvatar.Destroy();
 begin
     if (_pic <> nil) then FreeAndNil(_pic);
     inherited;
+end;
+
+{---------------------------------------}
+procedure TAvatar.SetBKColor(value: TColor);
+begin
+    if (_bkColor <> value) then
+    begin
+        _bkColor := value;
+        if (_pic <> nil) and (_pic is TPNGWrapper) then
+            TPNGWrapper(_pic).SetBackgroundColor(_bkCOlor);
+    end;
 end;
 
 {---------------------------------------}
@@ -147,7 +162,7 @@ begin
     end
     else if (ext = '.png') then begin
         _pic := TPNGWrapper.create();
-        _pic.Transparent := true;
+        TPNGWrapper(_pic).SetBackgroundColor(TExForm.GetDefaultWindowColor());
         _pic.LoadFromFile(filename);
     end
     else if (ext = '.bmp') then begin
