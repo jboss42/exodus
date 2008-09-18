@@ -1,140 +1,120 @@
+{
+    Copyright 2001-2008, Estate of Peter Millard
+	
+	This file is part of Exodus.
+	
+	Exodus is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	Exodus is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Exodus; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 unit PNGWrapper;
 
 interface
-{$UNDEF PNGIMAGE}
-//{$DEFINE PNGIMAGE}
 uses
-{$IFDEF PNGIMAGE}
-    PNGImage,
-{$ELSE}
     NGImages,
-{$ENDIF}
     graphics,
     Windows,
     classes;
 
 type
-{$IFDEF PNGIMAGE}
-    TPNGWrapper = class(TPNGObject)
-{$ELSE}
     TPNGWrapper = class(TNGImage)
-{$ENDIF}
-    private
-        _lastBG: TColor;
     public
-        constructor Create(); override;
-        procedure Draw(ACanvas: TCanvas; const Rect: TRect);
         procedure SetBackgroundColor(value: TColor);
 
         function  GetEmpty : boolean; override;
         procedure Assign(Source : TPersistent); override;
 
-        procedure LoadFromFile(const filename: string); override;
         procedure LoadFromStream(stream: TStream); override;
+        procedure LoadFromFile(const FileName : string ); override;
     end;
 
 implementation
 uses
+    Controls,
     SysUtils;
 
-procedure log(msg: string);
-begin
-    OutputDebugString(PChar(msg));
-end;
-
-constructor TPNGWrapper.Create();
-begin
-log('TPNGWrapper.create');
-    inherited;
-    _lastBG := clNone;
-end;
-
-procedure TPNGWrapper.Draw(ACanvas: TCanvas; const Rect: TRect);
-begin
-log('TPNGWrapper.draw');
-
-    SetBackgroundColor(ACanvas.Brush.Color);
-    inherited;
-end;
-
-//TPNGObject will do the right thing with images, if they have alphablended
-//bits it respects them, and determines the background color to bleed through
-//TPNGIMage on the other hand should be expclitly told what color
-//should bleed through on the alpha bits by setting the BGColor
-//unset (#000000) if clNone
+//set color to show through alpha
 procedure TPNGWrapper.SetBackgroundColor(value: TColor);
+var
+    ts: TMemoryStream;
 begin
-log('TPNGWrapper.SetBackgroundColor');
-    //nop if TPNGObject
-{$IFNDEF PNGIMAGE}
-    if (_lastBG <> ColorToRGB(value)) then
+    if (Self.BGColor <> ColorToRGB(value)) then
+    begin
+        ts := nil;
+        //if lib is currently displaying the bitmap, streeam a copy
+        //and reload after setting backcolor. Only way
+        //to force bitmap to be completely rebuilt (probably some
+        //slick way to do it, no time to figure it out
+        if (not Self.Empty) and (Self.StatusDisplaying) then
+        begin
+            MNG_Stop(); //mng_display_reset
+            ts := TMemoryStream.create();
+            Self.SaveToStream(ts);
+            ts.Seek(0, soBeginning)
+        end;
         Self.BGColor := ColorToRGB(value);
-{$ENDIF}
-    _lastBG := ColorToRGB(value);
- end;
+        Self.UseBKGD := true;
+        //reload if we were displaying
+        if (ts <> nil) then
+            Self.LoadFromStream(ts);
+        ts.Free();
+    end;
+end;
 
 function  TPNGWrapper.GetEmpty : boolean;
-{$IFNDEF PNGIMAGE}
 var
     tbm: Graphics.TBitmap;
-{$ENDIF}
 begin
-log('TPNGWrapper.getempty');
-{$IFDEF PNGIMAGE}
     Result := inherited GetEmpty();
-{$ELSE}
-    //check bitmap for emptyness, header may exist without bmp,
-    //thus not really ever "empty"
-    tbm := CopyBitmap();
-    Result := tbm.Empty;
-    tbm.free();
-{$ENDIF}
+    //check bitmap for emptyness. NGImage is empty if we have
+    //an unassigned libmng handle, not if this bitmap is empty or not...
+    //handle is created during construction so, in essence an NGImage is nver empty?
+    //dummy up an empty by checking bitmaps contents
+    if (not Result) then
+    begin
+        tbm := Self. CopyBitmap();
+        Result := tbm.Empty;
+        tbm.free();
+    end;
 end;
 
 procedure TPNGWrapper.Assign(Source : TPersistent);
-{$IFNDEF PNGIMAGE}
 var
-    tbm: Graphics.TBitmap;
-{$ENDIF}
+    tmp: TPersistent;
 begin
-log('TPNGWrapper.assign');
-
-{$IFDEF PNGIMAGE}
-    inherited;
-{$ELSE}
-    if (Source = nil) then
-    begin
-        tbm := Graphics.TBitmap.Create();
-        tbm.assign(nil);
-        inherited Assign(tbm);
-    end
+    if (Source <> nil) then
+        inherited
     else begin
-        if (Source is TPNGWrapper) then
-            //set our background color on the source, so later assign
-            //will keep our state. This feels hackish,
-            TPNGWrapper(Source).SetBackgroundColor(Self.BGColor);
-        inherited;
+        //assigning nil does not clear NGImage bitmap
+        //ultimately, a new bitmap and lib entry will be created by assigning
+        //an empty bitmap
+        tmp := Graphics.TBitmap.Create();
+        tmp.assign(nil);
+        inherited Assign(tmp);
+        tmp.Free();
     end;
-{$ENDIF}
 end;
 
 procedure TPNGWrapper.LoadFromFile(const filename: string);
 begin
-log('TPNGWrapper.loadfromfile');
-
     inherited;
-{$IFNDEF PNGIMAGE}
-    MNG_Stop(); //insures lib handles are in a good write state
-{$ENDIF}
+    MNG_Pause(); //mng_display_freeze, OK state to write
 end;
 
 procedure TPNGWrapper.LoadFromStream(stream: TStream);
 begin
-log('TPNGWrapper.LoadFromStream');
     inherited;
-{$IFNDEF PNGIMAGE}
-    MNG_Stop(); //insures lib handles are in a good write state
-{$ENDIF}
+    MNG_Pause(); //mng_display_freeze, OK state to write
 end;
 
 initialization

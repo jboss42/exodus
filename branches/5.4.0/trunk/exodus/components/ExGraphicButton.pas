@@ -42,7 +42,7 @@ type
     _target: TObject;
 
     procedure SetCaption(txt: WideString);
-    procedure SetPusehd(push: boolean);
+    procedure SetPushed(push: boolean);
     procedure SetSelected(sel: boolean);
     procedure SetBorder(border: TBorderWidth);
     procedure SetOrientation(orient: TGraphicButtonOrientation);
@@ -63,8 +63,6 @@ type
     procedure SetImagePushed(img: TPNGWrapper);
 
   protected
-    { Protected declarations }
-
     procedure Paint(); override;
     procedure DoEnter(); override;
     procedure DoExit(); override;
@@ -77,8 +75,8 @@ type
 
     function CanAutoSize(var NewWidth, NewHeight: Integer): Boolean; override;
 
-    function FindImage(): TPNGWrapper;
-
+    function GetImageToShow(): TPNGWrapper;
+    procedure Loaded(); override;
   public
     { Public declarations }
     constructor Create(AOwner : TComponent); override;
@@ -94,7 +92,7 @@ type
     property BorderWidth: TBorderWidth read _border write SetBorder default 3;
     property Caption: Widestring read _caption write SetCaption;
     property Enabled default true;
-    property Pushed: boolean read _pushed write SetPusehd default false;
+    property Pushed: boolean read _pushed write SetPushed default false;
     property Selected: boolean read _selected write SetSelected default false;
     property Orientation: TGraphicButtonOrientation read _orient
             write SetOrientation default gboOverlay;
@@ -134,15 +132,17 @@ constructor TExGraphicButton.Create(AOwner: TComponent);
 var
     idx: Integer;
 begin
+    //create these early for dfm loads
     for idx := 0 to Length(_images) - 1 do begin
         _images[idx] := TPNGWrapper.Create;
     end;
 
     OnMouseEnter := MouseEnter;
     OnMouseLeave := MouseLeave;
-
+    
     inherited Create(AOwner);
 end;
+
 destructor TExGraphicButton.Destroy;
 var
     idx: Integer;
@@ -154,6 +154,16 @@ begin
     inherited Destroy;
 end;
 
+procedure TExGraphicButton.Loaded();
+var
+    i: integer;
+begin
+    for i := 0 to 3 do
+    begin
+        _images[i].SetBackgroundColor(Self.Color);
+    end;
+end;
+
 procedure TExGraphicButton.SetCaption(txt: WideString);
 begin
     if txt <> _caption then begin
@@ -161,7 +171,7 @@ begin
         repaint;
     end;
 end;
-procedure TExGraphicButton.SetPusehd(push: Boolean);
+procedure TExGraphicButton.SetPushed(push: Boolean);
 begin
     if _pushed <> push then begin
         _pushed := push;
@@ -190,10 +200,9 @@ begin
     end;
 end;
 
-function TExGraphicButton.FindImage(): TPNGWrapper;
+function TExGraphicButton.GetImageToShow(): TPNGWrapper;
 begin
     Result := nil;
-
     if not Enabled then begin
         Result := GetImageDisabled;
     end
@@ -213,22 +222,12 @@ begin
     Result := _images[idx];
 end;
 procedure TExGraphicButton.SetImageOf(idx: Integer; img: TPNGWrapper);
-var
-    changed: boolean;
 begin
-    changed := false;
-
-    if not _images[idx].Empty then begin
-        _images[idx].Assign(nil);
-        changed := true;
-    end;
-
-    if (img <> nil) and (not img.Empty) then begin
+    if (_images[idx] <> img) then begin
         _images[idx].Assign(img);
-        changed := true;
-    end;
 
-    if changed then Repaint;
+        Repaint;
+    end;
 end;
 
 function TExGraphicButton.GetImageEnabled(): TPNGWrapper;
@@ -317,6 +316,7 @@ var
     begin
         img.Draw(Canvas, bounds);
     end;
+
     procedure paintText(Canvas: TCanvas; txt: Widestring; flags: Longint; bounds: TRect);
     var
         txtCanvas: TCanvas;
@@ -334,7 +334,7 @@ var
                         PWideChar(txt), Length(txt),
                         bounds, Flags);
             end;
-        except
+        finally
             ReleaseDC(Self.Handle, txtCanvas.Handle);
             txtCanvas.Free;
         end;
@@ -356,13 +356,12 @@ var
                         bounds.Right, bounds.Bottom,
                         2, 2);
             end;
-        except
+        finally
             ReleaseDC(Self.Handle, fCanvas.Handle);
             fCanvas.Free;
         end;
     end;
 begin
-    img := FindImage();
     if Selected then begin
         txtColor := clWhite;
     end
@@ -390,7 +389,10 @@ begin
     imgRect := InRect;
     txtRect := InRect;
     Flags := DT_EXPANDTABS or DT_SINGLELINE;
-    if img <> nil then begin
+    
+    img := GetImageToShow();
+
+    if (img <> nil) then begin
         extents.cx := img.Width;
         extents.cy := img.Height;
     end;
@@ -446,13 +448,11 @@ begin
     InflateRect(txtRect, -BorderWidth, -BorderWidth);
 
     // and now we paint...
-    if not img.Empty then
         paintImage(Canvas, img, imgRect);
     if txt <> '' then
         paintText(Canvas, txt, flags, txtRect);
     if _focused then
         paintFocus(Canvas, inRect);
-
 end;
 
 function TExGraphicButton.CanFocus(): Boolean;
@@ -468,7 +468,7 @@ begin
     Result := AutoSize;
 
     if Result and HandleAllocated() then begin
-        png := FindImage();
+        png := GetImageToShow();
         if png <> nil then with png do begin
             ih := Height;
             iw := Width;
