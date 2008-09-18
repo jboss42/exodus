@@ -113,8 +113,9 @@ type
     procedure showTopbar(show: boolean);
     procedure showCloseButton(show: boolean);
     procedure showDockToggleButton(show: boolean);
-    procedure updateMsgCount(msg: TJabberMessage); overload;virtual;
-    procedure updateMsgCount(msgTag: TXMLTag); overload;virtual;
+    procedure updateMsgCount(msg: TJabberMessage); overload; virtual;
+    procedure UpdatePriority(msg: TJabberMessage); overload; virtual;
+    procedure updateMsgCount(msgTag: TXMLTag); overload; virtual;
     procedure updateLastActivity(lasttime: TDateTime); virtual;
 
     //getters/setters for activity window properties. Allows subclasses to set their
@@ -701,7 +702,7 @@ end;
 
 procedure TfrmDockable.updateMsgCount(msg: TJabberMessage);
 begin
-    _priorityflag := _priorityflag or ((msg.Priority = High) and (not msg.isMe));
+    UpdatePriority(msg);
     UpdateMsgCount(msg.Tag);
 end;
 
@@ -716,6 +717,22 @@ begin
         Result.setAttribute('from', from);
     if (desc <> '') then
         Result.AddCData(desc)
+end;
+
+procedure TfrmDockable.UpdatePriority(msg: TJabberMessage);
+begin
+    //no message or we are not tracking messages
+    if (msg = nil) then exit;
+
+    if (not Active) then
+    begin
+        if ((not Docked) or
+            (GetDockManager().getTopDocked() <> Self) or
+            (not GetDockManager().isActive)) then
+        begin
+            _priorityflag := _priorityflag or (( msg.Priority = High) and (not msg.isMe));
+        end;
+    end;
 end;
 
 procedure TfrmDockable.updateMsgCount(msgTag: TXMLTag);
