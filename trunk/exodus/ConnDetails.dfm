@@ -562,7 +562,7 @@ inherited frmConnDetails: TfrmConnDetails
           Align = alTop
           AutoSize = True
           BevelOuter = bvNone
-          Caption = 'SSL modes:'
+          Caption = 'Secure connection:'
           ParentColor = True
           TabOrder = 2
           AutoHide = True
