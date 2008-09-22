@@ -23,30 +23,43 @@ interface
 uses
     NGImages,
     graphics,
-    Windows,
     classes;
 
 type
     TPNGWrapper = class(TNGImage)
+    protected
+        procedure SetBackgroundColor(value: TColor); virtual;
+        function GetBackgroundColor(): TColor; virtual;
     public
-        procedure SetBackgroundColor(value: TColor);
+        constructor Create(BackColor: TColor); reintroduce;overload;
 
         function  GetEmpty : boolean; override;
-        procedure Assign(Source : TPersistent); override;
+        procedure Assign(Source: TPersistent); override;
 
         procedure LoadFromStream(stream: TStream); override;
-        procedure LoadFromFile(const FileName : string ); override;
+        procedure LoadFromFile(const FileName: string ); override;
+
+        property BackgroundColor: TCOlor read GetBackgroundColor write SetBackgroundColor;
     end;
 
 implementation
-uses
-    Controls,
-    SysUtils;
+
+constructor TPNGWrapper.Create(BackColor: TColor);
+begin
+    inherited create();
+    BGColor := BackColor;
+end;
+
+function TPNGWrapper.GetBackgroundColor(): TColor;
+begin
+    Result := BGColor;
+end;
 
 //set color to show through alpha
 procedure TPNGWrapper.SetBackgroundColor(value: TColor);
 var
     ts: TMemoryStream;
+    tpng: TPNGWrapper;
 begin
     if (Self.BGColor <> ColorToRGB(value)) then
     begin
@@ -65,8 +78,14 @@ begin
         Self.BGColor := ColorToRGB(value);
         Self.UseBKGD := true;
         //reload if we were displaying
-        if (ts <> nil) then
-            Self.LoadFromStream(ts);
+        if (ts <> nil) then begin
+            tpng := TPNGWrapper.create();
+            tpng.BGColor := Self.BGColor;
+            tpng.UseBKGD := true;
+            tpng.LoadFromStream(ts); //mng_initialize, mng_display
+            Self.Assign(tpng);
+            tpng.free(); //keeps ref count == 1
+        end;
         ts.Free();
     end;
 end;
@@ -90,18 +109,16 @@ end;
 
 procedure TPNGWrapper.Assign(Source : TPersistent);
 var
-    tmp: TPersistent;
+    tpng: TPNGWrapper;
 begin
     if (Source <> nil) then
         inherited
     else begin
         //assigning nil does not clear NGImage bitmap
-        //ultimately, a new bitmap and lib entry will be created by assigning
-        //an empty bitmap
-        tmp := Graphics.TBitmap.Create();
-        tmp.assign(nil);
-        inherited Assign(tmp);
-        tmp.Free();
+        //assign an empty png isntead
+        tpng := TPNGWrapper.create();
+        inherited Assign(tpng);
+        tpng.Free(); //keeps ref count == 1
     end;
 end;
 

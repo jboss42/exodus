@@ -22,11 +22,11 @@ unit Avatar;
 
 interface
 uses
-    Unicode, JabberUtils, SecHash, Graphics, IdCoderMime, GifImage, Jpeg, XMLTag,
-    Types, SysUtils, Classes, Dialogs, GnuGetText;
+    XMLTag,
+     Graphics, Types, SysUtils, Classes, Dialogs;
 
 const
-    MAX_AVATAR_SIZE = 15000;
+    MAX_AVATAR_SIZE = 102400;
 
 type
 
@@ -42,14 +42,13 @@ type
         _hash: string;  // contains the sha1 hash
         _data: string;  // contains the base64 encoded image
         _height, _width: integer;
-        _bkColor: TColor;
 
         procedure _genData();
         function getMimeType(): string;
-
     protected
         procedure setHash(hash: string);
-        procedure SetBKColor(value: TColor);
+        procedure SetPNGBackgroundColor(value: TColor); virtual;
+        function GetPNGBackgroundColor(): TColor; virtual;
     public
         jid: Widestring;
         AvatarType: TAvatarType;
@@ -62,22 +61,29 @@ type
         procedure Draw(c: TCanvas); overload;
         procedure parse(tag: TXMLTag);
 
+
         function  getHash(): string;
         function  isValid(): boolean;
 
+        property Graphic: TGraphic read _pic;
         property  Data: string read _data;
         property  MimeType: string read getMimeType;
         property  Height: integer read _height;
         property  Width: integer read _width;
-        property BackgroundColor: TCOlor read _bkCOlor write SetBKColor;
+
+        property PNGBackgroundColor: TColor read GetPNGBackgroundColor write SetPNGBackgroundColor;
     end;
 
 implementation
-{$UNDEF PNGIMAGE}
 uses
-    PNGWrapper,
+    JabberUtils, 
+    Unicode,
+    IdCoderMime,
+    GifImage, Jpeg, PNGWrapper,
+    gnuGetText,
+    SecHash,
     ExForm, //for default bk color
-    XMLParser, AvatarCache, JabberID;
+    XMLParser, {AvatarCache, }JabberID;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -88,7 +94,6 @@ begin
     _pic := nil;
     _hash := '';
     _data := '';
-    _bkCOlor := clNone;
     Valid := false;
 end;
 
@@ -97,17 +102,6 @@ destructor TAvatar.Destroy();
 begin
     if (_pic <> nil) then FreeAndNil(_pic);
     inherited;
-end;
-
-{---------------------------------------}
-procedure TAvatar.SetBKColor(value: TColor);
-begin
-    if (_bkColor <> value) then
-    begin
-        _bkColor := value;
-        if (_pic <> nil) and (_pic is TPNGWrapper) then
-            TPNGWrapper(_pic).SetBackgroundColor(_bkCOlor);
-    end;
 end;
 
 {---------------------------------------}
@@ -162,7 +156,7 @@ begin
     end
     else if (ext = '.png') then begin
         _pic := TPNGWrapper.create();
-        TPNGWrapper(_pic).SetBackgroundColor(TExForm.GetDefaultWindowColor());
+        TPNGWrapper(_pic).BackgroundColor := TExForm.GetDefaultWindowColor();
         _pic.LoadFromFile(filename);
     end
     else if (ext = '.bmp') then begin
@@ -425,6 +419,19 @@ end;
 function TAvatar.isValid(): boolean;
 begin
     Result := (_pic <> nil);
+end;
+
+procedure TAvatar.SetPNGBackgroundColor(value: TColor);
+begin
+    if (_pic is TPNGWrapper) then
+        TPNGWrapper(_pic).BackgroundColor := value;
+end;
+
+function TAvatar.GetPNGBackgroundColor(): TColor;
+begin
+    Result := clNone;
+    if (_pic is TPNGWrapper) then
+        Result := TPNGWrapper(_pic).BackgroundColor;
 end;
 
 end.
