@@ -7,7 +7,7 @@ inherited frmChat: TfrmChat
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 450
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
@@ -27,7 +27,6 @@ inherited frmChat: TfrmChat
       inherited tbDockBar: TToolBar
         Left = 443
         ExplicitLeft = 443
-        ExplicitHeight = 22
       end
       inherited pnlDockTop: TTntPanel
         Width = 440
@@ -46,7 +45,7 @@ inherited frmChat: TfrmChat
             TabOrder = 0
             object lblNick: TTntLabel
               AlignWithMargins = True
-              Left = 53
+              Left = 49
               Top = 0
               Width = 45
               Height = 28
@@ -61,26 +60,25 @@ inherited frmChat: TfrmChat
               ShowHint = True
               Layout = tlCenter
               OnClick = lblJIDClick
+              ExplicitLeft = 53
               ExplicitHeight = 13
             end
-            object imgAvatar: TPaintBox
-              AlignWithMargins = True
-              Left = 4
+            object imgAvatar: TImage
+              Left = 0
               Top = 0
               Width = 35
-              Height = 26
-              Margins.Left = 4
-              Margins.Top = 0
-              Margins.Right = 0
-              Margins.Bottom = 2
+              Height = 28
               Align = alLeft
+              Center = True
+              Proportional = True
+              Stretch = True
+              Transparent = True
               OnClick = imgAvatarClick
-              OnPaint = imgAvatarPaint
-              ExplicitLeft = 3
-              ExplicitHeight = 34
+              ExplicitLeft = 39
+              ExplicitHeight = 26
             end
             object Panel3: TPanel
-              Left = 39
+              Left = 35
               Top = 0
               Width = 8
               Height = 28
@@ -88,6 +86,7 @@ inherited frmChat: TfrmChat
               BevelOuter = bvNone
               ParentColor = True
               TabOrder = 0
+              ExplicitLeft = 39
             end
           end
         end
@@ -95,7 +94,6 @@ inherited frmChat: TfrmChat
     end
     inherited pnlDockControlSite: TTntPanel
       Width = 484
-      ExplicitLeft = 4
       ExplicitWidth = 484
     end
   end

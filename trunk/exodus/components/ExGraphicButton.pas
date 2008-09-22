@@ -160,7 +160,7 @@ var
 begin
     for i := 0 to 3 do
     begin
-        _images[i].SetBackgroundColor(Self.Color);
+        _images[i].BackgroundColor := Self.Color;
     end;
 end;
 
@@ -215,6 +215,9 @@ begin
 
     if (Result = nil) or (Result.Empty) then
         Result := GetImageEnabled;
+    //last chance to make sure background is up to date...
+    if (result <> nil) then
+        Result.BackgroundColor := Self.Color;
 end;
 
 function TExGraphicButton.GetImageOf(idx: Integer): TPNGWrapper;
@@ -223,11 +226,9 @@ begin
 end;
 procedure TExGraphicButton.SetImageOf(idx: Integer; img: TPNGWrapper);
 begin
-    if (_images[idx] <> img) then begin
-        _images[idx].Assign(img);
-
-        Repaint;
-    end;
+    _images[idx].Assign(img);
+    _images[idx].BackgroundColor := Self.Color;
+    Repaint;
 end;
 
 function TExGraphicButton.GetImageEnabled(): TPNGWrapper;

@@ -63,10 +63,10 @@ type
     PrintDialog1: TPrintDialog;
     pnlJID: TPanel;
     lblNick: TTntLabel;
-    imgAvatar: TPaintBox;
     Panel3: TPanel;
     Print1: TTntMenuItem;
     mnuViewHistory: TTntMenuItem;
+    imgAvatar: TImage;
     
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -702,8 +702,8 @@ end;
 procedure TfrmChat.SetJID(cjid: widestring);
 var
     Item: IExodusItem;
-    m: integer;
-    a: TAvatar;
+//    m: integer;
+//    a: TAvatar;
     nickjid: Widestring;
     rm: TfrmRoom;
 begin
@@ -726,21 +726,29 @@ begin
 
     // check for an avatar
     if (MainSession.Prefs.getBool('chat_avatars')) then begin
-        a := Avatars.Find(_jid.jid);
-        if ((a <> nil) and (a.isValid())) then begin
-            // Put some upper bounds on avatars in chat windows
-            m := a.Height;
-            if (m >= 0) then begin
-                _avatar := a;
-                if (m > 32) then begin
-                    m := 32;
-                    imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
-                end
-                else
-                    imgAvatar.Width := _avatar.Width;
-                pnlDockTop.ClientHeight := m + 1;
-            end;
+        _avatar := Avatars.Find(_jid.jid);
+        if ((_avatar <> nil) and (_avatar.isValid())) then begin
+            _avatar.PNGBackgroundColor := pnlJID.Color;
+            imgAvatar.picture.assign(_avatar.Graphic);
+        end
+        else begin
+            imgAvatar.transparent := false;
+            imgAvatar.picture.assign(_unknown_avatar);
         end;
+//            // Put some upper bounds on avatars in chat windows
+//            m := a.Height;
+//            if (m >= 0) then begin
+//                _avatar := a;
+//                if (m > 32) then begin
+//                    m := 32;
+//                    imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+//                end
+//                else
+//                    imgAvatar.Width := _avatar.Width;
+//                pnlDockTop.ClientHeight := m + 1;
+//            end;
+
+//        end;
         lblNick.left := imgAvatar.Left + imgAvatar.Width;
     end
     else begin
@@ -1791,37 +1799,38 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.imgAvatarPaint(Sender: TObject);
-var
-    r: TRect;
+//var
+//    r: TRect;
 begin
-  inherited;
-    if (_avatar <> nil) then begin
-        try
-            if (_avatar.Height > imgAvatar.Height) then begin
-                r.Top := 1;
-                r.Left := 1;
-                r.Bottom := imgAvatar.Height;
-                r.Right := imgAvatar.Width;
-                _avatar.Draw(imgAvatar.Canvas, r);
-            end
-            else
-                _avatar.Draw(imgAvatar.Canvas);
-            exit;
-        except
-            //corrupt avatars could cause an invalid pointer here,
-            //make like we don't have an avatar
-            on E:Exception do
-            begin
-                DebugManager.DebugMessage('Exception attempting to draw avatar for chat: ' + GetUID() + ' (' + E.message + ')');
-                _avatar := nil;  //unknown drawn below
-            end;
-        end;
-    end;
-    r.Top := 1;
-    r.Left := 1;
-    r.Bottom := imgAvatar.Height;
-    r.Right := imgAvatar.Width;
-    imgAvatar.Canvas.StretchDraw(r, _unknown_avatar);
+//  inherited;
+//    if (_avatar <> nil) then begin
+//        try
+//            if (_avatar.Height > imgAvatar.Height) then begin
+//                r.Top := 1;
+//                r.Left := 1;
+//                r.Bottom := imgAvatar.Height;
+//                r.Right := imgAvatar.Width;
+//
+//                _avatar.Draw(imgAvatar.Canvas, r);
+//            end
+//            else
+//                _avatar.Draw(imgAvatar.Canvas);
+//            exit;
+//        except
+//            //corrupt avatars could cause an invalid pointer here,
+//            //make like we don't have an avatar
+//            on E:Exception do
+//            begin
+//                DebugManager.DebugMessage('Exception attempting to draw avatar for chat: ' + GetUID() + ' (' + E.message + ')');
+//                _avatar := nil;  //unknown drawn below
+//            end;
+//        end;
+//    end;
+//    r.Top := 1;
+//    r.Left := 1;
+//    r.Bottom := imgAvatar.Height;
+//    r.Right := imgAvatar.Width;
+//    imgAvatar.picture.Assign(_unknown_avatar);
 end;
 
 {---------------------------------------}
