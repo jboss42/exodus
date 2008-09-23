@@ -674,10 +674,10 @@ begin
 
     //initial conditions for position and size, may be changed later
     //when restoring state.
-    _pos.Left := Self.ExplicitLeft;
-    _pos.Top := Self.ExplicitTop;
-    _pos.Width := Self.ExplicitWidth;
-    _pos.Height := Self.ExplicitHeight;
+    _pos.Left := Self.Left;
+    _pos.Top := Self.Top;
+    _pos.Width := Self.Width;
+    _pos.Height := Self.Height;
 
     CenterOnMainformMonitor(_pos);
 
@@ -956,8 +956,8 @@ begin
     //check to make sure this all looks right, handling corrupted prefs
     if (_pos.Height < 30) and (_pos.width < 30) then
     begin
-        _pos.Height := Self.ExplicitHeight;
-        _pos.width := Self.ExplicitWidth;
+        _pos.Height := Self.Height;
+        _pos.width := Self.Width;
         CenterOnMainformMonitor(_pos);
     end;
     //skipping windowposchange handling, _skipWindowPosHandling is true during this event
