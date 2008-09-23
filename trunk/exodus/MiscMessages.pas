@@ -857,7 +857,6 @@ var
     dTag: TXMLTag;
     m: TJabberMessage;
     fromJID: TJabberID;
-    Item: IExodusItem;
 begin
     fromJID := TJabberID.Create(tag.getAttribute('from'));
 
@@ -882,8 +881,7 @@ begin
 
     //event the notification
     sstr := DisplayName.getDisplayNameCache().getDisplayName(fromJID);
-    Item := MainSession.ItemController.GetItem(fromJID.jid);
-    Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, Item.ImageIndex);
+    Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, RI_HEADLINE_INDEX);
     dTag.free();
     fromJID.free();
 
