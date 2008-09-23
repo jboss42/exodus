@@ -311,7 +311,7 @@ begin
         end;
 
         if (frm.Docked) then begin
-            updateLayoutDockChange(frm, true, AWTabControl.PageCount = 1);
+            updateLayoutDockChange(frm, false, AWTabControl.PageCount = 1);
         end;
 
         _needToBeShowingCheck();
@@ -679,7 +679,7 @@ end;
     flag is passed to force a state change.
 
     @param frm the form that was just docked/undocked
-    @param docking  is the form beign docked or undocked?
+    @param docking  is the form being docked or undocked?
     @toggleDockState moving from (dsDockOnly or dsRosterDock) to dsRosterOnly or vice versa
 }
 {---------------------------------------}
@@ -699,8 +699,14 @@ begin
          newState := dsDocked;
        end
     end
-    else
-      newState := dsUnDocked;
+    else begin
+      if (FirstOrLastDock) then begin
+          newState := dsUnDocked;
+      end
+      else begin
+          newState := dsDocked;
+      end;
+    end;
 
     if (newState <> oldState) then begin
         // Disable minimum window size while undocking/docking.
