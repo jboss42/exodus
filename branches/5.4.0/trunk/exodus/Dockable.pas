@@ -509,7 +509,8 @@ end;
 procedure TfrmDockable.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  inherited;
+    inherited;
+
     // handle Ctrl-Tab to switch tabs
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         GetDockManager().SelectNext(not (ssShift in Shift));
@@ -519,6 +520,11 @@ begin
     else if ((Jabber1.getAllowedDockState() <> adsForbidden) and ([ssCtrl] = Shift)) and (Key=68) then begin
       btnDockToggleClick(Self);
       Key := 0;
+    end
+    else if ((Key = VK_ESCAPE) and
+             (MainSession.Prefs.getBool('esc_close'))) then
+    begin
+        Self.Close();
     end;
 end;
 

@@ -81,6 +81,7 @@ type
 
 
   TIEMsgListNavigateHandler = procedure(url: widestring; var handled: boolean) of object;
+  TIEMsgListOnKeyPressHandler = procedure(const pEvtObj: IHTMLEventObj; var handled: boolean) of object;
 
   TIEMsgListProcessor = class
   private
@@ -215,12 +216,12 @@ type
     function onContextMenu(Sender: TObject): WordBool;
     function onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
     procedure onKeyDown(Sender: TObject; const pEvtObj: IHTMLEventObj);
+    function copyMenuEnabled(): boolean;
 
     procedure _ClearOldMessages();
     function _getHistory(includeState: boolean = true): WideString;
     procedure _SetInMessageDumpMode(value: boolean);
-    function copyMenuEnabled(): boolean;
-    
+
   protected
     procedure ProcessNavigate(Sender: TObject;
               const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
@@ -229,6 +230,9 @@ type
   public
     { Public declarations }
     NavigateHandler: TIEMsgListNavigateHandler;
+{$IFNDEF EXODUS}
+    OnKeyPressHandler: TIEMsgListOnKeyPressHandler;
+{$ENDIF}
 
 
 {$IFDEF EXODUS}
@@ -1661,8 +1665,18 @@ end;
 
 {$ELSE}
 function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
+var
+    handled: boolean;
 begin
-    Result := false;
+    handled := false;
+
+    try
+        OnKeyPressHandler(pEvtObj, handled);
+    except
+        handled := false;
+    end;
+
+    Result := handled;
 end;
 
 procedure TfIEMsgList.onKeyDown(Sender: TObject; const pEvtObj: IHTMLEventObj);
