@@ -311,7 +311,7 @@ begin
         end;
 
         if (frm.Docked) then begin
-            updateLayoutDockChange(frm, false, AWTabControl.PageCount = 1);
+            updateLayoutDockChange(frm, true, AWTabControl.PageCount = 1);
         end;
 
         _needToBeShowingCheck();
@@ -699,14 +699,8 @@ begin
          newState := dsDocked;
        end
     end
-    else begin
-      if (FirstOrLastDock) then begin
-          newState := dsUnDocked;
-      end
-      else begin
-          newState := dsDocked;
-      end;
-    end;
+    else
+      newState := dsUnDocked;
 
     if (newState <> oldState) then begin
         // Disable minimum window size while undocking/docking.
