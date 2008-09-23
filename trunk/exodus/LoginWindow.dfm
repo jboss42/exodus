@@ -443,6 +443,7 @@ object frmLoginWindow: TfrmLoginWindow
           07AFFE221055C5E53E614585225EAB594E731C2F257BFD80167058CD46CCC16C
           2F2B1FE09B80F6DD0B70E8F33B76C0D7D0B6AC7D7CFF97020C008D18D6712E61
           B5AF0000000049454E44AE426082}
+        OnClick = clickNewUser
       end
       object btnCreateProfile: TExGraphicButton
         Left = 0
