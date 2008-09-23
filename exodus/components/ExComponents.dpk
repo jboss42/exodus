@@ -57,17 +57,17 @@ contains
   ExGroupBox in 'ExGroupBox.pas' {Frame1: TFrame},
   ExFrame in 'base\ExFrame.pas',
   ExForm in 'base\ExForm.pas',
-  zlibpas in '..\..\jopl\png\zlibpas.pas',
-  pngextra in '..\..\jopl\png\pngextra.pas',
-  pngimage in '..\..\jopl\png\pngimage.pas',
-  pnglang in '..\..\jopl\png\pnglang.pas',
   ExBrandPanel in 'ExBrandPanel.pas',
   ExGradientPanel in 'ExGradientPanel.pas',
   ExCheckGroupBox in 'ExCheckGroupBox.pas',
   ExGraphicButton in 'ExGraphicButton.pas',
-  SClrRGrp in 'SClrRGrp.pas',
   Exodus_TLB in '..\Exodus_TLB.pas',
   ActionMenus in 'ActionMenus.pas',
-  MSXML_TLB in '..\MSXML_TLB.pas';
+  MSXML_TLB in '..\MSXML_TLB.pas',
+  ExCustomSeparatorBar in 'ExCustomSeparatorBar.pas',
+  NGConst in '..\..\jopl\TNGImage\Package\NGConst.pas',
+  NGImages in '..\..\jopl\TNGImage\Package\NGImages.pas',
+  NGTypes in '..\..\jopl\TNGImage\Package\NGTypes.pas',
+  PNGWrapper in '..\..\jopl\PNGWrapper.pas';
 
 end.

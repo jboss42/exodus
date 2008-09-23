@@ -123,7 +123,10 @@ function ExecAndWait(const ExecuteFile, ParamString : string): Cardinal;
     @return the first Form parent or nil if floating
 }
 function GetParentForm(c: TWinControl): TForm;
-
+{
+ Converts RGB to color
+}
+function RGBToColor(R,G,B:Byte): TColor;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -1249,6 +1252,15 @@ begin
     else Result := GetParentForm(c.Parent);
 end;
 
+{---------------------------------------}
+function RGBToColor(R,G,B:Byte): TColor;
+var
+    Blue, Green: integer;
+begin
+  Blue := B Shl 16;
+  Green := G Shl 8;
+  Result:=Blue Or Green Or R;
+end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}

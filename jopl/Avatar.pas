@@ -22,12 +22,11 @@ unit Avatar;
 
 interface
 uses
-    PNGImage,
-    Unicode, JabberUtils, SecHash, Graphics, IdCoderMime, GifImage, Jpeg, XMLTag,
-    Types, SysUtils, Classes, Dialogs, GnuGetText;
+    XMLTag,
+     Graphics, Types, SysUtils, Classes, Dialogs;
 
 const
-    MAX_AVATAR_SIZE = 15000;
+    MAX_AVATAR_SIZE = 102400;
 
 type
 
@@ -46,10 +45,10 @@ type
 
         procedure _genData();
         function getMimeType(): string;
-
     protected
         procedure setHash(hash: string);
-        
+        procedure SetPNGBackgroundColor(value: TColor); virtual;
+        function GetPNGBackgroundColor(): TColor; virtual;
     public
         jid: Widestring;
         AvatarType: TAvatarType;
@@ -62,21 +61,29 @@ type
         procedure Draw(c: TCanvas); overload;
         procedure parse(tag: TXMLTag);
 
+
         function  getHash(): string;
         function  isValid(): boolean;
 
+        property Graphic: TGraphic read _pic;
         property  Data: string read _data;
         property  MimeType: string read getMimeType;
         property  Height: integer read _height;
         property  Width: integer read _width;
+
+        property PNGBackgroundColor: TColor read GetPNGBackgroundColor write SetPNGBackgroundColor;
     end;
 
 implementation
 uses
-{$ifdef Exodus}
-    //Windows,
-{$endif}
-    XMLParser, PrefController, AvatarCache, JabberID;
+    JabberUtils, 
+    Unicode,
+    IdCoderMime,
+    GifImage, Jpeg, PNGWrapper,
+    gnuGetText,
+    SecHash,
+    ExForm, //for default bk color
+    XMLParser, {AvatarCache, }JabberID;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -114,9 +121,9 @@ begin
             filename := base + '.jpg';
             TJPEGImage(_pic).SaveToFile(filename);
         end
-        else if (_pic is TPNGObject) then begin
+        else if (_pic is TPNGWrapper) then begin
             filename := base + '.png';
-            TPNGObject(_pic).SaveToFile(filename);
+            TPNGWrapper(_pic).SaveToFile(filename);
         end
         else begin
             filename := base + '.bmp';
@@ -148,8 +155,8 @@ begin
         _pic.LoadFromFile(filename);
     end
     else if (ext = '.png') then begin
-        _pic := TPNGObject.Create();
-        _pic.Transparent := true;
+        _pic := TPNGWrapper.create();
+        TPNGWrapper(_pic).BackgroundColor := TExForm.GetDefaultWindowColor();
         _pic.LoadFromFile(filename);
     end
     else if (ext = '.bmp') then begin
@@ -347,9 +354,10 @@ begin
             _genData();
         end
         else if (mt = 'image/png') then begin
-            _pic := TPNGObject.Create();
+            _pic := TPNGWrapper.Create();
             _pic.Transparent := true;
-            _pic.LoadFromStream(m);
+            _pic.loadFromStream(m);
+
             _genData();
         end
         else if (_data <> '') then begin
@@ -402,7 +410,7 @@ begin
         Result := 'image/jpeg'
     else if (_pic is TBitmap) then
         Result := 'image/x-ms-bmp'
-    else if (_pic is TPNGObject) then
+    else if (_pic is TPNGWrapper) then
         Result := 'image/png'
     else
         Result := 'INVALID';
@@ -411,6 +419,19 @@ end;
 function TAvatar.isValid(): boolean;
 begin
     Result := (_pic <> nil);
+end;
+
+procedure TAvatar.SetPNGBackgroundColor(value: TColor);
+begin
+    if (_pic is TPNGWrapper) then
+        TPNGWrapper(_pic).BackgroundColor := value;
+end;
+
+function TAvatar.GetPNGBackgroundColor(): TColor;
+begin
+    Result := clNone;
+    if (_pic is TPNGWrapper) then
+        Result := TPNGWrapper(_pic).BackgroundColor;
 end;
 
 end.

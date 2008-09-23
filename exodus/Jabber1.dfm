@@ -340,17 +340,16 @@ inherited frmExodus: TfrmExodus
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 2
-    object ToolbarBevel: TColorBevel
+    object ToolbarSeparatorBar: TExCustomSeparatorBar
       Left = 0
-      Top = 30
+      Top = 29
       Width = 404
-      Height = 1
-      Align = alTop
-      Shape = bsBottomLine
-      HighLight = clBtnFace
-      Shadow = clBtnShadow
-      FrameColor = frUser
-      ExplicitTop = 24
+      Height = 2
+      Align = alBottom
+      CustomSeparatorBarProperites.Color1 = clBtnShadow
+      CustomSeparatorBarProperites.Color2 = clBtnFace
+      CustomSeparatorBarProperites.horizontal = True
+      ExplicitTop = -74
     end
     object ToolBar1: TToolBar
       Left = 0
