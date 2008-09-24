@@ -1258,12 +1258,7 @@ end;
 {---------------------------------------}
 procedure TfrmActivityWindow.imgShowRosterClick(Sender: TObject);
 begin
-    if (frmExodus.Showing) then begin
-        frmExodus.BringToFront();
-    end
-    else begin
-        frmExodus.Show();
-    end;
+    frmExodus.BringToFront();
 end;
 
 {---------------------------------------}
