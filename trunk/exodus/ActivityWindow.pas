@@ -807,7 +807,6 @@ procedure TfrmActivityWindow.activateItem(awitem: TfAWItem);
 var
     trackitem: TAWTrackerItem;
     tsheet: TTntTabSheet;
-    i: integer;
 begin
     if (awitem = nil) then exit;
 

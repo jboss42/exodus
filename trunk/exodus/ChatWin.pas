@@ -1192,8 +1192,6 @@ end;
  procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 var
    UpdateKey: WideString;
-   w: PWideChar;
-   num: Integer;
    Part: ChatParts;
 begin
     if (Key = #0) then exit;

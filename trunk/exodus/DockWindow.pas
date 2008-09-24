@@ -297,7 +297,6 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.CloseDocked(frm: TfrmDockable);
 var
-    idx: integer;
     aw: TfrmActivityWindow;
     item: TAWTrackerItem;
 begin
@@ -321,10 +320,7 @@ end;
 
 {---------------------------------------}
 function TfrmDockWindow.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
-var
-    oldsheet: TTntTabSheet;
 begin
-    oldsheet := GetActiveTabSheet();
     if (not Self.Showing) then begin
         ShowDockManagerWindow(true, false);
     end;
@@ -414,13 +410,10 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.AWTabControlDockDrop(Sender: TObject;
   Source: TDragDockObject; X, Y: Integer);
-var
-    oldsheet: TTntTabSheet;
 begin
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
         _undocking := false;
-        oldsheet := GetActiveTabSheet();
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();

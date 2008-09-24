@@ -429,7 +429,6 @@ type
 //    _new_tabindex: integer;             // new tab which was just docked
     _new_account: boolean;              // is this a new account
     _pending_passwd: Widestring;
-    _profileScreenLastWidth: integer;   // Storage for width of roster window when logged in
     _enforceConstraints: boolean;       // Should minimum size constraints be enforced
 
     _dnListener: TDisplayNameEventListener;

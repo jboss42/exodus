@@ -633,8 +633,6 @@ begin
 end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
-var
-    ttag: TXMLTag;
 begin
     inherited;
     if (Jabber1.getAllowedDockState() = adsForbidden) then
