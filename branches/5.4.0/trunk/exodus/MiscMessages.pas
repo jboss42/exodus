@@ -859,7 +859,8 @@ var
     fromJID: TJabberID;
 begin
     fromJID := TJabberID.Create(tag.getAttribute('from'));
-
+    if (MainSession.IsBlocked(fromJID)) then exit;
+    
     //if from a room, bail
     if (Room.FindRoom(fromJID.jid) <> nil) then exit;
 
