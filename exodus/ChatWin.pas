@@ -63,10 +63,10 @@ type
     PrintDialog1: TPrintDialog;
     pnlJID: TPanel;
     lblNick: TTntLabel;
-    imgAvatar: TPaintBox;
     Panel3: TPanel;
     Print1: TTntMenuItem;
     mnuViewHistory: TTntMenuItem;
+    imgAvatar: TImage;
     
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -249,6 +249,7 @@ uses
     RT_XIMConversion,
     EntityCache,
     IEMsgList,
+    DebugManager,
     TypInfo, Dockable, ActiveX,
     HistorySearch, ActivityWindow,
     TntSysUtils;
@@ -634,14 +635,6 @@ begin
     popClearHistory.Visible := (ExCOMController.ContactLogger <> nil);
 end;
 
-{posted by Sebastian Volland at http://www.delphi3000.com/articles/article_1150.asp?SK=}
-function RGBToColor(R,G,B:Byte): TColor;
-begin
-  Result:=B Shl 16 Or
-          G Shl 8  Or
-          R;
-end;
-
 {---------------------------------------}
 procedure TfrmChat.SetupPrefs();
 var
@@ -709,8 +702,8 @@ end;
 procedure TfrmChat.SetJID(cjid: widestring);
 var
     Item: IExodusItem;
-    m: integer;
-    a: TAvatar;
+//    m: integer;
+//    a: TAvatar;
     nickjid: Widestring;
     rm: TfrmRoom;
 begin
@@ -733,21 +726,29 @@ begin
 
     // check for an avatar
     if (MainSession.Prefs.getBool('chat_avatars')) then begin
-        a := Avatars.Find(_jid.jid);
-        if ((a <> nil) and (a.isValid())) then begin
-            // Put some upper bounds on avatars in chat windows
-            m := a.Height;
-            if (m >= 0) then begin
-                _avatar := a;
-                if (m > 32) then begin
-                    m := 32;
-                    imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
-                end
-                else
-                    imgAvatar.Width := _avatar.Width;
-                pnlDockTop.ClientHeight := m + 1;
-            end;
+        _avatar := Avatars.Find(_jid.jid);
+        if ((_avatar <> nil) and (_avatar.isValid())) then begin
+            _avatar.PNGBackgroundColor := pnlJID.Color;
+            imgAvatar.picture.assign(_avatar.Graphic);
+        end
+        else begin
+            imgAvatar.transparent := false;
+            imgAvatar.picture.assign(_unknown_avatar);
         end;
+//            // Put some upper bounds on avatars in chat windows
+//            m := a.Height;
+//            if (m >= 0) then begin
+//                _avatar := a;
+//                if (m > 32) then begin
+//                    m := 32;
+//                    imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+//                end
+//                else
+//                    imgAvatar.Width := _avatar.Width;
+//                pnlDockTop.ClientHeight := m + 1;
+//            end;
+
+//        end;
         lblNick.left := imgAvatar.Left + imgAvatar.Width;
     end
     else begin
@@ -1072,16 +1073,17 @@ begin
 
     if (Msg.Body <> '') then begin
         //Notify
-        if ((Msg.Priority = High) or (Msg.Priority = Low)) then
-           DoNotify(Self, 'notify_priority_chatactivity',
-                    GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
-                    RosterTreeImages.Find('contact'))
-         else
-           DoNotify(Self, 'notify_chatactivity',
+        if (not Msg.isMe) then
+        begin
+            if (Msg.Priority = High) then
+                DoNotify(Self, 'notify_priority_chatactivity',
+                        GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
+                        RosterTreeImages.Find('contact'))
+            else
+                DoNotify(Self, 'notify_chatactivity',
                     _(sChatActivity) + DisplayName,
-                    RosterTreeImages.Find('contact'));
-
-
+                      RosterTreeImages.Find('contact'));
+        end;
         if (Msg.isMe = false ) and ( _isRoom ) then
           Msg.Nick := DisplayName;
 
@@ -1190,8 +1192,6 @@ end;
  procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 var
    UpdateKey: WideString;
-   w: PWideChar;
-   num: Integer;
    Part: ChatParts;
 begin
     if (Key = #0) then exit;
@@ -1247,7 +1247,7 @@ begin
         end;
         MsgList.DisplayPresence('', _('You have been disconnected.'), '', 0);
         Self.ImageIndex := RosterImages.RI_OFFLINE_INDEX;
-**}        
+**}
     end
     else if (event = '/session/presence') then begin
         if (not MsgOut.Visible) then begin
@@ -1446,7 +1446,6 @@ begin
         end;
 
         txt := txt + '.';
-
         MsgList.DisplayPresence(_displayName, txt, ts, dt);
     end;
 end;
@@ -1798,28 +1797,38 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.imgAvatarPaint(Sender: TObject);
-var
-    r: TRect;
+//var
+//    r: TRect;
 begin
-  inherited;
-    if (_avatar <> nil) then begin
-        if (_avatar.Height > imgAvatar.Height) then begin
-            r.Top := 1;
-            r.Left := 1;
-            r.Bottom := imgAvatar.Height;
-            r.Right := imgAvatar.Width;
-            _avatar.Draw(imgAvatar.Canvas, r);
-        end
-        else
-            _avatar.Draw(imgAvatar.Canvas);
-    end
-    else begin
-        r.Top := 1;
-        r.Left := 1;
-        r.Bottom := imgAvatar.Height;
-        r.Right := imgAvatar.Width;
-        imgAvatar.Canvas.StretchDraw(r, _unknown_avatar);
-    end;
+//  inherited;
+//    if (_avatar <> nil) then begin
+//        try
+//            if (_avatar.Height > imgAvatar.Height) then begin
+//                r.Top := 1;
+//                r.Left := 1;
+//                r.Bottom := imgAvatar.Height;
+//                r.Right := imgAvatar.Width;
+//
+//                _avatar.Draw(imgAvatar.Canvas, r);
+//            end
+//            else
+//                _avatar.Draw(imgAvatar.Canvas);
+//            exit;
+//        except
+//            //corrupt avatars could cause an invalid pointer here,
+//            //make like we don't have an avatar
+//            on E:Exception do
+//            begin
+//                DebugManager.DebugMessage('Exception attempting to draw avatar for chat: ' + GetUID() + ' (' + E.message + ')');
+//                _avatar := nil;  //unknown drawn below
+//            end;
+//        end;
+//    end;
+//    r.Top := 1;
+//    r.Left := 1;
+//    r.Bottom := imgAvatar.Height;
+//    r.Right := imgAvatar.Width;
+//    imgAvatar.picture.Assign(_unknown_avatar);
 end;
 
 {---------------------------------------}

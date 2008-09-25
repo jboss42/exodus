@@ -176,7 +176,12 @@ procedure TExContactHoverFrame._GetAvatar();
 begin
     if (_UnknownAvatar.Empty) then
         frmExodus.bigImages.GetBitmap(0, _UnknownAvatar);
-    _Avatar := nil;
+
+   _Avatar := Avatars.Find(_Items.Item[0].uid);
+   if (_Avatar = nil) or (not _Avatar.isValid) or (_Avatar.Height < 0) then
+       _Avatar := nil;
+
+   //go ahead and kick off vcard request for phone number, updated avatar
     GetVCardCache().find(_Items.Item[0].uid, vcardCallback);
     if (not _Loaded) then begin
         lblPhone.Caption := _('N/A');
@@ -305,7 +310,6 @@ begin
         _Avatar.Draw(imgAvatar.Canvas, Rect)
     else
         imgAvatar.Canvas.StretchDraw(Rect, _UnknownAvatar);
-
 end;
 
 procedure TExContactHoverFrame.imgPresenceMouseEnter(Sender: TObject);

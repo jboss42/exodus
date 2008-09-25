@@ -108,7 +108,8 @@ uses
     AvatarCache,
     ChatWin,
     SndBroadcastDlg,
-    GnuGetText;
+    GnuGetText,
+    Exodus_TLB;
 
 const
     XMLNS_MULTICAST = 'http://jabber.org/protocol/address';
@@ -410,11 +411,6 @@ end;
 *************************** TBroadcastHandler **********************************
 *******************************************************************************}
 
-function RGBToColor(R,G,B:Byte): TColor;
-begin
-    Result:=(B Shl 16) or (G Shl 8) or R;
-end;
-
 type
 {************************* TExJIDHyperlinkLabel ********************************
 **
@@ -424,7 +420,7 @@ type
     TExJIDHyperlinkLabel = class(TTnTPanel)
     private
         _lblJID: TTntLabel;
-        _imgAvatar: TPaintBox;
+        _imgAvatar: TImage;
 
         _ShowFullResourceHint: boolean;
         _ShowDisplayName: boolean;
@@ -467,10 +463,9 @@ begin
     _dnListener := TDisplayNameEventListener.Create();
     _dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
 
-    _imgAvatar := TPaintBox.Create(Self);
+    _imgAvatar := TImage.Create(Self);
     _imgAvatar.Parent := Self;
     _imgAvatar.Name := 'imgAvatar';
-    _imgAvatar.OnPaint := Self.imgAvatarPaint;
     _imgAvatar.OnClick := Self.imgAvatarClick;
 
     _lblJID := TTntLabel.Create(Self);
@@ -512,8 +507,7 @@ begin
         Self.Visible := True;
 
         _imgAvatar.Align := alLeft;
-        _imgAvatar.ParentFont := True;
-        _imgAvatar.ParentColor := True;
+        _imgAvatar.transparent := true;
         _imgAvatar.Visible := True;
         _imgAvatar.Width := 33;
 
@@ -552,9 +546,9 @@ begin
 end;
 
 procedure TExJIDHyperlinkLabel.SetJID(jid: TJabberID; DisplayFormat: Widestring);
-var
-    a: TAvatar;
-    m: integer;
+//var
+//    a: TAvatar;
+//    m: integer;
 begin
     _displayFormat := DisplayFormat;
     _jid := TJabberID.create(jid);
@@ -564,22 +558,30 @@ begin
 
     // check for an avatar
     if (MainSession.Prefs.getBool('chat_avatars')) then begin
-        a := Avatars.Find(_jid.jid);
-        if ((a <> nil) and (a.isValid())) then begin
-            // Put some upper bounds on avatars in chat windows
-            m := a.Height;
-            if (m >= 0) then begin
-                _avatar := a;
-                if (m > 32) then begin
-                    m := 32;
-                    _imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
-                end
-                else
-                    _imgAvatar.Width := _avatar.Width;
-
-                Self.parent.ClientHeight := m + 1;
-            end;
+        _avatar := Avatars.Find(_jid.jid);
+        if ((_avatar <> nil) and (_avatar.isValid())) then begin
+            _avatar.PNGBackgroundColor := Self.Color;
+            _imgAvatar.picture.assign(_avatar.Graphic);
         end
+        else begin
+            _imgAvatar.transparent := false;
+            _imgAvatar.picture.assign(_unknownAvatar);
+        end;
+//
+//            // Put some upper bounds on avatars in chat windows
+//            m := a.Height;
+//            if (m >= 0) then begin
+//                _avatar := a;
+//                if (m > 32) then begin
+//                    m := 32;
+//                    _imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+//                end
+//                else
+//                    _imgAvatar.Width := _avatar.Width;
+//
+//                Self.parent.ClientHeight := m + 1;
+//            end;
+//        end
     end
     else begin
         // No avatars are displayed
@@ -588,40 +590,40 @@ begin
 end;
 
 procedure TExJIDHyperlinkLabel.imgAvatarPaint(Sender: TObject);
-var
-    r: TRect;
+//var
+//    r: TRect;
 begin
-  inherited;
-    if (_avatar <> nil) then begin
-        try
-            if (_avatar.Height > _imgAvatar.Height) then begin
-                r.Top := 1;
-                r.Left := 1;
-                r.Bottom := _imgAvatar.Height;
-                r.Right := _imgAvatar.Width;
-                _avatar.Draw(_imgAvatar.Canvas, r);
-            end
-            else
-                _avatar.Draw(_imgAvatar.Canvas);
-            exit;
-        //JJF I keep getting npe here, probably bad avatar data from an
-        //earlier avatar cache implementation, but it happens regularly
-        //enough to trap and report.
-        Except
-            On E:Exception do
-            begin
-                Debug.DebugMessage('Exception attempting to draw avatar (' + e.Message + ')');
-                _avatar := nil; //try to avoid doing this again
-                                //note its just a ref to the cache
-            end;
-        end;
-    end;
-    //drops through if avatar could not be rendered
-    r.Top := 1;
-    r.Left := 1;
-    r.Bottom := 28;
-    r.Right := 28;
-    _imgAvatar.Canvas.StretchDraw(r, _UnknownAvatar);
+//  inherited;
+//    if (_avatar <> nil) then begin
+//        try
+//            if (_avatar.Height > _imgAvatar.Height) then begin
+//                r.Top := 1;
+//                r.Left := 1;
+//                r.Bottom := _imgAvatar.Height;
+//                r.Right := _imgAvatar.Width;
+//                _avatar.Draw(_imgAvatar.Canvas, r);
+//            end
+//            else
+//                _avatar.Draw(_imgAvatar.Canvas);
+//            exit;
+//        //JJF I keep getting npe here, probably bad avatar data from an
+//        //earlier avatar cache implementation, but it happens regularly
+//        //enough to trap and report.
+//        Except
+//            On E:Exception do
+//            begin
+//                Debug.DebugMessage('Exception attempting to draw avatar (' + e.Message + ')');
+//                _avatar := nil; //try to avoid doing this again
+//                                //note its just a ref to the cache
+//            end;
+//        end;
+//    end;
+//    //drops through if avatar could not be rendered
+//    r.Top := 1;
+//    r.Left := 1;
+//    r.Bottom := 28;
+//    r.Right := 28;
+//    _imgAvatar.Canvas.StretchDraw(r, _UnknownAvatar);
 end;
 
 procedure TExJIDHyperlinkLabel.imgAvatarClick(Sender: TObject);
@@ -879,7 +881,7 @@ begin
 
     //event the notification
     sstr := DisplayName.getDisplayNameCache().getDisplayName(fromJID);
-    Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, 0);
+    Notify.DoNotify(DisplayWin, 'notify_normalmsg', _('Broadcast message from ') + sstr, RI_HEADLINE_INDEX);
     dTag.free();
     fromJID.free();
 

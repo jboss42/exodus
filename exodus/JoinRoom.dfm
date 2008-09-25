@@ -4,27 +4,28 @@ inherited frmJoinRoom: TfrmJoinRoom
   BorderStyle = bsSizeable
   Caption = 'Join Room'
   ClientHeight = 372
-  ClientWidth = 408
+  ClientWidth = 432
   DefaultMonitor = dmMainForm
   OldCreateOrder = True
   Position = poScreenCenter
   OnClose = FormClose
   OnDestroy = FormDestroy
-  ExplicitHeight = 406
+  ExplicitWidth = 440
+  ExplicitHeight = 400
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
     Top = 331
-    Width = 408
+    Width = 432
     TabOrder = 2
     ExplicitTop = 331
     ExplicitWidth = 408
     inherited Bevel1: TBevel
-      Width = 408
+      Width = 432
       ExplicitWidth = 408
     end
     inherited Panel3: TPanel
-      Left = 151
+      Left = 175
       ExplicitLeft = 151
       inherited btnBack: TTntButton
         Enabled = False
@@ -41,10 +42,10 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
   end
   inherited Panel1: TPanel
-    Width = 408
+    Width = 432
     ExplicitWidth = 408
     inherited Bevel2: TBevel
-      Width = 408
+      Width = 432
       ExplicitWidth = 408
     end
     inherited lblWizardTitle: TTntLabel
@@ -56,21 +57,18 @@ inherited frmJoinRoom: TfrmJoinRoom
       Caption = 'Specify or browse for a conference room to join or create.'
     end
     inherited Image1: TImage
-      Left = 367
+      Left = 391
       ExplicitLeft = 366
     end
   end
   inherited Tabs: TPageControl
-    Width = 408
+    Width = 432
     Height = 271
-    ActivePage = TabSheet2
     TabOrder = 0
     ExplicitWidth = 408
     ExplicitHeight = 271
     inherited TabSheet1: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 27
-      ExplicitWidth = 400
+      ExplicitWidth = 424
       ExplicitHeight = 240
       object Label2: TTntLabel
         Left = 25
@@ -194,10 +192,11 @@ inherited frmJoinRoom: TfrmJoinRoom
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
+      ExplicitWidth = 400
       object lstRooms: TTntListView
         Left = 0
         Top = 56
-        Width = 400
+        Width = 424
         Height = 184
         Align = alClient
         Columns = <
@@ -221,16 +220,18 @@ inherited frmJoinRoom: TfrmJoinRoom
         OnDataFind = lstRoomsDataFind
         OnDblClick = lstRoomsDblClick
         OnKeyPress = lstRoomsKeyPress
+        ExplicitWidth = 400
       end
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 400
+        Width = 424
         Height = 56
         Align = alTop
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitWidth = 400
         object lblFetch: TTntLabel
           Left = 2
           Top = 4

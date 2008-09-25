@@ -99,6 +99,7 @@ type
     procedure closeAllCallback(event: string; tag: TXMLTag);
     procedure dockAllCallback(event: string; tag: TXMLTag);
     procedure floatAllCallback(event: string; tag: TXMLTag);
+    //procedure restoreUnreadXML();
   protected
     updateDockedCnt: integer;
 
@@ -112,8 +113,9 @@ type
     procedure showTopbar(show: boolean);
     procedure showCloseButton(show: boolean);
     procedure showDockToggleButton(show: boolean);
-    procedure updateMsgCount(msg: TJabberMessage); overload;virtual;
-    procedure updateMsgCount(msgTag: TXMLTag); overload;virtual;
+    procedure updateMsgCount(msg: TJabberMessage); overload; virtual;
+    procedure UpdatePriority(msg: TJabberMessage); overload; virtual;
+    procedure updateMsgCount(msgTag: TXMLTag); overload; virtual;
     procedure updateLastActivity(lasttime: TDateTime); virtual;
 
     //getters/setters for activity window properties. Allows subclasses to set their
@@ -126,6 +128,7 @@ type
     function GetDockbar(): IExodusDockToolbar;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure StoreUnreadMessage(unreadMsg: widestring; key: widestring = '');
+    procedure OnRestoreUnreadDB ();override;
 public
     _windowType: widestring; // what kind of dockable window is this
 
@@ -319,6 +322,7 @@ begin
     _closing := false;
 
     inherited;
+   
 end;
 
 procedure TfrmDockable.setImageIndex(idx: integer);
@@ -505,7 +509,8 @@ end;
 procedure TfrmDockable.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  inherited;
+    inherited;
+
     // handle Ctrl-Tab to switch tabs
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         GetDockManager().SelectNext(not (ssShift in Shift));
@@ -515,6 +520,11 @@ begin
     else if ((Jabber1.getAllowedDockState() <> adsForbidden) and ([ssCtrl] = Shift)) and (Key=68) then begin
       btnDockToggleClick(Self);
       Key := 0;
+    end
+    else if ((Key = VK_ESCAPE) and
+             (MainSession.Prefs.getBool('esc_close'))) then
+    begin
+        Self.Close();
     end;
 end;
 
@@ -552,25 +562,22 @@ begin
     pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or tbDockBar.Visible;
 end;
 
-procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
-var
-    ttag: TXMLTag;
+//procedure TfrmDockable.restoreUnreadXML();
+//var
+//        txlist: TXMLTagList;
+//        idx: Integer;
+//        ttag: TXMLTag;
+//begin
+//        ttag := windowState.GetFirstTag('unread');
+//        if (ttag <> nil) then
+//        begin
+//            txList := ttag.ChildTags;
+//            for idx := 0 to txList.Count - 1 do
+//                OnPersistedMessage(txList[idx]);
+//        end;
+//end;
 
-    procedure restoreUnreadXML();
-    var
-        txlist: TXMLTagList;
-        idx: Integer;
-    begin
-        ttag := windowState.GetFirstTag('unread');
-        if (ttag <> nil) then
-        begin
-            txList := ttag.ChildTags;
-            for idx := 0 to txList.Count - 1 do
-                OnPersistedMessage(txList[idx]);
-        end;
-    end;
-
-    procedure restoreUnreadDB();
+procedure TfrmDockable.OnRestoreUnreadDB();
     var
         parser: TXMLTagParser;
         table: IExodusDataTable;
@@ -578,7 +585,8 @@ var
         xml: Widestring;
         tag: TXMLTag;
         idx:  Integer;
-    begin
+begin
+        PersistUnreadMessages := false;
         parser := nil;
         tag := nil;
         initializeDatabase();
@@ -587,8 +595,20 @@ var
         try
             table := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
             sql := Format('select * from unread_cache where (key=''%s'');',[key]);
-            if not DataStore.GetTable(sql, table) then exit;
-            if not table.FirstRow then exit;
+            if not DataStore.GetTable(sql, table) then
+            begin
+                FreeAndNil(tag);
+                FreeAndNil(parser);
+                PersistUnreadMessages := true;
+                exit;
+            end;
+            if not table.FirstRow then
+            begin
+                FreeAndNil(tag);
+                FreeAndNil(parser);
+                PersistUnreadMessages := true;
+                exit;
+            end;
 
             parser := TXMLTagParser.Create();
             for idx := 0 to table.RowCount - 1 do begin
@@ -607,10 +627,12 @@ var
         except
             //TODO: loggit
         end;
-
         FreeAndNil(tag);
         FreeAndNil(parser);
-    end;
+        PersistUnreadMessages := true;
+end;
+
+procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
 begin
     inherited;
     if (Jabber1.getAllowedDockState() = adsForbidden) then
@@ -621,19 +643,6 @@ begin
     else
         //initial condition, how to handle windows we have no state for
         _docked := MainSession.Prefs.getBool('start_docked');
-
-    if (PersistUnreadMessages) then
-    begin
-        PersistUnreadMessages := false;
-
-        //check for XML-based messages
-        restoreUnreadXML();
-
-        //check the database
-        restoreUnreadDB();
-        
-        PersistUnreadMessages := true;
-    end;
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
@@ -697,7 +706,7 @@ end;
 
 procedure TfrmDockable.updateMsgCount(msg: TJabberMessage);
 begin
-    _priorityflag := _priorityflag or ((msg.Priority = High) and (not msg.isMe));
+    UpdatePriority(msg);
     UpdateMsgCount(msg.Tag);
 end;
 
@@ -712,6 +721,22 @@ begin
         Result.setAttribute('from', from);
     if (desc <> '') then
         Result.AddCData(desc)
+end;
+
+procedure TfrmDockable.UpdatePriority(msg: TJabberMessage);
+begin
+    //no message or we are not tracking messages
+    if (msg = nil) then exit;
+
+    if (not Active) then
+    begin
+        if ((not Docked) or
+            (GetDockManager().getTopDocked() <> Self) or
+            (not GetDockManager().isActive)) then
+        begin
+            _priorityflag := _priorityflag or (( msg.Priority = High) and (not msg.isMe));
+        end;
+    end;
 end;
 
 procedure TfrmDockable.updateMsgCount(msgTag: TXMLTag);

@@ -479,8 +479,7 @@ begin
             // Socket is connected
             {$ifdef INDY9}
             _local_ip := _socket.Socket.Binding.IP;
-            if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
-                (_x509_int.PassThrough)) then begin
+            if ((_profile.ssl = ssl_port) and (_x509_int.PassThrough)) then begin
                 if (_profile.SocksType = proxy_http) then begin
                     HttpProxyConnect(_iohandler, _profile.ResolvedIP, _profile.ResolvedPort);
                 end;

@@ -716,9 +716,6 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.SendTag(tag: TXMLTag);
-var
-    track: TXMLTag;
-
     procedure _RemoveTrackingTag();
     var
         track: TXMLTag;

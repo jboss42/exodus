@@ -10,7 +10,7 @@ inherited frmProfile: TfrmProfile
   OnClose = FormClose
   OnCreate = FormCreate
   ExplicitWidth = 521
-  ExplicitHeight = 460
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
@@ -159,9 +159,6 @@ inherited frmProfile: TfrmProfile
           CommonAVI = aviFindFile
           StopFrame = 8
           Visible = False
-          ExplicitLeft = 279
-          ExplicitTop = 5
-          ExplicitHeight = 16
         end
       end
       object TntPanel2: TTntPanel
@@ -344,6 +341,7 @@ inherited frmProfile: TfrmProfile
           Height = 25
           Caption = 'Change...'
           TabOrder = 1
+          Visible = False
         end
       end
       object gbUserProps: TExGroupBox

@@ -50,8 +50,8 @@ uses
   TntStdCtrls,
   Buttons,
   TntButtons,
-  SClrRGrp,
-  XMLTag;
+  XMLTag,
+  ExCustomSeparatorBar;
 
 type
 
@@ -96,14 +96,14 @@ type
     SortLeftSpacer: TBevel;
     SortRightSpacer: TBevel;
     timShowActiveDocked: TTimer;
-    SortBevel: TColorBevel;
-    ScrollUpBevel: TColorBevel;
-    ScrollDownBevel: TColorBevel;
     popAWList: TTntPopupMenu;
     mnuAW_CloseAll: TTntMenuItem;
     mnuAW_DockAll: TTntMenuItem;
     mnuAW_FloatAll: TTntMenuItem;
     timScrollTimer: TTimer;
+    ScrollUpSeparatorBar: TExCustomSeparatorBar;
+    SortSeparatorBar: TExCustomSeparatorBar;
+    ScrollDownSeparatorBar: TExCustomSeparatorBar;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure pnlListScrollUpClick(Sender: TObject);
@@ -406,12 +406,12 @@ begin
         _scrollup_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
         _scrolldown_bevel_shadow_color := TColor(StrToInt(tag.GetFirstTag('shadow').Data));
         _scrolldown_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
-        SortBevel.Shadow := _sort_bevel_shadow_color;
-        SortBevel.HighLight := _sort_bevel_highlight_color;
-        ScrollUpBevel.Shadow := _scrollup_bevel_shadow_color;
-        ScrollUpBevel.HighLight := _scrollup_bevel_highlight_color;
-        ScrollDownBevel.Shadow := _scrolldown_bevel_shadow_color;
-        ScrollDownBevel.HighLight := _scrolldown_bevel_highlight_color;
+        SortSeparatorBar.CustomSeparatorBarProperites.Color1 := _sort_bevel_shadow_color;
+        SortSeparatorBar.CustomSeparatorBarProperites.Color2 := _sort_bevel_highlight_color;
+        ScrollUpSeparatorBar.CustomSeparatorBarProperites.Color1 := _scrollup_bevel_shadow_color;
+        ScrollUpSeparatorBar.CustomSeparatorBarProperites.Color2 := _scrollup_bevel_highlight_color;
+        ScrollDownSeparatorBar.CustomSeparatorBarProperites.Color1 := _scrolldown_bevel_shadow_color;
+        ScrollDownSeparatorBar.CustomSeparatorBarProperites.Color2 := _scrolldown_bevel_highlight_color;
     end;
     FreeAndNil(tag);
 
@@ -807,13 +807,12 @@ procedure TfrmActivityWindow.activateItem(awitem: TfAWItem);
 var
     trackitem: TAWTrackerItem;
     tsheet: TTntTabSheet;
-    i: integer;
 begin
     if (awitem = nil) then exit;
 
     try
         _needToSortList := true;
-        
+
         trackitem := _findItem(awitem);
 
         // Deactivate old item if new item docked
@@ -829,8 +828,11 @@ begin
         // Activate if Docked
         //only change to active colors if msg count = 0 (-1) or will be cleared later
         //prevents new message/new window colors from being overwritten
-        if (_dockWindow.Active and trackitem.frm.Docked) or trackitem.frm.active or (awitem.count < 1) then
+        if (_dockWindow.Active and trackitem.frm.Docked) or
+            trackitem.frm.active or (awitem.count < 1) then begin
             awitem.activate(true, trackitem.frm.Docked);
+        end;
+
         if (trackitem.frm.Docked) then begin
             _activeitem := awitem;
         end;
@@ -842,15 +844,15 @@ begin
                 try
                     tsheet.Visible := true;
                     _oldActivateSheet := tsheet;
+                    //tsheet will get a activated when ActivePage is set if
+                    //_dockWindow is active. That fires various aactivastion
+                    //events, includign clearing unread messages as needed.
+                    //If _dockWindow is not active, activation occurs when
+                    //if gets focus later.
                     _dockWindow.AWTabControl.ActivePage := tsheet;
                     _dockWindow.setWindowCaption(trackitem.frm.Caption);
-                except
-                end;
-                if (_dockWindow.Active) then begin
-                    trackitem.frm.ClearUnreadMsgCount();
-                    trackitem.awItem.count := trackitem.frm.UnreadMsgCount;
-                    trackitem.frm.gotActivate();
                     scrollToActive();
+                except
                 end;
             end;
         end
@@ -1255,12 +1257,7 @@ end;
 {---------------------------------------}
 procedure TfrmActivityWindow.imgShowRosterClick(Sender: TObject);
 begin
-    if (frmExodus.Showing) then begin
-        frmExodus.BringToFront();
-    end
-    else begin
-        frmExodus.Show();
-    end;
+    frmExodus.BringToFront();
 end;
 
 {---------------------------------------}
@@ -1787,7 +1784,7 @@ begin
         frm := TfrmDockable(_dockwindow.getTabForm(tsheet));
         if (frm <> nil) then
         begin
-            _dockwindow.CloseDocked(frm);
+           frm.Close();
         end;
     end;
 end;

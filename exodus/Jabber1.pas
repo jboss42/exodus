@@ -36,7 +36,7 @@ uses
     TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
     ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
     XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
-    SClrRGrp, IEMsgList;
+    IEMsgList, ExCustomSeparatorBar;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -288,7 +288,6 @@ type
     txtStatus: TTntEdit;
     imgAd: TImage;
     MainbarImageList: TImageList;
-    ToolbarBevel: TColorBevel;
     popViewStates: TTntPopupMenu;
     popShowOnline: TTntMenuItem;
     popShowAll: TTntMenuItem;
@@ -297,6 +296,7 @@ type
     mnuFile_Plugins: TTntMenuItem;
     N16: TTntMenuItem;
     mnuFile_Plugins_Options: TTntMenuItem;
+    ToolbarSeparatorBar: TExCustomSeparatorBar;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -429,7 +429,6 @@ type
 //    _new_tabindex: integer;             // new tab which was just docked
     _new_account: boolean;              // is this a new account
     _pending_passwd: Widestring;
-    _profileScreenLastWidth: integer;   // Storage for width of roster window when logged in
     _enforceConstraints: boolean;       // Should minimum size constraints be enforced
 
     _dnListener: TDisplayNameEventListener;
@@ -1876,6 +1875,8 @@ begin
         // Close whatever rooms we have
         CloseAllRooms();
         CloseAllChats();
+        //stop dock window flashing now that we are disconnected
+        StopFlash(_dockwindow); //from notify.pas
 
         Self.Caption := getAppInfo().Caption;
         setTrayInfo(Self.Caption);
@@ -3760,6 +3761,7 @@ procedure TfrmExodus.mnuWindows_CloseAllClick(Sender: TObject);
 begin
     GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/close-all-windows', nil);
+    StopFlash(_dockwindow); //from notify.pas
     GetActivityWindow().enableListUpdates(true);
 end;
 

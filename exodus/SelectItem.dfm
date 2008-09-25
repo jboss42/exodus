@@ -5,7 +5,7 @@ inherited frmSelectItem: TfrmSelectItem
   ParentFont = False
   OnCreate = FormCreate
   ExplicitWidth = 287
-  ExplicitHeight = 348
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   object pnlInput: TPanel
@@ -73,19 +73,20 @@ inherited frmSelectItem: TfrmSelectItem
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
+    ExplicitTop = 213
     DesignSize = (
       279
       37)
-    object ColorBevel1: TColorBevel
+    object SeparatorBar: TExCustomSeparatorBar
       Left = 0
       Top = 0
       Width = 279
       Height = 2
       Align = alTop
-      HighLight = clBtnHighlight
-      Shadow = clBtnShadow
-      FrameColor = frDefault
-      ExplicitWidth = 281
+      CustomSeparatorBarProperites.Color1 = clBtnShadow
+      CustomSeparatorBarProperites.Color2 = clBtnHighlight
+      CustomSeparatorBarProperites.horizontal = True
+      ExplicitTop = 2
     end
     object btnCancel: TTntButton
       AlignWithMargins = True

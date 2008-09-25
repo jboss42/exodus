@@ -485,7 +485,7 @@ begin
     inherited;
     frmExodus.ActiveChat := Self;
 
-    if (Self.Active and Self.Visible and MsgOut.Visible and MsgOut.Enabled) then begin
+    if (Self.Visible and MsgOut.Visible and MsgOut.Enabled) then begin
         try
             MsgOut.SetFocus();
         except

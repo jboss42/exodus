@@ -2,27 +2,22 @@ inherited frmSelectItemAny: TfrmSelectItemAny
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlInput: TPanel
-    ExplicitWidth = 279
-    ExplicitHeight = 286
     inherited pnlSelect: TPanel
       Top = 26
-      Height = 222
+      Height = 219
       ExplicitTop = 26
-      ExplicitWidth = 273
-      ExplicitHeight = 222
+      ExplicitHeight = 219
     end
     inherited pnlEntry: TPanel
-      Top = 251
+      Top = 248
       Height = 35
-      ExplicitTop = 254
-      ExplicitWidth = 279
+      ExplicitTop = 248
       ExplicitHeight = 35
       inherited lblJID: TTntLabel
         Height = 29
       end
       inherited txtJID: TTntEdit
         Height = 29
-        ExplicitWidth = 220
       end
     end
     object pnlAny: TTntPanel
@@ -47,9 +42,5 @@ inherited frmSelectItemAny: TfrmSelectItemAny
         OnClick = chkAnyClick
       end
     end
-  end
-  inherited pnlActions: TPanel
-    ExplicitTop = 286
-    ExplicitWidth = 279
   end
 end

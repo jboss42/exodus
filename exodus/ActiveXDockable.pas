@@ -139,6 +139,8 @@ begin
 
     end;
     _AXControl := nil;
+
+    Action := caFree;
 end;
 
 procedure TfrmActiveXDockable.FormCreate(Sender: TObject);
