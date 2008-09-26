@@ -1,6 +1,6 @@
 inherited frmDockable: TfrmDockable
   Caption = 'frmDockable'
-  ClientWidth = 251
+  ClientWidth = 204
   DragKind = dkDock
   DragMode = dmAutomatic
   KeyPreview = True
@@ -8,14 +8,15 @@ inherited frmDockable: TfrmDockable
   OnDragDrop = OnDockedDragDrop
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown
-  ExplicitWidth = 259
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 212
+  ExplicitHeight = 191
+  PixelsPerInch = 96
+  TextHeight = 13
   object pnlDock: TTntPanel
     Left = 0
     Top = 0
-    Width = 251
-    Height = 41
+    Width = 204
+    Height = 33
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
@@ -23,18 +24,18 @@ inherited frmDockable: TfrmDockable
     object pnlDockTopContainer: TTntPanel
       Left = 0
       Top = 0
-      Width = 251
-      Height = 34
+      Width = 204
+      Height = 28
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
       object tbDockBar: TToolBar
         AlignWithMargins = True
-        Left = 202
+        Left = 155
         Top = 3
         Width = 46
-        Height = 28
+        Height = 22
         Align = alRight
         AutoSize = True
         EdgeInner = esNone
@@ -75,8 +76,8 @@ inherited frmDockable: TfrmDockable
       object pnlDockTop: TTntPanel
         Left = 0
         Top = 0
-        Width = 199
-        Height = 34
+        Width = 152
+        Height = 28
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
@@ -86,17 +87,18 @@ inherited frmDockable: TfrmDockable
     object pnlDockControlSite: TTntPanel
       AlignWithMargins = True
       Left = 4
-      Top = 34
-      Width = 243
-      Height = 7
+      Top = 31
+      Width = 196
+      Height = 2
       Margins.Left = 4
-      Margins.Top = 0
       Margins.Right = 4
       Margins.Bottom = 0
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
+      ExplicitTop = 28
+      ExplicitHeight = 5
     end
   end
 end

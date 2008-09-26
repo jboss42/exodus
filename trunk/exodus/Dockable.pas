@@ -1,18 +1,18 @@
 {
     Copyright 2001-2008, Estate of Peter Millard
-    
+
     This file is part of Exodus.
-    
+
     Exodus is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     Exodus is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with Exodus; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -89,9 +89,9 @@ type
     _activating: boolean; //in GotActive event
     _lastActivity: TDateTime; // what was the last activity for this window
     _closing: boolean; // Is the window closing (for updatedocked() call);
-
+    
     _COMDockbar: IExodusDockToolbar;
-    _dockbarControl: IExodusControlSite;
+    _dbControlContainer: IExodusControlSite;
 
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
@@ -125,16 +125,20 @@ type
     procedure updateDocked(); virtual;
 
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;virtual;
+
     function GetDockbar(): IExodusDockToolbar;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure StoreUnreadMessage(unreadMsg: widestring; key: widestring = '');
     procedure OnRestoreUnreadDB ();override;
+
 public
     _windowType: widestring; // what kind of dockable window is this
 
     Constructor Create(AOwner: TComponent); override;
 
     procedure Dock(NewDockSite: TWinControl; ARect: TRect); override;
+    procedure Repaint; override;
+
 
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
@@ -220,6 +224,9 @@ var
   dockable_uid: integer;
   //frmDockable: TfrmDockable;
 
+const
+    DOCKBAR_CONTROL_DEFAULT_HEIGHT = 27;
+
 function generateUID(): widestring;
 begin
     Inc(dockable_uid);
@@ -268,6 +275,7 @@ begin
     _priorityflag := false;
     _activating := false;
     _uid := generateUID();
+
 end;
 
 procedure TfrmDockable.CreateParams(var Params: TCreateParams);
@@ -284,27 +292,52 @@ begin
     inherited;
 end;
 
+procedure TfrmDockable.Repaint;
+var
+    contHeight: integer;
+    topHeight: integer;
+begin
+    topHeight := max(pnlDockTop.Height, tbDockBar.Height);
+    contHeight := topHeight;
+    if (_dbControlContainer <> nil) and (_dbControlContainer as IExodusToolbarControl).Visible then
+        inc(contHeight, DOCKBAR_CONTROL_DEFAULT_HEIGHT);
+
+    //if height should change, realign everything    
+    if (pnlDock.Height <> contHeight) then
+    begin
+        disableAlign();
+        try
+            pnlDockTopContainer.Height := topHeight;
+            pnlDock.Height := contHeight;
+        finally
+            enableAlign();
+        end;    
+    end;
+    inherited;
+end;
+
 function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
+var
+    twc: TWinControl;
 begin
     Result := nil;
-    if (ToolbarName = 'dockbar') then
+    if (ToolbarName <> 'dockbar') then exit;
+
+    //dockbar will only have one control at a time. If this control is already
+    //created, just return it, otherwise destroy existing container
+    //and make new one
+    if (_dbControlContainer = nil) or (_dbControlContainer.ControlGUID <> ID) then
     begin
-        _dockbarControl := nil;
-        pnlDock.Align := alNone;
-        pnlDock.AutoSize := false;
-        pnlDock.Height := pnlDock.Height + 21;
-        pnlDockControlSite.AutoSize := false;
-        pnlDockControlSite.Height := 21;
+        //"deparent" container and let ref counts free it when appropriate
+        if (_dbControlContainer <> nil) then
+            TExodusControlSite((_dbControlContainer as IInterfaceComponentReference).GetComponent).Parent := nil;
 
-        _dockbarControl := TExodusControlSite.create(nil, pnlDockControlSite, StringToGUID(ID));
-        _dockbarControl.AlignClient := true;
-
-        pnlDockControlSite.AutoSize := true;
-        pnlDockControlSite.Visible := true;
-        pnlDock.AutoSize := true;
-        pnlDock.Align := alTop;
-        Result := _dockbarControl as IExodusToolbarControl;
+         //don't specify an owner, let ref counts manage lifetime
+        _dbControlContainer := TExodusControlSite.create(nil, pnlDockControlSite, StringToGUID(ID)) as IExodusControlSite;
+        _dbControlContainer.AlignClient := true;
+        Repaint();
     end;
+    Result := _dbControlContainer as IExodusToolbarControl;
 end;
 
 function TfrmDockable.GetDockbar(): IExodusDockToolbar;
