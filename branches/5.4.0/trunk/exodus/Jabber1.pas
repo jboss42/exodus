@@ -292,11 +292,11 @@ type
     popShowOnline: TTntMenuItem;
     popShowAll: TTntMenuItem;
     mnuContacts_ViewHistory: TTntMenuItem;
-    pnlStatusLabel: TPanel;
     mnuFile_Plugins: TTntMenuItem;
     N16: TTntMenuItem;
     mnuFile_Plugins_Options: TTntMenuItem;
     ToolbarSeparatorBar: TExCustomSeparatorBar;
+    pnlStatusLabel: TPanel;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -1822,6 +1822,14 @@ begin
 
         setTrayInfo(Self.Caption);
         imgSSL.Visible := MainSession.SSLEnabled;
+        GridPanel1.Height := lblDisplayName.Height+pnlStatus.Height+4;
+        imgSSL.Height := GridPanel1.Height;
+        imgPresence.Height := GridPanel1.Height;
+        imgSSL.Align := alClient;
+        imgPresence.Align := alClient;
+        imgSSL.AutoSize := false;
+        imgPresence.AutoSize := false;
+        GridPanel1.Realign;
 
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
