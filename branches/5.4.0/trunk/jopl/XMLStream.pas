@@ -670,6 +670,8 @@ var
     allow: WordBool;
     dispPacket: TXMLtag;
 begin
+    if (tag = nil) then exit;
+    
     //check with packet control listeners
     //before forwarding onto other callbacks
     allow := true;
