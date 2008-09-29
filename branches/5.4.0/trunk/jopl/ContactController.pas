@@ -602,6 +602,9 @@ begin
                Item.ExtendedText := Pres.Show
             else
                Item.ExtendedText := '';
+    end
+    else begin
+        Item.ExtendedText := '';
     end;
 
     ImagePrefix := Item.Value['ImagePrefix'];
