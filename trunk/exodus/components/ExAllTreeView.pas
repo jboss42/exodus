@@ -33,7 +33,7 @@ type
     _mnuDelete: TTntMenuItem;
 
     _dropSupport: TExDropTarget;
-    _Filter: WideString;
+
 
   protected
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
@@ -49,7 +49,7 @@ type
     procedure SaveGroupsState(); override;
 
     function FilterItem(item: IExodusItem): Boolean; override;
-    procedure _SetFilterType(filtertype: Widestring); virtual;
+    procedure _SetFilterType(filtertype: Widestring); override;
   public
     constructor Create(AOwner: TComponent; Session: TObject); override;
 
@@ -60,7 +60,6 @@ type
     procedure DragDrop(Source: TObject;
             X, Y: Integer); override;
 
-    property Filter: Widestring read _Filter write _SetFilterType;
   end;
 
 implementation
