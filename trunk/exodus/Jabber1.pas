@@ -247,7 +247,6 @@ type
     pnlRoster: TPanel;
     GridPanel1: TGridPanel;
     imgSSL: TImage;
-    lblDisplayName: TTntLabel;
     pnlStatus: TPanel;
     lblStatus: TTntLabel;
     imgDown: TImage;
@@ -431,7 +430,6 @@ type
     _pending_passwd: Widestring;
     _enforceConstraints: boolean;       // Should minimum size constraints be enforced
 
-    _dnListener: TDisplayNameEventListener;
 
     // Stuff for the Autoaway
     _idle_hooks: THandle;               // handle the lib
@@ -497,7 +495,6 @@ type
     procedure ShowLogin();
     procedure ShowRoster();
     procedure UpdatePresenceDisplay();
-    procedure UpdateDisplayName();
 
     function win32TrackerIndex(windows_msg: integer): integer;
 
@@ -586,7 +583,6 @@ published
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
-    procedure OnDisplayNameChange(jid, dn: Widestring);
   public
     ActiveChat: TfrmBaseChat;
 //    Tabs: TExodusTabs;
@@ -1236,9 +1232,6 @@ begin
     InitializeEmoticonLists();
     getToolbarColorSelect();
 
-    _dnListener := TDisplayNameEventListener.Create();
-    _dnListener.OnDisplayNameChange := OnDisplayNameChange;
-
     // Setup our caption and the help menus.
     with MainSession.Prefs do begin
         adVal := GetString('brand_ad');
@@ -1815,21 +1808,15 @@ begin
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
 
-        //Set Display Name listener to only fire on "My JID" DN updates
-        _dnListener.UID := MainSession.profile.getJabberID().jid;
-
-        UpdateDisplayName();
 
         setTrayInfo(Self.Caption);
         imgSSL.Visible := MainSession.SSLEnabled;
-        GridPanel1.Height := lblDisplayName.Height+pnlStatus.Height+4;
-        imgSSL.Height := GridPanel1.Height;
-        imgPresence.Height := GridPanel1.Height;
+        GridPanel1.Height := pnlStatus.Height + 2;
         imgSSL.Align := alClient;
         imgPresence.Align := alClient;
         imgSSL.AutoSize := false;
         imgPresence.AutoSize := false;
-        GridPanel1.Realign;
+        //GridPanel1.Realign;
 
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
@@ -1891,9 +1878,6 @@ begin
         setTrayIcon(0);
 
         imgSSL.Visible := false;
-
-        lblDisplayName.Caption := '';
-        lblDisplayName.Hint := '';
 
         _new_account := false;
         restoreMenus(false);
@@ -2355,8 +2339,6 @@ begin
         FreeAndNil(_docked_forms);
 
     Shell_NotifyIcon(NIM_DELETE, @_tray);
-    FreeAndNil(_dnListener);
-
     // Close the roster window
     RosterForm.CloseRosterWindow();
 
@@ -4961,11 +4943,6 @@ begin
     _dockWindowGlued := doGlue;
 end;
 
-procedure TfrmExodus.OnDisplayNameChange(jid, dn: Widestring);
-begin
-    UpdateDisplayName();
-end;
-
 procedure TfrmExodus.WMMoving(var Msg: TWMMoving);
 begin
     OutputDebugString('Got WM_MOVING');
@@ -5126,15 +5103,7 @@ begin
     setTrayIcon(idx);
     ImageList1.GetIcon(idx, imgPresence.Picture.Icon);
 end;
-procedure TfrmExodus.UpdateDisplayName;
-var
-    jid: TJabberID;
-begin
-    jid := MainSession.Profile.getJabberID();
 
-    lblDisplayName.Caption := TDisplayNameEventListener.GetDisplayName(jid.jid);
-    lblDisplayName.Hint := jid.getDisplayFull();
-end;
 
 procedure TfrmExodus.clickCreatePopupItem(Sender: TObject);
 var
