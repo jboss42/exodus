@@ -495,6 +495,8 @@ begin
 end;
 
 procedure TfrmBaseChat.FormCreate(Sender: TObject);
+const
+    INPUT_PNL_MIN_HEIGHT = 60;
 var
     ht: integer;
     sc: TShortcut;
@@ -566,11 +568,17 @@ begin
             begin
                 ht := pnlInput.Height;
                 if (ht = 0) then
-                    ht := 25;
+                    ht := INPUT_PNL_MIN_HEIGHT;
                 MainSession.prefs.setInt('chat_textbox', ht);
             end;
             pnlInput.Height := ht;
-            
+
+            if (pnlInput.Height < INPUT_PNL_MIN_HEIGHT) then
+            begin
+                pnlInput.Height := INPUT_PNL_MIN_HEIGHT;
+                MainSession.prefs.setInt('chat_textbox', ht);
+            end;
+
             _esc := MainSession.Prefs.getBool('esc_close');
 
             sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
