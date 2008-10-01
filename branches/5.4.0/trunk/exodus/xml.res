@@ -559,7 +559,7 @@
     <brand_registration value="1"/>
     <brand_browser value="1"/>
 	<brand_vcard value="1"/>
-    <branding_roster_hide_new_wizard value="1"/>
+    <branding_roster_hide_new_wizard value="0"/>
 
     <!-- lock down our nickname -->
     <brand_prevent_change_nick value="0"/>
