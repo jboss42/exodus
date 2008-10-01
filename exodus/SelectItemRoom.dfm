@@ -1,6 +1,6 @@
 inherited frmSelectItemRoom: TfrmSelectItemRoom
   OnDestroy = FormDestroy
-  ExplicitHeight = 354
+  ExplicitWidth = 320
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlInput: TPanel
@@ -20,7 +20,7 @@ inherited frmSelectItemRoom: TfrmSelectItemRoom
     end
     inherited pnlEntry: TPanel
       inherited lblJID: TTntLabel
-        Height = 23
+        Height = 13
       end
     end
     object pnlJoinedRooms: TTntPanel
@@ -36,11 +36,10 @@ inherited frmSelectItemRoom: TfrmSelectItemRoom
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 273
+        Width = 114
         Height = 13
         Align = alTop
         Caption = 'Currently Joined Rooms'
-        ExplicitWidth = 114
       end
       object lstJoinedRooms: TTntListView
         AlignWithMargins = True

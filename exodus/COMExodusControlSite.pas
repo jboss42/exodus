@@ -25,9 +25,17 @@ unit COMExodusControlSite;
 interface
 
 uses
-    Classes, Controls, OleCtrls, Exodus_TLB;
+    Classes, ComObj, Controls, OleCtrls, OleCtnrs, Exodus_TLB;
 
 type
+    //Exodus component wrapper for ActiveX controls.
+
+    //ActiveX controls should be wrapped in a TWinControl component for
+    //optimal results. Toolbars, activex dock containers create and parent
+    //this component.
+    //Wrapper component implements an interfaces that allows the container (wrapper)
+    //to enable/show/align client, access underlying control and get control
+    //metadata
     TExodusControlSite = class(TOleControl, IExodusControlSite, IExodusToolbarControl)
     private
         _control: IDispatch;
@@ -53,32 +61,31 @@ type
 
         property  ControlInterface: IDispatch read Get_Control;
         property  DefaultInterface: IDispatch read Get_Control;
-    published
-        //Sgood group of properties a default site should impl...
-        //exposed through IDispatch
-        property  Anchors;
-        property  TabStop;
-        property  Align;
-        property  DragCursor;
-        property  DragMode;
-        property  ParentShowHint;
-        property  PopupMenu;
-        property  ShowHint;
-        property  TabOrder;
-        property  Visible;
-        property  OnDragDrop;
-        property  OnDragOver;
-        property  OnEndDrag;
-        property  OnEnter;
-        property  OnExit;
-        property  OnStartDrag;
+
+        property Control: IDispatch read Get_Control;
+        property ControlName: WideString read Get_ControlName;
+        property ControlGUID: WideString read Get_ControlGUID;
+        property AlignClient: WordBool read Get_AlignClient write Set_AlignClient;
     end;
 
 implementation
 
-uses SysUtils, StrUtils;
+uses SysUtils, StrUtils, Forms;
 var
     _nameCounter: integer;
+
+procedure repaintParentForm(parent: TControl);
+var
+    tc: TControl;
+begin
+    if (parent <> nil) then
+    begin
+        tc := GetParentForm(parent, false); //get first parent form, not topmost
+        if (tc = nil) then
+            tc := parent;
+        tc.Repaint();
+    end;
+end;
 
 procedure TExodusControlSite.InitControlData;
 const
@@ -92,18 +99,18 @@ const
 begin
   ControlData := @CControlData;
   ControlData.ClassID := _controlClassID;
+
 end;
 
 constructor TExodusControlSite.Create(AOwner: TComponent; Parent: TWinControl; ClassId: TGuid);
 begin
     _control := nil;
     _controlClassID := ClassID; //overrides CControlData
-    inherited create(AOwner);
     _controlName := 'excontrol_' + IntToStr(_nameCounter);
     inc(_nameCounter);
-
+    inherited create(AOwner);
     Self.Parent := Parent;
-    Self.Name := _controlName + '_controlsite';
+    Self.Name := _controlName + '_container';
 end;
 
 destructor TExodusControlSite.Destroy();
@@ -125,12 +132,13 @@ end;
 procedure TExodusControlSite.Set_Enabled(value: WordBool);
 begin
     Enabled := value;
+    repaintParentForm(parent);
 end;
 
 procedure TExodusControlSite.Set_Visible(value: WordBool);
 begin
     Visible := value;
-    Parent.Realign();
+    repaintParentForm(parent);
 end;
 
 function TExodusControlSite.Get_ControlName: WideString;
@@ -161,7 +169,8 @@ begin
         Align := alClient
     else
         Align := alNone;
-    Parent.Realign();
+
+    repaintParentForm(parent);
 end;
 
 initialization

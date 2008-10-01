@@ -157,7 +157,7 @@ begin
             chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
             if (chat <> nil) then begin
                 msg := TJabberMessage.Create(tag);
-                if (((msg.Priority = high) or (msg.Priority = low)) and
+                if ((msg.Priority = high) and
                    (MainSession.Prefs.getInt('notify_priority_chatactivity') > 0))  then
                     DoNotify(chat, 'notify_priority_chatactivity',  GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyChat) +
                              chat.DisplayName, RosterTreeImages.Find('contact'))

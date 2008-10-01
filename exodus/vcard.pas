@@ -178,7 +178,7 @@ begin
     TreeView1.FullExpand();
     MainSession.Prefs.RestorePosition(Self);
 
-    GetVCardCache().find(MainSession.SessionJid.jid, Callback);
+    GetVCardCache().find(MainSession.SessionJid.jid, Callback, true);
 end;
 
 {---------------------------------------}

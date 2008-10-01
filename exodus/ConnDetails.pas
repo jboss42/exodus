@@ -27,7 +27,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
     TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows, JclMime, IdCoderMIME,
-	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile, ExForm, pngimage,
+	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile, ExForm,
   ExGraphicButton, Buttons, TntButtons, ExGroupBox, ExGradientPanel, ExFrame,
   ExBrandPanel, ExCheckGroupBox;
 
@@ -62,7 +62,6 @@ type
     Panel1: TPanel;
     btnOK: TTntButton;
     btnCancel: TTntButton;
-    btnConnect: TTntButton;
     ExGradientPanel1: TExGradientPanel;
     Panel5: TPanel;
     pnlTabs: TExBrandPanel;
@@ -155,7 +154,6 @@ type
     procedure SRVOptionClick(Sender: TObject);
     procedure chkWinLoginClick(Sender: TObject);
     procedure btnRenameClick(Sender: TObject);
-    procedure btnConnectClick(Sender: TObject);
     procedure chkSavePasswdClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
 	procedure chkCert(Sender: TObject);
@@ -187,18 +185,13 @@ type
     function updateProfile(): boolean;
     function encodeCertKey(keyLength: Cardinal; key: Pointer): string;
     procedure decodeCertKey(var key: Pointer; var decodedLength: Cardinal; encodedString: string);
-    procedure _setConnectButtonEnabled(val: boolean);
-    function _getConnectButtonEnabled(): boolean;
     procedure brandControl(ctrl: TControl);
     procedure brandPage(page: TExGraphicButton);
 
     function checkVisibility(ctrl: TControl): boolean;
     function updatePages(): Integer;
 
-  public
-    { Public declarations }
-    property ConnectButtonEnabled: boolean read _getConnectButtonEnabled write _setConnectButtonEnabled;
-  end;
+   end;
 
 var
   frmConnDetails: TfrmConnDetails;
@@ -248,7 +241,6 @@ begin
         (p.password = '')) then begin
         // Fairly Sure this is the first run of application
         // So disable connect button.
-        f.ConnectButtonEnabled := false;
     end;
 
 
@@ -266,18 +258,6 @@ begin
     else
         result := mrNone;
     f.Free();
-end;
-
-{---------------------------------------}
-procedure TfrmConnDetails._setConnectButtonEnabled(val: boolean);
-begin
-    btnConnect.Enabled := val;
-end;
-
-{---------------------------------------}
-function TfrmConnDetails._getConnectButtonEnabled(): boolean;
-begin
-    Result := btnConnect.Enabled;
 end;
 
 {---------------------------------------}
@@ -669,7 +649,10 @@ begin
     brandControl(pnlHost);
     brandControl(pnlPort);
     brandControl(pnlSSL);
-    //pnlConnection.captureChildStates();
+    if (MainSession.Prefs.getBool('brand_profile_allow_ssl_port')) then
+        optSSLlegacy.Visible := true
+    else
+        optSSLlegacy.Visible := false;
 
     //Setup proxy page
     imgProxy.Target := tbsProxy;
@@ -716,11 +699,6 @@ begin
     brandControl(pnlx509Auth);
 
     _Canceled := false;
-
-    if (MainSession.Prefs.getBool('brand_profile_enable_connect_btn')) then
-        btnConnect.Enabled := true
-    else
-        btnConnect.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -876,21 +854,6 @@ begin
     end;
 end;
 
-{---------------------------------------}
-procedure TfrmConnDetails.btnConnectClick(Sender: TObject);
-begin
-    // Check that resource does not match password
-    if (cboResource.Text <> '') and (txtPassword.Text <> '') and (cboResource.Text = txtPassword.Text) then begin
-        MessageDlgW(_(sProfileResourcePassMatch), mtError, [mbOK], 0);
-        ModalResult := mrNone;
-        exit;
-    end;
-
-    if updateProfile() then
-        ModalResult := mrYes
-    else
-        ModalResult := mrNone;
-end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.btnx509browseClick(Sender: TObject);

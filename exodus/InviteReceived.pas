@@ -81,7 +81,8 @@ uses
     Notify,
     ExUtils,
     ChatWin,
-    Contnrs;
+    Contnrs,
+    RosterImages;
 const
     LEFT_OFFSET = 60;
     TOP_OFFSET = 60;
@@ -400,7 +401,7 @@ begin
     frm.InitializeFromTag(InvitePacket);
     frm.Show();
 
-    Notify.DoNotify(Application.Mainform, 'notify_invite', 'You have received an invitation to join ' + frm.lblRoom.Caption, 0);
+    Notify.DoNotify(Application.Mainform, 'notify_invite', 'You have received an invitation to join ' + frm.lblRoom.Caption, RI_CONFERENCE_INDEX);
 end;
 
 procedure TInviteHandler.OnFormClose(Sender: TObject; var Action: TCloseAction);
