@@ -61,7 +61,7 @@ type
       procedure _NewWndProc(var Msg: TMessage);
   protected
        _JS: TObject;
-
+       _Filter: WideString;
       { Protected declarations }
       function _GetNodeByUID(UID: WideString; Cntr: TTreeNode = nil) : TTntTreeNode;
       
@@ -84,8 +84,9 @@ type
       procedure Editing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
       function  FilterItem(Item: IExodusItem): Boolean; virtual;
       procedure Changing(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
-
+      procedure _SetFilterType(filtertype: Widestring); virtual;
       property CurrentNode: TTntTreeNode read _CurrentNode write _CurrentNode;
+
   public
       { Public declarations }
       constructor Create(AOwner: TComponent; Session: TObject); virtual;
@@ -111,6 +112,7 @@ type
       procedure Refresh();
       //Properties
       property TabIndex: Integer read _TabIndex write _TabIndex;
+      property Filter: Widestring read _Filter write _SetFilterType;
   end;
 
 const
@@ -661,10 +663,14 @@ begin
    if (IsGroup) then begin
        //Set extended text for totals for the groups, if required.
        Text := TTntTreeNode(Node).Text;
-       if (_ShowGroupTotals) then begin
-          activeCount := IntToStr(GetActiveCounts(TTntTreeNode(Node)));
-          contactCount := IntToStr(GetContactCounts(TTntTreeNode(Node)));
-          ExtendedText := Format(_(X_OF_Y_ONLINE), [activeCount, contactCount]);
+       if (_ShowGroupTotals) then
+       begin
+          if ((Filter = '') or (Filter = EI_TYPE_CONTACT)) then
+          begin
+              activeCount := IntToStr(GetActiveCounts(TTntTreeNode(Node)));
+              contactCount := IntToStr(GetContactCounts(TTntTreeNode(Node)));
+              ExtendedText := Format(_(X_OF_Y_ONLINE), [activeCount, contactCount]);
+          end;
        end;
    end
    else if (Item <> nil) then begin
@@ -910,6 +916,12 @@ begin
        AllowChange := false
     else
        AllowChange := true;
+end;
+
+{---------------------------------------}
+procedure TExTreeView._SetFilterType(filtertype: Widestring);
+begin
+
 end;
 
 {---------------------------------------}

@@ -203,17 +203,9 @@ REAL STUFF STARTS HERE
 !define SSLEAY "ssleay32"
 !define LIBEAY "libeay32"
 !define SQLITE "sqlite3"
-!define ICUIN "icuin38"
-!define ICUUC "icuuc38"
-!define RICHED "riched20"
+!define TNGIMAGE "libmng"
 !define VCL "..\redist\vcl100.bpl"
 !define RTL "..\redist\rtl100.bpl"
-!define RICHED_UPDATER "richupd"
-!define COMCTL "comctl32"
-!define COMCTL_UPDATER "50comupd"
-!define WINSOCK "WS2_32"
-!define WINSOCK_SYSVER "95"
-!define WINSOCK_UPDATER "W95ws2setup"
 !define XMPPFILE "XMPPfile"
 !define CONTENT_TYPE_KEY "Content Type"
 !define XMPP_CONTENT_TYPE "application/xmpp"
@@ -444,9 +436,8 @@ Section Exodus SEC_Exodus
     File "${LIBEAY}${DLL_EXTENSION}";
     File "${VCL}"
     File "${RTL}"
-    File "${SQLITE}${DLL_EXTENSION}"
-    File "${ICUIN}${DLL_EXTENSION}"
-    File "${ICUUC}${DLL_EXTENSION}"
+    File "..\redist\${SQLITE}${DLL_EXTENSION}"
+    File "..\redist\${TNGIMAGE}${DLL_EXTENSION}"
 
     ; Daily builds should include the MAP file to get detailed AV reports.
     !ifdef DAILY
@@ -467,107 +458,6 @@ Section Exodus SEC_Exodus
     ; We need to do this to ensure that plugins can register properly.
     ExecWait '"$INSTDIR\${PRODUCT}${EXEC_EXTENSION}" -0'
 
-    ; version(riched20) >= 5.30
-    GetDLLVersion "$SYSDIR\${RICHED}${DLL_EXTENSION}" $R0 $R1
-    IntOp $R1 $R0 / 65536
-    IntOp $R2 $R0 & 0x00FF
-    DetailPrint "$(MSG_RichEdVersion): $R1.$R2"
-
-    ; if the installed version is >= to 5.30, skip ahead.
-    IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
-
-    DetailPrint "$(MSG_RichEdUpgrade)"
-    !ifndef NO_NETWORK
-        ; BRANDING: change this URL
-        NSISdl::download "${HOME_URL}/${RICHED_UPDATER}${EXEC_EXTENSION}" "$INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION}"
-        Pop $R0
-        StrCmp "$R0" "${NSISDL_SUCCESSFUL}" lbl_execrich
-        Abort "$(MSG_RichEdAbort)"
-      lbl_execrich:
-    !else
-        File "..\redist\${RICHED_UPDATER}${EXEC_EXTENSION}"
-    !endif
-
-    MessageBox MB_OK "$(MSG_NoReboot)"
-
-    ExecWait '"$INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION} /Q"'
-    SetRebootFlag true
-
-  lbl_reportVer:
-    DetailPrint "$(MSG_RichEdOK)"
-
-    ; delete any leftover richupd.exe file.  This should not error
-    ; if the file doesn't exist.
-    Delete $INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION}
-
-    /*
-    ---------------------------------------------------------------------------
-    Update common controls, if needed 5.80
-    ---------------------------------------------------------------------------
-    */
-
-    GetDLLVersion "$SYSDIR\${COMCTL}${DLL_EXTENSION}" $R0 $R1
-    IntOp $R1 $R0 / 65536
-    IntOp $R2 $R0 & 0x00FF
-    DetailPrint "$(MSG_COMCtlVersion): $R1.$R2"
-
-    ; (5 << 16) + 80 w00t!
-    ; if the installed version is >= to 5.80, skip ahead.
-    IntCmp 327760 $R0 com_reportVer com_reportVer
-
-    DetailPrint "$(MSG_COMCtlUpgrade)"
-    !ifndef NO_NETWORK
-        ; BRANDING: change this URL
-        NSISdl::download "${HOME_URL}/${COMCTL_UPDATER}${EXEC_EXTENSION}" "$INSTDIR\${COMCTL_UPDATER}${EXEC_EXTENSION}"
-        Pop $R0
-        StrCmp "$R0" "${NSISDL_SUCCESSFUL}" lbl_exec_com
-        Abort "$(MSG_COMCtlAbort)"
-      lbl_exec_com:
-    !else
-        File "..\redist\${COMCTL_UPDATER}${EXEC_EXTENSION}"
-    !endif
-
-    MessageBox MB_OK "$(MSG_NoReboot)"
-    ExecWait '"$INSTDIR\${COMCTL_UPDATER}${EXEC_EXTENSION}" /Q'
-    SetRebootFlag true
-
-  com_reportVer:
-    DetailPrint "$(MSG_COMCtlOK)"
-
-    ; delete any leftover 50comupd.exe file.  This should not error
-    ; if the file doesn't exist.
-    Delete "$INSTDIR\${COMCTL_UPDATER}${EXEC_EXTENSION}"
-
-    /*
-    ---------------------------------------------------------------------------
-    Check for Win95, and no Winsock2
-    ---------------------------------------------------------------------------
-    */
-    Call funcGetWindowsVersion
-    Pop $R0
-    ; at this point $R0 is "95" or "NT 4.0"
-    StrCmp "$R0" "${WINSOCK_SYSVER}" win95 winsock_done
-  win95:
-    IfFileExists "$SYSDIR\${WINSOCK}${DLL_EXTENSION}" winsock_done
-    DetailPrint "$(MSG_WinsockUpgrade)"
-    !ifndef NO_NETWORK
-        ; BRANDING: change this URL
-        NSISdl::download "${HOME_URL}/${WINSOCK_UPDATER}${EXEC_EXTENSION}" "$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
-        Pop $R0
-        StrCmp "$R0" "${NSISDL_SUCCESSFUL}" lbl_exec_winsock2
-        Abort "$(MSG_WinsockAbort)"
-      lbl_exec_winsock2:
-    !else
-        File "..\redist\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
-    !endif
-
-    MessageBox MB_OK "$(MSG_NoReboot)"
-    ExecWait '"$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}" /Q'
-    SetRebootFlag true
-
-  winsock_done:
-    DetailPrint "$(MSG_WinsockOK)"
-    Delete "$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
 
     /*
     ---------------------------------------------------------------------------

@@ -22,9 +22,9 @@ my $imports = "\"$DD\\Imports\"";
 my $dcc = "\"$::D\\Bin\\dcc32.exe\"";
 my $rcc = "\"$::D/Bin/brcc32.exe\"";
 my $jclopts = "-I\"$::JCL\" -U\"$::JCL\" -U\"$::JCL\\common\" -U\"$::JCL\\vcl\" -U\"$::JCL\\windows\"";
-my $opts = "-LUvcl -LUrtl -DIndy9 -B -Q -U\"$DD\\Lib\" -U\"$DD\\Lib\\Indy9\" $jclopts";
+my $opts = "-LUvcl -LUrtl -DIndy9 -B -Q -U\"$DD\\Lib\" -U\"$DD\\Lib\\Indy9\" -U\"..\\jopl\\TNGImage\\Package\" $jclopts";
 my $comp = "..\\..\\Components";
-my $plugopts = "$opts -U\"..\\..\" -U.. -U\"..\\..\\..\\jopl\" -U\"$comp\" -U\"$::TNT\"";
+my $plugopts = "$opts -U\"..\\..\" -U.. -U\"..\\..\\..\\jopl\" -U\"$comp\" -U\"$comp\\base\" -U\"$::TNT\"";
 my $installer = "1";
 
 if ($#ARGV >= 0) {

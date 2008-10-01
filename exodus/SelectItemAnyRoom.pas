@@ -24,7 +24,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, SelectItemAny, Menus, TntMenus, StdCtrls, TntStdCtrls, ExtCtrls,
-  SClrRGrp, TntExtCtrls, ComCtrls, TntComCtrls, Unicode;
+  TntExtCtrls, ComCtrls, TntComCtrls, Unicode, ExCustomSeparatorBar;
 
 type
     TListItemTracker = class
@@ -63,7 +63,8 @@ implementation
 
 uses
     Room,
-    DisplayName;
+    DisplayName,
+    JabberID;
 
 {$R *.dfm}
 
@@ -168,7 +169,7 @@ begin
     if (idx >= 0) then begin
         track := TListItemTracker(_trackinglist.Objects[idx]);
         jid := track.jid;
-        txtJID.text := jid;
+        txtJID.text := TJabberID.removeJEP106(jid);
         btnOK.Enabled := true;
     end
     else begin

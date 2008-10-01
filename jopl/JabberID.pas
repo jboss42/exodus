@@ -34,6 +34,7 @@ type
         _domain: widestring;
         _resource: widestring;
         _valid: boolean;
+
     public
         constructor Create(jid: widestring; isEscaped: boolean = true); overload;
         constructor Create(user: widestring; domain: widestring; resource: widestring); overload;
@@ -68,6 +69,7 @@ function isValidJID(jid: Widestring; isEscaped: boolean = false): boolean;
 implementation
 uses
     Stringprep;
+
 {
     \brief Determines if the given string is a valid JID.
 
@@ -296,9 +298,42 @@ class function TJabberID.applyJEP106(unescapedUser: widestring): widestring;
 var
     escapedUser: widestring;
     options       : TReplaceFlags;
+
+    function replaceEscape(input: Widestring): Widestring;
+    var
+        test, replace: Widestring;
+        idx: Integer;
+    begin
+        Result := '';
+        while (input <> '') do begin
+            idx := Pos('\', input);
+
+            if (idx = 0) then break;
+            replace := '\';
+            test := Tnt_WideUpperCase(Copy(input, idx, 3));
+            if      (test = '\20') or
+                    (test = '\22') or
+                    (test = '\26') or
+                    (test = '\27') or
+                    (test = '\2F') or
+                    (test = '\3A') or
+                    (test = '\3C') or
+                    (test = '\3E') or
+                    (test = '\40') or
+                    (test = '\5C') then begin
+                replace := '\5C'
+            end;
+
+            Result := Result + Copy(input, 1, idx - 1) + replace;
+            input := Copy(input, idx + 1, Length(input));
+        end;
+
+        Result := Result + input;
+    end;
 begin
    options := [rfReplaceAll, rfIgnoreCase];
-   escapedUser := Tnt_WideStringReplace(unescapedUser, '\', '\5C', options);
+   //Treat '\' special:  only escape if followed by a valid escape pair
+   escapedUser := replaceEscape(unescapedUser);
    escapedUser := Tnt_WideStringReplace(escapedUser, ' ', '\20', options);
    escapedUser := Tnt_WideStringReplace(escapedUser, '"', '\22', options);
    escapedUser := Tnt_WideStringReplace(escapedUser, '&', '\26', options);
@@ -308,6 +343,7 @@ begin
    escapedUser := Tnt_WideStringReplace(escapedUser, '<', '\3C', options);
    escapedUser := Tnt_WideStringReplace(escapedUser, '>', '\3E', options);
    escapedUser := Tnt_WideStringReplace(escapedUser, '@', '\40', options);
+
    Result := escapedUser;
 end;
 

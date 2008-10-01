@@ -602,6 +602,9 @@ begin
                Item.ExtendedText := Pres.Show
             else
                Item.ExtendedText := '';
+    end
+    else begin
+        Item.ExtendedText := '';
     end;
 
     ImagePrefix := Item.Value['ImagePrefix'];
@@ -860,13 +863,10 @@ begin
 
     iq.Send();
 end;
+
 procedure TContactUpdateItemOp._Callback(event: string; tag: TXMLTag);
-var
-    session: TJabberSession;
 begin
     if (tag <> nil) and (tag.GetAttribute('type') = 'result') then begin
-        session := TJabberSession(Controller._JS);
-
         if item.IsVisible then
             _ctrl._EvtCB.FireUpdate(item);
     end;
