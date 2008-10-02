@@ -516,6 +516,7 @@ type
     _hook_keyboard: HHOOK;
     _hook_mouse: HHOOK;
 
+    procedure Repaint(); override;
     // Window message handlers
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
@@ -904,6 +905,17 @@ function TfrmExodus.AddControl(ID: widestring; ToolbarName: widestring): IExodus
 begin
     Result := TExodusControlSite.create(Toolbar, Toolbar, StringToGuid(Id));
     Toolbar.Bands.Items[Toolbar.Bands.Count-1].Text := Id;
+end;
+
+procedure TfrmExodus.Repaint();
+var
+    i: integer;
+begin
+    //show toolbar (coolbar) if 1 or more controls are visible
+    Toolbar.visible := false;
+    for i := 0 to Toolbar.Bands.Count - 1 do
+        Toolbar.visible := Toolbar.visible or Toolbar.Bands[i].Control.Visible;
+    inherited;
 end;
 
 procedure TfrmExodus.Flash();
