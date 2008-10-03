@@ -806,7 +806,8 @@ procedure TfrmConnDetails.chkWinLoginClick(Sender: TObject);
 begin
     if pnlKerberos.Checked then begin
         chkWinLogin.Enabled := true;
-        pnlx509Auth.Enabled := false
+        pnlx509Auth.Enabled := false;
+        pnlx509Auth.checked := false
     end
     else begin
         chkWinLogin.Enabled := false;
@@ -1149,15 +1150,22 @@ begin
         ps := PrefController.getPrefState(pref);
             if (ps <> psInvisible) then begin
                 ctrl.Visible := true;
-                if ps = psReadOnly then
-                    ctrl.Enabled := false
+                if ps = psReadOnly then begin
+                    if  (ctrl is TExBrandPanel) then
+                        TExBrandPanel(ctrl).CanEnabled := false;
+                    ctrl.Enabled := false;
+                end
                 else
                     ctrl.Enabled := true;
             end
-            else
+            else begin
+                if  (ctrl is TExBrandPanel) then
+                    TExBrandPanel(ctrl).CanShow := false;
                 ctrl.Visible := false;
+            end;
     end;
 end;
+
 procedure TfrmConnDetails.brandPage(page: TExGraphicButton);
 var
     pref: WideString;
