@@ -308,19 +308,23 @@ var
     m, etag: TXMLTag;
     isComposingEvent: boolean;
     isEventWithNoBody: boolean;
+    hasValidBody: boolean;
+
     auto_resp_body: WideString;
     auto_resp_msg: TJabberMessage;
 begin
     // do stuff
     // if we don't have a window, then ignore composing events
     etag := tag.QueryXPTag(XP_MSGXEVENT);
+    m := tag.GetFirstTag('body');
+    hasValidBody :=  (m <> nil) and (Length(WideTrim(m.Data)) <> 0);
 
     isComposingEvent := ((etag <> nil) and
         (etag.GetFirstTag('composing') <> nil) and
         (etag.GetFirstTag('id') <> nil));
 
-    isEventWithNoBody := ((etag <> nil) and
-        (tag.GetFirstTag('body') = nil));
+    isEventWithNoBody := ((etag <> nil) and (m = nil));
+
 
     // if our event isn't hooked up, and this is a composing event,
     // just bail
@@ -328,7 +332,9 @@ begin
     // if our event isn't hooked up, and this is an event with no body,
     // just bail
     if (isEventWithNoBody and (not Assigned(_OnMessageEvent))) then exit;
-
+    //bail if we have an empty or missing body and no event handler (TT 63680)
+    if ((not hasValidBody) and (not Assigned(_OnMessageEvent))) then exit;
+    
     mtype := tag.GetAttribute('type');
     // if not an event and we have no body or type, do not handle
     if ((etag = nil) and ((tag.GetFirstTag('body') = nil) or (mtype =  '')))  then exit;
