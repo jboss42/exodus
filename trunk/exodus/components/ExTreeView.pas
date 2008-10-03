@@ -110,6 +110,7 @@ type
 
       procedure Clear();
       procedure Refresh();
+      procedure KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
       //Properties
       property TabIndex: Integer read _TabIndex write _TabIndex;
       property Filter: Widestring read _Filter write _SetFilterType;
@@ -172,6 +173,7 @@ begin
     _AllowDefaultSelection := false;
     _OldProc := Self.WindowProc;
     Self.WindowProc := _NewWndProc;
+    Self.OnKeyDown := KeyDown;
 end;
 
 {---------------------------------------}
@@ -1099,4 +1101,15 @@ begin
     _OldProc(Msg);
 
 end;
+
+procedure TExTreeView.KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+    if (Key = VK_RETURN) then
+    begin
+       if (SelectionCount > 1) then exit;
+       CurrentNode := Selected;
+       DblClick();
+    end;
+end;
+
 end.
