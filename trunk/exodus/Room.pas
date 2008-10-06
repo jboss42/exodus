@@ -2170,7 +2170,6 @@ end;
 procedure TfrmRoom.MsgOutKeyPress(Sender: TObject; var Key: Char);
 var
    UpdateKey: WideString;
-   w: PWideChar;
    Part: ChatParts;
 begin
     if (TExodusChat(ComController) = nil) then exit;

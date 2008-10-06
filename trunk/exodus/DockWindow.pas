@@ -297,7 +297,6 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.CloseDocked(frm: TfrmDockable);
 var
-    idx: integer;
     aw: TfrmActivityWindow;
     item: TAWTrackerItem;
 begin
@@ -321,10 +320,7 @@ end;
 
 {---------------------------------------}
 function TfrmDockWindow.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
-var
-    oldsheet: TTntTabSheet;
 begin
-    oldsheet := GetActiveTabSheet();
     if (not Self.Showing) then begin
         ShowDockManagerWindow(true, false);
     end;
@@ -414,13 +410,10 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.AWTabControlDockDrop(Sender: TObject;
   Source: TDragDockObject; X, Y: Integer);
-var
-    oldsheet: TTntTabSheet;
 begin
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
         _undocking := false;
-        oldsheet := GetActiveTabSheet();
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();
@@ -656,6 +649,7 @@ procedure TfrmDockWindow.WMActivate(var msg: TMessage);
 var
     frm: TfrmDockable;
 begin
+    inherited; //stop flashing
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         if (_dockState = dsDocked) then begin
             frm := getTopDocked();
@@ -664,7 +658,6 @@ begin
             end;
         end;
     end;
-    inherited;
 end;
 
 {
@@ -679,7 +672,7 @@ end;
     flag is passed to force a state change.
 
     @param frm the form that was just docked/undocked
-    @param docking  is the form beign docked or undocked?
+    @param docking  is the form being docked or undocked?
     @toggleDockState moving from (dsDockOnly or dsRosterDock) to dsRosterOnly or vice versa
 }
 {---------------------------------------}

@@ -36,7 +36,7 @@ uses
     TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
     ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
     XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
-    SClrRGrp, IEMsgList;
+    IEMsgList, ExCustomSeparatorBar;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -247,7 +247,6 @@ type
     pnlRoster: TPanel;
     GridPanel1: TGridPanel;
     imgSSL: TImage;
-    lblDisplayName: TTntLabel;
     pnlStatus: TPanel;
     lblStatus: TTntLabel;
     imgDown: TImage;
@@ -288,15 +287,15 @@ type
     txtStatus: TTntEdit;
     imgAd: TImage;
     MainbarImageList: TImageList;
-    ToolbarBevel: TColorBevel;
     popViewStates: TTntPopupMenu;
     popShowOnline: TTntMenuItem;
     popShowAll: TTntMenuItem;
     mnuContacts_ViewHistory: TTntMenuItem;
-    pnlStatusLabel: TPanel;
     mnuFile_Plugins: TTntMenuItem;
     N16: TTntMenuItem;
     mnuFile_Plugins_Options: TTntMenuItem;
+    ToolbarSeparatorBar: TExCustomSeparatorBar;
+    pnlStatusLabel: TPanel;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -429,10 +428,8 @@ type
 //    _new_tabindex: integer;             // new tab which was just docked
     _new_account: boolean;              // is this a new account
     _pending_passwd: Widestring;
-    _profileScreenLastWidth: integer;   // Storage for width of roster window when logged in
     _enforceConstraints: boolean;       // Should minimum size constraints be enforced
 
-    _dnListener: TDisplayNameEventListener;
 
     // Stuff for the Autoaway
     _idle_hooks: THandle;               // handle the lib
@@ -498,7 +495,6 @@ type
     procedure ShowLogin();
     procedure ShowRoster();
     procedure UpdatePresenceDisplay();
-    procedure UpdateDisplayName();
 
     function win32TrackerIndex(windows_msg: integer): integer;
 
@@ -520,6 +516,7 @@ type
     _hook_keyboard: HHOOK;
     _hook_mouse: HHOOK;
 
+    procedure Repaint(); override;
     // Window message handlers
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
@@ -587,7 +584,6 @@ published
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
-    procedure OnDisplayNameChange(jid, dn: Widestring);
   public
     ActiveChat: TfrmBaseChat;
 //    Tabs: TExodusTabs;
@@ -909,6 +905,17 @@ function TfrmExodus.AddControl(ID: widestring; ToolbarName: widestring): IExodus
 begin
     Result := TExodusControlSite.create(Toolbar, Toolbar, StringToGuid(Id));
     Toolbar.Bands.Items[Toolbar.Bands.Count-1].Text := Id;
+end;
+
+procedure TfrmExodus.Repaint();
+var
+    i: integer;
+begin
+    //show toolbar (coolbar) if 1 or more controls are visible
+    Toolbar.visible := false;
+    for i := 0 to Toolbar.Bands.Count - 1 do
+        Toolbar.visible := Toolbar.visible or Toolbar.Bands[i].Control.Visible;
+    inherited;
 end;
 
 procedure TfrmExodus.Flash();
@@ -1236,9 +1243,6 @@ begin
     // Init our emoticons
     InitializeEmoticonLists();
     getToolbarColorSelect();
-
-    _dnListener := TDisplayNameEventListener.Create();
-    _dnListener.OnDisplayNameChange := OnDisplayNameChange;
 
     // Setup our caption and the help menus.
     with MainSession.Prefs do begin
@@ -1816,13 +1820,15 @@ begin
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
 
-        //Set Display Name listener to only fire on "My JID" DN updates
-        _dnListener.UID := MainSession.profile.getJabberID().jid;
-
-        UpdateDisplayName();
 
         setTrayInfo(Self.Caption);
         imgSSL.Visible := MainSession.SSLEnabled;
+        GridPanel1.Height := pnlStatus.Height + 2;
+        imgSSL.Align := alClient;
+        imgPresence.Align := alClient;
+        imgSSL.AutoSize := false;
+        imgPresence.AutoSize := false;
+        //GridPanel1.Realign;
 
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
@@ -1876,15 +1882,14 @@ begin
         // Close whatever rooms we have
         CloseAllRooms();
         CloseAllChats();
+        //stop dock window flashing now that we are disconnected
+        StopFlash(_dockwindow); //from notify.pas
 
         Self.Caption := getAppInfo().Caption;
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
 
         imgSSL.Visible := false;
-
-        lblDisplayName.Caption := '';
-        lblDisplayName.Hint := '';
 
         _new_account := false;
         restoreMenus(false);
@@ -2346,8 +2351,6 @@ begin
         FreeAndNil(_docked_forms);
 
     Shell_NotifyIcon(NIM_DELETE, @_tray);
-    FreeAndNil(_dnListener);
-
     // Close the roster window
     RosterForm.CloseRosterWindow();
 
@@ -3760,6 +3763,7 @@ procedure TfrmExodus.mnuWindows_CloseAllClick(Sender: TObject);
 begin
     GetActivityWindow().enableListUpdates(false);
     MainSession.FireEvent('/session/close-all-windows', nil);
+    StopFlash(_dockwindow); //from notify.pas
     GetActivityWindow().enableListUpdates(true);
 end;
 
@@ -4951,11 +4955,6 @@ begin
     _dockWindowGlued := doGlue;
 end;
 
-procedure TfrmExodus.OnDisplayNameChange(jid, dn: Widestring);
-begin
-    UpdateDisplayName();
-end;
-
 procedure TfrmExodus.WMMoving(var Msg: TWMMoving);
 begin
     OutputDebugString('Got WM_MOVING');
@@ -5116,15 +5115,7 @@ begin
     setTrayIcon(idx);
     ImageList1.GetIcon(idx, imgPresence.Picture.Icon);
 end;
-procedure TfrmExodus.UpdateDisplayName;
-var
-    jid: TJabberID;
-begin
-    jid := MainSession.Profile.getJabberID();
 
-    lblDisplayName.Caption := TDisplayNameEventListener.GetDisplayName(jid.jid);
-    lblDisplayName.Hint := jid.getDisplayFull();
-end;
 
 procedure TfrmExodus.clickCreatePopupItem(Sender: TObject);
 var

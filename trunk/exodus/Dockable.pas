@@ -1,18 +1,18 @@
 {
     Copyright 2001-2008, Estate of Peter Millard
-    
+
     This file is part of Exodus.
-    
+
     Exodus is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     Exodus is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with Exodus; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -89,9 +89,9 @@ type
     _activating: boolean; //in GotActive event
     _lastActivity: TDateTime; // what was the last activity for this window
     _closing: boolean; // Is the window closing (for updatedocked() call);
-
+    
     _COMDockbar: IExodusDockToolbar;
-    _dockbarControl: IExodusControlSite;
+    _dbControlContainer: IExodusControlSite;
 
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
@@ -99,6 +99,7 @@ type
     procedure closeAllCallback(event: string; tag: TXMLTag);
     procedure dockAllCallback(event: string; tag: TXMLTag);
     procedure floatAllCallback(event: string; tag: TXMLTag);
+    //procedure restoreUnreadXML();
   protected
     updateDockedCnt: integer;
 
@@ -112,8 +113,9 @@ type
     procedure showTopbar(show: boolean);
     procedure showCloseButton(show: boolean);
     procedure showDockToggleButton(show: boolean);
-    procedure updateMsgCount(msg: TJabberMessage); overload;virtual;
-    procedure updateMsgCount(msgTag: TXMLTag); overload;virtual;
+    procedure updateMsgCount(msg: TJabberMessage); overload; virtual;
+    procedure UpdatePriority(msg: TJabberMessage); overload; virtual;
+    procedure updateMsgCount(msgTag: TXMLTag); overload; virtual;
     procedure updateLastActivity(lasttime: TDateTime); virtual;
 
     //getters/setters for activity window properties. Allows subclasses to set their
@@ -123,15 +125,20 @@ type
     procedure updateDocked(); virtual;
 
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;virtual;
+
     function GetDockbar(): IExodusDockToolbar;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure StoreUnreadMessage(unreadMsg: widestring; key: widestring = '');
+    procedure OnRestoreUnreadDB ();override;
+
 public
     _windowType: widestring; // what kind of dockable window is this
 
     Constructor Create(AOwner: TComponent); override;
 
     procedure Dock(NewDockSite: TWinControl; ARect: TRect); override;
+    procedure Repaint; override;
+
 
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
@@ -217,6 +224,9 @@ var
   dockable_uid: integer;
   //frmDockable: TfrmDockable;
 
+const
+    DOCKBAR_CONTROL_DEFAULT_HEIGHT = 27;
+
 function generateUID(): widestring;
 begin
     Inc(dockable_uid);
@@ -265,6 +275,7 @@ begin
     _priorityflag := false;
     _activating := false;
     _uid := generateUID();
+
 end;
 
 procedure TfrmDockable.CreateParams(var Params: TCreateParams);
@@ -281,27 +292,52 @@ begin
     inherited;
 end;
 
+procedure TfrmDockable.Repaint;
+var
+    contHeight: integer;
+    topHeight: integer;
+begin
+    topHeight := max(pnlDockTop.Height, tbDockBar.Height);
+    contHeight := topHeight;
+    if (_dbControlContainer <> nil) and (_dbControlContainer as IExodusToolbarControl).Visible then
+        inc(contHeight, DOCKBAR_CONTROL_DEFAULT_HEIGHT);
+
+    //if height should change, realign everything    
+    if (pnlDock.Height <> contHeight) then
+    begin
+        disableAlign();
+        try
+            pnlDockTopContainer.Height := topHeight;
+            pnlDock.Height := contHeight;
+        finally
+            enableAlign();
+        end;    
+    end;
+    inherited;
+end;
+
 function TfrmDockable.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
+var
+    twc: TWinControl;
 begin
     Result := nil;
-    if (ToolbarName = 'dockbar') then
+    if (ToolbarName <> 'dockbar') then exit;
+
+    //dockbar will only have one control at a time. If this control is already
+    //created, just return it, otherwise destroy existing container
+    //and make new one
+    if (_dbControlContainer = nil) or (_dbControlContainer.ControlGUID <> ID) then
     begin
-        _dockbarControl := nil;
-        pnlDock.Align := alNone;
-        pnlDock.AutoSize := false;
-        pnlDock.Height := pnlDock.Height + 21;
-        pnlDockControlSite.AutoSize := false;
-        pnlDockControlSite.Height := 21;
+        //"deparent" container and let ref counts free it when appropriate
+        if (_dbControlContainer <> nil) then
+            TExodusControlSite((_dbControlContainer as IInterfaceComponentReference).GetComponent).Parent := nil;
 
-        _dockbarControl := TExodusControlSite.create(nil, pnlDockControlSite, StringToGUID(ID));
-        _dockbarControl.AlignClient := true;
-
-        pnlDockControlSite.AutoSize := true;
-        pnlDockControlSite.Visible := true;
-        pnlDock.AutoSize := true;
-        pnlDock.Align := alTop;
-        Result := _dockbarControl as IExodusToolbarControl;
+         //don't specify an owner, let ref counts manage lifetime
+        _dbControlContainer := TExodusControlSite.create(nil, pnlDockControlSite, StringToGUID(ID)) as IExodusControlSite;
+        _dbControlContainer.AlignClient := true;
+        Repaint();
     end;
+    Result := _dbControlContainer as IExodusToolbarControl;
 end;
 
 function TfrmDockable.GetDockbar(): IExodusDockToolbar;
@@ -319,6 +355,7 @@ begin
     _closing := false;
 
     inherited;
+   
 end;
 
 procedure TfrmDockable.setImageIndex(idx: integer);
@@ -505,7 +542,8 @@ end;
 procedure TfrmDockable.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  inherited;
+    inherited;
+
     // handle Ctrl-Tab to switch tabs
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         GetDockManager().SelectNext(not (ssShift in Shift));
@@ -515,6 +553,11 @@ begin
     else if ((Jabber1.getAllowedDockState() <> adsForbidden) and ([ssCtrl] = Shift)) and (Key=68) then begin
       btnDockToggleClick(Self);
       Key := 0;
+    end
+    else if ((Key = VK_ESCAPE) and
+             (MainSession.Prefs.getBool('esc_close'))) then
+    begin
+        Self.Close();
     end;
 end;
 
@@ -552,25 +595,22 @@ begin
     pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or tbDockBar.Visible;
 end;
 
-procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
-var
-    ttag: TXMLTag;
+//procedure TfrmDockable.restoreUnreadXML();
+//var
+//        txlist: TXMLTagList;
+//        idx: Integer;
+//        ttag: TXMLTag;
+//begin
+//        ttag := windowState.GetFirstTag('unread');
+//        if (ttag <> nil) then
+//        begin
+//            txList := ttag.ChildTags;
+//            for idx := 0 to txList.Count - 1 do
+//                OnPersistedMessage(txList[idx]);
+//        end;
+//end;
 
-    procedure restoreUnreadXML();
-    var
-        txlist: TXMLTagList;
-        idx: Integer;
-    begin
-        ttag := windowState.GetFirstTag('unread');
-        if (ttag <> nil) then
-        begin
-            txList := ttag.ChildTags;
-            for idx := 0 to txList.Count - 1 do
-                OnPersistedMessage(txList[idx]);
-        end;
-    end;
-
-    procedure restoreUnreadDB();
+procedure TfrmDockable.OnRestoreUnreadDB();
     var
         parser: TXMLTagParser;
         table: IExodusDataTable;
@@ -578,7 +618,8 @@ var
         xml: Widestring;
         tag: TXMLTag;
         idx:  Integer;
-    begin
+begin
+        PersistUnreadMessages := false;
         parser := nil;
         tag := nil;
         initializeDatabase();
@@ -587,8 +628,20 @@ var
         try
             table := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
             sql := Format('select * from unread_cache where (key=''%s'');',[key]);
-            if not DataStore.GetTable(sql, table) then exit;
-            if not table.FirstRow then exit;
+            if not DataStore.GetTable(sql, table) then
+            begin
+                FreeAndNil(tag);
+                FreeAndNil(parser);
+                PersistUnreadMessages := true;
+                exit;
+            end;
+            if not table.FirstRow then
+            begin
+                FreeAndNil(tag);
+                FreeAndNil(parser);
+                PersistUnreadMessages := true;
+                exit;
+            end;
 
             parser := TXMLTagParser.Create();
             for idx := 0 to table.RowCount - 1 do begin
@@ -607,10 +660,12 @@ var
         except
             //TODO: loggit
         end;
-
         FreeAndNil(tag);
         FreeAndNil(parser);
-    end;
+        PersistUnreadMessages := true;
+end;
+
+procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
 begin
     inherited;
     if (Jabber1.getAllowedDockState() = adsForbidden) then
@@ -621,19 +676,6 @@ begin
     else
         //initial condition, how to handle windows we have no state for
         _docked := MainSession.Prefs.getBool('start_docked');
-
-    if (PersistUnreadMessages) then
-    begin
-        PersistUnreadMessages := false;
-
-        //check for XML-based messages
-        restoreUnreadXML();
-
-        //check the database
-        restoreUnreadDB();
-        
-        PersistUnreadMessages := true;
-    end;
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
@@ -697,7 +739,7 @@ end;
 
 procedure TfrmDockable.updateMsgCount(msg: TJabberMessage);
 begin
-    _priorityflag := _priorityflag or ((msg.Priority = High) and (not msg.isMe));
+    UpdatePriority(msg);
     UpdateMsgCount(msg.Tag);
 end;
 
@@ -712,6 +754,22 @@ begin
         Result.setAttribute('from', from);
     if (desc <> '') then
         Result.AddCData(desc)
+end;
+
+procedure TfrmDockable.UpdatePriority(msg: TJabberMessage);
+begin
+    //no message or we are not tracking messages
+    if (msg = nil) then exit;
+
+    if (not Active) then
+    begin
+        if ((not Docked) or
+            (GetDockManager().getTopDocked() <> Self) or
+            (not GetDockManager().isActive)) then
+        begin
+            _priorityflag := _priorityflag or (( msg.Priority = High) and (not msg.isMe));
+        end;
+    end;
 end;
 
 procedure TfrmDockable.updateMsgCount(msgTag: TXMLTag);

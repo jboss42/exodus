@@ -59,18 +59,16 @@ object frmActivityWindow: TfrmActivityWindow
         OnMouseUp = pnlListScrollUpMouseUp
         ExplicitLeft = 73
       end
-      object ScrollUpBevel: TColorBevel
+      object ScrollUpSeparatorBar: TExCustomSeparatorBar
         Left = 0
-        Top = 17
+        Top = 20
         Width = 195
-        Height = 5
+        Height = 2
         Align = alBottom
-        Shape = bsBottomLine
-        HighLight = clBtnHighlight
-        Shadow = clBtnShadow
-        FrameColor = frUser
-        ExplicitTop = -28
-        ExplicitWidth = 187
+        CustomSeparatorBarProperites.Color1 = clBtnShadow
+        CustomSeparatorBarProperites.Color2 = clBtnHighlight
+        CustomSeparatorBarProperites.horizontal = True
+        ExplicitTop = -83
       end
     end
     object pnlListScrollDown: TExGradientPanel
@@ -103,17 +101,16 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitLeft = 75
         ExplicitTop = 2
       end
-      object ScrollDownBevel: TColorBevel
+      object ScrollDownSeparatorBar: TExCustomSeparatorBar
         Left = 0
         Top = 0
         Width = 195
-        Height = 5
+        Height = 2
         Align = alTop
-        Shape = bsTopLine
-        HighLight = clBtnHighlight
-        Shadow = clBtnShadow
-        FrameColor = frUser
-        ExplicitWidth = 187
+        CustomSeparatorBarProperites.Color1 = clBtnShadow
+        CustomSeparatorBarProperites.Color2 = clBtnHighlight
+        CustomSeparatorBarProperites.horizontal = True
+        ExplicitTop = 5
       end
     end
     object pnlList: TExGradientPanel
@@ -166,7 +163,7 @@ object frmActivityWindow: TfrmActivityWindow
         Left = 26
         Top = 5
         Width = 148
-        Height = 20
+        Height = 23
         Align = alClient
         Alignment = taRightJustify
         AutoSize = False
@@ -193,7 +190,7 @@ object frmActivityWindow: TfrmActivityWindow
         Left = 174
         Top = 5
         Width = 16
-        Height = 20
+        Height = 23
         Align = alRight
         Transparent = True
         OnClick = pnlListSortClick
@@ -205,7 +202,7 @@ object frmActivityWindow: TfrmActivityWindow
         Left = 10
         Top = 5
         Width = 16
-        Height = 20
+        Height = 23
         Hint = 'Back to Contact List'
         Align = alLeft
         ParentShowHint = False
@@ -214,37 +211,39 @@ object frmActivityWindow: TfrmActivityWindow
         OnClick = imgShowRosterClick
         ExplicitLeft = 149
         ExplicitTop = 4
+        ExplicitHeight = 20
       end
       object SortLeftSpacer: TBevel
         Left = 0
         Top = 5
         Width = 10
-        Height = 20
+        Height = 23
         Align = alLeft
         Shape = bsSpacer
+        ExplicitHeight = 20
       end
       object SortRightSpacer: TBevel
         Left = 190
         Top = 5
         Width = 5
-        Height = 20
+        Height = 23
         Align = alRight
         Shape = bsSpacer
         ExplicitLeft = 177
+        ExplicitHeight = 20
       end
-      object SortBevel: TColorBevel
+      object SortSeparatorBar: TExCustomSeparatorBar
         Left = 0
-        Top = 25
+        Top = 28
         Width = 195
-        Height = 5
+        Height = 2
         Align = alBottom
-        Shape = bsBottomLine
-        HighLight = clBtnHighlight
-        Shadow = clBtnShadow
-        FrameColor = frUser
-        ExplicitLeft = 104
-        ExplicitTop = 32
-        ExplicitWidth = 50
+        CustomSeparatorBarProperites.Color1 = clBtnShadow
+        CustomSeparatorBarProperites.Color2 = clBtnHighlight
+        CustomSeparatorBarProperites.horizontal = True
+        ExplicitLeft = 72
+        ExplicitTop = 16
+        ExplicitWidth = 105
       end
     end
   end

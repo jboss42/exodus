@@ -55,6 +55,7 @@ type
     function VisibleChildren(): integer; override;
     function GetCaption(): WideString;
     procedure SetCaption(c: widestring);
+    procedure Loaded();override;
   public
     Constructor Create(AOwner: TComponent);override;
     Destructor Destroy();override;
@@ -71,15 +72,25 @@ type
   procedure Register();
 
 implementation
+uses JclWideStrings;
+
 
 procedure Register();
 begin
     RegisterComponents('Exodus Components', [TExCheckGroupBox]);
 end;
 
+
 procedure OutputDebugMsg(Message : String);
 begin
     OutputDebugString(PChar(Message));
+end;
+
+procedure TExCheckGroupBox.Loaded();
+begin
+    inherited;
+    //force a resize of our caption
+    Self.Caption := Self.Caption;
 end;
 
 Constructor TExCheckGroupBox.Create(AOwner: TComponent);
@@ -163,24 +174,24 @@ begin
     Result := _chkBox.Caption;
 end;
 
-const
-    BOX_SIZE = 6;
-    MARGIN_SIZE = 6;
-
 procedure TExCheckGroupBox.AutoSizeCheckBox();
 var
     extra: WideString;
+    s: TSize;
 begin
     InitializeControls();
     Self.Canvas.Font := Self.Font;
 
     //if caption has accellerator defined, don't add additional & char...
     extra := '';
-    if (Pos('&', _chkBox.Caption) = 0) then
-        extra := 'WWW';
+    if (WidePos('&', _chkBox.Caption) = 0) then
+        extra := extra + 'W';
+     s.cX := 0;
+     s.cY := 0;
+     Windows.GetTextExtentPoint32W(Canvas.Handle, PWideChar(_chkBox.Caption + extra), Length(_chkBox.Caption + extra), s);
 
-    _chkBox.Width := Self.Canvas.TextWidth(_chkBox.Caption + extra) + BOX_SIZE + MARGIN_SIZE;
-    _pnlTop.Realign();
+     _chkBox.Width := s.cX + _chkBox.Height - 3;
+
 end;
 
 procedure TExCheckGroupBox.SetCaption(c: widestring);
