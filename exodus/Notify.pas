@@ -136,6 +136,13 @@ begin
     DoNotify(nil, notifyEvents, nick + _(notifyMessage), ImageIndex, notifyType);
 end;
 
+function GetTopForm(f: TForm): TCustomForm;
+begin
+    //get the topmost parent form of win
+    Result := Forms.GetParentForm(f, true);
+    if (Result = nil) then
+        Result := f;
+end;
 
 procedure StartFlash(win: TForm);
 var
@@ -143,9 +150,7 @@ var
     tf: TCustomForm;
 begin
     //get the topmost parent form of win
-    tf := Forms.GetParentForm(win, true);
-    if (tf = nil) then
-        tf := win;
+    tf := GetTopForm(win);
 
     if (_flashList.indexOf(inttostr(tf.Handle)) <> -1) then exit; //already flashing this window
 
@@ -160,7 +165,7 @@ begin
     if (not MainSession.Prefs.getBool('notify_flasher')) then
         FlashWindow(tf.Handle, false)
     else begin
-debug.DebugMessage('start flashing actual window: ' + inttostr(tf.Handle) + ', class: ' + tf.ClassName);
+//debug.DebugMessage('start flashing actual window: ' + inttostr(tf.Handle) + ', class: ' + tf.ClassName);
         _flashList.add(inttostr(tf.Handle));
         fi.hwnd:= tf.Handle;
         fi.dwFlags := FLASHW_TIMER + FLASHW_ALL;
@@ -177,13 +182,12 @@ var
     tf: TCustomForm;
     idx: integer;
 begin
-    tf := Forms.GetParentForm(win, true);
-    if (tf = nil) then tf := win;
+    tf := GetTopForm(win);
 
     idx := _flashList.indexOf(inttostr(tf.Handle));
     if (idx = -1) then exit; //not flashing
 
-debug.DebugMessage('stop flashing actual window: ' + inttostr(tf.Handle) + ', class: ' + tf.ClassName);
+//debug.DebugMessage('stop flashing actual window: ' + inttostr(tf.Handle) + ', class: ' + tf.ClassName);
     _flashList.Delete(idx);
 
     fi.hwnd:= tf.Handle;
@@ -198,6 +202,8 @@ end;
 {check to see if notification should be allowed. notify event flags may be changed
  if only some notifications are allowed (usually type specific)}
 function AllowNotifications(win: TForm; notifyType: widestring; var notifyEvents: integer): boolean;
+var
+    fw: THandle;
 begin
     Result := false;
     //if we have no notifications, we are done
@@ -221,13 +227,21 @@ begin
         //don't notify active window, we are active window -> bail (no notify)
         if (not MainSession.prefs.getBool('notify_active_win')) then
         begin
-            if (GetForegroundWindow() = win.handle) then
+            fw := GetForegroundWindow();
+
+            //floating window
+            if (fw = win.handle) then exit;
+
+            //docked, top docked and dock window is forground
+            if ((GetDockManager().GetTopDocked() = win) and
+               (fw = GetDockManager().getHWND())) then
                 exit;
 
-            if ({(GetDockManager().isActive) and}
-               (GetDockManager().GetTopDocked() = win) and
-               (GetForegroundWindow() = GetDockManager().getHWND())) then
-                exit;
+            //remove flash if dock manager is forground window, perform
+            //all other notifications
+            if (fw = GetTopForm(win).Handle) and
+               ((notifyEvents and notify_flash) = notify_flash) then
+                notifyEvents := notifyEvents xor notify_flash; //remove it
         end;
     end;
     Result := true;

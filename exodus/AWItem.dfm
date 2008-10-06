@@ -28,7 +28,7 @@ inherited fAWItem: TfAWItem
       Left = 29
       Top = 3
       Width = 136
-      Height = 16
+      Height = 19
       Margins.Left = 29
       Align = alClient
       AutoSize = False
@@ -69,7 +69,7 @@ inherited fAWItem: TfAWItem
       Left = 168
       Top = 0
       Width = 5
-      Height = 22
+      Height = 25
       Align = alRight
       Shape = bsSpacer
       ExplicitLeft = 16
@@ -79,23 +79,23 @@ inherited fAWItem: TfAWItem
       Left = 180
       Top = 0
       Width = 5
-      Height = 22
+      Height = 25
       Align = alRight
       Shape = bsSpacer
       ExplicitLeft = 184
       ExplicitTop = 3
+      ExplicitHeight = 22
     end
-    object AWItemBevel: TColorBevel
+    object AWItemSeparatorBar: TExCustomSeparatorBar
       Left = 0
-      Top = 22
+      Top = 25
       Width = 185
-      Height = 5
+      Height = 2
       Align = alBottom
-      Shape = bsBottomLine
-      HighLight = clBtnHighlight
-      Shadow = clBtnShadow
-      FrameColor = frUser
-      ExplicitTop = -23
+      CustomSeparatorBarProperites.Color1 = clBtnShadow
+      CustomSeparatorBarProperites.Color2 = clBtnHighlight
+      CustomSeparatorBarProperites.horizontal = True
+      ExplicitTop = -78
     end
   end
   object AWItemPopupMenu: TTntPopupMenu

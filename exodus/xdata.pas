@@ -74,7 +74,6 @@ type
   TfrmXData = class(TExForm)
     frameButtons1: TframeButtons;
     frameXData: TframeXData;
-    procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -617,11 +616,6 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-procedure TfrmXData.FormCreate(Sender: TObject);
-begin
-  inherited;
-end;
-
 {---------------------------------------}
 procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
 begin

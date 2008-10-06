@@ -169,6 +169,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormDestroy(Sender: TObject);
     procedure FormOnActivate(Sender: TObject);
+
   private
      _pos: TPos;          //our position
      _persistPos: boolean; //should we persist our current position?
@@ -213,7 +214,6 @@ type
         This event is fired when the form is created.
     }
     procedure OnRestoreWindowState(windowState : TXMLTag);virtual;
-
     {
         Event fired when form should persist its position and other state
         information.
@@ -253,6 +253,10 @@ type
         specific windows (ie always saving unread messaged)
     }
     function CanPersist(): boolean;virtual;
+    {
+      Override to restore unread messages
+    }
+    procedure OnRestoreUnreadDB ();virtual;
   public
     {
         Show the window in its default configuration.
@@ -332,19 +336,15 @@ type
     property IsNotifying: boolean read _isNotifying write _isNotifying;
   end;
 
-procedure Log(msg: widestring);
 implementation
 
 {$R *.dfm}
 
 uses
     PrefController,
-    debug,
-    DebugManager,
     room,
     ChatWin,
     unicode,
-    jabber1,
     types,
     Session,
     Notify,
@@ -356,11 +356,6 @@ uses
 
 var
   currentAutoOpenEvent: widestring;
-
-procedure Log(msg: widestring);
-begin
-//    DebugManager.DebugMessage(msg);
-end;
 
 class procedure TAutoOpenEventManager.onAutoOpenEvent(event: Widestring);
 type
@@ -679,10 +674,10 @@ begin
 
     //initial conditions for position and size, may be changed later
     //when restoring state.
-    _pos.Left := Self.ExplicitLeft;
-    _pos.Top := Self.ExplicitTop;
-    _pos.Width := Self.ExplicitWidth;
-    _pos.Height := Self.ExplicitHeight;
+    _pos.Left := Self.Left;
+    _pos.Top := Self.Top;
+    _pos.Width := Self.Width;
+    _pos.Height := Self.Height;
 
     CenterOnMainformMonitor(_pos);
 
@@ -701,7 +696,6 @@ end;
 {---------------------------------------}
 procedure TfrmState.FormOnActivate(Sender: TObject);
 begin
-    log('TfrmState(' + GetWindowStateKey() + ').FormOnActivate BEGIN');
     try
         inherited; //hmm, shouldthis go first?
         if (not skipWindowPosEvents()) then
@@ -713,16 +707,16 @@ begin
                          Self.Left, Self.Top, Self.Width, Self.Height,
                          HWND_TOP);
             StartWindowPosEvents();
-        end;
-        StopFlash(Self);
-        isNotifying := false;
+            
+            StopFlash(Self);
+            isNotifying := false;
 
-        if (self.Showing) then
-            gotActivate();
+            if (self.Showing) then
+                gotActivate();
+        end;
     except
         // Possible exception when dealing with an extreme amount of windows
     end;
-    log('TfrmState(' + GetWindowStateKey() + ').FormOnActivate END');
 end;
 
 {---------------------------------------}
@@ -823,6 +817,7 @@ begin
     begin
         prefHelper := TStateFormPrefsHelper.create();
         key := GetWindowStateKey();
+        OnRestoreUnreadDB();
         if (CanPersist() and
            (prefHelper.getWindowState(key, stateTag))) then
         begin
@@ -904,21 +899,17 @@ end;
 procedure TfrmState.WMActivate(var msg: TMessage);
 begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
-        log('TfrmState(' + GetWindowStateKey() + ').WMActivate BEGIN');
-        if (Floating) and(self.Showing) then
+        StopFlash(Self);
+        isNotifying := false;
+        if (Floating) then
             gotActivate();
-        log('TfrmState(' + GetWindowStateKey() + ').WMActivate END');
     end;
     inherited;
 end;
 
 procedure TfrmState.gotActivate();
 begin
-    log('TfrmState(' + GetWindowStateKey() + ').gotActivate BEGIN');
-    StopFlash(Self);
-    isNotifying := false;
     //nop
-    log('TfrmState(' + GetWindowStateKey() + ').gotActivate END');
 end;
 
 {
@@ -965,8 +956,8 @@ begin
     //check to make sure this all looks right, handling corrupted prefs
     if (_pos.Height < 30) and (_pos.width < 30) then
     begin
-        _pos.Height := Self.ExplicitHeight;
-        _pos.width := Self.ExplicitWidth;
+        _pos.Height := Self.Height;
+        _pos.width := Self.Width;
         CenterOnMainformMonitor(_pos);
     end;
     //skipping windowposchange handling, _skipWindowPosHandling is true during this event
@@ -1079,6 +1070,10 @@ begin
     Result := MainSession.Prefs.getBool('restore_window_state');
 end;
 
+procedure TfrmState.OnRestoreUnreadDB ();
+begin
+
+end;
 initialization
     currentAutoOpenEvent := '';
 

@@ -95,7 +95,8 @@ end;
 {---------------------------------------}
 implementation
 uses
-    Math;
+    Math,
+    Debug;
 var
     _computedMinTimeout: integer;
 
@@ -238,7 +239,8 @@ begin
                     msg := msg + '<NULL>'
                 else msg := msg + tag.XML;
                 msg := msg + '), (' + e.message + ')';
-                raise Exception.create(msg); //may replace this with a data/debug event
+                //raise Exception.create(msg); //may replace this with a data/debug event
+                debugmessage(msg);
             end;
         end;
     finally

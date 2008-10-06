@@ -105,6 +105,7 @@ procedure TJabberChatList.MsgCallback(event: string; tag: TXMLTag);
 var
     tmp_jid: TJabberID;
     c: TChatController;
+    ttag: TXMLTag;
 //    isEvent: boolean;
 begin
     // check to see if we have a session already open for
@@ -122,6 +123,10 @@ begin
     // we are only interested in packets w/ a body tag
     if (not isEvent and (tag.GetFirstTag('body') = nil)) then exit;
 **}
+    //don't start a chat if we receive empty body (TT 63680)
+    ttag := tag.QueryXPTag('/message/body');
+    if (Length(WideTrim(ttag.Data)) = 0) then exit;
+
     tmp_jid := TJabberID.Create(tag.getAttribute('from'));
     try
         // in the blocker list?

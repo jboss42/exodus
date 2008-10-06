@@ -65,7 +65,8 @@ function StandardAuthFactory(session: TObject): TJabberAuth;
 
 implementation
 uses
-    JabberConst, XMLUtils, JabberID;
+    JabberConst, XMLUtils, JabberID,
+    Debug;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -94,9 +95,24 @@ end;
 destructor TStandardAuth.Destroy();
 begin
     //
-    FreeAndNil(_sasl_auth);
-    FreeAndNil(_auth_iq);
-    FreeAndNil(_token);
+    try
+        FreeAndNil(_sasl_auth);
+    except
+        DebugMessage('TStandardAuth.Destroy excpetion');
+        _sasl_auth := nil;
+    end;
+    try
+        FreeAndNil(_auth_iq);
+    except
+        DebugMessage('TStandardAuth.Destroy excpetion');
+        _auth_iq := nil;
+    end;
+    try
+        FreeAndNil(_token);
+    except
+        DebugMessage('TStandardAuth.Destroy excpetion');
+        _token := nil;
+    end;
 end;
 
 // IAuth Implementation
@@ -131,10 +147,14 @@ end;
 procedure TStandardAuth.CancelAuthentication();
 begin
     // Clean out pending iq's
+    try
     if (_session.isXMPP) then
         _sasl_auth.CancelAuthentication()
     else if (_auth_iq <> nil) then
         FreeAndNil(_auth_iq);
+    except
+        DebugMessage('TStandardAuth.CancelAuthentication excpetion');
+    end;
 end;
 
 {---------------------------------------}

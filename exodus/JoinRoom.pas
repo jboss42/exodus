@@ -198,7 +198,6 @@ var
     l: TWidestringlist;
     i: integer;
     tmp: TJabberID;
-    ce: TJabberEntity;
 begin
     txtServer.Items.Clear();
     l := TWidestringlist.Create();

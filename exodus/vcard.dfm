@@ -8,6 +8,8 @@ inherited frmVCard: TfrmVCard
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  ExplicitWidth = 450
+  ExplicitHeight = 387
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
@@ -27,10 +29,6 @@ inherited frmVCard: TfrmVCard
     TabOrder = 0
     object TabSheet1: TTntTabSheet
       Caption = 'General'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object TntLabel1: TTntLabel
         Left = 4
         Top = 144
@@ -154,10 +152,6 @@ inherited frmVCard: TfrmVCard
     object TabSheet3: TTntTabSheet
       Caption = 'Personal Info.'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 261
       object Label12: TTntLabel
         Left = 4
         Top = 9
@@ -259,10 +253,6 @@ inherited frmVCard: TfrmVCard
     object TabSheet4: TTntTabSheet
       Caption = 'Home'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 278
       object Label13: TTntLabel
         Left = 10
         Top = 139
@@ -594,10 +584,6 @@ inherited frmVCard: TfrmVCard
     object TabSheet5: TTntTabSheet
       Caption = 'Work'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 278
       object Label22: TTntLabel
         Left = 10
         Top = 9
@@ -672,10 +658,6 @@ inherited frmVCard: TfrmVCard
     object TabSheet6: TTntTabSheet
       Caption = 'TabSheet6'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 278
       object Label15: TTntLabel
         Left = 10
         Top = 83
@@ -1061,8 +1043,9 @@ inherited frmVCard: TfrmVCard
   object OpenPic: TOpenPictureDialog
     Filter = 
       'All (*.jpg;*.jpeg;*.jpg;*.jpeg;*.gif, *.bmp)|*.jpg;*.jpeg;*.jpg;' +
-      '*.jpeg;*.bmp;*.gif|JPEG Image File (*.jpg)|*.jpg;*jpeg;|GIF Imag' +
-      'e (*.gif)|*.gif|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico'
+      '*.jpeg;*.bmp;*.gif;*.png|JPEG Image File (*.jpg)|*.jpg;*jpeg;|GI' +
+      'F Image (*.gif)|*.gif|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico|' +
+      'PNG Image (*.png)|*.png'
     Left = 335
     Top = 265
   end

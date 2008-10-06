@@ -25,7 +25,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, CheckLst, TntStdCtrls, TntCheckLst,
-  ExtCtrls, TntExtCtrls, pngextra, ExGroupBox, TntForms, ExFrame, ExBrandPanel,
+  ExtCtrls, TntExtCtrls, ExGroupBox, TntForms, ExFrame, ExBrandPanel,
   Buttons, TntButtons, TntDialogs,
   Registry,
   Contnrs, ExCheckGroupBox;
