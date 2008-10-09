@@ -4193,6 +4193,7 @@ var
     mon: TMonitor;
     bounds: TRect;
     winfo: TWindowInfo;
+    ScreenSaverRunning: LongBool;
 begin
     if ((_windows_ver < cWIN_NT) or (_windows_ver = cWIN_ME)) then begin
         result := DT_UNKNOWN;
@@ -4215,6 +4216,27 @@ begin
     CloseDesktop(desk);
     // there's a null on the end.  Not sure why this worked before the -1.
     SetLength(name, len-1);
+
+    if ((MainSession.Prefs.getBool('auto_away')) and
+        (MainSession.Prefs.getBool('away_screen_saver'))) then
+    begin
+        ScreenSaverRunning := false;
+        if (name = 'Screen-saver') then begin
+            // This only seems to be the case when the desktop is locked
+            ScreenSaverRunning := true;
+        end
+        else begin
+            // Alternate check for when screen saver is running but desktop is not locked
+            SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, @ScreenSaverRunning, 0);
+        end;
+
+        if (ScreenSaverRunning) then
+        begin
+            result := DT_SCREENSAVER;
+            exit;
+        end;
+    end;
+
     if name = 'Default' then begin  // NO I18N!
         // what about fullscreen mode, like PowerPoint shows?
         w := GetForegroundWindow();
@@ -4251,12 +4273,6 @@ begin
             end;
         end;
         result := DT_OPEN;
-        exit;
-    end;
-    if ((name = 'Screen-saver') and
-        (MainSession.Prefs.getBool('auto_away')) and
-        (MainSession.Prefs.getBool('away_screen_saver'))) then begin
-        result := DT_SCREENSAVER;
         exit;
     end;
 
