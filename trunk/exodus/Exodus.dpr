@@ -301,7 +301,7 @@ uses
   XMLVCardCache in '..\jopl\XMLVCardCache.pas',
   AvatarCache in '..\jopl\AvatarCache.pas',
   ExVcardCache in 'ExVcardCache.pas',
-  Pubsub in 'pubsub\Pubsub.pas';
+  Pubsub in 'pubsub\Pubsub.pas',
   NTDLLFixup in '..\jopl\NTDLLFixup.pas',
   PNGWrapper in '..\jopl\PNGWrapper.pas',
   NGImages in '..\jopl\TNGImage\Package\NGImages.pas';
