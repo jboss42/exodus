@@ -1028,7 +1028,7 @@ begin
     // display the body of the msg
     if (_warn_busyclose) then begin
         timBusy.Enabled := false;
-        timBusy.Enabled := true;
+// JJF disabling to try and address TT 63701, hang on chat close        timBusy.Enabled := true;
     end;
 
     Msg := chat_object.CreateMessage(tag); //Create, assign nickname & directionality
