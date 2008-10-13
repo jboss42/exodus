@@ -1,1 +1,0 @@
-All important documentation is located in the DOCS sub-directory, including LICENCE information.
