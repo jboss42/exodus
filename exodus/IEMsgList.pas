@@ -628,10 +628,10 @@ begin
         txt := _processUnicode(txt); //StringReplace() cannot handle
         // Make sure the spaces are preserved
         // txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]); // Doesn't work well with some versions of IE
-        // Detect URLs in text
-        txt := REGEX_URL.ReplaceEx(txt, ReplaceURLs.Replace);
         // Change CRLF to HTML equiv
         txt := REGEX_CRLF.Replace(txt, '<br />', true);
+        // Detect URLs in text
+        txt := REGEX_URL.ReplaceEx(txt, ReplaceURLs.Replace);
     end;
 
     // build up a string, THEN call writeHTML, since IE is being "helpful" by
