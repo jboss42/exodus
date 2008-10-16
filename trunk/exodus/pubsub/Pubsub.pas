@@ -205,6 +205,7 @@ begin
         iq.toJid := Get_Jid();
 
     iq.RemoveTag(iq.qTag);
+    iq.qTag := nil;
     pub := iq.AddTagNS('pubsub', XMLNS_PUBSUB);
     pub := pub.AddTag('publish');
     pub.setAttribute('node', node);
@@ -333,11 +334,15 @@ begin
         pubsubs := TWidestringList.Create();
         jid := TJabberSession(_js).SessionJid.jid;
         jEntityCache.getByIdentity('pubsub', 'pep', pubsubs);
-        while (pubsubs.Count > 0) do begin
-            jid := pubsubs[0];
+
+        // There SHOULD only be 1 PEP entity - so assume there is only 1
+        if (pubsubs.Count > 0) then
+        begin
+            //jid := TJabberSession(_js).SessionJid.jid;
             pubsubs.Delete(0);
 
-            svc := TExodusPubsubService.Create(jid) as IExodusPubsubService;
+            //svc := TExodusPubsubService.Create(jid) as IExodusPubsubService;
+            svc := TExodusPubsubService.Create('') as IExodusPubsubService;
             _svcs.AddObject(jid, TPubsubServiceWrapper.Create(svc));
         end;
 

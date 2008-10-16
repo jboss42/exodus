@@ -200,7 +200,9 @@ begin
 
         if iqType <> '' then
             Self.setAttribute('type', iqType);
-        qTag.setAttribute('xmlns', Namespace);
+
+        if (qTag <> nil) then        
+            qTag.setAttribute('xmlns', Namespace);
 
         if (_js.xmlLang <> '') then
             self.setAttribute('xml:lang', _js.xmlLang);
