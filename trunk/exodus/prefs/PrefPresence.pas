@@ -91,7 +91,8 @@ const
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils;
+    GnuGetText, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils,
+    PrefController, PrefFile;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.LoadPrefs();
@@ -99,6 +100,7 @@ var
     i, pos: integer;
     ws: TWidestringlist;
     cp: TJabberCustomPres;
+    prefstate: TPrefState;
 
     procedure BrandShowOption(value: Widestring; brand: boolean);
     begin
@@ -113,7 +115,7 @@ begin
     inherited;
 
     with MainSession.Prefs do begin
-        //jjf todo check state
+        // presence tracking
         i := GetInt('pres_tracking');
         if (i = 2) then
             rbNoPres.Checked := true
@@ -121,6 +123,17 @@ begin
             rbLastPres.Checked := true
         else
             rbAllPres.Checked := true;
+
+        prefstate := getPrefState('pres_tracking');
+        if (prefstate = psReadOnly) then
+        begin
+            rbNoPres.Enabled := false;
+            rbLastPres.Enabled := false;
+            rbAllPres.Enabled := false;
+        end
+        else if (prefstate = psInvisible) then begin
+            ExGroupBox1.Visible := false;
+        end;
 
         // Custom Presence options
         lstCustomPres.Items.Clear();
