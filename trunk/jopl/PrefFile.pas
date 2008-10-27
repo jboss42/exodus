@@ -161,12 +161,14 @@ end;
 
 const
     WINDOWSTATE = 'ws';            //ditto
+    PREFFILE_NOT_WELL_FORMED = 'Failed to load file %s.  '#13#10'XML not well formed.';
 
 implementation
 
 uses
     PrefController, //map vlaue class
-    Windows, SysUtils, XMLParser, Session;
+    Windows, SysUtils, XMLParser, Session,
+    gnugettext;
 
 const
     PRES    = 'presii';           // DO NOT LOCALIZE
@@ -194,6 +196,7 @@ end;
 constructor TPrefFile.Create(filename: Widestring);
 var
     parser: TXMLTagParser;
+    s: widestring;
 begin
     _filename := filename;
     parser := TXMLTagParser.Create;
@@ -204,6 +207,10 @@ begin
             if (parser.Count > 0) then begin
                 _root := parser.popTag();
             end
+            else begin
+                s := Format(_(PREFFILE_NOT_WELL_FORMED), [_filename]);
+                MessageBoxW(0, PWChar(s), PWChar(_('Failed to load file')), MB_OK or MB_ICONERROR);
+            end;
         end
     except
     end;
