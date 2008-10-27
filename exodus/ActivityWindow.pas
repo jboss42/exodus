@@ -1104,6 +1104,9 @@ begin
         else begin
             // Deactivate all items
             TAWTrackerItem(_trackingList.Objects[curitemindx]).awItem.activate(false);
+
+            // Set title bar to Generalized caption
+            _dockWindow.setWindowCaption('');
         end;
     except
     end;
