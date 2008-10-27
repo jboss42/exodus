@@ -365,7 +365,7 @@ const
     sNoVoice = 'You are not allowed to speak in this room.';
     sCurModerator = 'You are currently a moderator of this room.';
 
-    sNewUser = '%s has entered the room.';
+    sUserEnter = '%s has entered the room.';
     sUserLeave = '%s has left the room.';
     sNewRole = '%s has a new role of %s.';
 
@@ -1562,7 +1562,7 @@ begin
                 _isMUC := true;
 
                 if (MainSession.Prefs.getBool('room_joins')) then begin
-                    mtag := newRoomMessage(WideFormat(_(sNewUser), [member.nick]));
+                    mtag := newRoomMessage(WideFormat(_(sUserEnter), [member.nick]));
                     showMsg(mtag);
                 end;
 
@@ -1582,6 +1582,11 @@ begin
             if (itag <> nil) then begin
                 _isMUC := true;
                 tmp1 := itag.getAttribute('role');
+            end;
+
+            if (MainSession.Prefs.getBool('room_joins')) then begin
+                mtag := newRoomMessage(WideFormat(_(sUserEnter), [member.nick]));
+                showMsg(mtag);
             end;
 
             mtag := nil;
