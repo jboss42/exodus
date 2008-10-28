@@ -313,7 +313,6 @@ begin
     if (lstCustomPres.ItemIndex >= 0) then begin
       cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
       _pres_list.Remove(cp);
-      MainSession.Prefs.removePresence(cp);
       lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
       lstCustompresClick(Self);
       cp.Free();
