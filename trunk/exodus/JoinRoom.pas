@@ -308,13 +308,14 @@ begin
             MessageDlgW(_(sInvalidRoomJID), mtError, [mbOK], 0);
             exit;
         end;
+        rmjid := TJabberID.Create(rjid, false);
     end
     else begin
         li := lstRooms.Selected;
         if (li = nil) then exit;
-        rjid := li.Caption + '@' + li.SubItems[0];
+        rjid := TJabberEntity(_cur[li.Index]).Jid.full;
+        rmjid := TJabberID.Create(rjid, true);
     end;
-    rmjid := TJabberID.Create(rjid, false);
     rjid := rmjid.jid();
     rmjid.Free();
 
