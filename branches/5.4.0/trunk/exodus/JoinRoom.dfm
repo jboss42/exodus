@@ -11,7 +11,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   OnClose = FormClose
   OnDestroy = FormDestroy
   ExplicitWidth = 440
-  ExplicitHeight = 400
+  ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -19,14 +19,14 @@ inherited frmJoinRoom: TfrmJoinRoom
     Width = 432
     TabOrder = 2
     ExplicitTop = 331
-    ExplicitWidth = 408
+    ExplicitWidth = 432
     inherited Bevel1: TBevel
       Width = 432
       ExplicitWidth = 408
     end
     inherited Panel3: TPanel
       Left = 175
-      ExplicitLeft = 151
+      ExplicitLeft = 175
       inherited btnBack: TTntButton
         Enabled = False
         OnClick = btnBackClick
@@ -43,7 +43,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   end
   inherited Panel1: TPanel
     Width = 432
-    ExplicitWidth = 408
+    ExplicitWidth = 432
     inherited Bevel2: TBevel
       Width = 432
       ExplicitWidth = 408
@@ -65,7 +65,7 @@ inherited frmJoinRoom: TfrmJoinRoom
     Width = 432
     Height = 271
     TabOrder = 0
-    ExplicitWidth = 408
+    ExplicitWidth = 432
     ExplicitHeight = 271
     inherited TabSheet1: TTabSheet
       ExplicitWidth = 424
@@ -192,7 +192,6 @@ inherited frmJoinRoom: TfrmJoinRoom
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
-      ExplicitWidth = 400
       object lstRooms: TTntListView
         Left = 0
         Top = 56
@@ -220,7 +219,6 @@ inherited frmJoinRoom: TfrmJoinRoom
         OnDataFind = lstRoomsDataFind
         OnDblClick = lstRoomsDblClick
         OnKeyPress = lstRoomsKeyPress
-        ExplicitWidth = 400
       end
       object Panel2: TPanel
         Left = 0
@@ -231,7 +229,6 @@ inherited frmJoinRoom: TfrmJoinRoom
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitWidth = 400
         object lblFetch: TTntLabel
           Left = 2
           Top = 4
