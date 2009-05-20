@@ -35,6 +35,8 @@ const
     sPref_Hotkeys_Keys = 'hotkeys_keys';
     sPref_Hotkeys_Text = 'hotkeys_text';
 
+    sExceededMaxMsgLen = 'Your message exceeds the maximum allowed message size.';
+
     RTF_MSGLIST = 0;
     HTML_MSGLIST = 1;
 
@@ -121,6 +123,7 @@ type
     _hotkeys_keys_stringlist : TWideStringList;
     _hotkeys_text_stringlist : TWideStringList;
     _rtEnabled: boolean;
+
   protected
     _embed_returns: boolean;        // Put CR/LF's into message
     _wrap_input: boolean;           // Wrap text input
@@ -133,6 +136,8 @@ type
 //    _filelink_callback: integer;
     _msglist_type: integer;
 //    _fileLinkInfo: TFileLinkClickInfo;
+    _maxMsgLen: integer;            // Max allowed message length.  0=unlimited
+
     procedure _scrollBottom();
    {
         Set the left and top properties of the given form.
@@ -161,9 +166,10 @@ type
               const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
               Headers: OleVariant; var Cancel: WordBool);
     procedure OnFileLinkCallback(event: string; tag: TXMLTag);
-}    
+}
     function AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;override;
     procedure ClearMsgOut();
+    function ExceedsMsgLengthMax(): boolean;
 
   public
     { Public declarations }
@@ -222,7 +228,8 @@ uses
     ActivityWindow,
     ExSession,
     COMExodusControlSite,
-    COMChatController;
+    COMChatController,
+    GnuGetText;
 
 const
     PREF_RT_ENABLED = 'richtext_enabled';
@@ -240,6 +247,10 @@ constructor TfrmBaseChat.Create(AOwner: TComponent);
 begin
     inherited;
     UnreadMsgCount := 0;
+
+    // Get the max message length in kilobytes
+    _maxMsgLen := MainSession.Prefs.getInt('brand_maximum_message_length') *
+                  1024;
 end;
 
 function TfrmBaseChat.AddControl(ID: widestring; ToolbarName: widestring): IExodusToolbarControl;
@@ -378,6 +389,20 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
                                      Shift: TShiftState);
+    procedure SendCheckedMsg();
+    begin
+        // Check to see if this message passes the max length test
+        // and notify user that the message is too long if it fails.
+        if (ExceedsMsgLengthMax()) then begin
+            MessageBoxW(0,
+                        pWideChar(_(sExceededMaxMsgLen)),
+                        PWideChar(self.Caption),
+                        MB_OK);
+        end
+        else begin
+            SendMsg();
+        end;
+    end;
 var
     prefstag: TXMLTag;
 begin
@@ -399,11 +424,11 @@ begin
     else if (Key = VK_RETURN) then begin
         if ((Shift = []) and (not _embed_returns)) then begin
             Key := 0;
-            SendMsg();
+            SendCheckedMsg();
         end
         else if (Shift = [ssCtrl]) then begin
             Key := 0;
-            SendMsg()
+            SendCheckedMsg();
         end;
     end
 
@@ -442,6 +467,24 @@ begin
         Key := 0;
     end
     else inherited;
+end;
+
+{---------------------------------------}
+function TfrmBaseChat.ExceedsMsgLengthMax(): boolean;
+var
+    txt: Widestring;
+    len: integer;
+begin
+    Result := false;
+    if (_maxMsgLen = 0) then exit;
+
+    txt := getInputText(MsgOut);
+    len := Length(txt);
+
+    if (len > _maxMsgLen) then begin
+        // Message length is beyond limit
+        Result := true;
+    end;
 end;
 
 {---------------------------------------}

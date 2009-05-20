@@ -693,6 +693,13 @@
     
 	 <!-- brand value for user directory prefix -->
 	 <brand_user_directory value="users"/>
+	 
+	 <!-- 
+	    Brand maximum allowed length of a message to send in a chat/room.
+	    Value is in kilobytes, so a value of 2 would = 2048 bytes max.
+	    A value of 0 = unlimited.
+	 -->
+	 <brand_maximum_message_length value="0"/>
 
   </prefs>
 
