@@ -1,1 +1,0 @@
-!define EXODUS_VERSION "0.10.0.0"
