@@ -411,8 +411,10 @@ begin
     aniWait.Visible := true;
     aniWait.Active := true;
     Entity :=  jEntityCache.getByJid(jid);
-    if (Entity <> nil) then
-       Entity.Refresh(MainSession);
+    if (Entity <> nil) then begin
+       Entity.clearItems();
+       Entity.getItems(MainSession);
+    end;
 end;
 
 {---------------------------------------}
