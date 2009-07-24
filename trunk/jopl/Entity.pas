@@ -151,6 +151,7 @@ type
 
         procedure getInfo(js: TJabberSession);
         procedure getItems(js: TJabberSession);
+        procedure clearItems();
         procedure discoWalk(js: TJabberSession; items_limit: boolean = true;
             timeout: integer = 10);
         procedure refresh(js: TJabberSession);
@@ -705,6 +706,15 @@ begin
     _use_limit := items_limit;
     _timeout := timeout;
     _discoInfo(js, WalkInfoCallback);
+end;
+
+{---------------------------------------}
+procedure TJabberEntity.clearItems();
+begin
+    if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
+    ClearStringListObjects(_items);
+    _items.Clear();
+    _has_items := false;
 end;
 
 {---------------------------------------}
