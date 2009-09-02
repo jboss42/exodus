@@ -304,8 +304,7 @@ begin
         end;
     end;
 
-    if ((Contact.GroupCount = 0) and
-        (Trim(_DefaultGroup) <> '')) then
+    if (Contact.GroupCount = 0) then
     begin
         Contact.AddGroup(_DefaultGroup);
     end;

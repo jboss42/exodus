@@ -1,8 +1,8 @@
 object ExFrame: TExFrame
   Left = 0
   Top = 0
-  Width = 20
-  Height = 20
+  Width = 320
+  Height = 240
   Color = 13681583
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

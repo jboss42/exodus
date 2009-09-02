@@ -1404,7 +1404,6 @@ begin
     // Get the pres for this resource
     p := MainSession.ppdb.FindPres(j.jid, j.resource);
     if (p = nil) then begin
-        msglist.HideComposing(); // Make sure is replying message is cleared
         show := _(sOffline);
         status := _(sOffline);
     end

@@ -91,8 +91,7 @@ const
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils,
-    PrefController, PrefFile;
+    GnuGetText, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.LoadPrefs();
@@ -100,7 +99,6 @@ var
     i, pos: integer;
     ws: TWidestringlist;
     cp: TJabberCustomPres;
-    prefstate: TPrefState;
 
     procedure BrandShowOption(value: Widestring; brand: boolean);
     begin
@@ -115,7 +113,7 @@ begin
     inherited;
 
     with MainSession.Prefs do begin
-        // presence tracking
+        //jjf todo check state
         i := GetInt('pres_tracking');
         if (i = 2) then
             rbNoPres.Checked := true
@@ -123,17 +121,6 @@ begin
             rbLastPres.Checked := true
         else
             rbAllPres.Checked := true;
-
-        prefstate := getPrefState('pres_tracking');
-        if (prefstate = psReadOnly) then
-        begin
-            rbNoPres.Enabled := false;
-            rbLastPres.Enabled := false;
-            rbAllPres.Enabled := false;
-        end
-        else if (prefstate = psInvisible) then begin
-            ExGroupBox1.Visible := false;
-        end;
 
         // Custom Presence options
         lstCustomPres.Items.Clear();
@@ -313,6 +300,7 @@ begin
     if (lstCustomPres.ItemIndex >= 0) then begin
       cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
       _pres_list.Remove(cp);
+      MainSession.Prefs.removePresence(cp);
       lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
       lstCustompresClick(Self);
       cp.Free();

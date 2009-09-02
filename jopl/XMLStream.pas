@@ -153,9 +153,12 @@ type
         function GetTag: TXMLTag;
 end;
 
+procedure log(logStr: widestring);
+function logFormat(str: widestring; charCount: integer = 13): widestring;
 
 implementation
 uses
+    DebugManager,
     Signals,
     Math;
 
@@ -163,6 +166,20 @@ type
     TControlCallbackWrapper = class
         _callback: TPacketControlCallback;
     end;
+
+procedure log(logStr: widestring);
+begin
+  DebugManager.SynchronizedDebugMessageEx(logStr,'',3);
+end;
+
+function logFormat(str: widestring; charCount: integer = 13): widestring;
+begin
+    //make a "<iq to="ji...uery></iq>"
+    if (Length(str) <= (2*charCount + 3)) then
+        Result := str
+    else
+        Result := Copy(str, 0, charCount) + '...' + Copy(str, Length(str) - charCount + 1, charCount);
+end;
 
 {---------------------------------------}
 {---------------------------------------}

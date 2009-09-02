@@ -90,15 +90,70 @@ type
     timTrayAlert: TTimer;
     XMPPAction: TDdeServerConv;
     Resolver: TIdDNSResolver;
+    Exit2: TTntMenuItem;
+    N9: TTntMenuItem;
+    mnuPassword: TTntMenuItem;
+    mnuRegisterService: TTntMenuItem;
+    mnuConference: TTntMenuItem;
+    mnuChat: TTntMenuItem;
+    mnuMessage: TTntMenuItem;
+    N14: TTntMenuItem;
+    ClearMessages1: TTntMenuItem;
+    View1: TTntMenuItem;
+    N7: TTntMenuItem;
+    mnuDisconnect: TTntMenuItem;
+    Test1: TTntMenuItem;
     Help1: TTntMenuItem;
+    Tools1: TTntMenuItem;
+    Exodus1: TTntMenuItem;
+    mnuExpanded: TTntMenuItem;
+    mnuStatBar: TTntMenuItem;
+    mnuToolbar: TTntMenuItem;
+    Preferences1: TTntMenuItem;
+    N1: TTntMenuItem;
+    mnuPlugins: TTntMenuItem;
+    ShowXML1: TTntMenuItem;
+    mnuServer: TTntMenuItem;
+    mnuBrowser: TTntMenuItem;
+    mnuBookmark: TTntMenuItem;
+    mnuVCard: TTntMenuItem;
+    N3: TTntMenuItem;
+    mnuMyVCard: TTntMenuItem;
+    mnuRegistration: TTntMenuItem;
+    N2: TTntMenuItem;
+    mnuPresence: TTntMenuItem;
+    mnuContacts: TTntMenuItem;
     trayExit: TTntMenuItem;
     N01: TTntMenuItem;
     trayDisconnect: TTntMenuItem;
     N4: TTntMenuItem;
     trayPresence: TTntMenuItem;
     trayShow: TTntMenuItem;
+    mnuServerVCard: TTntMenuItem;
+    mnuTime: TTntMenuItem;
+    mnuVersion: TTntMenuItem;
     About1: TTntMenuItem;
     N12: TTntMenuItem;
+    SubscribetoPresence2: TTntMenuItem;
+    N8: TTntMenuItem;
+    NewGroup2: TTntMenuItem;
+    mnuOnline: TTntMenuItem;
+    mnuSearch: TTntMenuItem;
+    mnuFindAgain: TTntMenuItem;
+    mnuFind: TTntMenuItem;
+    N10: TTntMenuItem;
+    Properties2: TTntMenuItem;
+    MessageHistory2: TTntMenuItem;
+    RemovePerson1: TTntMenuItem;
+    AddPerson1: TTntMenuItem;
+    presToggle: TTntMenuItem;
+    Custom3: TTntMenuItem;
+    N11: TTntMenuItem;
+    presDND: TTntMenuItem;
+    presXA: TTntMenuItem;
+    presAway: TTntMenuItem;
+    presChat: TTntMenuItem;
+    presOnline: TTntMenuItem;
     Custom2: TTntMenuItem;
     N5: TTntMenuItem;
     trayPresDND: TTntMenuItem;
@@ -107,9 +162,13 @@ type
     trayPresChat: TTntMenuItem;
     trayPresOnline: TTntMenuItem;
     IdAntiFreeze1: TIdAntiFreeze;
+    mnuPluginOpts: TTntMenuItem;
+    N15: TTntMenuItem;
     bigImages: TImageList;
+    mnuChatToolbar: TTntMenuItem;
     File1: TTntMenuItem;
     People: TTntMenuItem;
+    Options: TTntMenuItem;
     Windows1: TTntMenuItem;
     mnuFile_Connect: TTntMenuItem;
     mnuFile_Disconnect: TTntMenuItem;
@@ -117,6 +176,10 @@ type
     mnuFile_MyStatus_Available: TTntMenuItem;
     mnuFile_MyStatus_Away: TTntMenuItem;
     mnuFile_MyStatus_Donotdisturb: TTntMenuItem;
+    mnuFile_MyProfiles: TTntMenuItem;
+    mnuFile_MyProfiles_CreateNewProfile: TTntMenuItem;
+    mnuFile_MyProfiles_DeleteProfile: TTntMenuItem;
+    mnuFile_MyProfiles_ModifyProfile: TTntMenuItem;
     mnuFile_Exit: TTntMenuItem;
     mnuPeople_Search: TTntMenuItem;
     mnuPeople_Contacts: TTntMenuItem;
@@ -140,10 +203,30 @@ type
     mnuPeople_Conference_OpenNewConferenceRoom: TTntMenuItem;
     mnuPeople_Conference_SearchforConferenceRoom: TTntMenuItem;
     mnuPeople_Conference_ViewHistory: TTntMenuItem;
+    mnuOptions_Password: TTntMenuItem;
+    mnuOptions_Registration: TTntMenuItem;
+    mnuOptions_Registration_EditRegistration: TTntMenuItem;
+    mnuOptions_Registration_EditAvatar: TTntMenuItem;
+    mnuOptions_EnableHTMLLinks: TTntMenuItem;
+    mnuOptions_EnableEmoticonDisplays: TTntMenuItem;
+    mnuOptions_Enablenotificationsall: TTntMenuItem;
+    mnuOptions_EnableStartupWithWindows: TTntMenuItem;
+    mnuOptions_Font: TTntMenuItem;
+    mnuOptions_Notifications: TTntMenuItem;
+    mnuOptions_Notifications_NewMessage: TTntMenuItem;
+    mnuOptions_Notifications_ContactOnline: TTntMenuItem;
+    mnuOptions_Notifications_ContactOffline: TTntMenuItem;
+    mnuOptions_Plugins: TTntMenuItem;
     mnuWindows_CloseAll: TTntMenuItem;
     mnuWindows_List1: TTntMenuItem;
     mnuWindows_MinimizetoSystemTray: TTntMenuItem;
     mnuWindows_MinimizetoTaskBar: TTntMenuItem;
+    mnuFile_MyProfiles_RenameProfile: TTntMenuItem;
+    N17: TTntMenuItem;
+    mnuOptions_Options: TTntMenuItem;
+    mnuOptions_Plugins_Options: TTntMenuItem;
+    N18: TTntMenuItem;
+    Old1: TTntMenuItem;
     mnuPeople_Contacts_SendFile: TTntMenuItem;
     mnuFile_MyStatus_FreeToChat: TTntMenuItem;
     mnuFile_MyStatus_XtendedAway: TTntMenuItem;
@@ -154,6 +237,7 @@ type
     mnuWindows_View_ShowChatToolbar: TTntMenuItem;
     mnuWindows_View_ShowInstantMessages1: TTntMenuItem;
     mnuFile_ShowDebugXML: TTntMenuItem;
+    mnuOptions_Notifications_NewConversation: TTntMenuItem;
     mnuWindows_View_ShowActivityWindow: TTntMenuItem;
     trayShowActivityWindow: TTntMenuItem;
     tbsView: TPageControl;
@@ -245,6 +329,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure WinJabWebsite1Click(Sender: TObject);
     procedure JabberBugzilla1Click(Sender: TObject);
+    procedure mnuVersionClick(Sender: TObject);
     procedure mnuPasswordClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure mnuMessageClick(Sender: TObject);
@@ -285,8 +370,10 @@ type
     procedure mnuFile_MyProfiles_CreateNewProfileClick(Sender: TObject);
     procedure mnuPeople_Contacts_BlockContactClick(Sender: TObject);
     procedure mnuOptions_FontClick(Sender: TObject);
+    procedure mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
     procedure mnuOptions_EnableStartupWithWindowsClick(Sender: TObject);
     procedure OptionsClick(Sender: TObject);
+    procedure mnuOptions_Notifications_NewMessageClick(Sender: TObject);
     procedure mnuOptions_Notifications_ContactOnlineClick(Sender: TObject);
     procedure mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
     procedure mnuWindows_CloseAllClick(Sender: TObject);
@@ -299,6 +386,7 @@ type
     procedure mnuOpenNewConferenceRoom1Click(Sender: TObject);
     procedure mnuFile_ConnectClick(Sender: TObject);
     procedure mnuPeople_Contacts_SendFileClick(Sender: TObject);
+    procedure mnuOptions_Notifications_NewConversationClick(Sender: TObject);
     procedure mnuPeople_ConferenceClick(Sender: TObject);
     procedure btnFindClick(Sender: TObject);
     procedure mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
@@ -1112,7 +1200,7 @@ var
             Result := '&' + Result;
         end;
     end;
-
+ 
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
 
@@ -1149,6 +1237,9 @@ begin
         _auto_away_interval := 10;
     timAutoAway.Interval := _auto_away_interval * 1000;
 
+    // show the test menu if cmd line args say so.
+    Test1.Visible := ExStartup.test_menu;
+
     // Init our emoticons
     InitializeEmoticonLists();
     getToolbarColorSelect();
@@ -1174,6 +1265,7 @@ begin
         self.Caption := GetString('brand_caption');
         trayShow.Caption := _('Show ') + getAppInfo.Caption;
         trayExit.Caption := _('Exit ') + getAppInfo.Caption;
+        Exodus1.Caption := getAppInfo.ID;
         RestorePosition(Self);
 
         File1.Caption := _GetAppMenuName();
@@ -1210,19 +1302,39 @@ begin
 //
     // setup some branding stuff
     with (MainSession.Prefs) do begin
+        mnuConference.Visible := getBool('brand_muc');
+        if (not mnuConference.Visible) then begin
+            mnuConference.ShortCut := 0;
+            btnRoom.Visible := false;
+            mnuPeople_Conference.Visible := false;
+        end;
         btnRoom.Visible := getBool('brand_muc');
+
+        mnuPlugins.Visible := getBool('brand_plugs');
+        mnuVCard.Visible := getBool('brand_vcard');
+        mnuMyVCard.Visible := getBool('brand_vcard');
 
         mnuFile_Password.Visible := getBool('brand_changepassword');
         mnuFile_Registration_VCard.Visible := getBool('brand_vcard');
         mnuFile_Registration_EditReg.Visible := getBool('brand_registration');
+        mnuRegistration.Visible := mnuFile_Registration_EditReg.Visible and mnuFile_Registration_VCard.Visible;
+
+        mnuBrowser.Visible := getBool('brand_browser');
+        if (not mnuBrowser.Visible) then begin
+            mnuBrowser.ShortCut := 0;
+            btnBrowser.Visible := false;
+        end;
         mnuPeople_Contacts_SendFile.Visible := getBool('brand_ft');
         btnSendFile.Visible := getBool('brand_ft');
         peerFTAction.Enabled := getBool('brand_ft');
         mnuPeople_Contacts_BlockContact.Visible := getBool('brand_allow_blocking_jids');
+        mnuOptions_Plugins.Visible := getBool('brand_plugs');
         mnuFile_ShowDebugXML.Visible := getBool('brand_show_debug_in_menu');
     end;
 
     prefstate := PrefController.getPrefState('auto_start');
+    mnuOptions_EnableStartupWithWindows.Enabled := (prefstate <> psReadOnly);
+    mnuOptions_EnableStartupWithWindows.Visible := (prefstate <> psInvisible);
 //
 //    // Make sure presence menus have unified captions
 ////    setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
@@ -1281,6 +1393,10 @@ begin
     sExodusGMHook := 0;
 
     OptionsMenuItemsChecks();
+//
+//    // Remove the "old menus" from user view
+//    // Eventually will have to actually remove menus
+    Old1.Visible := false;
 
     _dockWindowGlued := false;
 
@@ -1604,6 +1720,8 @@ begin
         btnConnect.Enabled := false;
         mnuFile_Connect.Enabled := false;
         btnOptions.Enabled := false;
+        mnuOptions_Options.Enabled := false;
+        Preferences1.Enabled := false;
     end
 
     else if event = '/session/error/auth' then begin
@@ -1747,6 +1865,8 @@ begin
         end;
 
         btnOptions.Enabled := true;
+        mnuOptions_Options.Enabled := true;
+        Preferences1.Enabled := true;
         _sendInitPresence();
     end
 
@@ -1808,6 +1928,8 @@ begin
         btnConnect.Enabled := true;
         mnuFile_Connect.Enabled := true;
         btnOptions.Enabled := true;
+        mnuOptions_Options.Enabled := true;
+        Preferences1.Enabled := true;
 
         ShowLogin();
 
@@ -2034,7 +2156,11 @@ procedure TfrmExodus.restoreToolbar;
 begin
     // setup the toolbar based on prefs
     with MainSession.Prefs do begin
+        mnuExpanded.Checked := getBool('expanded');
+
+        mnuOnline.Checked := btnOnlineRoster.Down;
         pnlToolbar.Visible := getBool('toolbar');
+        mnuToolbar.Checked := pnlToolbar.Visible;
         mnuWindows_View_ShowToolbar.Checked := pnlToolbar.Visible;
 
         popShowOnline.Checked := getBool('roster_only_online');
@@ -2071,7 +2197,24 @@ end;
 procedure TfrmExodus.restoreMenus(enable: boolean);
 begin
     // (dis)enable the menus
+    mnuDisconnect.Enabled := enable;
+    mnuMessage.Enabled := enable;
+    mnuChat.Enabled := enable;
+    mnuConference.Enabled := enable;
+    mnuPassword.Enabled := enable;
+    mnuRegisterService.Enabled := enable;
+
+    mnuContacts.Enabled := enable;
+    mnuPresence.Enabled := enable;
     trayPresence.Enabled := enable;
+
+    mnuRegistration.Enabled := enable;
+    mnuMyVCard.Enabled := enable;
+    mnuVCard.Enabled := enable;
+
+    mnuBookmark.Enabled := enable;
+    mnuBrowser.Enabled := enable;
+    mnuServer.Enabled := enable;
 
     // (dis)enable the tray menus
     trayPresence.Enabled := enable;
@@ -2131,6 +2274,8 @@ begin
     People.Enabled := enable;
 
     // Options Menu
+    mnuOptions_Password.Enabled := enable;
+    mnuOptions_Registration.Enabled := enable;
     mnuWindows_View_ShowInstantMessages1.Enabled := enable;
     //Windows Menu
 end;
@@ -2321,6 +2466,8 @@ procedure TfrmExodus.mnuFile_ConnectClick(Sender: TObject);
 begin
     btnConnect.Enabled := false;
     btnOptions.Enabled := false;
+    mnuOptions_Options.Enabled := false;
+    Preferences1.Enabled := false;
     mnuFile_Connect.Enabled := false;
     GetLoginWindow().lstProfilesClick(Sender);
     btnActivityWindow.Enabled := false;
@@ -2331,12 +2478,25 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
 begin
+    if (mnuOptions_Notifications_ContactOffline.Checked) then
+        MainSession.Prefs.setInt('notify_offline', 0)
+    else
+        MainSession.Prefs.setInt('notify_offline', 1);
 
+    mnuOptions_Notifications_ContactOffline.Checked :=
+                        not mnuOptions_Notifications_ContactOffline.Checked;
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuOptions_Notifications_ContactOnlineClick(Sender: TObject);
 begin
+    if (mnuOptions_Notifications_ContactOnline.Checked) then
+        MainSession.Prefs.setInt('notify_online', 0)
+    else
+        MainSession.Prefs.setInt('notify_online', 1);
+
+    mnuOptions_Notifications_ContactOnline.Checked :=
+                        not mnuOptions_Notifications_ContactOnline.Checked;
 end;
 
 {---------------------------------------}
@@ -2686,6 +2846,29 @@ begin
     ShowMyProfile();
 end;
 
+procedure TfrmExodus.mnuOptions_Notifications_NewConversationClick(
+  Sender: TObject);
+begin
+    if (mnuOptions_Notifications_NewConversation.Checked) then
+        MainSession.Prefs.setInt('notify_newchat', 0)
+    else
+        MainSession.Prefs.setInt('notify_newchat', 1);
+
+    mnuOptions_Notifications_NewConversation.Checked :=
+                                not mnuOptions_Notifications_NewConversation.Checked;
+end;
+
+procedure TfrmExodus.mnuOptions_Notifications_NewMessageClick(Sender: TObject);
+begin
+    if (mnuOptions_Notifications_NewMessage.Checked) then
+        MainSession.Prefs.setInt('notify_normalmsg', 0)
+    else
+        MainSession.Prefs.setInt('notify_normalmsg', 1);
+
+    mnuOptions_Notifications_NewMessage.Checked :=
+                                not mnuOptions_Notifications_NewMessage.Checked;
+end;
+
 procedure TfrmExodus.mnuOpenNewConferenceRoom1Click(Sender: TObject);
 begin
 
@@ -2696,6 +2879,7 @@ procedure TfrmExodus.mnuToolbarClick(Sender: TObject);
 begin
     // toggle toolbar on/off
     pnlToolbar.Visible := not pnlToolbar.Visible;
+    mnuToolbar.Checked := pnlToolbar.Visible;
     mnuWindows_View_ShowToolbar.Checked := pnlToolbar.Visible;
     MainSession.Prefs.setBool('toolbar', pnlToolbar.Visible);
 end;
@@ -2856,6 +3040,15 @@ end;
 
 {---------------------------------------}
 // JJF TODO: remove these calls, show server version/time somewhere else (about box?)
+procedure TfrmExodus.mnuVersionClick(Sender: TObject);
+begin
+    // get either version of time request from the jabber server
+    if Sender = mnuVersion then
+        jabberSendCTCP(MainSession.Server, XMLNS_VERSION, Self.CTCPCallback)
+    else if Sender = mnuTime then
+        jabberSendCTCP(MainSession.Server, XMLNS_TIME, Self.CTCPCallback);
+end;
+
 procedure TfrmExodus.mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
 begin
     GetLoginWindow().mnuModifyProfileClick(Sender);
@@ -3560,6 +3753,7 @@ begin
     // toggle toolbar on/off
     tempbool := MainSession.Prefs.getBool('chat_toolbar');
     tempbool := not tempbool;
+    mnuChatToolbar.Checked := tempbool;
     mnuWindows_View_ShowChatToolbar.Checked := tempbool;
     MainSession.Prefs.setBool('chat_toolbar', tempbool);
     MainSession.FireEvent('/session/prefs', nil);
@@ -3859,8 +4053,48 @@ begin
     ShowLogin();
 end;
 
-procedure TfrmExodus.mnuOptions_EnableStartupWithWindowsClick(Sender: TObject);
+procedure TfrmExodus.mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
 begin
+    if (mnuOptions_EnableEmoticonDisplays.Checked) then
+        MainSession.Prefs.setBool('emoticons', false)
+    else
+        MainSession.Prefs.setBool('emoticons', true);
+
+    mnuOptions_EnableEmoticonDisplays.Checked :=
+                                not mnuOptions_EnableEmoticonDisplays.Checked;
+end;
+
+procedure TfrmExodus.mnuOptions_EnableStartupWithWindowsClick(Sender: TObject);
+var
+    reg: TRegistry;
+    cmd: Widestring;
+    i: integer;
+begin
+    reg := TRegistry.Create();
+    try
+        reg.RootKey := HKEY_CURRENT_USER;
+        reg.OpenKey(RUN_ONCE, true);
+
+        if (mnuOptions_EnableStartupWithWindows.Checked) then begin
+            if (reg.ValueExists(PrefController.getAppInfo.ID)) then begin
+                reg.DeleteValue(PrefController.getAppInfo.ID);
+                MainSession.Prefs.setBool('auto_start', false);
+            end;
+        end
+        else begin
+            cmd := '"' + ParamStr(0) + '"';
+            for i := 1 to ParamCount do
+                cmd := cmd + ' "' + ParamStr(i) + '"';
+            reg.WriteString(PrefController.getAppInfo.ID,  cmd);
+            MainSession.Prefs.setBool('auto_start', true);
+        end;
+        reg.CloseKey();
+    finally
+        reg.Free();
+    end;
+
+    mnuOptions_EnableStartupWithWindows.Checked :=
+                            not mnuOptions_EnableStartupWithWindows.Checked;
 end;
 
 {******************************************************************************
@@ -4502,6 +4736,12 @@ end;
 
 procedure TfrmExodus.OptionsMenuItemsChecks();
 begin
+    mnuOptions_EnableEmoticonDisplays.Checked := MainSession.Prefs.getBool('emoticons');
+    mnuOptions_EnableStartupWithWindows.Checked := MainSession.Prefs.getBool('auto_start');
+    mnuOptions_Notifications_ContactOnline.Checked := (MainSession.Prefs.getInt('notify_online') > 0);
+    mnuOptions_Notifications_ContactOffline.Checked := (MainSession.Prefs.getInt('notify_offline') > 0);
+    mnuOptions_Notifications_NewMessage.Checked := (MainSession.Prefs.getInt('notify_normalmsg') > 0);
+    mnuOptions_Notifications_NewConversation.Checked := (MainSession.Prefs.getInt('notify_newchat') > 0);
 end;
 
 

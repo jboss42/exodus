@@ -249,6 +249,8 @@ begin
         SetFontsAndColors();
         Invalidate();
     end
+    else if Event = '/session/hover/clear' then
+        _LastHintNode := nil
     else if (Event = '/session/disconnecting') then
     begin
          //SaveGroupsState();
@@ -855,7 +857,7 @@ begin
 
     if (GetRosterWindow().HoverWindow.Visible) then
         ActivateHover();
-
+    
     _LastMouseMovePoint.X := X;
     _LastMouseMovePoint.Y := Y;
 
@@ -864,7 +866,6 @@ end;
 {---------------------------------------}
 procedure TExTreeView.MouseLeave(Sender: TObject);
 begin
-    _LastHintNode := nil;
     GetRosterWindow().HoverWindow.CancelHover();
 end;
 

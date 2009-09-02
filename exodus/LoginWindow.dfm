@@ -260,7 +260,6 @@ object frmLoginWindow: TfrmLoginWindow
         LangOptions = [loAutoFont]
         Language = 1033
         ParentColor = True
-        ReadOnly = True
         ScrollBars = ssVertical
         ShowSelectionBar = False
         TabOrder = 0

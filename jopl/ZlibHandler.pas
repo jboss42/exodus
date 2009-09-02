@@ -67,6 +67,7 @@ type
 implementation
 
 uses
+    SysUtils,
     GnuGetText;
 
 {---------------------------------------}
@@ -76,15 +77,16 @@ function CCheck(code: Integer): Integer;
 begin
   Result := code;
   if code < 0 then
-    raise ECompressionError.Create(_('Compression Error')); //!!
+    raise ECompressionError.Create(_('An error occurred trying to compress outgoing packet, code: ' + inttohex(code, 8))); //!!
 end;
 
 {---------------------------------------}
 function DCheck(code: Integer): Integer;
 begin
   Result := code;
-  if code < 0 then
-    raise EDecompressionError.Create(_('Decompression Error'));  //!!
+  if code < 0 then begin
+    raise EDecompressionError.Create(_('An error occurred trying to decompression inbound packet, code: ' + inttohex(code, 8))); //!!
+  end;
 end;
 
 {---------------------------------------}
@@ -190,7 +192,7 @@ end;
 {---------------------------------------}
 function TZlibIOHandler.Readable(AMSec: integer = IdTimeoutDefault): boolean;
 begin
-    result := _wrapped.Readable(AMSec);
+     Result := (_inrec.avail_in > 0) or _wrapped.Readable(AMSec);
 end;
 
 {---------------------------------------}
