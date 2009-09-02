@@ -675,7 +675,7 @@ begin
         (ss <> SEC_I_CONTEXT_EXPIRED)) then
     begin
       if (dataStore <> nil) then FreeMem(dataStore);
-      raise EIdException.Create('SSL Decryption Failed.');
+      raise EIdException.Create('SSL decryption failed, code: ' + inttohex(ss,8));
     end;
 
     if (ss = SEC_I_CONTEXT_EXPIRED) then
@@ -788,7 +788,7 @@ begin
     FreeMem(buffers[0].pvBuffer);
     FreeMem(buffers[2].pvBuffer);
   end else begin
-    raise EIdException.Create('SSL encryption failed.');
+    raise EIdException.Create('SSL encryption failed, code: ' + inttohex(ss, 8));
   end;
 end;
 
