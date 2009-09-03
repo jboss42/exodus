@@ -282,8 +282,15 @@ begin
         else begin
             // Get any pending incoming data
             // utf := _Socket.CurrentReadBuffer;
-            _socket.ReadFromStack();
-            utf := _socket.InputBuffer.Extract(_socket.InputBuffer.Size);
+            try
+                _socket.ReadFromStack();
+                utf := _socket.InputBuffer.Extract(_socket.InputBuffer.Size);
+            except
+                on E:Exception do begin
+                    log('Exception trying to read from socket: ' + E.message);
+                    raise E;
+                end;
+            end;
             if ((_remain_utf) <> '') then begin
                 inp := _remain_utf + utf;
                 _remain_utf := '';
