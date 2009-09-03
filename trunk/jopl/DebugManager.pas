@@ -73,7 +73,9 @@ const
     sfLine: integer = 8;
     sfAll: integer = 15;
 
-procedure DebugMessageEx(msg: widestring; id: widestring = '');
+procedure SynchronizedDebugMessageEx(msg: widestring; id: widestring = ''; sFrame: integer = 2);
+
+procedure DebugMessageEx(msg: widestring; id: widestring = ''; sframe: integer = 2);
 procedure DebugStackTrace(caption: Widestring);
 {$ENDIF}
 
@@ -90,6 +92,7 @@ uses
     debug,
     JclDebug,
 {$ENDIF}
+    contnrs,
     Session,
     DebugLogger;
 
@@ -266,7 +269,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure DebugMessageEx(msg: widestring; id: widestring);
+procedure DebugMessageEx(msg: widestring; id: widestring; sframe: integer);
 var
     tstr: widestring;
 begin
@@ -278,8 +281,58 @@ begin
     tstr := tstr + msg;
 
     //0->stackframetostring, 1-> DebugMessageEx 2-> caller
-    debugMessage(StackFrameToString(2, sfUnit or sfProc) + tstr);
+    debugMessage(StackFrameToString(sframe, sfUnit or sfProc) + tstr);
 end;
+
+type
+  tmsginfo = class
+    lastmsg: widestring;
+    lastlbl: widestring;
+    lastfrm: widestring;
+
+    constructor create(msg, lbl, frm: widestring);
+  public
+    function getFormatted(): widestring;
+  end;
+  constructor tmsginfo.create(msg, lbl, frm: widestring);
+  begin
+    lastmsg := msg;
+    lastlbl := lbl;
+    lastfrm := frm;
+  end;
+  function tmsginfo.getFormatted(): widestring;
+  begin
+    result := ' ';
+    if (lastlbl <> '') then
+        result := result + '(' + lastlbl + ') ';//note space
+    result := lastfrm + result + lastmsg;
+  end;
+  
+type
+  TSThread = class(TThread)
+  private
+    lastMsg: tmsginfo;
+  public
+    procedure dbgMsgEx();
+  end;
+
+  //synchronized
+  procedure TSThread.dbgMsgEx();
+  begin
+    debugMessage(lastmsg.getFormatted());
+    lastmsg.free();
+  end;
+
+procedure SynchronizedDebugMessageEx(msg: widestring; id: widestring = ''; sFrame: integer = 2);
+var
+  dthread: TSThread;
+begin
+    dThread := TSThread.create(true);
+    dThread.lastMsg := tmsginfo.create(msg, id, StackFrameToString(sFrame, sfUnit or sfProc));
+    TThread.Synchronize(dThread, dThread.dbgMsgEx);
+    dThread.free();
+end;
+
 {$ENDIF}
 
 {---------------------------------------}
